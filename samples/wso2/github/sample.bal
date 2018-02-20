@@ -6,19 +6,28 @@ import src.wso2.github.structTemplates;
 
 public function main (string[] args) {
     endpoint<github:ClientConnector> githubConnector {
-        create github:ClientConnector("b8277ec704a117743b59a99d794ce6f025255117");
+        create github:ClientConnector("f9fd45c0f9bbbcfc9174ccae62135dee3bda53cd");
     }
     http:InResponse gitResponse = {};
-    http:HttpConnectorError e;
-    github:Project[] gitJsonResponse;
-    //gitJsonResponse, e = githubConnector.getRepositoryProjects("vlgunarathne", "carbon-apimgt", "open");
-    gitJsonResponse, e = githubConnector.getRepositoryProjects("vlgunarathne", "ProLAd-ExpertSystem", "open");
-    println(gitJsonResponse);
+    error e;
+    github:Project[] responseProjectList;
+
+    //responseProjectList, e = githubConnector.getRepositoryProjects("vlgunarathne", "carbon-apimgt", "open");
+    responseProjectList, e = githubConnector.getRepositoryProjects("vlgunrathne", "ProLAd-ExpertSystem", "open");
+    println(responseProjectList);
     println(e);
-
-
-    //gitJsonResponse, e = githubConnector.getOrganizationProjects("wso2", "open");
-    //println(gitJsonResponse);
+    println("=========================================================");
+    //
+    //responseProjectList, e = githubConnector.getOrganizationProjects("wso23", "open");
+    //println(responseProjectList);
     //println(e);
+    //println("=========================================================");
+
+    //github:Project singleProject;
+    //singleProject, e = githubConnector.getProject("wso2", "testgrid", 1);
+    ////singleProject, e = githubConnector.getProject("vlgunarathne", "ProLAd-ExpertSystem", 1);
+    //println(singleProject);
+    //println(e);
+
 }
 
