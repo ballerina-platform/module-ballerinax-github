@@ -31,3 +31,9 @@ target
 *.ipr
 .idea
 .m2
+
+# Ignore ballerina files
+accessToken.bal
+
+#Ignore doc files
+docs/

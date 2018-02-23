@@ -11,4 +11,11 @@ function testBoolean () {
 
 
 }
-
+public enum State {
+    OPEN,
+    CLOSED,
+    ALL
+}
+public function main (string[] args)  {
+    println(typeof State.OPEN);
+}
