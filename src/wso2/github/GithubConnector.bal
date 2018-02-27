@@ -48,9 +48,10 @@ public connector GithubConnector (string accessToken) {
         http:OutRequest request = {};
         http:InResponse response = {};
 
-        json query = { "variables":{ "owner":repository.creator.login, "repository":repository.name, "states":state},
-                         "query": gq:GET_REPOSITORY_PROJECTS};
-        string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":{{repository.owner.login}}, "{{GIT_REPOSITORY}}":{{repository.name}}, "{{GIT_STATE}}":{{state}}}, "{{GIT_QUERY}}":{{gq:GET_REPOSITORY_PROJECTS}}}`;
+        string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}",
+        "{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":"{{state}}"},"{{GIT_QUERY}}":"{{gq:GET_REPOSITORY_PROJECTS}}"}`;
+
+        var query,_ = <json>stringQuery;
         constructRequestHeaders(request, query, accessToken);
 
         response, httpError = gitHubEndpoint.post("", request);
@@ -61,15 +62,10 @@ public connector GithubConnector (string accessToken) {
         json jsonResponse =  response.getJsonPayload();
 
         try {
-            var githubProjectsJson, _ = (json[])jsonResponse[GIT_DATA][GIT_REPOSITORY_OWNER]
-                                                [GIT_REPOSITORY][GIT_PROJECTS][GIT_EDGES];
+            var githubProjectsJson, _ = (json[])jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_NODES];
             int i = 0;
             foreach projectJson in githubProjectsJson {
-                io:println(projectJson);io:println("====================");
-
-                var projectObject, _ = <Project>projectJson[GIT_NODE];
-
-                projectArray[i] = projectObject;
+                projectArray[i], _ = <Project>projectJson;
                 i = i + 1;
             }
         } catch (error e) {
@@ -240,7 +236,15 @@ function constructRequestHeaders (http:OutRequest request, json query, string ac
     request.setJsonPayload(query);
 
 }
+@Description {value:"Construct the request headers"}
+@Param {value:"request: The http request object"}
+@Param {value:"query: GraphQL API query"}
+@Param {value:"accessToken: GitHub access token"}
+function constructStringRequestHeaders (http:OutRequest request, string query, string accessToken) {
+    request.addHeader("Authorization", "Bearer " + accessToken);
+    request.setStringPayload(query);
 
+}
 
 // #TODO Move these structs and enum to another package once https://github.com/ballerina-lang/ballerina/issues/4736 is fixed.
 //*************************************************
