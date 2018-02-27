@@ -19,31 +19,26 @@
 package src.wso2.github.graphqlQueries;
 
 public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $repository: String!, $states:[ProjectState!]){
-
- repositoryOwner(login: $owner) {
-   id,
-   url,
-   login,
-   repository(name: $repository){
-     name,
-    url,
-
-	 projects(first: 100, states: $states) {
-    edges {
-      node {
+	repository(owner:$owner, name:$repository){
+    projects(first:100, states:$states){
+      pageInfo {
+        hasNextPage,
+        startCursor,
+        endCursor
+      },
+      nodes {
         id,
         databaseId,
         name,
         body,
         number,
         createdAt,
+        updatedAt,
         closed,
         closedAt,
-        updatedAt,
         resourcePath,
         state,
         url,
-
         viewerCanUpdate,
         creator {
           login,
@@ -57,12 +52,10 @@ public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $reposito
           projectsUrl,
           viewerCanCreateProjects
         }
-
       }
     }
   }
-   }
- }
+
 }";
 
 public const string GET_ORGANIZATION_PROJECTS = "query ($organization: String!, $states:[ProjectState!]){

@@ -21,10 +21,11 @@ package src.wso2.github;
 import ballerina.net.http;
 import src.wso2.github.graphqlQueries as gq;
 import ballerina.log;
+import ballerina.io;
 
 @Description {value: "GitHub client connector"}
 @Param {value: "accessToken:Access token"}
-public connector githubConnector (string accessToken) {
+public connector GithubConnector (string accessToken) {
 
     endpoint <http:HttpClient> gitHubEndpoint {
         create http:HttpClient("https://api.github.com/graphql", {} );
@@ -37,34 +38,42 @@ public connector githubConnector (string accessToken) {
     @Param{value: "state: State of the repository (open, closed, all)"}
     @Return { value:"Array of projects" }
     @Return {value:"error: Error"}
-    action getRepositoryProjects (string owner, string repository, string state) (Project[], error ) {
-        http:OutRequest request = {};
-        http:InResponse response = {};
+    action getRepositoryProjects (Repository repository, string state) (Project[], error ) {
         error returnError;
         Project[] projectArray= [];
+        if (repository == null || state == null) {
+            returnError = {message: "Repository and state cannot be null"};
+            return projectArray, returnError;
+        }
+        http:OutRequest request = {};
+        http:InResponse response = {};
 
-        json query = {"variables":{"owner":owner,"repository":repository,"state":state},
+        json query = { "variables":{ "owner":repository.creator.login, "repository":repository.name, "states":state},
                          "query": gq:GET_REPOSITORY_PROJECTS};
+        string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":{{repository.owner.login}}, "{{GIT_REPOSITORY}}":{{repository.name}}, "{{GIT_STATE}}":{{state}}}, "{{GIT_QUERY}}":{{gq:GET_REPOSITORY_PROJECTS}}}`;
         constructRequestHeaders(request, query, accessToken);
 
         response, httpError = gitHubEndpoint.post("", request);
         if (httpError != null) {
-            returnError = {msg:httpError.msg, cause:httpError.cause, stackTrace:httpError.stackTrace};
+            returnError = {message:httpError.message, cause:httpError.cause};
             return projectArray, returnError;
         }
         json jsonResponse =  response.getJsonPayload();
 
         try {
-            var githubProjectsJson, _ = (json[])jsonResponse["data"]["repositoryOwner"]["repository"]["projects"]["edges"];
+            var githubProjectsJson, _ = (json[])jsonResponse[GIT_DATA][GIT_REPOSITORY_OWNER]
+                                                [GIT_REPOSITORY][GIT_PROJECTS][GIT_EDGES];
             int i = 0;
             foreach projectJson in githubProjectsJson {
-                var projectObject, _ = <Project>projectJson["node"];
+                io:println(projectJson);io:println("====================");
+
+                var projectObject, _ = <Project>projectJson[GIT_NODE];
 
                 projectArray[i] = projectObject;
                 i = i + 1;
             }
         } catch (error e) {
-            returnError = {msg:e.msg, cause:e.cause, stackTrace:e.stackTrace};
+            returnError = {message:e.message, cause:e.cause};
             return projectArray, returnError;
         }
 
@@ -86,7 +95,7 @@ public connector githubConnector (string accessToken) {
         constructRequestHeaders(request, query, accessToken);
         response, httpError = gitHubEndpoint.post("", request);
         if (httpError != null) {
-            returnError = {msg:httpError.msg, cause:httpError.cause, stackTrace:httpError.stackTrace};
+            returnError = {message:httpError.message, cause:httpError.cause};
             return projectArray, returnError;
         }
         json jsonResponse =  response.getJsonPayload();
@@ -101,7 +110,7 @@ public connector githubConnector (string accessToken) {
                 i = i + 1;
             }
         } catch (error e) {
-            returnError = {msg:e.msg, cause:e.cause, stackTrace:e.stackTrace};
+            returnError = {message:e.message, cause:e.cause};
             return projectArray, returnError;
         }
 
@@ -125,7 +134,7 @@ public connector githubConnector (string accessToken) {
         constructRequestHeaders(request, query, accessToken);
         response, httpError = gitHubEndpoint.post("", request);
         if (httpError != null) {
-            returnError = {msg:httpError.msg, cause:httpError.cause, stackTrace:httpError.stackTrace};
+            returnError = {message:httpError.message, cause:httpError.cause};
             return singleProject, returnError;
         }
         json jsonResponse =  response.getJsonPayload();
@@ -134,7 +143,7 @@ public connector githubConnector (string accessToken) {
             var projectObject, _ = <Project>githubProjectJson;
             singleProject = projectObject;
         } catch (error e) {
-            returnError = {msg:e.msg, cause:e.cause, stackTrace:e.stackTrace};
+            returnError = {message:e.message, cause:e.cause};
             return singleProject, returnError;
         }
 
@@ -159,7 +168,7 @@ public connector githubConnector (string accessToken) {
 
         response, httpError = gitHubEndpoint.post("", request);
         if (httpError != null) {
-            returnError = {msg:httpError.msg, cause:httpError.cause, stackTrace:httpError.stackTrace};
+            returnError = {message:httpError.message, cause:httpError.cause};
             return cardArray, returnError;
         }
 
@@ -171,14 +180,14 @@ public connector githubConnector (string accessToken) {
                 foreach cardJson in columnJson["node"]["cards"]["edges"] {
                     //println(cardJson); println("====");
                     var card, _ = <Card>cardJson["node"];
-                    println(cardJson["node"]);println("%%%%");
+                    io:println(cardJson["node"]);io:println("%%%%");
                     cardArray[i] = card;
                     i = i + 1;
                 }
             }
         } catch (error e) {
-            returnError = {msg:e.msg, cause:e.cause, stackTrace:e.stackTrace};
-            log:printError(returnError.msg);
+            returnError = {message:e.message, cause:e.cause};
+            log:printError(returnError.message);
             return cardArray, returnError;
         }
 
@@ -202,7 +211,7 @@ public connector githubConnector (string accessToken) {
 
         response, httpError = gitHubEndpoint.post("", request);
         if (httpError != null) {
-            returnError = {msg:httpError.msg, cause:httpError.cause, stackTrace:httpError.stackTrace};
+            returnError = {message:httpError.message, cause:httpError.cause};
             return repository, returnError;
         }
 
@@ -213,8 +222,8 @@ public connector githubConnector (string accessToken) {
             var repositoryStruct, _ = <Repository>projectJson;
             repository = repositoryStruct;
         } catch (error e) {
-            returnError = {msg:e.msg, cause:e.cause, stackTrace:e.stackTrace};
-            log:printError(returnError.msg);
+            returnError = {message:e.message, cause:e.cause};
+            log:printError(returnError.message);
             return repository, returnError;
         }
 
@@ -233,11 +242,12 @@ function constructRequestHeaders (http:OutRequest request, json query, string ac
 }
 
 
+// #TODO Move these structs and enum to another package once https://github.com/ballerina-lang/ballerina/issues/4736 is fixed.
 //*************************************************
 //*************************************************
 //  Struct Templates
 //*************************************************
-// #TODO Move these structs to another package once https://github.com/ballerina-lang/ballerina/issues/4736 is fixed.
+
 public struct Project {
     string id;
     int databaseId;
@@ -253,7 +263,7 @@ public struct Project {
     string url;
     boolean viewerCanUpdate;
     Creator creator;
-    Owner owner;
+    ProjectOwner owner;
 }
 
 public struct Creator {
@@ -263,11 +273,18 @@ public struct Creator {
     string avatarUrl;
 }
 
-public struct Owner {
+public struct ProjectOwner {
     string id;
     string projectsResourcePath;
     string projectsUrl;
-    boolean viewerCanCreateProjects;
+    string viewerCanCreateProjects;
+}
+
+public struct RepositoryOwner {
+    string id;
+    string login;
+    string url;
+    string resourcePath;
 }
 
 public struct Error {
@@ -298,19 +315,47 @@ public struct Content {
 public struct Repository {
     string id;
     string name;
-    string organization;
+    RepositoryOwner owner;
+    string nameWithOwner;
+    string createdAt;
+    string updatedAt;
+    string description;
+    string homepageUrl;
+    Language primaryLanguage;
+    Language[] language;
+    string url;
 }
 
 public struct Issue {
     string id;
     string name;
 }
+
+public struct Language {
+    string id;
+    string name;
+    string color;
+}
+
+public struct State {
+    string OPEN = "OPEN";
+    string CLOSED = "CLOSED";
+    string ALL = "OPEN,CLOSED";
+}
 //*************************************************
 // End of structs
 //*************************************************
 
-public enum State {
-    OPEN,
-    CLOSED,
-    ALL
-}
+
+//*************************************************
+//*************************************************
+//  Enum
+//*************************************************
+//public enum State {
+//    OPEN,
+//    CLOSED,
+//    ALL
+//}
+//*************************************************
+// End of Enum
+//*************************************************
