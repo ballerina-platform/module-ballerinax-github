@@ -18,7 +18,7 @@
 
 package src.wso2.github.graphqlQueries;
 
-public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $repository: String!, $states:[ProjectState!]){
+public const string GET_REPOSITORY_PROJECTS = "query ($owne: String!, $repository: String!, $states:[ProjectState!]){
 	repository(owner:$owner, name:$repository){
     projects(first:100, states:$states){
       pageInfo {

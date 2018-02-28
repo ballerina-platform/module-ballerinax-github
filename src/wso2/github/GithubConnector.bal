@@ -44,7 +44,7 @@ public connector GithubConnector (string accessToken) {
         Project[] projectArray= [];
         if (repository == null || states == null) {
             returnError = {message: "Repository and state cannot be null"};
-            return projectArray, returnError;
+            return [], returnError;
         }
         http:OutRequest request = {};
         http:InResponse response = {};
@@ -53,36 +53,39 @@ public connector GithubConnector (string accessToken) {
         "{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":"{{states}}"},"{{GIT_QUERY}}":"{{gq:GET_REPOSITORY_PROJECTS}}"}`;
 
         var query, _ = <json>stringQuery;
+
+        //Set headers and payload to the request
         constructRequestHeaders(request, query, accessToken);
         int i = 0;
         while (hasNextPage) {
             response, httpError = gitHubEndpoint.post("", request);
-            if (httpError != null) {
+            if (null != httpError) {
                 returnError = {message:httpError.message, cause:httpError.cause};
-                return projectArray, returnError;
+                return [], returnError;
             }
-            json jsonResponse =  response.getJsonPayload();
-
+            json jsonResponse;
             try {
+                jsonResponse =  response.getJsonPayload();
+
                 var githubProjectsJson, _ = (json[])jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_NODES];
                 foreach projectJson in githubProjectsJson {
                     projectArray[i], _ = <Project>projectJson;
                     i = i + 1;
                 }
             } catch (error e) {
-                returnError = {message:e.message, cause:e.cause};
-                return projectArray, returnError;
+                returnError = {message:"", cause:e.cause};
+                return [], returnError;
             }
 
-                hasNextPage, _ = (boolean)jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_PAGE_INFO]
+            hasNextPage, _ = (boolean)jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_PAGE_INFO]
                                               [GIT_HAS_NEXT_PAGE];
-                if (hasNextPage) {
-                    var endCursor, _ = (string)jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_PAGE_INFO][GIT_END_CURSOR];
-                    string stringQueryNextPage = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}","{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":"{{states}}","{{GIT_END_CURSOR}}":"{{endCursor}}"},"{{GIT_QUERY}}":"{{gq:GET_REPOSITORY_PROJECTS_NEXT_PAGE}}"}`;
-                    var queryNextPage, _ = <json>stringQueryNextPage;
-                    request = {};
-                    constructRequestHeaders(request, queryNextPage, accessToken);
-                }
+            if (hasNextPage) {
+                var endCursor, _ = (string)jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_PAGE_INFO][GIT_END_CURSOR];
+                string stringQueryNextPage = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}","{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":"{{states}}","{{GIT_END_CURSOR}}":"{{endCursor}}"},"{{GIT_QUERY}}":"{{gq:GET_REPOSITORY_PROJECTS_NEXT_PAGE}}"}`;
+                 var queryNextPage, _ = <json>stringQueryNextPage;
+                 request = {};
+                 constructRequestHeaders(request, queryNextPage, accessToken);
+            }
 
         }
 
@@ -250,13 +253,35 @@ function constructRequestHeaders (http:OutRequest request, json query, string ac
     request.setJsonPayload(query);
 
 }
-@Description {value:"Construct the request headers"}
-@Param {value:"request: The http request object"}
-@Param {value:"query: GraphQL API query"}
-@Param {value:"accessToken: GitHub access token"}
-function constructStringRequestHeaders (http:OutRequest request, string query, string accessToken) {
-    request.addHeader("Authorization", "Bearer " + accessToken);
-    request.setStringPayload(query);
+
+@Description {value:"Validate the http response"}
+@Param {value:"http:InResponse: The http response object"}
+@Return {value:"json: The JSON payload in the response"}
+@Return {value:"GitConnectoError: GitConnectorError object"}
+function validateResponse (http:InResponse response) (json, GitConnectorError){
+    GitConnectorError gitError;
+    json responsePayload;
+    try {
+        responsePayload = response.getJsonPayload();
+
+        if (null == responsePayload[GIT_DATA]) {
+            string[] errors = [];
+            var errorList, _ = (json[])responsePayload[GIT_ERRORS];
+            int i = 0;
+            foreach singleError in errorList {
+                errors[i], _ = (string)singleError[GIT_MESSAGE];
+            }
+
+            gitError = {message:errors, statusCode:response.statusCode, reasonPhrase:response.reasonPhrase, server:response.server};
+            return null, gitError;
+        }
+
+    } catch (error e) {
+        string[] errorMessage = [GIT_ERROR_WHILE_RETRIEVING_DATA];
+        gitError = {message:errorMessage, statusCode:response.statusCode, reasonPhrase:response.reasonPhrase, server:response.server};
+    }
+
+    return responsePayload, gitError;
 
 }
 
@@ -359,6 +384,13 @@ public struct State {
     string OPEN = "OPEN";
     string CLOSED = "CLOSED";
     string ALL = "OPEN,CLOSED";
+}
+
+public struct GitConnectorError {
+    int statusCode;
+    string[] message;
+    string reasonPhrase;
+    string server;
 }
 //*************************************************
 // End of structs
