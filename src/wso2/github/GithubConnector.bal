@@ -36,12 +36,13 @@ public connector GithubConnector (string accessToken) {
     @Param{ value : "owner: Owner of the repository"}
     @Param{ value : "repository: Name of the repository"}
     @Param{value: "state: State of the repository (open, closed, all)"}
-    @Return { value:"Array of projects" }
+    @Return { value:"Project[]: Array of projects" }
     @Return {value:"error: Error"}
-    action getRepositoryProjects (Repository repository, string state) (Project[], error ) {
+    action getRepositoryProjects (Repository repository, string states) (Project[], error ) {
+        boolean hasNextPage = true;
         error returnError;
         Project[] projectArray= [];
-        if (repository == null || state == null) {
+        if (repository == null || states == null) {
             returnError = {message: "Repository and state cannot be null"};
             return projectArray, returnError;
         }
@@ -49,28 +50,40 @@ public connector GithubConnector (string accessToken) {
         http:InResponse response = {};
 
         string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}",
-        "{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":"{{state}}"},"{{GIT_QUERY}}":"{{gq:GET_REPOSITORY_PROJECTS}}"}`;
+        "{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":"{{states}}"},"{{GIT_QUERY}}":"{{gq:GET_REPOSITORY_PROJECTS}}"}`;
 
-        var query,_ = <json>stringQuery;
+        var query, _ = <json>stringQuery;
         constructRequestHeaders(request, query, accessToken);
-
-        response, httpError = gitHubEndpoint.post("", request);
-        if (httpError != null) {
-            returnError = {message:httpError.message, cause:httpError.cause};
-            return projectArray, returnError;
-        }
-        json jsonResponse =  response.getJsonPayload();
-
-        try {
-            var githubProjectsJson, _ = (json[])jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_NODES];
-            int i = 0;
-            foreach projectJson in githubProjectsJson {
-                projectArray[i], _ = <Project>projectJson;
-                i = i + 1;
+        int i = 0;
+        while (hasNextPage) {
+            response, httpError = gitHubEndpoint.post("", request);
+            if (httpError != null) {
+                returnError = {message:httpError.message, cause:httpError.cause};
+                return projectArray, returnError;
             }
-        } catch (error e) {
-            returnError = {message:e.message, cause:e.cause};
-            return projectArray, returnError;
+            json jsonResponse =  response.getJsonPayload();
+
+            try {
+                var githubProjectsJson, _ = (json[])jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_NODES];
+                foreach projectJson in githubProjectsJson {
+                    projectArray[i], _ = <Project>projectJson;
+                    i = i + 1;
+                }
+            } catch (error e) {
+                returnError = {message:e.message, cause:e.cause};
+                return projectArray, returnError;
+            }
+
+                hasNextPage, _ = (boolean)jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_PAGE_INFO]
+                                              [GIT_HAS_NEXT_PAGE];
+                if (hasNextPage) {
+                    var endCursor, _ = (string)jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_PAGE_INFO][GIT_END_CURSOR];
+                    string stringQueryNextPage = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}","{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":"{{states}}","{{GIT_END_CURSOR}}":"{{endCursor}}"},"{{GIT_QUERY}}":"{{gq:GET_REPOSITORY_PROJECTS_NEXT_PAGE}}"}`;
+                    var queryNextPage, _ = <json>stringQueryNextPage;
+                    request = {};
+                    constructRequestHeaders(request, queryNextPage, accessToken);
+                }
+
         }
 
         return projectArray, returnError;
@@ -232,6 +245,7 @@ public connector GithubConnector (string accessToken) {
 @Param {value:"query: GraphQL API query"}
 @Param {value:"accessToken: GitHub access token"}
 function constructRequestHeaders (http:OutRequest request, json query, string accessToken) {
+    request.removeAllHeaders();
     request.addHeader("Authorization", "Bearer " + accessToken);
     request.setJsonPayload(query);
 

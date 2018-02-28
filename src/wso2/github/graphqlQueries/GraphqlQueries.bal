@@ -58,6 +58,46 @@ public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $reposito
 
 }";
 
+public const string GET_REPOSITORY_PROJECTS_NEXT_PAGE = "query ($owner: String!, $repository: String!, $states:[ProjectState!], $endCursor: String!){
+	repository(owner:$owner, name:$repository){
+    projects(first:100, states:$states, after:$endCursor){
+      pageInfo {
+        hasNextPage,
+        startCursor,
+        endCursor
+      },
+      nodes {
+        id,
+        databaseId,
+        name,
+        body,
+        number,
+        createdAt,
+        updatedAt,
+        closed,
+        closedAt,
+        resourcePath,
+        state,
+        url,
+        viewerCanUpdate,
+        creator {
+          login,
+          resourcePath,
+          url,
+          avatarUrl
+        }
+        owner {
+          id,
+          projectsResourcePath,
+          projectsUrl,
+          viewerCanCreateProjects
+        }
+      }
+    }
+  }
+
+}";
+
 public const string GET_ORGANIZATION_PROJECTS = "query ($organization: String!, $states:[ProjectState!]){
  organization (login: $organization){
   id,
