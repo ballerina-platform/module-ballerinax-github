@@ -10,7 +10,7 @@ public function main (string[] args) {
         create github:GithubConnector(getAccessToken());
     }
     http:InResponse gitResponse = {};
-    error e;
+    github:GitConnectorError e;
     github:Project[] responseProjectList;
     github:Repository sampleRepo = {name:"ProLAd-ExpertSystem", owner:{login:"vlgunarathne"}};
 

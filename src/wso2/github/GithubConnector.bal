@@ -38,13 +38,13 @@ public connector GithubConnector (string accessToken) {
     @Param{value: "state: State of the repository (open, closed, all)"}
     @Return { value:"Project[]: Array of projects" }
     @Return {value:"error: Error"}
-    action getRepositoryProjects (Repository repository, string states) (Project[], error ) {
+    action getRepositoryProjects (Repository repository, string states) (Project[], GitConnectorError) {
         boolean hasNextPage = true;
-        error returnError;
+        GitConnectorError connectorError;
         Project[] projectArray= [];
         if (repository == null || states == null) {
-            returnError = {message: "Repository and state cannot be null"};
-            return [], returnError;
+            connectorError = {message:["Repository and state cannot be null"]};
+            return [], connectorError;
         }
         http:OutRequest request = {};
         http:InResponse response = {};
@@ -57,30 +57,30 @@ public connector GithubConnector (string accessToken) {
         //Set headers and payload to the request
         constructRequestHeaders(request, query, accessToken);
         int i = 0;
+        //Loop through multiple pages of results
         while (hasNextPage) {
             response, httpError = gitHubEndpoint.post("", request);
             if (null != httpError) {
-                returnError = {message:httpError.message, cause:httpError.cause};
-                return [], returnError;
+                connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+                return [], connectorError;
             }
             json jsonResponse;
-            try {
-                jsonResponse =  response.getJsonPayload();
-
-                var githubProjectsJson, _ = (json[])jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_NODES];
-                foreach projectJson in githubProjectsJson {
+            //Check for empty payloads and errors
+            jsonResponse, connectorError = validateResponse(response);
+            if (null != connectorError) {
+                return [], connectorError;
+            }
+            var githubProjectsJson, _ = (json[])jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_NODES];
+            foreach projectJson in githubProjectsJson {
                     projectArray[i], _ = <Project>projectJson;
                     i = i + 1;
                 }
-            } catch (error e) {
-                returnError = {message:"", cause:e.cause};
-                return [], returnError;
-            }
 
             hasNextPage, _ = (boolean)jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_PAGE_INFO]
                                               [GIT_HAS_NEXT_PAGE];
             if (hasNextPage) {
                 var endCursor, _ = (string)jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_PAGE_INFO][GIT_END_CURSOR];
+
                 string stringQueryNextPage = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}","{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":"{{states}}","{{GIT_END_CURSOR}}":"{{endCursor}}"},"{{GIT_QUERY}}":"{{gq:GET_REPOSITORY_PROJECTS_NEXT_PAGE}}"}`;
                  var queryNextPage, _ = <json>stringQueryNextPage;
                  request = {};
@@ -88,8 +88,7 @@ public connector GithubConnector (string accessToken) {
             }
 
         }
-
-        return projectArray, returnError;
+        return projectArray, connectorError;
     }
 
     @Description{ value : "Get all projects of an organization"}
@@ -259,7 +258,7 @@ function constructRequestHeaders (http:OutRequest request, json query, string ac
 @Return {value:"json: The JSON payload in the response"}
 @Return {value:"GitConnectoError: GitConnectorError object"}
 function validateResponse (http:InResponse response) (json, GitConnectorError){
-    GitConnectorError gitError;
+    GitConnectorError connectorError;
     json responsePayload;
     try {
         responsePayload = response.getJsonPayload();
@@ -270,18 +269,20 @@ function validateResponse (http:InResponse response) (json, GitConnectorError){
             int i = 0;
             foreach singleError in errorList {
                 errors[i], _ = (string)singleError[GIT_MESSAGE];
+                i = i + 1;
             }
 
-            gitError = {message:errors, statusCode:response.statusCode, reasonPhrase:response.reasonPhrase, server:response.server};
-            return null, gitError;
+            connectorError = {message:errors, statusCode:response.statusCode, reasonPhrase:response.reasonPhrase, server:response.server};
+            return null, connectorError;
         }
 
     } catch (error e) {
         string[] errorMessage = [GIT_ERROR_WHILE_RETRIEVING_DATA];
-        gitError = {message:errorMessage, statusCode:response.statusCode, reasonPhrase:response.reasonPhrase, server:response.server};
+        responsePayload = null;
+        connectorError = {message:errorMessage, statusCode:response.statusCode, reasonPhrase:response.reasonPhrase, server:response.server};
     }
 
-    return responsePayload, gitError;
+    return responsePayload, connectorError;
 
 }
 
