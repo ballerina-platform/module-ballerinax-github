@@ -208,6 +208,38 @@ public const string GET_REPOSITORY_PROJECT = "query ($owner: String!, $repositor
   }
 }";
 
+public const string GET_ORGANIZATION_PROJECT = "query ($organization: String!, $number: Int!){
+	organization(login:$organization) {
+    project(number:$number) {
+        id,
+        databaseId,
+        name,
+        body,
+        number,
+        createdAt,
+        updatedAt,
+        closed,
+        closedAt,
+        resourcePath,
+        state,
+        url,
+        viewerCanUpdate,
+        creator {
+          login,
+          resourcePath,
+          url,
+          avatarUrl
+        }
+        owner {
+          id,
+          projectsResourcePath,
+          projectsUrl,
+          viewerCanCreateProjects
+        }
+    }
+  }
+}";
+
 public const string GET_PROJECT_CARDS = "query ($organization: String!, $number: Int!){
   organization (login: $organization) {
 

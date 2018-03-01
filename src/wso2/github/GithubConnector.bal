@@ -149,12 +149,11 @@ public connector GithubConnector (string accessToken) {
         return projectArray, connectorError;
     }
 
-    @Description{ value : "Get a single project"}
-    @Param{ value : "owner: Owner of the repository"}
+    @Description{ value : "Get a single project of a specified repository."}
     @Param{value: "repository: Name of the repository"}
     @Param {value:"projectNumber: The number of the project"}
-    @Return { value:"A project object" }
-    @Return {value:"error: Error"}
+    @Return { value:"Project object" }
+    @Return {value:"Error"}
     action getRepositoryProject (Repository repository, int projectNumber) (Project, GitConnectorError) {
         http:OutRequest request = {};
         http:InResponse response = {};
@@ -181,6 +180,47 @@ public connector GithubConnector (string accessToken) {
         }
         try {
             var githubProjectJson, _ = (json)jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECT];
+            singleProject, _ = <Project>githubProjectJson;
+        } catch (error e) {
+            connectorError = {message:[e.message]};
+            return null, connectorError;
+        }
+
+        return singleProject, connectorError;
+
+    }
+
+    @Description{ value : "Get a single project of a specified organization."}
+    @Param{value: "organization: Name of the organization"}
+    @Param {value:"projectNumber: The number of the project"}
+    @Return { value:"Project object" }
+    @Return {value:"Error"}
+    action getOrganizationProject (string organization, int projectNumber) (Project, GitConnectorError) {
+        http:OutRequest request = {};
+        http:InResponse response = {};
+        GitConnectorError connectorError;
+        http:HttpConnectorError httpError;
+        Project singleProject;
+
+        string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization}}","{{GIT_NUMBER}}":{{projectNumber}}},"{{GIT_QUERY}}":"{{gq:GET_ORGANIZATION_PROJECT}}"}`;
+
+        var query, _ = <json>stringQuery;
+
+        //Set headers and payload to the request
+        constructRequestHeaders(request, query, accessToken);
+
+        response, httpError = gitHubEndpoint.post("", request);
+        if (null != httpError) {
+            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+            return {}, connectorError;
+        }
+        json jsonResponse;
+        jsonResponse, connectorError = validateResponse(response, GIT_PROJECT);
+        if (null != connectorError) {
+            return null, connectorError;
+        }
+        try {
+            var githubProjectJson, _ = (json)jsonResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECT];
             singleProject, _ = <Project>githubProjectJson;
         } catch (error e) {
             connectorError = {message:[e.message]};

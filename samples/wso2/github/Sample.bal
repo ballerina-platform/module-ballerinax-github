@@ -14,22 +14,31 @@ public function main (string[] args) {
     github:Project[] responseProjectList;
     github:Repository sampleRepo = {name:"testgrid", owner:{login:"wso2"}};
 
-    //responseProjectList, e = githubConnector.getRepositoryProjects("vlgunarathne", "carbon-apimgt", "open");
+    ////Get a list of projects of a repository
     //responseProjectList, e = githubConnector.getRepositoryProjects(sampleRepo, github:GIT_STATE_OPEN);
     //io:println(responseProjectList);
     //io:println(e);
     //io:println("=========================================================");
 
+    ////Get a list of projects of an organization
     //responseProjectList, e = githubConnector.getOrganizationProjects("wso2", github:GIT_STATE_ALL);
     //io:println(lengthof responseProjectList);
     //io:println(e);
     //io:println("=========================================================");
 
+    ////Get Repository Project
+    //github:Project singleProject;
+    //singleProject, e = githubConnector.getRepositoryProject(sampleRepo, 1);
+    //io:println(singleProject);
+    //io:print("Error : ");io:println(e);
+
+    //Get Organization Project
     github:Project singleProject;
-    singleProject, e = githubConnector.getRepositoryProject(sampleRepo, 1);
-    //singleProject, e = githubConnector.getProject("vlgunarathne", "ProLAd-ExpertSystem", 1);
+    singleProject, e = githubConnector.getOrganizationProject("wso2", 14);
     io:println(singleProject);
     io:print("Error : ");io:println(e);
+
+
     //github:Card[] cardList;
     //cardList, e = githubConnector.getProjectCards("wso2", 2);
     //io:println(cardList);
