@@ -36,7 +36,7 @@ public connector GithubConnector (string accessToken) {
     @Param{ value : "repository: Name of the repository"}
     @Param{value: "states: State of the repository (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
     @Return { value:"Project[]: Array of projects" }
-    @Return {value:"error: Error"}
+    @Return {value:"GitConnectorError: Error"}
     action getRepositoryProjects (Repository repository, string state) (Project[], GitConnectorError) {
         boolean hasNextPage = true;
         GitConnectorError connectorError;
@@ -66,7 +66,7 @@ public connector GithubConnector (string accessToken) {
             }
             json jsonResponse;
             //Check for empty payloads and errors
-            jsonResponse, connectorError = validateResponse(response, GIT_REPOSITORY);
+            jsonResponse, connectorError = validateResponse(response, GIT_PROJECTS);
             if (null != connectorError) {
                 return [], connectorError;
             }
@@ -94,9 +94,9 @@ public connector GithubConnector (string accessToken) {
     @Description{ value : "Get all projects of an organization"}
     @Param{ value : "organzation: Github organization name"}
     @Param{value: "state: State of the repository (open, closed, all)"}
-    @Return { value:"Array of projects" }
-    @Return {value:"error: Error"}
-    action getOrganizationProjects (string organization, string state) (Project[], GitConnectorError) {    //Working here
+    @Return { value:"Project[]:Array of projects" }
+    @Return {value:"GitConnectorError: Error"}
+    action getOrganizationProjects (string organization, string state) (Project[], GitConnectorError) {
         boolean hasNextPage = true;
         GitConnectorError connectorError;
         http:HttpConnectorError httpError;
@@ -124,7 +124,7 @@ public connector GithubConnector (string accessToken) {
             }
             json jsonResponse;
             //Check for empty payloads and errors
-            jsonResponse, connectorError = validateResponse(response, GIT_ORGANIZATION);
+            jsonResponse, connectorError = validateResponse(response, GIT_PROJECTS);
             if (null != connectorError) {
                 return [], connectorError;
             }
@@ -155,31 +155,39 @@ public connector GithubConnector (string accessToken) {
     @Param {value:"projectNumber: The number of the project"}
     @Return { value:"A project object" }
     @Return {value:"error: Error"}
-    action getProject (string owner, string repository, int projectNumber) (Project, error ) {
+    action getRepositoryProject (Repository repository, int projectNumber) (Project, GitConnectorError) {
         http:OutRequest request = {};
         http:InResponse response = {};
-        error returnError;
+        GitConnectorError connectorError;
         http:HttpConnectorError httpError;
         Project singleProject;
-        json query = {"variables":{"owner":owner,"repository":repository,"number":projectNumber},
-                         "query": gq:GET_PROJECT};
+
+        string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}","{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_NUMBER}}":{{projectNumber}}},"{{GIT_QUERY}}":"{{gq:GET_REPOSITORY_PROJECT}}"}`;
+
+        var query, _ = <json>stringQuery;
+
+        //Set headers and payload to the request
         constructRequestHeaders(request, query, accessToken);
+
         response, httpError = gitHubEndpoint.post("", request);
-        if (httpError != null) {
-            returnError = {message:httpError.message, cause:httpError.cause};
-            return singleProject, returnError;
+        if (null != httpError) {
+            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+            return {}, connectorError;
         }
-        json jsonResponse =  response.getJsonPayload();
+        json jsonResponse;
+        jsonResponse, connectorError = validateResponse(response, GIT_PROJECT);
+        if (null != connectorError) {
+            return null, connectorError;
+        }
         try {
-            var githubProjectJson, _ = (json)jsonResponse["data"]["repositoryOwner"]["repository"]["project"];
-            var projectObject, _ = <Project>githubProjectJson;
-            singleProject = projectObject;
+            var githubProjectJson, _ = (json)jsonResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECT];
+            singleProject, _ = <Project>githubProjectJson;
         } catch (error e) {
-            returnError = {message:e.message, cause:e.cause};
-            return singleProject, returnError;
+            connectorError = {message:[e.message]};
+            return null, connectorError;
         }
 
-        return singleProject, returnError;
+        return singleProject, connectorError;
 
     }
 
@@ -286,22 +294,32 @@ function validateResponse (http:InResponse response, string validateComponent) (
     json responsePayload;
     try {
         responsePayload = response.getJsonPayload();
-
-        if (null == responsePayload[GIT_DATA] || null == responsePayload[GIT_DATA][validateComponent]) {
-            string[] errors = [];
-            var errorList, _ = (json[])responsePayload[GIT_ERRORS];
-            int i = 0;
-            foreach singleError in errorList {
-                errors[i], _ = (string)singleError[GIT_MESSAGE];
-                i = i + 1;
+        string[] payLoadKeys = responsePayload.getKeys();
+        //Check all the keys in the payload to see if an error object is returned.
+        foreach key in payLoadKeys {
+            if (GIT_ERRORS.equalsIgnoreCase(key)){
+                string[] errors = [];
+                var errorList, _ = (json[])responsePayload[GIT_ERRORS];
+                int i = 0;
+                foreach singleError in errorList {
+                    errors[i], _ = (string)singleError[GIT_MESSAGE];
+                    i = i + 1;
+                }
+                connectorError = {message:errors, statusCode:response.statusCode, reasonPhrase:response.reasonPhrase, server:response.server};
+                return null, connectorError;
             }
-
-            connectorError = {message:errors, statusCode:response.statusCode, reasonPhrase:response.reasonPhrase, server:response.server};
-            return null, connectorError;
+        }
+        //If no error object is returned, then check if the response contains the requested data.
+        string keyInData = responsePayload[GIT_DATA].getKeys()[GIT_INDEX_ZERO];
+        if (null == responsePayload[GIT_DATA][keyInData][validateComponent]) {
+            string[] errorMessage = [GIT_ERROR_WHILE_RETRIEVING_DATA];
+            responsePayload = null;
+            connectorError = {message:errorMessage, statusCode:response.statusCode, reasonPhrase:response.reasonPhrase, server:response.server};
         }
 
+
     } catch (error e) {
-        string[] errorMessage = [GIT_ERROR_WHILE_RETRIEVING_DATA];
+        string[] errorMessage = [GIT_ERROR_WHILE_RETRIEVING_PAYLOAD];
         responsePayload = null;
         connectorError = {message:errorMessage, statusCode:response.statusCode, reasonPhrase:response.reasonPhrase, server:response.server};
     }

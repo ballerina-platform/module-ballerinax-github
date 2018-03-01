@@ -21,11 +21,12 @@ package src.wso2.github;
 // Stated in alphabetical order
 
 //Constant related to graphql queries
+
+//String constants
 public const string GIT_DATA = "data";
 public const string GIT_EDGES = "edges";
 public const string GIT_END_CURSOR = "endCursor";
-public const string GIT_ERRORS = "errors";
-public const string GIT_ERROR_WHILE_RETRIEVING_DATA = "Error while retrieving data";
+
 public const string GIT_HAS_NEXT_PAGE = "hasNextPage";
 public const string GIT_MESSAGE = "message";
 public const string GIT_NAME = "name";
@@ -35,6 +36,7 @@ public const string GIT_NUMBER = "number";
 public const string GIT_ORGANIZATION = "organization";
 public const string GIT_OWNER = "owner";
 public const string GIT_PAGE_INFO = "pageInfo";
+public const string GIT_PROJECT = "project";
 public const string GIT_PROJECTS = "projects";
 public const string GIT_QUERY = "query";
 public const string GIT_REPOSITORY = "repository";
@@ -48,4 +50,10 @@ public const string GIT_STATE_OPEN = "[\"OPEN\"]";
 public const string GIT_VARIABLES = "variables";
 
 
+//Integer constants
+public const int GIT_INDEX_ZERO = 0;
 
+//Errors
+public const string GIT_ERRORS = "errors";
+public const string GIT_ERROR_WHILE_RETRIEVING_DATA = "Error while retrieving data.";
+public const string GIT_ERROR_WHILE_RETRIEVING_PAYLOAD = "Error while obtaining payload.";

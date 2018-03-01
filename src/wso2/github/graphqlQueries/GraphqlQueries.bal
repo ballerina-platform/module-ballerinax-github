@@ -20,7 +20,7 @@ package src.wso2.github.graphqlQueries;
 
 public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $repository: String!, $states:[ProjectState!]){
 	repository(owner:$owner, name:$repository){
-    projects(first:1, states:$states){
+    projects(first:100, states:$states){
       pageInfo {
         hasNextPage,
         startCursor,
@@ -176,47 +176,37 @@ public const string GET_ORGANIZATION_PROJECTS_NEXT_PAGE = "query ($organization:
   }
 }";
 
-public const string GET_PROJECT = "query ($owner: String!, $repository: String!, $number: Int!){
-
- repositoryOwner(login: $owner) {
-   id,
-   url,
-   login,
-   repository(name: $repository){
-     name,
-    url,
-    project (number : $number) {
-      id,
-      name,
-      state,
-      body,
-      closed,
-      closedAt,
-      createdAt,
-      creator {
-        url,
-        login,
-        resourcePath,
-        avatarUrl
-      },
-      owner {
+public const string GET_REPOSITORY_PROJECT = "query ($owner: String!, $repository: String!, $number: Int!){
+	repository(owner:$owner, name:$repository) {
+    project(number:$number) {
         id,
-        projectsResourcePath,
-        projectsUrl,
-        viewerCanCreateProjects
-      }
-			databaseId,
-      number,
-      updatedAt,
-      resourcePath,
-      url,
-      viewerCanUpdate,
-
+        databaseId,
+        name,
+        body,
+        number,
+        createdAt,
+        updatedAt,
+        closed,
+        closedAt,
+        resourcePath,
+        state,
+        url,
+        viewerCanUpdate,
+        creator {
+          login,
+          resourcePath,
+          url,
+          avatarUrl
+        }
+        owner {
+          id,
+          projectsResourcePath,
+          projectsUrl,
+          viewerCanCreateProjects
+        }
     }
-
   }
-   }
- }";
+}";
 
 public const string GET_PROJECT_CARDS = "query ($organization: String!, $number: Int!){
   organization (login: $organization) {
