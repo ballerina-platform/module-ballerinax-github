@@ -41,10 +41,10 @@ public const string GIT_REPOSITORY = "repository";
 public const string GIT_REPOSITORY_OWNER = "repositoryOwner";
 public const string GIT_START_CURSOR = "startCursor";
 public const string GIT_STATES = "states";
-public const string GIT_STATE_ALL = "OPEN,CLOSED";
-public const string GIT_STATE_CLOSED = "CLOSED";
-public const string GIT_STATE_MERGED = "MERGED";
-public const string GIT_STATE_OPEN = "OPEN";
+public const string GIT_STATE_ALL = "[\"OPEN\",\"CLOSED\"]";
+public const string GIT_STATE_CLOSED = "[\"CLOSED\"]";
+public const string GIT_STATE_MERGED = "[\"MERGED\"]";
+public const string GIT_STATE_OPEN = "[\"OPEN\"]";
 public const string GIT_VARIABLES = "variables";
 
 

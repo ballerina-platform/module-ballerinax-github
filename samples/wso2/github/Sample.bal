@@ -15,15 +15,15 @@ public function main (string[] args) {
     github:Repository sampleRepo = {name:"ProLAd-ExpertSystem", owner:{login:"vlgunarathne"}};
 
     //responseProjectList, e = githubConnector.getRepositoryProjects("vlgunarathne", "carbon-apimgt", "open");
-    responseProjectList, e = githubConnector.getRepositoryProjects(sampleRepo, github:GIT_STATE_OPEN);
-    io:println(responseProjectList);
+    //responseProjectList, e = githubConnector.getRepositoryProjects(sampleRepo, github:GIT_STATE_OPEN);
+    //io:println(responseProjectList);
+    //io:println(e);
+    //io:println("=========================================================");
+
+    responseProjectList, e = githubConnector.getOrganizationProjects("wso2", github:GIT_STATE_ALL);
+    io:println(lengthof responseProjectList);
     io:println(e);
     io:println("=========================================================");
-
-    //responseProjectList, e = githubConnector.getOrganizationProjects("wso23", "open");
-    //println(responseProjectList);
-    //println(e);
-    //println("=========================================================");
 
     //github:Project singleProject;
     //singleProject, e = githubConnector.getProject("wso2", "testgrid", 1);
