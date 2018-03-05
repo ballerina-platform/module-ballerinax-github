@@ -55,7 +55,7 @@ public connector GithubConnector (string accessToken) {
         var query, _ = <json>stringQuery;
 
         //Set headers and payload to the request
-        constructRequestHeaders(request, query, accessToken);
+        constructRequest(request, query, accessToken);
         int i = 0;
         //Iterate through multiple pages of results
         while (hasNextPage) {
@@ -84,7 +84,7 @@ public connector GithubConnector (string accessToken) {
                 string stringQueryNextPage = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}","{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":{{state}},"{{GIT_END_CURSOR}}":"{{endCursor}}"},"{{GIT_QUERY}}":"{{gq:GET_REPOSITORY_PROJECTS_NEXT_PAGE}}"}`;
                  var queryNextPage, _ = <json>stringQueryNextPage;
                  request = {};
-                 constructRequestHeaders(request, queryNextPage, accessToken);
+                 constructRequest(request, queryNextPage, accessToken);
             }
 
         }
@@ -113,7 +113,7 @@ public connector GithubConnector (string accessToken) {
         var query, _ = <json>stringQuery;
 
         //Set headers and payload to the request
-        constructRequestHeaders(request, query, accessToken);
+        constructRequest(request, query, accessToken);
         int i = 0;
         //Iterate through multiple pages of results
         while (hasNextPage) {
@@ -142,7 +142,7 @@ public connector GithubConnector (string accessToken) {
                 string stringQueryNextPage = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization}}","{{GIT_STATES}}":{{state}},"{{GIT_END_CURSOR}}":"{{endCursor}}"},"{{GIT_QUERY}}":"{{gq:GET_ORGANIZATION_PROJECTS_NEXT_PAGE}}"}`;
                 var queryNextPage, _ = <json>stringQueryNextPage;
                 request = {};
-                constructRequestHeaders(request, queryNextPage, accessToken);
+                constructRequest(request, queryNextPage, accessToken);
             }
 
         }
@@ -166,7 +166,7 @@ public connector GithubConnector (string accessToken) {
         var query, _ = <json>stringQuery;
 
         //Set headers and payload to the request
-        constructRequestHeaders(request, query, accessToken);
+        constructRequest(request, query, accessToken);
 
         response, httpError = gitHubEndpoint.post("", request);
         if (null != httpError) {
@@ -207,7 +207,7 @@ public connector GithubConnector (string accessToken) {
         var query, _ = <json>stringQuery;
 
         //Set headers and payload to the request
-        constructRequestHeaders(request, query, accessToken);
+        constructRequest(request, query, accessToken);
 
         response, httpError = gitHubEndpoint.post("", request);
         if (null != httpError) {
@@ -245,7 +245,7 @@ public connector GithubConnector (string accessToken) {
         json query = {"variables":{"organization":organization, "number":projectNumber},
                      "query":gq:GET_PROJECT_CARDS};
 
-        constructRequestHeaders(request, query, accessToken);
+        constructRequest(request, query, accessToken);
 
         response, httpError = gitHubEndpoint.post("", request);
         if (httpError != null) {
@@ -289,7 +289,7 @@ public connector GithubConnector (string accessToken) {
 
         json query = {"variables":{"owner":repoDetails[0],"name":repoDetails[1]}, "query":gq:GET_REPOSITORY};
 
-        constructRequestHeaders(request, query, accessToken);
+        constructRequest(request, query, accessToken);
 
         response, httpError = gitHubEndpoint.post("", request);
         if (httpError != null) {
@@ -317,7 +317,7 @@ public connector GithubConnector (string accessToken) {
 @Param {value:"request: The http request object"}
 @Param {value:"query: GraphQL API query"}
 @Param {value:"accessToken: GitHub access token"}
-function constructRequestHeaders (http:OutRequest request, json query, string accessToken) {
+function constructRequest (http:OutRequest request, json query, string accessToken) {
     request.removeAllHeaders();
     request.addHeader("Authorization", "Bearer " + accessToken);
     request.setJsonPayload(query);
