@@ -23,6 +23,7 @@ package src.wso2.github;
 //Constant related to graphql queries
 
 //String constants
+public const string GIT_API_URL = "https://api.github.com/graphql"; //TODO move this to a config file
 public const string GIT_DATA = "data";
 public const string GIT_EDGES = "edges";
 public const string GIT_END_CURSOR = "endCursor";
@@ -43,7 +44,8 @@ public const string GIT_REPOSITORY = "repository";
 public const string GIT_REPOSITORY_OWNER = "repositoryOwner";
 public const string GIT_START_CURSOR = "startCursor";
 public const string GIT_STATES = "states";
-public const string GIT_STATE_ALL = "[\"OPEN\",\"CLOSED\"]";
+public const string GIT_STATE_ALL_ISSUE = "[\"OPEN\",\"CLOSED\"]";
+public const string GIT_STATE_ALL_PULL_REQUEST = "[\"OPEN\",\"CLOSED\",\"MERGED\"]";
 public const string GIT_STATE_CLOSED = "[\"CLOSED\"]";
 public const string GIT_STATE_MERGED = "[\"MERGED\"]";
 public const string GIT_STATE_OPEN = "[\"OPEN\"]";
@@ -52,6 +54,7 @@ public const string GIT_VARIABLES = "variables";
 
 //Integer constants
 public const int GIT_INDEX_ZERO = 0;
+public const int GIT_INDEX_ONE = 1;
 
 //Errors
 public const string GIT_ERRORS = "errors";

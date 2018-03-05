@@ -291,33 +291,74 @@ public const string GET_PROJECT_CARDS = "query ($organization: String!, $number:
  }";
 
 public const string GET_REPOSITORY = "query ($owner: String!, $name: String!){
-	repository (owner:$owner, name:$name) {
+	repository(owner:$owner, name:$name){
     id,
     name,
+    createdAt,
+    updatedAt,
+    description,
+    forkCount,
+    hasIssuesEnabled,
+    hasWikiEnabled,
+    homepageUrl,
+    isArchived,
+    isFork,
+    isLocked,
+    isMirror,
+    isPrivate,
+    license,
+    lockReason,
+    mirrorUrl,
+    url,
+    sshUrl,
     owner {
       id,
       login,
       url,
-      avatarUrl
+      avatarUrl,
+      resourcePath
     },
-    nameWithOwner,
-    createdAt,
-    updatedAt,
-    description,
-    homepageUrl,
     primaryLanguage {
       id,
       name,
       color
-    },
-    languages (first:100){
+    }
+  }
+}";
+
+public const string GET_PULL_REQUESTS = "query ($owner: String!, $name: String!, $states:[PullRequestState!]){
+	repository(owner:$owner, name:$name){
+    pullRequests(first:100, states:$states) {
+      pageInfo{
+        hasNextPage,
+        startCursor,
+        endCursor
+      },
       nodes {
         id,
-        name,
-        color
+        title,
+        createdAt,
+        updatedAt,
+        closed,
+        closedAt,
+        state,
+        number,
+        url,
+        body,
+        changedFiles,
+        additions,
+        deletions,
+        resourcePath,
+        revertResourcePath,
+        revertUrl,
+        author {
+          login,
+          resourcePath,
+          url,
+          avatarUrl
+        }
       }
-    },
-    url
+    }
   }
 }";
 

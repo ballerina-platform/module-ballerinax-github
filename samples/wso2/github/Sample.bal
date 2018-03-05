@@ -15,11 +15,11 @@ public function main (string[] args) {
     github:Project[] responseProjectList;
     github:Repository sampleRepo = {name:"ProLAd-ExpertSystem", owner:{login:"vlgunarathne"}};
 
-    //Get a list of projects of a repository
-    responseProjectList, e = githubConnector.getRepositoryProjects(sampleRepo, github:GIT_STATE_OPEN);
-    io:println(responseProjectList);
-    io:println(e);
-    io:println("=========================================================");
+    ////Get a list of projects of a repository
+    //responseProjectList, e = githubConnector.getRepositoryProjects(sampleRepo, github:GIT_STATE_OPEN);
+    //io:println(responseProjectList);
+    //io:println(e);
+    //io:println("=========================================================");
 
     ////Get a list of projects of an organization
     //responseProjectList, e = githubConnector.getOrganizationProjects("wso2", github:GIT_STATE_ALL);
@@ -45,7 +45,14 @@ public function main (string[] args) {
     //io:println(cardList);
     //io:println(e);
     //
-    //github:Repository repo = githubConnector.getRepository("wso2/docker-is");
+
+    //Get a single repository
+    github:Repository repo;
+    repo, e= githubConnector.getRepository("wso2/docker-is");
+    io:println(repo);
+    io:println(e);
+    io:println("=========================================================");
+
     //github:Issue[] issueList = githubConnector.getRepositoryIssues(repo.organization, repo.name, github:State.ALL);
     //
     //io:println(issueList);
