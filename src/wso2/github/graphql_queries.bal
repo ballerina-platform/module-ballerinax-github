@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package src.wso2.github.graphqlQueries;
+package src.wso2.github;
 
 public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $repository: String!, $states:[ProjectState!]){
 	repository(owner:$owner, name:$repository){
