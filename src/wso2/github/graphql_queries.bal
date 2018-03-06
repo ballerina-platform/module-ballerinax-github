@@ -398,3 +398,19 @@ public const string GET_PULL_REQUESTS_NEXT_PAGE = "query ($owner: String!, $name
   }
 }";
 
+public const string GET_ORGANIZATION = "query ($organization: String!) {
+  organization(login:$organization) {
+    avatarUrl,
+    description,
+    email,
+    id,
+    location,
+    login,
+    name,
+    projectsResourcePath,
+    projectsUrl,
+    resourcePath,
+    url,
+    websiteUrl
+  }
+}";

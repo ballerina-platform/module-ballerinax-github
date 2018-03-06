@@ -233,6 +233,50 @@ public connector GithubConnector (string accessToken) {
         return singleRepository, connectorError;
     }
 
+    @Description {value:"Get an organization"}
+    @Param {value:"name: Name of the organization"}
+    @Return {value:"Organization: Organization struct"}
+    @Return {value:"GitConnectorError: Error"}
+    action getOrganization (string name) (Organization, GitConnectorError ) {
+        GitConnectorError connectorError;
+
+        if (null == name || "" == name) {
+            connectorError = {message:["Organization name should be specified."]};
+            return null, connectorError;
+        }
+        http:OutRequest request = {};
+        http:InResponse response = {};
+        http:HttpConnectorError httpError;
+        Organization singleOrganization;
+
+        string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{name}}"},
+        "{{GIT_QUERY}}":"{{GET_ORGANIZATION}}"}`;
+
+        var query, _ = <json>stringQuery;
+
+        //Set headers and payload to the request
+        constructRequest(request, query, accessToken);
+
+        response, httpError = gitHubEndpoint.post("", request);
+        if (httpError != null) {
+            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+            return null, connectorError;
+        }
+        json validatedResponse;
+        validatedResponse, connectorError = validateResponse(response, GIT_NAME);
+        if (connectorError != null) {
+            return null, connectorError;
+        }
+        try {
+            var githubRepositoryJson, _ = (json)validatedResponse[GIT_DATA][GIT_ORGANIZATION];
+            singleOrganization, _ = <Organization >githubRepositoryJson;
+        } catch (error e) {
+            connectorError = {message:[e.message]};
+            return null, connectorError;
+        }
+
+        return singleOrganization, connectorError;
+    }
 }
 
 

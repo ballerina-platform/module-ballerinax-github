@@ -24,7 +24,11 @@ public function main (string[] args) {
     //io:println(e);
     //io:println("=========================================================");
 
-
+    //Get a single organization
+    github:Organization organization;
+    organization, e = githubConnector.getOrganization("wso2");
+    io:println(organization);
+    io:println(e);
 
     ////Get Organization Project
     //github:Project singleProject;
@@ -39,12 +43,12 @@ public function main (string[] args) {
     //io:println(e);
     //
 
-    //Get a single repository
-    github:Repository repo;
-    repo, e= githubConnector.getRepository("vlgunarathne/ProLAd-ExpertSystem");
-    io:println(repo);
-    io:println(e);
-    io:println("=========================================================");
+    ////Get a single repository
+    //github:Repository repo;
+    //repo, e= githubConnector.getRepository("vlgunarathne/ProLAd-ExpertSystem");
+    //io:println(repo);
+    //io:println(e);
+    //io:println("=========================================================");
 
     ////Get a list of projects of a repository
     //github:Project[] responseProjectList;
@@ -61,11 +65,11 @@ public function main (string[] args) {
     //io:println(e);
     //io:println("=========================================================");
 
-    //Get Repository Project
-    github:Project singleProject;
-    singleProject, e = repo.getProject(1);
-    io:println(singleProject);
-    io:print("Error : ");io:println(e);
+    ////Get Repository Project
+    //github:Project singleProject;
+    //singleProject, e = repo.getProject(1);
+    //io:println(singleProject);
+    //io:print("Error : ");io:println(e);
 
 
 }
