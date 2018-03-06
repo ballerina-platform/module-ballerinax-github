@@ -13,7 +13,8 @@ public function main (string[] args) {
     http:InResponse gitResponse = {};
     github:GitConnectorError e;
     github:Project[] responseProjectList;
-    github:Repository sampleRepo = {name:"ProLAd-ExpertSystem", owner:{login:"vlgunarathne"}};
+    //github:Repository sampleRepo = {name:"ProLAd-ExpertSystem", owner:{login:"vlgunarathne"}};
+    github:Repository sampleRepo = {name:"product-is", owner:{login:"wso2"}};
 
     ////Get a list of projects of a repository
     //responseProjectList, e = githubConnector.getRepositoryProjects(sampleRepo, github:GIT_STATE_OPEN);
@@ -46,10 +47,18 @@ public function main (string[] args) {
     //io:println(e);
     //
 
-    //Get a single repository
-    github:Repository repo;
-    repo, e= githubConnector.getRepository("wso2/docker-is");
-    io:println(repo);
+    ////Get a single repository
+    //github:Repository repo;
+    //repo, e= githubConnector.getRepository("wso2/docker-is");
+    //io:println(repo);
+    //io:println(e);
+    //io:println("=========================================================");
+
+    //Get a list of pull requests in a repository
+    github:PullRequest[] prList;
+    prList, e = githubConnector.getPullRequests(sampleRepo, github:GIT_STATE_OPEN);
+    io:println(lengthof prList);
+    io:println(prList);
     io:println(e);
     io:println("=========================================================");
 

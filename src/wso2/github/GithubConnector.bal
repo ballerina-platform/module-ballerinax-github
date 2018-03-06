@@ -339,6 +339,67 @@ public connector GithubConnector (string accessToken) {
 
         return singleRepository, connectorError;
     }
+
+    @Description {value:"Get all pull requests of a repository"}
+    @Param {value:"repository: The repository object"}
+    @Return {value:"PullRequest[]: Array of pull requests"}
+    @Return {value:"GitConnectorError: Error"}
+    action getPullRequests(Repository repository, string state) (PullRequest[], GitConnectorError) {
+        GitConnectorError connectorError;
+
+        if (repository == null || state == "" || state == null) {
+            connectorError = {message:["Repository and state cannot be null."]};
+            return [], connectorError;
+        }
+
+        boolean hasNextPage = true;
+        http:HttpConnectorError httpError;
+        PullRequest[] pullRequestArray= [];
+
+        http:OutRequest request = {};
+        http:InResponse response = {};
+
+        string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}","{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}}},"{{GIT_QUERY}}":"{{gq:GET_PULL_REQUESTS}}"}`;
+
+        var query, _ = <json>stringQuery;
+
+        //Set headers and payload to the request
+        constructRequest(request, query, accessToken);
+        int i = 0;
+        //Iterate through multiple pages of results
+        while (hasNextPage) {
+            response, httpError = gitHubEndpoint.post("", request);
+            if (httpError != null) {
+                connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+                return [], connectorError;
+            }
+            json validatedResponse;
+            //Check for empty payloads and errors
+            validatedResponse, connectorError = validateResponse(response, GIT_PULL_REQUESTS);
+            if (connectorError != null) {
+                return [], connectorError;
+            }
+            var githubProjectsJson, _ = (json[])validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS][GIT_NODES];
+            foreach projectJson in githubProjectsJson {
+                pullRequestArray[i], _ = <PullRequest>projectJson;
+                i = i + 1;
+            }
+
+            hasNextPage, _ = (boolean)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS][GIT_PAGE_INFO]
+                                      [GIT_HAS_NEXT_PAGE];
+            if (hasNextPage) {
+                var endCursor, _ = (string)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS][GIT_PAGE_INFO][GIT_END_CURSOR];
+
+                string stringQueryNextPage = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}","{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}},"{{GIT_END_CURSOR}}":"{{endCursor}}"},"{{GIT_QUERY}}":"{{gq:GET_PULL_REQUESTS_NEXT_PAGE}}"}`;
+                var queryNextPage, _ = <json>stringQueryNextPage;
+                request = {};
+                constructRequest(request, queryNextPage, accessToken);
+            }
+
+        }
+        return pullRequestArray, connectorError;
+
+    }
 }
 
 @Description {value:"Construct the request headers"}

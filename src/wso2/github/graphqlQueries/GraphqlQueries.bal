@@ -362,4 +362,39 @@ public const string GET_PULL_REQUESTS = "query ($owner: String!, $name: String!,
   }
 }";
 
+public const string GET_PULL_REQUESTS_NEXT_PAGE = "query ($owner: String!, $name: String!, $states:[PullRequestState!], $endCursor: String!){
+	repository(owner:$owner, name:$name){
+    pullRequests(first:100, states:$states, after: $endCursor) {
+      pageInfo{
+        hasNextPage,
+        startCursor,
+        endCursor
+      },
+      nodes {
+        id,
+        title,
+        createdAt,
+        updatedAt,
+        closed,
+        closedAt,
+        state,
+        number,
+        url,
+        body,
+        changedFiles,
+        additions,
+        deletions,
+        resourcePath,
+        revertResourcePath,
+        revertUrl,
+        author {
+          login,
+          resourcePath,
+          url,
+          avatarUrl
+        }
+      }
+    }
+  }
+}";
 
