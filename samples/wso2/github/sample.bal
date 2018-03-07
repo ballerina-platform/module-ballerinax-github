@@ -17,24 +17,24 @@ public function main (string[] args) {
     github:Repository sampleRepo = {name:"product-is", owner:{login:"wso2"}};
 
 
-
-    ////Get a list of projects of an organization
-    //responseProjectList, e = githubConnector.getOrganizationProjects("wso2", github:GIT_STATE_ALL);
-    //io:println(lengthof responseProjectList);
-    //io:println(e);
-    //io:println("=========================================================");
-
     //Get a single organization
     github:Organization organization;
     organization, e = githubConnector.getOrganization("wso2");
     io:println(organization);
     io:println(e);
 
-    ////Get Organization Project
-    //github:Project singleProject;
-    //singleProject, e = githubConnector.getOrganizationProject("wso2", 14);
-    //io:println(singleProject);
-    //io:print("Error : ");io:println(e);
+    ////Get a list of projects of an organization
+    //github:Project[] responseProjectList;
+    //responseProjectList, e = organization.getProjects(github:GIT_STATE_OPEN);
+    //io:println(lengthof responseProjectList);
+    //io:println(e);
+    //io:println("=========================================================");
+
+     //Get Organization Project
+     github:Project singleProject;
+     singleProject, e = organization.getProject(14);
+     io:println(singleProject);
+     io:print("Error : ");io:println(e);
 
 
     //github:Card[] cardList;
