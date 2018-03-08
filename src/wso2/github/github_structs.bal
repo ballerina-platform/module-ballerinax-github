@@ -27,6 +27,92 @@ public struct Project {
     ProjectOwner owner;
 }
 
+public function <Project project> getCards () (Card[], GitConnectorError ) {
+    endpoint <http:HttpClient> gitClient {
+        gitHTTPClient;
+    }
+
+    GitConnectorError connectorError;
+
+    if (project == null) {
+        connectorError = {message:["Project cannot be null"]};
+        return [], connectorError;
+    }
+    string stringQuery;
+    string nextPageQuery;
+    string projectOwnerType = project.owner.__typename;
+    if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION) && project.resourcePath != null) {
+        try {
+            string organization = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
+            stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization}}",
+            "{{GIT_NUMBER}}":"{{project.number}}"},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT_CARDS}}"}`;
+
+        } catch (error e) {
+            connectorError = {message:[GIT_ERROR_WHILE_RETRIEVING_RESOURCE_PATH]};
+            return [], connectorError;
+        }
+
+    } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
+        try {
+            string ownerName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_ONE];
+            string repositoryName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
+            stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{ownerName}}",
+            "{{GIT_REPOSITORY}}":"{{repositoryName}}","{{GIT_NUMBER}}":"{{project.number}}"},
+        "{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECT_CARDS}}"}`;
+        } catch (error e) {
+            connectorError = {message:[GIT_ERROR_WHILE_RETRIEVING_RESOURCE_PATH]};
+            return [], connectorError;
+        }
+    }
+    boolean hasColumnsNextPage = true;
+    http:HttpConnectorError httpError;
+    Card[] cardArray = [];
+
+    http:OutRequest request = {};
+    http:InResponse response = {};
+
+    var query, _ = <json>stringQuery;
+
+    //Set headers and payload to the request
+    constructRequest(request, query, gitAccessToken);
+    int i = 0;
+    //Iterate through multiple pages of results
+    while (hasColumnsNextPage) {
+        response, httpError = gitClient.post("", request);
+        if (httpError != null) {
+            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+            return [], connectorError;
+        }
+        json validatedResponse;
+        //Check for empty payloads and errors
+        validatedResponse, connectorError = validateResponse(response, GIT_PROJECT);
+        if (connectorError != null) {
+            return [], connectorError;
+        }
+        var projectColumnsJson, _ = (json[])validatedResponse[GIT_DATA][projectOwnerType.toLowerCase()][GIT_PROJECT][GIT_COLUMNS][GIT_NODES];
+        foreach columnJson in projectColumnsJson {
+            var projectCardsJson, _ = (json[])columnJson[GIT_CARDS][GIT_NODES];
+            foreach card in projectCardsJson {
+                cardArray[i], _ = <Card>card;
+                i = i + 1;
+            }
+
+        }
+
+        hasColumnsNextPage, _ = (boolean)validatedResponse[GIT_DATA][projectOwnerType.toLowerCase()][GIT_PROJECT][GIT_COLUMNS][GIT_PAGE_INFO]
+                                  [GIT_HAS_NEXT_PAGE];
+        if (hasColumnsNextPage) {
+            var columnEndCursor, _ = (string)validatedResponse[GIT_DATA][projectOwnerType.toLowerCase()][GIT_PROJECTS][GIT_PAGE_INFO][GIT_END_CURSOR];
+
+            //string stringQueryNextPage = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{repository.owner.login}}","{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":{{state}},"{{GIT_END_CURSOR}}":"{{columnEndCursor}}"},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT_CARDS_COLUMN_NEXT_PAGE}}"}`;
+            //var queryNextPage, _ = <json>stringQueryNextPage;
+            //request = {};
+            //constructRequest(request, queryNextPage, gitAccessToken);
+        }
+
+    }
+    return cardArray, connectorError;
+}
 public struct Creator {
     string login;
     string resourcePath;
@@ -39,6 +125,7 @@ public struct ProjectOwner {
     string projectsResourcePath;
     string projectsUrl;
     string viewerCanCreateProjects;
+    string __typename;
 }
 
 public struct RepositoryOwner {
@@ -68,11 +155,15 @@ public struct Card {
 public struct Column {
     string id;
     string name;
+    string url;
 }
 
 public struct Content {
-    string body;
+    string title;
+    string url;
+    string s;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Repository struct
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -283,6 +374,7 @@ public function <Repository repository> getProject (int projectNumber) (Project,
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Organization struct
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

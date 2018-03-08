@@ -24,10 +24,11 @@ package src.wso2.github;
 
 //String constants
 public const string GIT_API_URL = "https://api.github.com/graphql"; //TODO move this to a config file
+public const string GIT_CARDS = "cards";
+public const string GIT_COLUMNS = "columns";
 public const string GIT_DATA = "data";
 public const string GIT_EDGES = "edges";
 public const string GIT_END_CURSOR = "endCursor";
-
 public const string GIT_HAS_NEXT_PAGE = "hasNextPage";
 public const string GIT_MESSAGE = "message";
 public const string GIT_NAME = "name";
@@ -56,8 +57,12 @@ public const string GIT_VARIABLES = "variables";
 //Integer constants
 public const int GIT_INDEX_ZERO = 0;
 public const int GIT_INDEX_ONE = 1;
+public const int GIT_INDEX_TWO = 2;
 
 //Errors
 public const string GIT_ERRORS = "errors";
 public const string GIT_ERROR_WHILE_RETRIEVING_DATA = "Error while retrieving data.";
-public const string GIT_ERROR_WHILE_RETRIEVING_PAYLOAD = "Error while obtaining payload.";
+public const string GIT_ERROR_WHILE_RETRIEVING_PAYLOAD = "Error while retrieving payload.";
+public const string GIT_ERROR_WHILE_RETRIEVING_RESOURCE_PATH = "Error while retrieving project resource path.";
+
+public const string GIT_PATH_SEPARATOR = "/";

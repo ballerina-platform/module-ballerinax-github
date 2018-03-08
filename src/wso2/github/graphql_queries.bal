@@ -50,7 +50,8 @@ public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $reposito
           id,
           projectsResourcePath,
           projectsUrl,
-          viewerCanCreateProjects
+          viewerCanCreateProjects,
+          __typename
         }
       }
     }
@@ -90,7 +91,8 @@ public const string GET_REPOSITORY_PROJECTS_NEXT_PAGE = "query ($owner: String!,
           id,
           projectsResourcePath,
           projectsUrl,
-          viewerCanCreateProjects
+          viewerCanCreateProjects,
+          __typename
         }
       }
     }
@@ -130,7 +132,8 @@ public const string GET_ORGANIZATION_PROJECTS = "query ($organization: String!, 
           id,
           projectsResourcePath,
           projectsUrl,
-          viewerCanCreateProjects
+          viewerCanCreateProjects,
+          __typename
         }
       }
     }
@@ -169,7 +172,8 @@ public const string GET_ORGANIZATION_PROJECTS_NEXT_PAGE = "query ($organization:
           id,
           projectsResourcePath,
           projectsUrl,
-          viewerCanCreateProjects
+          viewerCanCreateProjects,
+          __typename
         }
       }
     }
@@ -202,7 +206,8 @@ public const string GET_REPOSITORY_PROJECT = "query ($owner: String!, $repositor
           id,
           projectsResourcePath,
           projectsUrl,
-          viewerCanCreateProjects
+          viewerCanCreateProjects,
+          __typename
         }
     }
   }
@@ -234,61 +239,12 @@ public const string GET_ORGANIZATION_PROJECT = "query ($organization: String!, $
           id,
           projectsResourcePath,
           projectsUrl,
-          viewerCanCreateProjects
+          viewerCanCreateProjects,
+          __typename
         }
     }
   }
 }";
-
-public const string GET_PROJECT_CARDS = "query ($organization: String!, $number: Int!){
-  organization (login: $organization) {
-
-    project (number : $number) {
-      name,
-
-      columns (first:100){
-        totalCount,
-
-        edges {
-          node {
-            id,
-            name,
-            cards (first:100){
-              edges {
-                node {
-                  id,
-                  note,
-                  creator {
-                    url,
-                    login,
-                    resourcePath,
-                    avatarUrl
-                  },
-                  state,
-                  createdAt,
-                  updatedAt,
-                  url,
-                  column {
-                    id,
-                    name,
-                  }
-                  content {
-                    ... on Issue {
-                        title
-                    }
-                    ... on PullRequest {
-                      title
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
- }";
 
 public const string GET_REPOSITORY = "query ($owner: String!, $name: String!){
 	repository(owner:$owner, name:$name){
@@ -414,3 +370,192 @@ public const string GET_ORGANIZATION = "query ($organization: String!) {
     websiteUrl
   }
 }";
+
+public const string GET_REPOSITORY_PROJECT_CARDS = "query ($owner: String!,$name:String!, $number: Int!){
+  repository (owner:$owner, name:$name) {
+    project (number : $number) {
+      columns (first:100) {
+        pageInfo {
+          hasNextPage,
+          startCursor,
+          endCursor
+        }
+        nodes {
+          name,
+          cards (first:100){
+            pageInfo {
+              hasNextPage,
+              startCursor,
+              endCursor
+            },
+            nodes {
+              id,
+              note,
+              creator {
+                login,
+                resourcePath,
+                url,
+                avatarUrl
+              },
+              state,
+              createdAt,
+              updatedAt,
+              url,
+              column {
+                id,
+                name,
+                url
+              },
+              content {
+                ... on Issue { title, url, issueState:state}
+                ... on PullRequest { title, url, prState:state}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+ }";
+// Organization Project Cards
+public const string GET_ORGANIZATION_PROJECT_CARDS = "query ($organization: String!, $number: Int!){
+  organization (login:$organization) {
+    project (number : $number) {
+      columns (first:100) {
+        pageInfo {
+          hasNextPage,
+          startCursor,
+          endCursor
+        }
+        nodes {
+          name,
+          cards (first:100){
+            pageInfo {
+              hasNextPage,
+              startCursor,
+              endCursor
+            },
+            nodes {
+              id,
+              note,
+              creator {
+                login,
+                resourcePath,
+                url,
+                avatarUrl
+              },
+              state,
+              createdAt,
+              updatedAt,
+              url,
+              column {
+                id,
+                name,
+                url
+              },
+              content {
+                ... on Issue { title, url, issueState:state}
+                ... on PullRequest { title, url, prState:state}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+ }";
+
+public const string GET_ORGANIZATION_PROJECT_CARDS_COLUMN_NEXT_PAGE = "query ($organization: String!, $number: Int!, $columnEndCursor:String!, $cardEndCursor:String!){
+  organization (login:$organization) {
+    project (number : $number) {
+      columns (first:100, after: $columnEndCursor) {
+        pageInfo {
+          hasNextPage,
+          startCursor,
+          endCursor
+        }
+        nodes {
+          name,
+          cards (first:100, after: $cardEndCursor){
+            pageInfo {
+              hasNextPage,
+              startCursor,
+              endCursor
+            },
+            nodes {
+              id,
+              note,
+              creator {
+                login,
+                resourcePath,
+                url,
+                avatarUrl
+              },
+              state,
+              createdAt,
+              updatedAt,
+              url,
+              column {
+                id,
+                name,
+                url
+              },
+              content {
+                ... on Issue { title, url, issueState:state}
+                ... on PullRequest { title, url, prState:state}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+ }";
+
+public const string GET_ORGANIZATION_PROJECT_CARDS_CARD_NEXT_PAGE = "query ($organization: String!, $number: Int!, $cardEndCursor:String!){
+  organization (login:$organization) {
+    project (number : $number) {
+      columns (first:100) {
+        pageInfo {
+          hasNextPage,
+          startCursor,
+          endCursor
+        }
+        nodes {
+          name,
+          cards (first:100, after: $cardEndCursor){
+            pageInfo {
+              hasNextPage,
+              startCursor,
+              endCursor
+            },
+            nodes {
+              id,
+              note,
+              creator {
+                login,
+                resourcePath,
+                url,
+                avatarUrl
+              },
+              state,
+              createdAt,
+              updatedAt,
+              url,
+              column {
+                id,
+                name,
+                url
+              },
+              content {
+                ... on Issue { title, url, issueState:state}
+                ... on PullRequest { title, url, prState:state}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+ }";
+//

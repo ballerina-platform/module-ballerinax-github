@@ -32,49 +32,49 @@ public connector GithubConnector (string accessToken) {
         create http:HttpClient(GIT_API_URL, {});
     }
 
-    @Description {value:"Get cards relevant to a project"}
-    @Param {value:"organzation: Github organization name"}
-    @Param {value:"projectNumber: The number of the project"}
-    @Return {value:"error: Error"}
-    action getProjectCards (string organization, int projectNumber) (Card[], error ) {
-        http:OutRequest request = {};
-        http:InResponse response = {};
-        error returnError;
-        http:HttpConnectorError httpError;
-        Card[] cardArray = [];
-
-        json query = {"variables":{"organization":organization, "number":projectNumber},
-                     "query":GET_PROJECT_CARDS};
-
-        constructRequest(request, query, accessToken);
-
-        response, httpError = gitHubEndpoint.post("", request);
-        if (httpError != null) {
-            returnError = {message:httpError.message, cause:httpError.cause};
-            return cardArray, returnError;
-        }
-
-        json jsonResponse = response.getJsonPayload();
-        try {
-            var githubJson, _ = (json) jsonResponse["data"]["organization"]["project"]["columns"]["edges"];
-            int i = 0;
-            foreach columnJson in githubJson {
-                foreach cardJson in columnJson["node"]["cards"]["edges"] {
-                    //println(cardJson); println("====");
-                    var card, _ = <Card>cardJson["node"];
-                    io:println(cardJson["node"]);io:println("%%%%");
-                    cardArray[i] = card;
-                    i = i + 1;
-                }
-            }
-        } catch (error e) {
-            returnError = {message:e.message, cause:e.cause};
-            log:printError(returnError.message);
-            return cardArray, returnError;
-        }
-
-        return cardArray, returnError;
-    }
+    //@Description {value:"Get cards relevant to a project"}
+    //@Param {value:"organzation: Github organization name"}
+    //@Param {value:"projectNumber: The number of the project"}
+    //@Return {value:"error: Error"}
+    //action getProjectCards (string organization, int projectNumber) (Card[], error ) {
+    //    http:OutRequest request = {};
+    //    http:InResponse response = {};
+    //    error returnError;
+    //    http:HttpConnectorError httpError;
+    //    Card[] cardArray = [];
+    //
+    //    json query = {"variables":{"organization":organization, "number":projectNumber},
+    //                 "query":GET_PROJECT_CARDS};
+    //
+    //    constructRequest(request, query, accessToken);
+    //
+    //    response, httpError = gitHubEndpoint.post("", request);
+    //    if (httpError != null) {
+    //        returnError = {message:httpError.message, cause:httpError.cause};
+    //        return cardArray, returnError;
+    //    }
+    //
+    //    json jsonResponse = response.getJsonPayload();
+    //    try {
+    //        var githubJson, _ = (json) jsonResponse["data"]["organization"]["project"]["columns"]["edges"];
+    //        int i = 0;
+    //        foreach columnJson in githubJson {
+    //            foreach cardJson in columnJson["node"]["cards"]["edges"] {
+    //                //println(cardJson); println("====");
+    //                var card, _ = <Card>cardJson["node"];
+    //                io:println(cardJson["node"]);io:println("%%%%");
+    //                cardArray[i] = card;
+    //                i = i + 1;
+    //            }
+    //        }
+    //    } catch (error e) {
+    //        returnError = {message:e.message, cause:e.cause};
+    //        log:printError(returnError.message);
+    //        return cardArray, returnError;
+    //    }
+    //
+    //    return cardArray, returnError;
+    //}
 
     @Description {value:"Get a repository of an owner"}
     @Param {value:"name: Name of the form owner/repository"}
