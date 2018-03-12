@@ -29,6 +29,7 @@ function beforeTestFunction () {
 }
 
 function testBoolean () {
+    //
     test:assertBooleanEquals(true,false, "Value doesn't match");
     io:println("Hello World!");
 }

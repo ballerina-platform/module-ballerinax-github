@@ -3,12 +3,17 @@ package src.wso2.github;
 import ballerina.net.http;
 
 http:HttpClient gitHTTPClient = create http:HttpClient (GIT_API_URL, {});
-// #TODO Move these structs and enum to another package once https://github.com/ballerina-lang/ballerina/issues/4736 is fixed.
-//*************************************************
-//*************************************************
+//*********************************************************************************************************************
+//*********************************************************************************************************************
 //  Struct Templates
-//*************************************************
+//*********************************************************************************************************************
+//*********************************************************************************************************************
 
+
+//*********************************************************************************************************************
+//*********************************************************************************************************************
+// Project struct
+//*********************************************************************************************************************
 public struct Project {
     string id;
     int databaseId;
@@ -26,8 +31,13 @@ public struct Project {
     Creator creator;
     ProjectOwner owner;
 }
-
-public function <Project project> getCards () (Card[], GitConnectorError ) {
+//*********************************************************************************************************************
+// Project bound functions
+//*********************************************************************************************************************
+@Description {value:"Get all columns of a project"}
+@Return {value:"ColumnList: Column list object"}
+@Return {value:"GitConnectorError: Error"}
+public function <Project project> getColumns () (ColumnList , GitConnectorError ) {
     endpoint <http:HttpClient> gitClient {
         gitHTTPClient;
     }
@@ -36,40 +46,45 @@ public function <Project project> getCards () (Card[], GitConnectorError ) {
 
     if (project == null) {
         connectorError = {message:["Project cannot be null"]};
-        return [], connectorError;
+        return null, connectorError;
     }
-    string stringQuery;
-    string nextPageQuery;
     string projectOwnerType = project.owner.__typename;
     if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION) && project.resourcePath != null) {
-        try {
-            string organization = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
-            stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization}}",
-            "{{GIT_NUMBER}}":"{{project.number}}"},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT_CARDS}}"}`;
+        string organization = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
 
-        } catch (error e) {
-            connectorError = {message:[GIT_ERROR_WHILE_RETRIEVING_RESOURCE_PATH]};
-            return [], connectorError;
-        }
-
+        return getOrganizationProjectColumns(organization, project.number);
     } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
-        try {
-            string ownerName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_ONE];
-            string repositoryName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
-            stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{ownerName}}",
-            "{{GIT_REPOSITORY}}":"{{repositoryName}}","{{GIT_NUMBER}}":"{{project.number}}"},
-        "{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECT_CARDS}}"}`;
-        } catch (error e) {
-            connectorError = {message:[GIT_ERROR_WHILE_RETRIEVING_RESOURCE_PATH]};
-            return [], connectorError;
-        }
+        string ownerName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_ONE];
+        string repositoryName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
+
+        return getRepositoryProjectColumns(ownerName, repositoryName, project.number);
     }
-    boolean hasColumnsNextPage = true;
+    return null, connectorError;
+}
+
+@Description {value:"Get all columns of an organization project"}
+@Param{value: "organization: Name of the organization"}
+@Param{value: "projectNumber: Number of the project"}
+@Return {value:"ColumnList: Column list object"}
+@Return {value:"GitConnectorError: Error"}
+function getOrganizationProjectColumns (string organization, int projectNumber) (ColumnList , GitConnectorError ) {
+    endpoint <http:HttpClient> gitClient {
+        gitHTTPClient;
+    }
+    GitConnectorError connectorError;
+
+    if (organization == null || organization == "" || projectNumber <= 0) {
+        connectorError = {message:["Repository and state cannot be null."]};
+        return null, connectorError;
+    }
+
     http:HttpConnectorError httpError;
-    Card[] cardArray = [];
 
     http:OutRequest request = {};
     http:InResponse response = {};
+
+    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization}}",
+            "{{GIT_NUMBER}}":{{projectNumber}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT_CARDS}}"}`;
 
     var query, _ = <json>stringQuery;
 
@@ -77,42 +92,75 @@ public function <Project project> getCards () (Card[], GitConnectorError ) {
     constructRequest(request, query, gitAccessToken);
     int i = 0;
     //Iterate through multiple pages of results
-    while (hasColumnsNextPage) {
-        response, httpError = gitClient.post("", request);
-        if (httpError != null) {
-            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
-            return [], connectorError;
-        }
-        json validatedResponse;
-        //Check for empty payloads and errors
-        validatedResponse, connectorError = validateResponse(response, GIT_PROJECT);
-        if (connectorError != null) {
-            return [], connectorError;
-        }
-        var projectColumnsJson, _ = (json[])validatedResponse[GIT_DATA][projectOwnerType.toLowerCase()][GIT_PROJECT][GIT_COLUMNS][GIT_NODES];
-        foreach columnJson in projectColumnsJson {
-            var projectCardsJson, _ = (json[])columnJson[GIT_CARDS][GIT_NODES];
-            foreach card in projectCardsJson {
-                cardArray[i], _ = <Card>card;
-                i = i + 1;
-            }
-
-        }
-
-        hasColumnsNextPage, _ = (boolean)validatedResponse[GIT_DATA][projectOwnerType.toLowerCase()][GIT_PROJECT][GIT_COLUMNS][GIT_PAGE_INFO]
-                                  [GIT_HAS_NEXT_PAGE];
-        if (hasColumnsNextPage) {
-            var columnEndCursor, _ = (string)validatedResponse[GIT_DATA][projectOwnerType.toLowerCase()][GIT_PROJECTS][GIT_PAGE_INFO][GIT_END_CURSOR];
-
-            //string stringQueryNextPage = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{repository.owner.login}}","{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":{{state}},"{{GIT_END_CURSOR}}":"{{columnEndCursor}}"},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT_CARDS_COLUMN_NEXT_PAGE}}"}`;
-            //var queryNextPage, _ = <json>stringQueryNextPage;
-            //request = {};
-            //constructRequest(request, queryNextPage, gitAccessToken);
-        }
-
+    response, httpError = gitClient.post("", request);
+    if (httpError != null) {
+        connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+        return null, connectorError;
     }
-    return cardArray, connectorError;
+    json validatedResponse;
+    //Check for empty payloads and errors
+    validatedResponse, connectorError = validateResponse(response, GIT_PROJECT);
+    if (connectorError != null) {
+        return null, connectorError;
+    }
+    var projectColumnsJson, _ = (json)validatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECT][GIT_COLUMNS];
+    var columnList, err = <ColumnList>projectColumnsJson;
+
+    return columnList, connectorError;
 }
+
+@Description {value:"Get all columns of an organization project"}
+@Param{value: "owner: Owner of the repository"}
+@Param{value: "repoName: Name of the repository"}
+@Param{value: "projectNumber: Number of the project"}
+@Return {value:"ColumnList: Column list object"}
+@Return {value:"GitConnectorError: Error"}
+function getRepositoryProjectColumns (string owner, string repoName, int projectNumber) (ColumnList , GitConnectorError ) {
+    endpoint <http:HttpClient> gitClient {
+        gitHTTPClient;
+    }
+    GitConnectorError connectorError;
+
+    if (owner == null || owner == "" || repoName == null || repoName == "" || projectNumber <= 0) {
+        connectorError = {message:["Owner, repository name cannot be empty and project number must be positive"]};
+        return null, connectorError;
+    }
+
+    http:HttpConnectorError httpError;
+
+    http:OutRequest request = {};
+    http:InResponse response = {};
+
+    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{owner}}","{{GIT_NAME}}":"{{repoName}}",
+            "{{GIT_NUMBER}}":{{projectNumber}}},"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECT_CARDS}}"}`;
+
+    var query, _ = <json>stringQuery;
+
+    //Set headers and payload to the request
+    constructRequest(request, query, gitAccessToken);
+    int i = 0;
+    //Iterate through multiple pages of results
+    response, httpError = gitClient.post("", request);
+    if (httpError != null) {
+        connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+        return null, connectorError;
+    }
+    json validatedResponse;
+    //Check for empty payloads and errors
+    validatedResponse, connectorError = validateResponse(response, GIT_PROJECT);
+    if (connectorError != null) {
+        return null, connectorError;
+    }
+    var projectColumnsJson, _ = (json)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECT][GIT_COLUMNS];
+    var columnList, err = <ColumnList>projectColumnsJson;
+
+    return columnList, connectorError;
+}
+//*********************************************************************************************************************
+// End of Project struct
+//*********************************************************************************************************************
+//*********************************************************************************************************************
+
 public struct Creator {
     string login;
     string resourcePath;
@@ -140,33 +188,18 @@ public struct Error {
     string message;
 }
 
-public struct Card {
-    string id;
-    string note;
-    string state;
-    string createdAt;
-    string updatedAt;
-    string url;
-    Creator creator;
-    Column column;
-    Content content;
-}
 
-public struct Column {
-    string id;
-    string name;
-    string url;
-}
 
 public struct Content {
     string title;
     string url;
-    string s;
+    string issueState;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//*********************************************************************************************************************
+//*********************************************************************************************************************
 // Repository struct
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*********************************************************************************************************************
 
 public struct Repository {
     string id;
@@ -191,7 +224,9 @@ public struct Repository {
     RepositoryOwner owner;
     Language primaryLanguage;
 }
-
+//*********************************************************************************************************************
+// Repository bound functions
+//*********************************************************************************************************************
 @Description {value:"Get all pull requests of a repository"}
 @Param{value: "state: State of the repository (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_MERGED, GIT_STATE_ALL)"}
 @Return {value:"PullRequest[]: Array of pull requests"}
@@ -369,15 +404,15 @@ public function <Repository repository> getProject (int projectNumber) (Project,
 
     return singleProject, connectorError;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*********************************************************************************************************************
 // End of Repository struct
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*********************************************************************************************************************
+//*********************************************************************************************************************
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*********************************************************************************************************************
+//*********************************************************************************************************************
 // Organization struct
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*********************************************************************************************************************
 public struct Organization {
     string id;
     string login;
@@ -392,7 +427,9 @@ public struct Organization {
     string websiteUrl;
     string avatarUrl;
 }
-
+//*********************************************************************************************************************
+// Organization bound functions
+//*********************************************************************************************************************
 @Description{ value : "Get all projects of an organization"}
 @Param{value: "state: State of the repository (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
 @Return { value:"Project[]:Array of projects" }
@@ -506,9 +543,10 @@ public function <Organization organization> getProject (int projectNumber) (Proj
 
     return singleProject, connectorError;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*********************************************************************************************************************
 // End of Organization struct
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*********************************************************************************************************************
+//*********************************************************************************************************************
 
 public struct Issue {
     string id;
@@ -554,21 +592,85 @@ public struct PullRequest {
     Creator author;
 }
 
+public struct Card {
+    string id;
+    string note;
+    string state;
+    string createdAt;
+    string updatedAt;
+    string url;
+    Creator creator;
+    json column;
+    json content;
+}
+
+public struct Column {
+    string name;
+    CardList cards;
+}
+
+public struct PageInfo {
+    boolean hasNextPage;
+    boolean hasPreviousPage;
+    string startCursor;
+    string endCursor;
+}
+
+
+//*********************************************************************************************************************
+//*********************************************************************************************************************
+// CardList struct
+//*********************************************************************************************************************
+public struct CardList {
+    PageInfo pageInfo;
+    Card[] nodes;
+}
+//*********************************************************************************************************************
+// CardList bound functions
+//*********************************************************************************************************************
+public function <CardList cardList> hasNextPage()(boolean) {
+    return cardList.pageInfo.hasNextPage;
+}
+
+public function <CardList cardList> hasPreviousPage() (boolean) {
+    return cardList.pageInfo.hasPreviousPage;
+}
+
+public function <CardList cardList> nextPage () {
+
+}
+//*********************************************************************************************************************
+// End of CardList struct
+//*********************************************************************************************************************
+//*********************************************************************************************************************
+
+//*********************************************************************************************************************
+//*********************************************************************************************************************
+// Column List struct
+//*********************************************************************************************************************
+public struct ColumnList {
+    private:PageInfo pageInfo;
+    Column[] nodes;
+}
+//*********************************************************************************************************************
+// ColumnList bound functions
+//*********************************************************************************************************************
+public function <ColumnList columnList> hasNextPage()(boolean) {
+    return columnList.pageInfo.hasNextPage;
+}
+
+public function <ColumnList columnList> hasPreviousPage() (boolean) {
+    return columnList.pageInfo.hasPreviousPage;
+}
+
+public function <ColumnList columnList> nextPage () {
+
+}
+//*********************************************************************************************************************
+// End of ColumnList struct
+//*********************************************************************************************************************
+//*********************************************************************************************************************
+
 //*************************************************
 // End of structs
 //*************************************************
-
-
-//*************************************************
-//*************************************************
-//  Enum
-//*************************************************
-//public enum State {
-//    OPEN,
-//    CLOSED,
-//    ALL
-//}
-//*************************************************
-// End of Enum
-//*************************************************
-

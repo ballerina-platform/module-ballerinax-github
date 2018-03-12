@@ -1,2 +1,2 @@
 # connector-github
-Ballerina GitHub Connector 
+Ballerina GitHub Connector

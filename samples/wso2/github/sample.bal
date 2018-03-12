@@ -17,11 +17,11 @@ public function main (string[] args) {
     github:Repository sampleRepo = {name:"product-is", owner:{login:"wso2"}};
 
 
-    //Get a single organization
-    github:Organization organization;
-    organization, e = githubConnector.getOrganization("wso2");
-    io:println(organization);
-    io:println(e);
+    ////Get a single organization
+    //github:Organization organization;
+    //organization, e = githubConnector.getOrganization("wso2");
+    //io:println(organization);
+    //io:println(e);
 
     ////Get a list of projects of an organization
     //github:Project[] responseProjectList;
@@ -30,25 +30,25 @@ public function main (string[] args) {
     //io:println(e);
     //io:println("=========================================================");
 
-     //Get Organization Project
-     github:Project singleProject;
-     singleProject, e = organization.getProject(14);
-     io:println(singleProject);
-     io:print("Error : ");io:println(e);
+     ////Get Organization Project
+     //github:Project singleProject;
+     //singleProject, e = organization.getProject(1);
+     //io:println(singleProject);
+     //io:print("Error : ");io:println(e);
 
 
-    //github:Card[] cardList;
-    //cardList, e = githubConnector.getProjectCards("wso2", 2);
-    //io:println(cardList);
+    //github:ColumnList columnList;
+    //columnList, e = singleProject.getColumns();
+    //io:println(columnList);
     //io:println(e);
-    //
 
-    ////Get a single repository
-    //github:Repository repo;
-    //repo, e= githubConnector.getRepository("vlgunarathne/ProLAd-ExpertSystem");
-    //io:println(repo);
-    //io:println(e);
-    //io:println("=========================================================");
+
+    //Get a single repository
+    github:Repository repo;
+    repo, e= githubConnector.getRepository("wso2/testgrid");
+    io:println(repo);
+    io:println(e);
+    io:println("=========================================================");
 
     ////Get a list of projects of a repository
     //github:Project[] responseProjectList;
@@ -65,12 +65,17 @@ public function main (string[] args) {
     //io:println(e);
     //io:println("=========================================================");
 
-    ////Get Repository Project
-    //github:Project singleProject;
-    //singleProject, e = repo.getProject(1);
-    //io:println(singleProject);
-    //io:print("Error : ");io:println(e);
+    //Get Repository Project
+    github:Project singleProject;
+    singleProject, e = repo.getProject(1);
+    io:println(singleProject);
+    io:print("Error : ");io:println(e);
+    io:println("=========================================================");
 
+    github:ColumnList columnList;
+    columnList, e = singleProject.getColumns();
+    io:println(columnList);
+    io:println(e);
 
 }
 

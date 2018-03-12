@@ -19,8 +19,6 @@
 package src.wso2.github;
 
 import ballerina.net.http;
-import ballerina.log;
-import ballerina.io;
 
 string gitAccessToken = "";
 
