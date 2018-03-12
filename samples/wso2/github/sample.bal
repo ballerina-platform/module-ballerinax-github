@@ -46,9 +46,9 @@ public function main (string[] args) {
     //Get a single repository
     github:Repository repo;
     repo, e= githubConnector.getRepository("wso2/testgrid");
-    io:println(repo);
-    io:println(e);
-    io:println("=========================================================");
+    //io:println(repo);
+    //io:println(e);
+    //io:println("=========================================================");
 
     ////Get a list of projects of a repository
     //github:Project[] responseProjectList;
@@ -68,13 +68,17 @@ public function main (string[] args) {
     //Get Repository Project
     github:Project singleProject;
     singleProject, e = repo.getProject(1);
-    io:println(singleProject);
-    io:print("Error : ");io:println(e);
-    io:println("=========================================================");
+    //io:println(singleProject);
+    //io:print("Error : ");io:println(e);
+    //io:println("=========================================================");
 
     github:ColumnList columnList;
-    columnList, e = singleProject.getColumns();
-    io:println(columnList);
+    columnList, e = singleProject.getColumnList();
+
+    github:Column cl = columnList.getAllColumns()[0];
+    github:CardList cdList= cl.getCardList();
+    github:Card cd = cdList.getAllCards()[0];
+    io:println(cd.content.title);
     io:println(e);
 
 }

@@ -37,7 +37,7 @@ public struct Project {
 @Description {value:"Get all columns of a project"}
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <Project project> getColumns () (ColumnList , GitConnectorError ) {
+public function <Project project> getColumnList () (ColumnList , GitConnectorError ) {
     endpoint <http:HttpClient> gitClient {
         gitHTTPClient;
     }
@@ -603,19 +603,33 @@ public struct Card {
     json column;
     json content;
 }
-
+//*********************************************************************************************************************
+//*********************************************************************************************************************
+// Column struct
+//*********************************************************************************************************************
 public struct Column {
-    string name;
+   private: string name;
     CardList cards;
 }
-
+//*********************************************************************************************************************
+// Column bound functions
+//*********************************************************************************************************************
+public function <Column column> getColumnName() (string) {
+    return column.name;
+}
+public function <Column column> getCardList() (CardList) {
+    return column.cards;
+}
 public struct PageInfo {
     boolean hasNextPage;
     boolean hasPreviousPage;
     string startCursor;
     string endCursor;
 }
-
+//*********************************************************************************************************************
+// End of Column struct
+//*********************************************************************************************************************
+//*********************************************************************************************************************
 
 //*********************************************************************************************************************
 //*********************************************************************************************************************
@@ -639,6 +653,10 @@ public function <CardList cardList> hasPreviousPage() (boolean) {
 public function <CardList cardList> nextPage () {
 
 }
+
+public function <CardList cardList> getAllCards() (Card[]) {
+    return cardList.nodes;
+}
 //*********************************************************************************************************************
 // End of CardList struct
 //*********************************************************************************************************************
@@ -655,7 +673,7 @@ public struct ColumnList {
 //*********************************************************************************************************************
 // ColumnList bound functions
 //*********************************************************************************************************************
-public function <ColumnList columnList> hasNextPage()(boolean) {
+public function <ColumnList columnList> hasNextPage() (boolean) {
     return columnList.pageInfo.hasNextPage;
 }
 
@@ -663,8 +681,12 @@ public function <ColumnList columnList> hasPreviousPage() (boolean) {
     return columnList.pageInfo.hasPreviousPage;
 }
 
-public function <ColumnList columnList> nextPage () {
+public function <ColumnList columnList> nextPage() {
 
+}
+
+public function <ColumnList columnList> getAllColumns() (Column[]) {
+    return columnList.nodes;
 }
 //*********************************************************************************************************************
 // End of ColumnList struct
