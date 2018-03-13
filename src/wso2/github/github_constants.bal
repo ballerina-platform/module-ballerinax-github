@@ -44,6 +44,7 @@ public const string GIT_PROJECT = "project";
 public const string GIT_PROJECTS = "projects";
 public const string GIT_PULL_REQUESTS = "pullRequests";
 public const string GIT_QUERY = "query";
+public const string GIT_REPOSITORIES = "repositories";
 public const string GIT_REPOSITORY = "repository";
 public const string GIT_REPOSITORY_OWNER = "repositoryOwner";
 public const string GIT_START_CURSOR = "startCursor";

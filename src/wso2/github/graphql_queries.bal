@@ -17,7 +17,7 @@
 //
 
 package src.wso2.github;
-
+//TODO Implement a QueryBuilder to programatically develop the queries
 public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $repository: String!, $states:[ProjectState!]){
 	repository(owner:$owner, name:$repository){
     projects(first:100, states:$states){
@@ -673,4 +673,96 @@ public const string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE = "query ($organiza
     }
   }
  }";
+
+public const string GET_ORGANIZATION_REPOSITORIES = "query ($organization: String!) {
+  organization (login:$organization) {
+    repositories (first: 100) {
+      pageInfo {
+        hasNextPage,
+        hasPreviousPage,
+        startCursor,
+        endCursor
+      }
+      nodes {
+    id,
+    name,
+    createdAt,
+    updatedAt,
+    description,
+    forkCount,
+    hasIssuesEnabled,
+    hasWikiEnabled,
+    homepageUrl,
+    isArchived,
+    isFork,
+    isLocked,
+    isMirror,
+    isPrivate,
+    license,
+    lockReason,
+    mirrorUrl,
+    url,
+    sshUrl,
+    owner {
+      id,
+      login,
+      url,
+      avatarUrl,
+      resourcePath
+    },
+    primaryLanguage {
+      id,
+      name,
+      color
+    }
+      }
+    }
+  }
+}";
+
+public const string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE = "query ($organization: String!, $endCursorRepos: String!) {
+  organization (login:$organization) {
+    repositories (first: 100, after: $endCursorRepos) {
+      pageInfo {
+        hasNextPage,
+        hasPreviousPage,
+        startCursor,
+        endCursor
+      }
+      nodes {
+    id,
+    name,
+    createdAt,
+    updatedAt,
+    description,
+    forkCount,
+    hasIssuesEnabled,
+    hasWikiEnabled,
+    homepageUrl,
+    isArchived,
+    isFork,
+    isLocked,
+    isMirror,
+    isPrivate,
+    license,
+    lockReason,
+    mirrorUrl,
+    url,
+    sshUrl,
+    owner {
+      id,
+      login,
+      url,
+      avatarUrl,
+      resourcePath
+    },
+    primaryLanguage {
+      id,
+      name,
+      color
+    }
+      }
+    }
+  }
+}";
 //
