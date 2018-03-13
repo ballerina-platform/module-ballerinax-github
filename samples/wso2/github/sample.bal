@@ -17,11 +17,11 @@ public function main (string[] args) {
     github:Repository sampleRepo = {name:"product-is", owner:{login:"wso2"}};
 
 
-    ////Get a single organization
-    //github:Organization organization;
-    //organization, e = githubConnector.getOrganization("wso2");
-    //io:println(organization);
-    //io:println(e);
+    //Get a single organization
+    github:Organization organization;
+    organization, e = githubConnector.getOrganization("wso2");
+    io:println(organization);
+    io:println(e);
 
     ////Get a list of projects of an organization
     //github:Project[] responseProjectList;
@@ -30,11 +30,11 @@ public function main (string[] args) {
     //io:println(e);
     //io:println("=========================================================");
 
-     ////Get Organization Project
-     //github:Project singleProject;
-     //singleProject, e = organization.getProject(1);
-     //io:println(singleProject);
-     //io:print("Error : ");io:println(e);
+     //Get Organization Project
+     github:Project singleProject;
+     singleProject, e = organization.getProject(1);
+     io:println(singleProject);
+     io:print("Error : ");io:println(e);
 
 
     //github:ColumnList columnList;
@@ -43,9 +43,9 @@ public function main (string[] args) {
     //io:println(e);
 
 
-    //Get a single repository
-    github:Repository repo;
-    repo, e= githubConnector.getRepository("wso2/testgrid");
+    ////Get a single repository
+    //github:Repository repo;
+    //repo, e= githubConnector.getRepository("wso2/testgrid");
     //io:println(repo);
     //io:println(e);
     //io:println("=========================================================");
@@ -66,8 +66,8 @@ public function main (string[] args) {
     //io:println("=========================================================");
 
     //Get Repository Project
-    github:Project singleProject;
-    singleProject, e = repo.getProject(1);
+    //github:Project singleProject;
+    //singleProject, e = repo.getProject(1);
     //io:println(singleProject);
     //io:print("Error : ");io:println(e);
     //io:println("=========================================================");
@@ -75,12 +75,9 @@ public function main (string[] args) {
     github:ColumnList columnList;
     columnList, e = singleProject.getColumnList();
 
-    github:Column cl = columnList.getAllColumns()[0];
-    github:CardList cdList= cl.getCardList();
-    github:Card cd = cdList.getAllCards()[0];
-    io:println(cd.content.title);
-    io:println(e);
+    columnList, e = columnList.nextPage();
 
+    io:println(columnList);
 }
 
 //function getConnector() {

@@ -1,8 +1,11 @@
 package src.wso2.github;
 
 import ballerina.net.http;
+import ballerina.io;
 
 http:HttpClient gitHTTPClient = create http:HttpClient (GIT_API_URL, {});
+string gitGraphqlQuery = "";
+string projectOwnerType = "";
 //*********************************************************************************************************************
 //*********************************************************************************************************************
 //  Struct Templates
@@ -48,33 +51,40 @@ public function <Project project> getColumnList () (ColumnList , GitConnectorErr
         connectorError = {message:["Project cannot be null"]};
         return null, connectorError;
     }
-    string projectOwnerType = project.owner.__typename;
+    projectOwnerType = project.owner.__typename;
     if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION) && project.resourcePath != null) {
         string organization = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
 
-        return getOrganizationProjectColumns(organization, project.number);
+        gitGraphqlQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization}}",
+            "{{GIT_NUMBER}}":{{project.number}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT_COLUMNS}}"}`;
+
+        return getProjectColumns(GIT_ORGANIZATION, gitGraphqlQuery);
+
     } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
         string ownerName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_ONE];
         string repositoryName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
 
-        return getRepositoryProjectColumns(ownerName, repositoryName, project.number);
+        gitGraphqlQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{ownerName}}","{{GIT_NAME}}":"{{repositoryName}}",
+            "{{GIT_NUMBER}}":{{project.number}}},"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECT_COLUMNS}}"}`;
+
+        return getProjectColumns(GIT_REPOSITORY, gitGraphqlQuery);
     }
     return null, connectorError;
 }
 
-@Description {value:"Get all columns of an organization project"}
-@Param{value: "organization: Name of the organization"}
-@Param{value: "projectNumber: Number of the project"}
+@Description {value:"Get all columns of a project"}
+@Param{value: "ownerType: Repository or Organization"}
+@Param{value: "gitQuery: Graphql query"}
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
-function getOrganizationProjectColumns (string organization, int projectNumber) (ColumnList , GitConnectorError ) {
+function getProjectColumns (string ownerType, string gitQuery) (ColumnList , GitConnectorError ) {
     endpoint <http:HttpClient> gitClient {
         gitHTTPClient;
     }
     GitConnectorError connectorError;
 
-    if (organization == null || organization == "" || projectNumber <= 0) {
-        connectorError = {message:["Repository and state cannot be null."]};
+    if (ownerType == null || ownerType == "" || gitQuery == null || gitQuery == "") {
+        connectorError = {message:["Owner type and query cannot be null"]};
         return null, connectorError;
     }
 
@@ -83,10 +93,7 @@ function getOrganizationProjectColumns (string organization, int projectNumber) 
     http:OutRequest request = {};
     http:InResponse response = {};
 
-    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization}}",
-            "{{GIT_NUMBER}}":{{projectNumber}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT_CARDS}}"}`;
-
-    var query, _ = <json>stringQuery;
+    var query, _ = <json>gitQuery;
 
     //Set headers and payload to the request
     constructRequest(request, query, gitAccessToken);
@@ -103,98 +110,18 @@ function getOrganizationProjectColumns (string organization, int projectNumber) 
     if (connectorError != null) {
         return null, connectorError;
     }
-    var projectColumnsJson, _ = (json)validatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECT][GIT_COLUMNS];
+    var projectColumnsJson, _ = (json)validatedResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
     var columnList, err = <ColumnList>projectColumnsJson;
 
     return columnList, connectorError;
 }
 
-@Description {value:"Get all columns of an organization project"}
-@Param{value: "owner: Owner of the repository"}
-@Param{value: "repoName: Name of the repository"}
-@Param{value: "projectNumber: Number of the project"}
-@Return {value:"ColumnList: Column list object"}
-@Return {value:"GitConnectorError: Error"}
-function getRepositoryProjectColumns (string owner, string repoName, int projectNumber) (ColumnList , GitConnectorError ) {
-    endpoint <http:HttpClient> gitClient {
-        gitHTTPClient;
-    }
-    GitConnectorError connectorError;
 
-    if (owner == null || owner == "" || repoName == null || repoName == "" || projectNumber <= 0) {
-        connectorError = {message:["Owner, repository name cannot be empty and project number must be positive"]};
-        return null, connectorError;
-    }
-
-    http:HttpConnectorError httpError;
-
-    http:OutRequest request = {};
-    http:InResponse response = {};
-
-    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{owner}}","{{GIT_NAME}}":"{{repoName}}",
-            "{{GIT_NUMBER}}":{{projectNumber}}},"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECT_CARDS}}"}`;
-
-    var query, _ = <json>stringQuery;
-
-    //Set headers and payload to the request
-    constructRequest(request, query, gitAccessToken);
-    int i = 0;
-    //Iterate through multiple pages of results
-    response, httpError = gitClient.post("", request);
-    if (httpError != null) {
-        connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
-        return null, connectorError;
-    }
-    json validatedResponse;
-    //Check for empty payloads and errors
-    validatedResponse, connectorError = validateResponse(response, GIT_PROJECT);
-    if (connectorError != null) {
-        return null, connectorError;
-    }
-    var projectColumnsJson, _ = (json)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECT][GIT_COLUMNS];
-    var columnList, err = <ColumnList>projectColumnsJson;
-
-    return columnList, connectorError;
-}
 //*********************************************************************************************************************
 // End of Project struct
 //*********************************************************************************************************************
 //*********************************************************************************************************************
 
-public struct Creator {
-    string login;
-    string resourcePath;
-    string url;
-    string avatarUrl;
-}
-
-public struct ProjectOwner {
-    string id;
-    string projectsResourcePath;
-    string projectsUrl;
-    string viewerCanCreateProjects;
-    string __typename;
-}
-
-public struct RepositoryOwner {
-    string id;
-    string login;
-    string url;
-    string avatarUrl;
-    string resourcePath;
-}
-
-public struct Error {
-    string message;
-}
-
-
-
-public struct Content {
-    string title;
-    string url;
-    string issueState;
-}
 
 //*********************************************************************************************************************
 //*********************************************************************************************************************
@@ -548,6 +475,147 @@ public function <Organization organization> getProject (int projectNumber) (Proj
 //*********************************************************************************************************************
 //*********************************************************************************************************************
 
+//*********************************************************************************************************************
+//*********************************************************************************************************************
+// Column struct
+//*********************************************************************************************************************
+public struct Column {
+    private: string name;
+        CardList cards;
+}
+//*********************************************************************************************************************
+// Column bound functions
+//*********************************************************************************************************************
+public function <Column column> getColumnName() (string) {
+    return column.name;
+}
+public function <Column column> getCardList() (CardList) {
+    return column.cards;
+}
+//*********************************************************************************************************************
+// End of Column struct
+//*********************************************************************************************************************
+//*********************************************************************************************************************
+
+//*********************************************************************************************************************
+//*********************************************************************************************************************
+// CardList struct
+//*********************************************************************************************************************
+public struct CardList {
+    PageInfo pageInfo;
+    Card[] nodes;
+}
+//*********************************************************************************************************************
+// CardList bound functions
+//*********************************************************************************************************************
+public function <CardList cardList> hasNextPage()(boolean) {
+    return cardList.pageInfo.hasNextPage;
+}
+
+public function <CardList cardList> hasPreviousPage() (boolean) {
+    return cardList.pageInfo.hasPreviousPage;
+}
+
+public function <CardList cardList> nextPage () {
+    if (cardList.hasNextPage()) {
+        string stringQuery = gitGraphqlQuery;
+    }
+}
+
+public function <CardList cardList> getAllCards() (Card[]) {
+    return cardList.nodes;
+}
+//*********************************************************************************************************************
+// End of CardList struct
+//*********************************************************************************************************************
+//*********************************************************************************************************************
+
+//*********************************************************************************************************************
+//*********************************************************************************************************************
+// Column List struct
+//*********************************************************************************************************************
+public struct ColumnList {
+    private:PageInfo pageInfo;
+            Column[] nodes;
+}
+//*********************************************************************************************************************
+// ColumnList bound functions
+//*********************************************************************************************************************
+public function <ColumnList columnList> hasNextPage() (boolean) {
+    return columnList.pageInfo.hasNextPage;
+}
+
+public function <ColumnList columnList> hasPreviousPage() (boolean) {
+    return columnList.pageInfo.hasPreviousPage;
+}
+
+public function <ColumnList columnList> nextPage() (ColumnList, GitConnectorError ){
+    if (columnList.hasNextPage()) {
+        string stringQuery = gitGraphqlQuery;
+        var query, _ = <json>stringQuery;
+        query.variables.endCursorColumns = columnList.pageInfo.endCursor;
+
+        if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION)) {
+            query.query = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
+            gitGraphqlQuery = query.toString();
+
+            return getProjectColumns(GIT_ORGANIZATION, query.toString());
+        }else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
+            query.query = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
+            gitGraphqlQuery = query.toString();
+
+            return getProjectColumns(GIT_REPOSITORY, query.toString());
+        }
+        io:println(query);
+    }
+    GitConnectorError connectorError = {message:["Column list has no next page"]};
+
+    return null, connectorError;
+}
+
+public function <ColumnList columnList> getAllColumns() (Column[]) {
+    return columnList.nodes;
+}
+//*********************************************************************************************************************
+// End of ColumnList struct
+//*********************************************************************************************************************
+//*********************************************************************************************************************
+
+public struct Creator {
+    string login;
+    string resourcePath;
+    string url;
+    string avatarUrl;
+}
+
+public struct ProjectOwner {
+    string id;
+    string projectsResourcePath;
+    string projectsUrl;
+    string viewerCanCreateProjects;
+    string __typename;
+}
+
+public struct RepositoryOwner {
+    string id;
+    string login;
+    string url;
+    string avatarUrl;
+    string resourcePath;
+}
+
+public struct Error {
+    string message;
+}
+
+
+
+public struct Content {
+    string title;
+    string url;
+    string issueState;
+}
+
 public struct Issue {
     string id;
     string name;
@@ -603,95 +671,18 @@ public struct Card {
     json column;
     json content;
 }
-//*********************************************************************************************************************
-//*********************************************************************************************************************
-// Column struct
-//*********************************************************************************************************************
-public struct Column {
-   private: string name;
-    CardList cards;
-}
-//*********************************************************************************************************************
-// Column bound functions
-//*********************************************************************************************************************
-public function <Column column> getColumnName() (string) {
-    return column.name;
-}
-public function <Column column> getCardList() (CardList) {
-    return column.cards;
-}
+
+
+
 public struct PageInfo {
     boolean hasNextPage;
     boolean hasPreviousPage;
     string startCursor;
     string endCursor;
 }
-//*********************************************************************************************************************
-// End of Column struct
-//*********************************************************************************************************************
-//*********************************************************************************************************************
 
-//*********************************************************************************************************************
-//*********************************************************************************************************************
-// CardList struct
-//*********************************************************************************************************************
-public struct CardList {
-    PageInfo pageInfo;
-    Card[] nodes;
-}
-//*********************************************************************************************************************
-// CardList bound functions
-//*********************************************************************************************************************
-public function <CardList cardList> hasNextPage()(boolean) {
-    return cardList.pageInfo.hasNextPage;
-}
 
-public function <CardList cardList> hasPreviousPage() (boolean) {
-    return cardList.pageInfo.hasPreviousPage;
-}
 
-public function <CardList cardList> nextPage () {
-
-}
-
-public function <CardList cardList> getAllCards() (Card[]) {
-    return cardList.nodes;
-}
-//*********************************************************************************************************************
-// End of CardList struct
-//*********************************************************************************************************************
-//*********************************************************************************************************************
-
-//*********************************************************************************************************************
-//*********************************************************************************************************************
-// Column List struct
-//*********************************************************************************************************************
-public struct ColumnList {
-    private:PageInfo pageInfo;
-    Column[] nodes;
-}
-//*********************************************************************************************************************
-// ColumnList bound functions
-//*********************************************************************************************************************
-public function <ColumnList columnList> hasNextPage() (boolean) {
-    return columnList.pageInfo.hasNextPage;
-}
-
-public function <ColumnList columnList> hasPreviousPage() (boolean) {
-    return columnList.pageInfo.hasPreviousPage;
-}
-
-public function <ColumnList columnList> nextPage() {
-
-}
-
-public function <ColumnList columnList> getAllColumns() (Column[]) {
-    return columnList.nodes;
-}
-//*********************************************************************************************************************
-// End of ColumnList struct
-//*********************************************************************************************************************
-//*********************************************************************************************************************
 
 //*************************************************
 // End of structs
