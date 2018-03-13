@@ -20,8 +20,8 @@ public function main (string[] args) {
     //Get a single organization
     github:Organization organization;
     organization, e = githubConnector.getOrganization("wso2");
-    io:println(organization);
-    io:println(e);
+    //io:println(organization);
+    //io:println(e);
 
     ////Get a list of projects of an organization
     //github:Project[] responseProjectList;
@@ -33,8 +33,8 @@ public function main (string[] args) {
      //Get Organization Project
      github:Project singleProject;
      singleProject, e = organization.getProject(1);
-     io:println(singleProject);
-     io:print("Error : ");io:println(e);
+     //io:println(singleProject);
+     //io:print("Error : ");io:println(e);
 
 
     //github:ColumnList columnList;
@@ -74,10 +74,15 @@ public function main (string[] args) {
 
     github:ColumnList columnList;
     columnList, e = singleProject.getColumnList();
+    //io:println(columnList);
+    //columnList, e = columnList.nextPage();
 
-    columnList, e = columnList.nextPage();
+    github:Column cl = columnList.getAllColumns()[0];
+    github:CardList cd = cl.getCardList();
+    cd.nextPage();
 
-    io:println(columnList);
+
+    //io:println(columnList);
 }
 
 //function getConnector() {

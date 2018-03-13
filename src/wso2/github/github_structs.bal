@@ -6,6 +6,7 @@ import ballerina.io;
 http:HttpClient gitHTTPClient = create http:HttpClient (GIT_API_URL, {});
 string gitGraphqlQuery = "";
 string projectOwnerType = "";
+string projectColumnId = "";
 //*********************************************************************************************************************
 //*********************************************************************************************************************
 //  Struct Templates
@@ -111,7 +112,7 @@ function getProjectColumns (string ownerType, string gitQuery) (ColumnList , Git
         return null, connectorError;
     }
     var projectColumnsJson, _ = (json)validatedResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
-    var columnList, err = <ColumnList>projectColumnsJson;
+    var columnList, _ = <ColumnList>projectColumnsJson;
 
     return columnList, connectorError;
 }
@@ -475,12 +476,15 @@ public function <Organization organization> getProject (int projectNumber) (Proj
 //*********************************************************************************************************************
 //*********************************************************************************************************************
 
-//*********************************************************************************************************************
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //*********************************************************************************************************************
 // Column struct
 //*********************************************************************************************************************
 public struct Column {
-    private: string name;
+
+    string id;
+    string name;
+    private:
         CardList cards;
 }
 //*********************************************************************************************************************
@@ -490,12 +494,13 @@ public function <Column column> getColumnName() (string) {
     return column.name;
 }
 public function <Column column> getCardList() (CardList) {
+    projectColumnId = column.id;
     return column.cards;
 }
 //*********************************************************************************************************************
 // End of Column struct
 //*********************************************************************************************************************
-//*********************************************************************************************************************
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //*********************************************************************************************************************
 //*********************************************************************************************************************
@@ -516,10 +521,39 @@ public function <CardList cardList> hasPreviousPage() (boolean) {
     return cardList.pageInfo.hasPreviousPage;
 }
 
-public function <CardList cardList> nextPage () {
+public function <CardList cardList> nextPage() (CardList, GitConnectorError ){
+    GitConnectorError connectorError;
     if (cardList.hasNextPage()) {
         string stringQuery = gitGraphqlQuery;
+        var query, _ = <json>stringQuery;
+        query.variables.endCursorCards = cardList.pageInfo.endCursor;
+
+        if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION)) {
+            query.query = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE; //TODO
+            gitGraphqlQuery = query.toString();
+            ColumnList columnList;
+            columnList, _ = getProjectColumns(GIT_ORGANIZATION, query.toString());
+            foreach column in columnList.getAllColumns() {
+                if (column.id == projectColumnId) {
+                    return column.getCardList(), connectorError;
+                }
+            }
+        }else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
+            query.query = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
+            gitGraphqlQuery = query.toString();
+            ColumnList columnList;
+            columnList, _ = getProjectColumns(GIT_REPOSITORY, query.toString());
+            foreach column in columnList.getAllColumns() {
+                if (column.id == projectColumnId) {
+                    return column.getCardList(), connectorError;
+                }
+            }
+        }
+        io:println(query);
     }
+    connectorError = {message:["Card list has no next page"]};
+
+    return null, connectorError;
 }
 
 public function <CardList cardList> getAllCards() (Card[]) {
@@ -550,6 +584,7 @@ public function <ColumnList columnList> hasPreviousPage() (boolean) {
 }
 
 public function <ColumnList columnList> nextPage() (ColumnList, GitConnectorError ){
+    GitConnectorError connectorError;
     if (columnList.hasNextPage()) {
         string stringQuery = gitGraphqlQuery;
         var query, _ = <json>stringQuery;
@@ -559,16 +594,16 @@ public function <ColumnList columnList> nextPage() (ColumnList, GitConnectorErro
             query.query = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
             gitGraphqlQuery = query.toString();
 
-            return getProjectColumns(GIT_ORGANIZATION, query.toString());
+            return getProjectColumns(GIT_ORGANIZATION, query.toString()), connectorError;
         }else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
             query.query = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
             gitGraphqlQuery = query.toString();
 
-            return getProjectColumns(GIT_REPOSITORY, query.toString());
+            return getProjectColumns(GIT_REPOSITORY, query.toString()), connectorError;
         }
         io:println(query);
     }
-    GitConnectorError connectorError = {message:["Column list has no next page"]};
+    connectorError = {message:["Column list has no next page"]};
 
     return null, connectorError;
 }

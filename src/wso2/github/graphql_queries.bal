@@ -382,6 +382,7 @@ public const string GET_REPOSITORY_PROJECT_COLUMNS = "query ($owner: String!,$na
           endCursor
         }
         nodes {
+          id,
           name,
           cards (first:100){
             pageInfo {
@@ -431,6 +432,7 @@ public const string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE = "query ($owner: S
           endCursor
         }
         nodes {
+          id,
           name,
           cards (first:100){
             pageInfo {
@@ -472,7 +474,7 @@ public const string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE = "query ($owner: S
 public const string GET_ORGANIZATION_PROJECT_COLUMNS = "query ($organization: String!, $number: Int!){
   organization (login:$organization) {
     project (number : $number) {
-      columns (first:1) {
+      columns (first:100) {
         pageInfo {
           hasNextPage,
           hasPreviousPage,
@@ -480,6 +482,7 @@ public const string GET_ORGANIZATION_PROJECT_COLUMNS = "query ($organization: St
           endCursor
         }
         nodes {
+          id,
           name,
           cards (first:100){
             pageInfo {
@@ -529,6 +532,7 @@ public const string GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE = "query ($organi
           endCursor
         }
         nodes {
+          id,
           name,
           cards (first:100){
             pageInfo {
