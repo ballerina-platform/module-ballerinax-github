@@ -297,6 +297,7 @@ public const string GET_PULL_REQUESTS = "query ($owner: String!, $name: String!,
         updatedAt,
         closed,
         closedAt,
+        mergedAt,
         state,
         number,
         url,
@@ -312,7 +313,9 @@ public const string GET_PULL_REQUESTS = "query ($owner: String!, $name: String!,
           resourcePath,
           url,
           avatarUrl
-        }
+        },
+        headRefName,
+        baseRefName
       }
     }
   }

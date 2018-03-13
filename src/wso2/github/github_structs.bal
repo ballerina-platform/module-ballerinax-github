@@ -682,6 +682,7 @@ public struct PullRequest {
     string updatedAt;
     boolean closed;
     string closedAt;
+    string mergedAt;
     string state;
     int number;
     string url;
@@ -693,6 +694,8 @@ public struct PullRequest {
     string revertResourcePath;
     string revertUrl;
     Creator author;
+    string headRefName;
+    string baseRefName;
 }
 
 public struct Card {

@@ -43,12 +43,12 @@ public function main (string[] args) {
     //io:println(e);
 
 
-    ////Get a single repository
-    //github:Repository repo;
-    //repo, e= githubConnector.getRepository("wso2/testgrid");
-    //io:println(repo);
-    //io:println(e);
-    //io:println("=========================================================");
+    //Get a single repository
+    github:Repository repo;
+    repo, e= githubConnector.getRepository("wso2/product-is");
+    io:println(repo);
+    io:println(e);
+    io:println("=========================================================");
 
     ////Get a list of projects of a repository
     //github:Project[] responseProjectList;
@@ -57,13 +57,13 @@ public function main (string[] args) {
     //io:println(e);
     //io:println("=========================================================");
 
-    ////Get a list of pull requests in a repository
-    //github:PullRequest[] prList;
-    //prList, e = repo.getPullRequests(github:GIT_STATE_OPEN);
-    //io:println(lengthof prList);
-    //io:println(prList);
-    //io:println(e);
-    //io:println("=========================================================");
+    //Get a list of pull requests in a repository
+    github:PullRequest[] prList;
+    prList, e = repo.getPullRequests(github:GIT_STATE_OPEN);
+    io:println(lengthof prList);
+    io:println(prList);
+    io:println(e);
+    io:println("=========================================================");
 
     //Get Repository Project
     //github:Project singleProject;
@@ -72,24 +72,24 @@ public function main (string[] args) {
     //io:print("Error : ");io:println(e);
     //io:println("=========================================================");
 
-    github:ColumnList columnList;
-    columnList, e = singleProject.getColumnList();
-    //io:println(columnList);
-    ////columnList, e = columnList.nextPage();
+    //github:ColumnList columnList;
+    //columnList, e = singleProject.getColumnList();
+    ////io:println(columnList);
+    //////columnList, e = columnList.nextPage();
+    ////
+    //github:Column cl = columnList.getAllColumns()[0];
     //
-    github:Column cl = columnList.getAllColumns()[0];
-
-    github:CardList cd = cl.getCardList();
-    boolean hasNext = true;
-    while (hasNext) {
-        foreach card in cd.getAllCards() {
-            io:println(card.note);
-            io:println(card.content);
-            io:println("=========================");
-        }
-        hasNext = cd.hasNextPage();
-        cd, e = cd.nextPage();
-    }
+    //github:CardList cd = cl.getCardList();
+    //boolean hasNext = true;
+    //while (hasNext) {
+    //    foreach card in cd.getAllCards() {
+    //        io:println(card.note);
+    //        io:println(card.content);
+    //        io:println("=========================");
+    //    }
+    //    hasNext = cd.hasNextPage();
+    //    cd, e = cd.nextPage();
+    //}
     //cd, e = cd.nextPage();
     //
     //
