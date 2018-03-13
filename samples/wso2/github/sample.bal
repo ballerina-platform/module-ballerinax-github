@@ -75,14 +75,25 @@ public function main (string[] args) {
     github:ColumnList columnList;
     columnList, e = singleProject.getColumnList();
     //io:println(columnList);
-    //columnList, e = columnList.nextPage();
-
+    ////columnList, e = columnList.nextPage();
+    //
     github:Column cl = columnList.getAllColumns()[0];
+
     github:CardList cd = cl.getCardList();
-    cd.nextPage();
-
-
-    //io:println(columnList);
+    boolean hasNext = true;
+    while (hasNext) {
+        foreach card in cd.getAllCards() {
+            io:println(card.note);
+            io:println(card.content);
+            io:println("=========================");
+        }
+        hasNext = cd.hasNextPage();
+        cd, e = cd.nextPage();
+    }
+    //cd, e = cd.nextPage();
+    //
+    //
+    //io:println(cd);
 }
 
 //function getConnector() {

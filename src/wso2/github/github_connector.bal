@@ -23,7 +23,7 @@ import ballerina.net.http;
 string gitAccessToken = "";
 
 @Description {value: "GitHub client connector"}
-@Param {value: "accessToken:Access token"}
+@Param {value: "accessToken: GitHub access token"}
 public connector GithubConnector (string accessToken) {
 
     endpoint <http:HttpClient> gitHubEndpoint {

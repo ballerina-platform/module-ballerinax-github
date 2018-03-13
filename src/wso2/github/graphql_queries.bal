@@ -421,7 +421,7 @@ public const string GET_REPOSITORY_PROJECT_COLUMNS = "query ($owner: String!,$na
   }
  }";
 
-public const string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE = "query ($owner: String!,$name:String!, $number: Int!){
+public const string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE = "query ($owner: String!,$name:String!, $number: Int!, $endCursorColumns: String!){
   repository (owner:$owner, name:$name) {
     project (number : $number){
       columns (first:100){
@@ -470,11 +470,11 @@ public const string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE = "query ($owner: S
     }
   }
  }";
-//TODO
-public const string GET_ORGANIZATION_PROJECT_COLUMNS = "query ($organization: String!, $number: Int!){
-  organization (login:$organization) {
-    project (number : $number) {
-      columns (first:100) {
+
+public const string GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE = "query ($owner: String!,$name:String!, $number: Int!, $endCursorCards: String!){
+  repository (owner:$owner, name:$name) {
+    project (number : $number){
+      columns (first:100){
         pageInfo {
           hasNextPage,
           hasPreviousPage,
@@ -484,7 +484,57 @@ public const string GET_ORGANIZATION_PROJECT_COLUMNS = "query ($organization: St
         nodes {
           id,
           name,
-          cards (first:100){
+          cards (first:100, after: $endCursorCards){
+            pageInfo {
+              hasNextPage,
+              hasPreviousPage,
+              startCursor,
+              endCursor
+            },
+            nodes {
+              id,
+              note,
+              creator {
+                login,
+                resourcePath,
+                url,
+                avatarUrl
+              },
+              state,
+              createdAt,
+              updatedAt,
+              url,
+              column {
+                id,
+                name,
+                url
+              },
+              content {
+                ... on Issue { title, url, issueState:state}
+                ... on PullRequest { title, url, prState:state}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+ }";
+//TODO
+public const string GET_ORGANIZATION_PROJECT_COLUMNS = "query ($organization: String!, $number: Int!){
+  organization (login:$organization) {
+    project (number : $number) {
+      columns (first:1) {
+        pageInfo {
+          hasNextPage,
+          hasPreviousPage,
+          startCursor,
+          endCursor
+        }
+        nodes {
+          id,
+          name,
+          cards (first:1){
             pageInfo {
               hasNextPage,
               hasPreviousPage,
@@ -534,7 +584,7 @@ public const string GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE = "query ($organi
         nodes {
           id,
           name,
-          cards (first:100){
+          cards (first:1){
             pageInfo {
               hasNextPage,
               hasPreviousPage,
@@ -571,4 +621,53 @@ public const string GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE = "query ($organi
   }
  }";
 
+public const string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE = "query ($organization: String!, $number: Int!, $endCursorCards: String!){
+  organization (login:$organization) {
+    project (number : $number) {
+      columns (first:100) {
+        pageInfo {
+          hasNextPage,
+          hasPreviousPage,
+          startCursor,
+          endCursor
+        }
+        nodes {
+          id,
+          name,
+          cards (first:1, after: $endCursorCards){
+            pageInfo {
+              hasNextPage,
+              hasPreviousPage,
+              startCursor,
+              endCursor
+            },
+            nodes {
+              id,
+              note,
+              creator {
+                login,
+                resourcePath,
+                url,
+                avatarUrl
+              },
+              state,
+              createdAt,
+              updatedAt,
+              url,
+              column {
+                id,
+                name,
+                url
+              },
+              content {
+                ... on Issue { title, url, issueState:state}
+                ... on PullRequest { title, url, prState:state}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+ }";
 //

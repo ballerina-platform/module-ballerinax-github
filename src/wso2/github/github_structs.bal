@@ -529,7 +529,7 @@ public function <CardList cardList> nextPage() (CardList, GitConnectorError ){
         query.variables.endCursorCards = cardList.pageInfo.endCursor;
 
         if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION)) {
-            query.query = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE; //TODO
+            query.query = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE; //TODO
             gitGraphqlQuery = query.toString();
             ColumnList columnList;
             columnList, _ = getProjectColumns(GIT_ORGANIZATION, query.toString());
@@ -539,7 +539,7 @@ public function <CardList cardList> nextPage() (CardList, GitConnectorError ){
                 }
             }
         }else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
-            query.query = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
+            query.query = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE; //TODO
             gitGraphqlQuery = query.toString();
             ColumnList columnList;
             columnList, _ = getProjectColumns(GIT_REPOSITORY, query.toString());
@@ -594,12 +594,12 @@ public function <ColumnList columnList> nextPage() (ColumnList, GitConnectorErro
             query.query = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
             gitGraphqlQuery = query.toString();
 
-            return getProjectColumns(GIT_ORGANIZATION, query.toString()), connectorError;
+            return getProjectColumns(GIT_ORGANIZATION, query.toString());
         }else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
             query.query = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
             gitGraphqlQuery = query.toString();
 
-            return getProjectColumns(GIT_REPOSITORY, query.toString()), connectorError;
+            return getProjectColumns(GIT_REPOSITORY, query.toString());
         }
         io:println(query);
     }
