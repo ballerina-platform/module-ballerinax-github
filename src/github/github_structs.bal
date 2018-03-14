@@ -586,7 +586,7 @@ public function <Organization organization> getRepositories () (RepositoryList, 
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}"},
     "{{GIT_QUERY}}":"{{GET_ORGANIZATION_REPOSITORIES}}"}`;
-    gitGraphqlQuery = stringQuery;
+    metaData["repositoryListQuery"] = stringQuery;
     var query, _ = <json>stringQuery;
 
     //Set headers and payload to the request
@@ -660,8 +660,8 @@ public function <CardList cardList> nextPage () (CardList, GitConnectorError) {
         query.variables.endCursorCards = cardList.pageInfo.endCursor;
         var projectOwnerType, _ = (string)metaData["projectOwnerType"];
         if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION)) {
-            query.query = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE; //TODO
-            gitGraphqlQuery = query.toString();
+            query.query = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE; // TODO
+            metaData["projectColumnQuery"] = query.toString();
             ColumnList columnList;
             columnList, _ = getProjectColumns(GIT_ORGANIZATION, query.toString());
             foreach column in columnList.getAllColumns() {
@@ -671,7 +671,7 @@ public function <CardList cardList> nextPage () (CardList, GitConnectorError) {
             }
         } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
             query.query = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE; //TODO
-            gitGraphqlQuery = query.toString();
+            metaData["projectColumnQuery"] = query.toString();
             ColumnList columnList;
             columnList, _ = getProjectColumns(GIT_REPOSITORY, query.toString());
             foreach column in columnList.getAllColumns() {

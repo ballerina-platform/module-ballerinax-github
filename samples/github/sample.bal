@@ -18,8 +18,8 @@ public function main (string[] args) {
 
 
     //Get a single organization
-    //github:Organization organization;
-    //organization, e = githubConnector.getOrganization("wso2");
+    github:Organization organization;
+    organization, e = githubConnector.getOrganization("wso2");
     //io:println(organization);
     //io:println(e);
 
@@ -31,8 +31,8 @@ public function main (string[] args) {
     //io:println("=========================================================");
 
      ////Get Organization Project
-     //github:Project singleProject;
-     //singleProject, e = organization.getProject(1);
+     github:Project singleProject;
+     singleProject, e = organization.getProject(1);
      ////io:println(singleProject);
      ////io:print("Error : ");io:println(e);
 
@@ -78,25 +78,25 @@ public function main (string[] args) {
     //io:print("Error : ");io:println(e);
     //io:println("=========================================================");
 
-    //github:ColumnList columnList;
-    //columnList, e = singleProject.getColumnList();
-    ////io:println(columnList);
-    //////columnList, e = columnList.nextPage();
-    ////
-    //github:Column cl = columnList.getAllColumns()[0];
+    github:ColumnList columnList;
+    columnList, e = singleProject.getColumnList();
+    //io:println(columnList);
+    ////columnList, e = columnList.nextPage();
     //
-    //github:CardList cd = cl.getCardList();
-    //boolean hasNext = true;
-    //while (hasNext) {
-    //    foreach card in cd.getAllCards() {
-    //        io:println(card.note);
-    //        io:println(card.content);
-    //        io:println("=========================");
-    //    }
-    //    hasNext = cd.hasNextPage();
-    //    cd, e = cd.nextPage();
-    //}
-    //cd, e = cd.nextPage();
+    github:Column cl = columnList.getAllColumns()[0];
+
+    github:CardList cd = cl.getCardList();
+    boolean hasNext = true;
+    while (hasNext) {
+        foreach card in cd.getAllCards() {
+            io:println(card.note);
+            io:println(card.content);
+            io:println("=========================");
+        }
+        hasNext = cd.hasNextPage();
+        cd, e = cd.nextPage();
+    }
+    cd, e = cd.nextPage();
 
 
     //io:println(cd);
