@@ -32,6 +32,7 @@ public const string GIT_END_CURSOR = "endCursor";
 public const string GIT_END_CURSOR_CARD = "endCursorCard";
 public const string GIT_END_CURSOR_COLUMN = "endCursorColumn";
 public const string GIT_HAS_NEXT_PAGE = "hasNextPage";
+public const string GIT_ISSUES = "issues";
 public const string GIT_MESSAGE = "message";
 public const string GIT_NAME = "name";
 public const string GIT_NODE = "node";

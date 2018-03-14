@@ -62,7 +62,7 @@ public connector GithubConnector (string accessToken) {
             return null, connectorError;
         }
         json validatedResponse;
-        validatedResponse, connectorError = validateResponse(response, GIT_NAME);
+        validatedResponse, connectorError = getValidatedResponse(response, GIT_NAME);
         if (connectorError != null) {
             return null, connectorError;
         }
@@ -107,7 +107,7 @@ public connector GithubConnector (string accessToken) {
             return null, connectorError;
         }
         json validatedResponse;
-        validatedResponse, connectorError = validateResponse(response, GIT_NAME);
+        validatedResponse, connectorError = getValidatedResponse(response, GIT_NAME);
         if (connectorError != null) {
             return null, connectorError;
         }

@@ -37,7 +37,7 @@ function constructRequest (http:OutRequest request, json query, string accessTok
 @Param {value:"component:"}
 @Return {value:"json: The JSON payload in the response"}
 @Return {value:"GitConnectoError: GitConnectorError object"}
-function validateResponse (http:InResponse response, string validateComponent) (json, GitConnectorError){
+function getValidatedResponse (http:InResponse response, string validateComponent) (json, GitConnectorError) {
     GitConnectorError connectorError;
     json responsePayload;
     try {

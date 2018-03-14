@@ -17,6 +17,7 @@
 //
 
 package src.github;
+
 //TODO Implement a QueryBuilder to programatically develop the queries
 public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $repository: String!, $states:[ProjectState!]){
 	repository(owner:$owner, name:$repository){
@@ -761,6 +762,51 @@ public const string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE = "query ($organizat
       name,
       color
     }
+      }
+    }
+  }
+}";
+
+public const string GET_REPOSITORY_ISSUES = "query ($owner:String!, $name:String!, $states:[IssueState!]) {
+  repository(owner:$owner, name: $name) {
+    issues (first: 100, states:$states) {
+      pageInfo {
+        hasNextPage,
+        hasPreviousPage,
+        startCursor,
+        endCursor
+      }
+      nodes {
+        id,
+        author {
+          login,
+          resourcePath,
+          url,
+          avatarUrl
+        },
+        bodyText,
+        closed,
+        closedAt,
+        createdAt,
+        editor {
+          login,
+          resourcePath,
+          url,
+          avatarUrl,
+        },
+        labels (first: 100){
+          nodes {
+            id,
+            name,
+            description,
+            color
+          }
+        },
+        number,
+        state,
+        title,
+        updatedAt,
+        url
       }
     }
   }

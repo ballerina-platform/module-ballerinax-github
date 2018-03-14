@@ -23,8 +23,6 @@ import ballerina.io;
 
 http:HttpClient gitHTTPClient = create http:HttpClient(GIT_API_URL, {});
 map metaData = {};
-string gitGraphqlQuery = "";
-string projectColumnId = "";
 //*********************************************************************************************************************
 //*********************************************************************************************************************
 //  Struct Templates
@@ -125,7 +123,7 @@ function getProjectColumns (string ownerType, string gitQuery) (ColumnList, GitC
     }
     json validatedResponse;
     //Check for empty payloads and errors
-    validatedResponse, connectorError = validateResponse(response, GIT_PROJECT);
+    validatedResponse, connectorError = getValidatedResponse(response, GIT_PROJECT);
     if (connectorError != null) {
         return null, connectorError;
     }
@@ -156,14 +154,14 @@ public function <RepositoryList repositoryList> hasPreviousPage () (boolean) {
     return repositoryList.pageInfo.hasPreviousPage;
 }
 
-public function <RepositoryList repositoryList> nextPage() (RepositoryList, GitConnectorError ){
+public function <RepositoryList repositoryList> nextPage () (RepositoryList, GitConnectorError) {
     endpoint<http:HttpClient> gitClient {
         gitHTTPClient;
     }
 
     GitConnectorError connectorError;
     if (repositoryList.hasNextPage()) {
-        string stringQuery = gitGraphqlQuery;
+        var stringQuery, _ = (string)metaData["repositoryListQuery"];
         http:HttpConnectorError httpError;
 
         http:OutRequest request = {};
@@ -182,7 +180,7 @@ public function <RepositoryList repositoryList> nextPage() (RepositoryList, GitC
         }
         json validatedResponse;
         //Check for empty payloads and errors
-        validatedResponse, connectorError = validateResponse(response, GIT_REPOSITORIES);
+        validatedResponse, connectorError = getValidatedResponse(response, GIT_REPOSITORIES);
         if (connectorError != null) {
             return null, connectorError;
         }
@@ -272,7 +270,7 @@ public function <Repository repository> getPullRequests (string state) (PullRequ
         }
         json validatedResponse;
         //Check for empty payloads and errors
-        validatedResponse, connectorError = validateResponse(response, GIT_PULL_REQUESTS);
+        validatedResponse, connectorError = getValidatedResponse(response, GIT_PULL_REQUESTS);
         if (connectorError != null) {
             return [], connectorError;
         }
@@ -298,7 +296,7 @@ public function <Repository repository> getPullRequests (string state) (PullRequ
     }
     return pullRequestArray, connectorError;
 
-}
+} //TODO getPullRequestList
 
 @Description {value:"Get all projects of a repository"}
 @Param {value:"state: State of the repository (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
@@ -341,7 +339,7 @@ public function <Repository repository> getProjects (string state) (Project[], G
         }
         json validatedResponse;
         //Check for empty payloads and errors
-        validatedResponse, connectorError = validateResponse(response, GIT_PROJECTS);
+        validatedResponse, connectorError = getValidatedResponse(response, GIT_PROJECTS);
         if (connectorError != null) {
             return [], connectorError;
         }
@@ -367,12 +365,12 @@ public function <Repository repository> getProjects (string state) (Project[], G
 
     }
     return projectArray, connectorError;
-}
+} //TODO getProjectList
 
 @Description {value:"Get a single project of a specified repository."}
 @Param {value:"projectNumber: The number of the project"}
 @Return {value:"Project object"}
-@Return {value:"Error"}
+@Return {value:"GitConnectorError: Error"}
 public function <Repository repository> getProject (int projectNumber) (Project, GitConnectorError) {
     endpoint<http:HttpClient> gitClient {
         gitHTTPClient;
@@ -405,7 +403,7 @@ public function <Repository repository> getProject (int projectNumber) (Project,
         return {}, connectorError;
     }
     json validatedResponse;
-    validatedResponse, connectorError = validateResponse(response, GIT_PROJECT);
+    validatedResponse, connectorError = getValidatedResponse(response, GIT_PROJECT);
     if (connectorError != null) {
         return null, connectorError;
     }
@@ -418,6 +416,52 @@ public function <Repository repository> getProject (int projectNumber) (Project,
     }
 
     return singleProject, connectorError;
+}
+
+@Description {value:"Get a list of issues of a specified repository."}
+@Param {value:"state: State of the repository (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
+@Return {value:"IssueList object"}
+@Return {value:"GitConnectorError: Error"}
+public function <Repository repository> getIssueList (string state) (IssueList, GitConnectorError) {
+
+    endpoint<http:HttpClient> gitClient {
+        gitHTTPClient;
+    }
+
+    GitConnectorError connectorError;
+
+    if (repository == null) {
+        connectorError = {message:["Repository cannot be null"]};
+        return null, connectorError;
+    }
+
+    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}"
+    ,"{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}}},"{{GIT_QUERY}}":"{{GET_REPOSITORY_ISSUES}}"}`;
+    metaData["issueListQuery"] = stringQuery;
+    var query, _ = <json>stringQuery;
+
+    //Set headers and payload to the request
+    http:OutRequest request = {};
+    http:InResponse response = {};
+    http:HttpConnectorError httpError;
+    constructRequest(request, query, gitAccessToken);
+    response, httpError = gitClient.post("", request);
+    if (httpError != null) {
+        connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+        return null, connectorError;
+    }
+
+    //Check for empty payloads and errors
+    json validatedResponse;
+    validatedResponse, connectorError = getValidatedResponse(response, GIT_ISSUES);
+    if (connectorError != null) {
+        return null, connectorError;
+    }
+    var githubIssuesJson, _ = (json)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
+    IssueList issueList; error err;
+    issueList, err = <IssueList>githubIssuesJson;
+    io:println(err);
+    return issueList, connectorError;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of Repository struct                                                //
@@ -483,7 +527,7 @@ public function <Organization organization> getProjects (string state) (Project[
         }
         json validatedResponse;
         //Check for empty payloads and errors
-        validatedResponse, connectorError = validateResponse(response, GIT_PROJECTS);
+        validatedResponse, connectorError = getValidatedResponse(response, GIT_PROJECTS);
         if (connectorError != null) {
             return [], connectorError;
         }
@@ -546,7 +590,7 @@ public function <Organization organization> getProject (int projectNumber) (Proj
         return {}, connectorError;
     }
     json validatedResponse;
-    validatedResponse, connectorError = validateResponse(response, GIT_PROJECT);
+    validatedResponse, connectorError = getValidatedResponse(response, GIT_PROJECT);
     if (connectorError != null) {
         return null, connectorError;
     }
@@ -598,12 +642,12 @@ public function <Organization organization> getRepositories () (RepositoryList, 
     }
     json validatedResponse;
     //Check for empty payloads and errors
-    validatedResponse, connectorError = validateResponse(response, GIT_REPOSITORIES);
+    validatedResponse, connectorError = getValidatedResponse(response, GIT_REPOSITORIES);
     if (connectorError != null) {
         return null, connectorError;
     }
     var githubRepositoriesJson, _ = (json)validatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
-    repositoryList, _ = <RepositoryList >githubRepositoriesJson;
+    repositoryList, _ = <RepositoryList>githubRepositoriesJson;
 
     return repositoryList, connectorError;
 }
@@ -627,7 +671,7 @@ public struct Column {
 // Column bound functions
 //*********************************************************************************************************************
 public function <Column column> getCardList () (CardList) {
-    projectColumnId = column.id;
+    metaData["projectColumnId"] = column.id;
     return column.cards;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -656,6 +700,7 @@ public function <CardList cardList> nextPage () (CardList, GitConnectorError) {
     GitConnectorError connectorError;
     if (cardList.hasNextPage()) {
         var stringQuery, _ = (string)metaData["projectColumnQuery"];
+        var projectColumnId, _ = (string)metaData["projectColumnId"];
         var query, _ = <json>stringQuery;
         query.variables.endCursorCards = cardList.pageInfo.endCursor;
         var projectOwnerType, _ = (string)metaData["projectOwnerType"];
@@ -718,7 +763,7 @@ public function <ColumnList columnList> nextPage () (ColumnList, GitConnectorErr
         var stringQuery, _ = (string)metaData["projectColumnQuery"];
         var query, _ = <json>stringQuery;
         query.variables.endCursorColumns = columnList.pageInfo.endCursor;
-        var projectOwnerType, _ = (string) metaData["projectOwnerType"];
+        var projectOwnerType, _ = (string)metaData["projectOwnerType"];
         if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION)) {
             query.query = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
             metaData["projectColumnQuery"] = query.toString();
@@ -776,7 +821,39 @@ public struct Content {
 
 public struct Issue {
     string id;
-    string name;
+    string bodyText;
+    string closed;
+    string closedAt;
+    string createdAt;
+    Creator author;
+    Creator editor;
+    LabelList labels;
+    int number;
+    string state;
+    string title;
+    string updatedAt;
+    string url;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                IssueList struct                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+public struct IssueList {
+    private:
+        PageInfo pageInfo;
+        Issue[] nodes;
+}
+//*********************************************************************************************************************
+// ColumnList bound functions
+//*********************************************************************************************************************
+public function <IssueList issueList> hasNextPage () (boolean) {
+    return issueList.pageInfo.hasNextPage;
+}
+
+public function <IssueList issueList> hasPreviousPage () (boolean) {
+    return issueList.pageInfo.hasPreviousPage;
+}
+public function <IssueList issueList> getAllIssues () (Issue[]) {
+    return issueList.nodes;
 }
 
 public struct Language {
@@ -842,6 +919,16 @@ public struct PageInfo {
     string endCursor;
 }
 
+public struct Label {
+    string id;
+    string name;
+    string description;
+    string color;
+}
+
+public struct LabelList {
+    Label[] nodes;
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              End of structs                                                       //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
