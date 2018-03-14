@@ -16,14 +16,14 @@
 // under the License.
 //
 
-package src.wso2.github;
+package src.github;
 
 import ballerina.net.http;
 import ballerina.io;
 
 http:HttpClient gitHTTPClient = create http:HttpClient(GIT_API_URL, {});
+map metaData = {};
 string gitGraphqlQuery = "";
-string projectOwnerType = "";
 string projectColumnId = "";
 //*********************************************************************************************************************
 //*********************************************************************************************************************
@@ -69,24 +69,24 @@ public function <Project project> getColumnList () (ColumnList, GitConnectorErro
         connectorError = {message:["Project cannot be null"]};
         return null, connectorError;
     }
-    projectOwnerType = project.owner.__typename;
+    metaData["projectOwnerType"] = project.owner.__typename;
+    string projectOwnerType = project.owner.__typename;
     if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION) && project.resourcePath != null) {
         string organization = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
-
-        gitGraphqlQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization}}",
+        string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization}}",
             "{{GIT_NUMBER}}":{{project.number}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT_COLUMNS}}"}`;
-
-        return getProjectColumns(GIT_ORGANIZATION, gitGraphqlQuery);
+        metaData["projectColumnQuery"] = stringQuery;
+        return getProjectColumns(GIT_ORGANIZATION, stringQuery);
 
     } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
         string ownerName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_ONE];
         string repositoryName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
 
-        gitGraphqlQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{ownerName}}"
+        string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{ownerName}}"
         ,"{{GIT_NAME}}":"{{repositoryName}}","{{GIT_NUMBER}}":{{project.number}}}
         ,"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECT_COLUMNS}}"}`;
-
-        return getProjectColumns(GIT_REPOSITORY, gitGraphqlQuery);
+        metaData["projectColumnQuery"] = stringQuery;
+        return getProjectColumns(GIT_REPOSITORY, stringQuery);
     }
     return null, connectorError;
 }
@@ -626,9 +626,6 @@ public struct Column {
 //*********************************************************************************************************************
 // Column bound functions
 //*********************************************************************************************************************
-public function <Column column> getColumnName () (string) {
-    return column.name;
-}
 public function <Column column> getCardList () (CardList) {
     projectColumnId = column.id;
     return column.cards;
@@ -658,10 +655,10 @@ public function <CardList cardList> hasPreviousPage () (boolean) {
 public function <CardList cardList> nextPage () (CardList, GitConnectorError) {
     GitConnectorError connectorError;
     if (cardList.hasNextPage()) {
-        string stringQuery = gitGraphqlQuery;
+        var stringQuery, _ = (string)metaData["projectColumnQuery"];
         var query, _ = <json>stringQuery;
         query.variables.endCursorCards = cardList.pageInfo.endCursor;
-
+        var projectOwnerType, _ = (string)metaData["projectOwnerType"];
         if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION)) {
             query.query = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE; //TODO
             gitGraphqlQuery = query.toString();
@@ -718,18 +715,18 @@ public function <ColumnList columnList> hasPreviousPage () (boolean) {
 public function <ColumnList columnList> nextPage () (ColumnList, GitConnectorError) {
     GitConnectorError connectorError;
     if (columnList.hasNextPage()) {
-        string stringQuery = gitGraphqlQuery;
+        var stringQuery, _ = (string)metaData["projectColumnQuery"];
         var query, _ = <json>stringQuery;
         query.variables.endCursorColumns = columnList.pageInfo.endCursor;
-
+        var projectOwnerType, _ = (string) metaData["projectOwnerType"];
         if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION)) {
             query.query = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
-            gitGraphqlQuery = query.toString();
+            metaData["projectColumnQuery"] = query.toString();
 
             return getProjectColumns(GIT_ORGANIZATION, query.toString());
         } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
             query.query = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
-            gitGraphqlQuery = query.toString();
+            metaData["projectColumnQuery"] = query.toString();
 
             return getProjectColumns(GIT_REPOSITORY, query.toString());
         }
@@ -769,11 +766,6 @@ public struct RepositoryOwner {
     string avatarUrl;
     string resourcePath;
 }
-
-public struct Error {
-    string message;
-}
-
 
 
 public struct Content {

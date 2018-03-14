@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package src.wso2.github;
+package src.github;
 //TODO Implement a QueryBuilder to programatically develop the queries
 public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $repository: String!, $states:[ProjectState!]){
 	repository(owner:$owner, name:$repository){
@@ -676,7 +676,7 @@ public const string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE = "query ($organiza
 
 public const string GET_ORGANIZATION_REPOSITORIES = "query ($organization: String!) {
   organization (login:$organization) {
-    repositories (first: 100) {
+    repositories (first: 1) {
       pageInfo {
         hasNextPage,
         hasPreviousPage,
@@ -722,7 +722,7 @@ public const string GET_ORGANIZATION_REPOSITORIES = "query ($organization: Strin
 
 public const string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE = "query ($organization: String!, $endCursorRepos: String!) {
   organization (login:$organization) {
-    repositories (first: 100, after: $endCursorRepos) {
+    repositories (first: 1, after: $endCursorRepos) {
       pageInfo {
         hasNextPage,
         hasPreviousPage,

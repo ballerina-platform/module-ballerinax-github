@@ -1,7 +1,7 @@
-package samples.wso2.github;
+package samples.github;
 
 import ballerina.net.http;
-import src.wso2.github;
+import src.github;
 //import src.wso2.github.structTemplates;
 import ballerina.io;
 
@@ -18,8 +18,8 @@ public function main (string[] args) {
 
 
     //Get a single organization
-    github:Organization organization;
-    organization, e = githubConnector.getOrganization("wso2");
+    //github:Organization organization;
+    //organization, e = githubConnector.getOrganization("wso2");
     //io:println(organization);
     //io:println(e);
 
@@ -30,11 +30,11 @@ public function main (string[] args) {
     //io:println(e);
     //io:println("=========================================================");
 
-     //Get Organization Project
-     github:Project singleProject;
-     singleProject, e = organization.getProject(1);
-     //io:println(singleProject);
-     //io:print("Error : ");io:println(e);
+     ////Get Organization Project
+     //github:Project singleProject;
+     //singleProject, e = organization.getProject(1);
+     ////io:println(singleProject);
+     ////io:print("Error : ");io:println(e);
 
 
     //github:ColumnList columnList;
@@ -43,12 +43,18 @@ public function main (string[] args) {
     //io:println(e);
 
 
-    //Get a single repository
-    github:Repository repo;
-    repo, e= githubConnector.getRepository("wso2/product-is");
-    io:println(repo);
-    io:println(e);
-    io:println("=========================================================");
+    ////Get a single repository
+    //github:Repository repo;
+    //repo, e= githubConnector.getRepository("wso2/product-is");
+    //io:println(repo);
+    //io:println(e);
+    //io:println("=========================================================");
+
+    ////Get a all the repositories of Organization
+    //github:RepositoryList repoList;
+    //repoList, e = organization.getRepositories();
+    //io:println(repoList);
+    //io:println(e);
 
     ////Get a list of projects of a repository
     //github:Project[] responseProjectList;
@@ -57,13 +63,13 @@ public function main (string[] args) {
     //io:println(e);
     //io:println("=========================================================");
 
-    //Get a list of pull requests in a repository
-    github:PullRequest[] prList;
-    prList, e = repo.getPullRequests(github:GIT_STATE_OPEN);
-    io:println(lengthof prList);
-    io:println(prList);
-    io:println(e);
-    io:println("=========================================================");
+    ////Get a list of pull requests in a repository
+    //github:PullRequest[] prList;
+    //prList, e = repo.getPullRequests(github:GIT_STATE_OPEN);
+    //io:println(lengthof prList);
+    //io:println(prList);
+    //io:println(e);
+    //io:println("=========================================================");
 
     //Get Repository Project
     //github:Project singleProject;
@@ -91,16 +97,9 @@ public function main (string[] args) {
     //    cd, e = cd.nextPage();
     //}
     //cd, e = cd.nextPage();
-    //
-    //
+
+
     //io:println(cd);
 }
 
-//function getConnector() {
-//    endpoint<github:GithubConnector> gitConnector {
-//        create github:GithubConnector(getAccessToken());
-//    }
-//   type t = typeof gitConnector;
-//    io:print("Type: ");io:println(t);
-//}
 

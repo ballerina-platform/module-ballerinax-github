@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package src.wso2.github;
+package src.github;
 
 import ballerina.net.http;
 

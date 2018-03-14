@@ -1,4 +1,4 @@
-package test.wso2.github;
+package test.github;
 
 import ballerina.net.http;
 
