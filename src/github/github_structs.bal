@@ -844,7 +844,9 @@ public struct ProjectOwner {
     private:
         string __typename;
 }
-
+//*********************************************************************************************************************
+// ProjectOwner bound functions
+//*********************************************************************************************************************
 @Description {value: "Get the type of the project owner"}
 @Return {value: "string: Type of the owner"}
 public function <ProjectOwner projectOwner> getOwnerType () (string) {
@@ -1005,7 +1007,7 @@ public struct PullRequestList {
         PullRequest[] nodes;
 }
 //*********************************************************************************************************************
-// ColumnList bound functions
+// PullRequestList bound functions
 //*********************************************************************************************************************
 @Description {value: "Check if pull request list next page is available"}
 @Return {value: "boolean: Return true or false"}
@@ -1083,7 +1085,9 @@ public struct LabelList {
     private:
         Label[] nodes;
 }
-
+//*********************************************************************************************************************
+// LabelList bound functions
+//*********************************************************************************************************************
 @Description {value: "Get an array of labels"}
 @Return {value: "Lebel[]: Label array"}
 public function <LabelList labelList> getAllLabels () (Label[]) {
