@@ -161,7 +161,7 @@ state | string | The state of the pull request. (Eg: github:GIT_STATE_OPEN, gith
 
 ***
 
-##github:Organization
+## github:Organization
 
 ### getProjectList()
 Return a list of projects on the organization.
@@ -197,5 +197,165 @@ None
 
 ###### Returns
 **github:RepositoryList , github:GitConnectorError**
+
+***
+
+## github:Project
+
+### getColumnList()
+Return a list of columns in the project.
+
+###### Parameters
+None
+
+###### Returns
+**github:ColumnList**
+
+***
+
+## github:Column
+
+### getCardList()
+Return a list of cards in the column.
+
+###### Parameters
+None
+
+###### Returns
+**github:CardList**
+
+***
+## github:RepositoryList
+
+### getAllRepositories()
+Return an array of repositories.
+
+###### Parameters
+None
+
+###### Returns
+**github:Repository[]**
+
+***
+
+### nextPage()
+Return the next page of the repository list.
+
+###### Parameters
+None
+
+###### Returns
+**github:RepositoryList , github:GitConnectorError**
+
+***
+
+### hasNextPage()
+Check if there is another page for the repository list.
+
+###### Parameters
+None
+
+###### Returns
+**boolean**
+
+***
+
+### hasPreviousPage()
+Check if there is a previous page for the repository list.
+
+###### Parameters
+None
+
+###### Returns
+**boolean**
+
+***
+
+## github:ColumnList
+
+### getAllColumns()
+Return an array of columns.
+
+###### Parameters
+None
+
+###### Returns
+**github:Column[]**
+
+***
+### nextPage()
+Return the next page of the column list.
+
+###### Parameters
+None
+
+###### Returns
+**github:ColumnList , github:GitConnectorError**
+
+***
+### hasNextPage()
+Check if there is another page for the column list.
+
+###### Parameters
+None
+
+###### Returns
+**boolean**
+
+***
+
+### hasPreviousPage()
+Check if there is a previous page for the column list.
+
+###### Parameters
+None
+
+###### Returns
+**boolean**
+
+***
+
+## github:CardList
+
+### getAllCards()
+Return an array of cards.
+
+###### Parameters
+None
+
+###### Returns
+**github:Card[]**
+
+***
+
+### nextPage()
+Return the next page of the card list.
+
+###### Parameters
+None
+
+###### Returns
+**github:CardList , github:GitConnectorError**
+
+***
+### hasNextPage()
+Check if there is another page for the card list.
+
+###### Parameters
+None
+
+###### Returns
+**boolean**
+
+***
+
+### hasPreviousPage()
+Check if there is a previous page for the card list.
+
+###### Parameters
+None
+
+###### Returns
+**boolean**
 
 ***
