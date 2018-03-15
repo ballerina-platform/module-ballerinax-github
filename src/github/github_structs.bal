@@ -898,6 +898,11 @@ public struct PullRequest {
     string baseRefName;
 }
 
+public struct PullRequestList {
+    private:
+        PageInfo pageInfo;
+        PullRequest[] nodes;
+}
 public struct Card {
     string id;
     string note;

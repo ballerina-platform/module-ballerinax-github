@@ -2,7 +2,6 @@ package samples.github;
 
 import ballerina.net.http;
 import src.github;
-//import src.wso2.github.structTemplates;
 import ballerina.io;
 
 public function main (string[] args) {
@@ -43,12 +42,12 @@ public function main (string[] args) {
     //io:println(e);
 
 
-    ////Get a single repository
-    //github:Repository repo;
-    //repo, e= githubConnector.getRepository("wso2/docker-is");
-    //io:println(repo);
-    //io:println(e);
-    //io:println("=========================================================");
+    //Get a single repository
+    github:Repository repo;
+    repo, e= githubConnector.getRepository("vlgunarathne/connector-github");
+    io:println(repo);
+    io:println(e);
+    io:println("=========================================================");
 
     ////Get a all the repositories of Organization
     //github:RepositoryList repoList;
