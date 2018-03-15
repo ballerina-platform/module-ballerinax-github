@@ -8,6 +8,8 @@ The Ballerina GitHub connector allow users to access the GitHub API through ball
 |------------------|-------------------|
 |0.964.0 | 0.1 |
 
+![Ballerina GitHub Connector Overview](BallerinaGitHubConnector_Overview.jpg)
+
 ### Getting started
 
 * Clone the repository by running the following command
