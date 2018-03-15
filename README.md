@@ -79,7 +79,7 @@ Name | Type | Description
 name | string | Name of the organization and repository. (Eg: "organization/repository")
 
 ###### Returns
-**github:Repository**
+* **github:Repository , github:GitConnectorError**
 
 ***
 
@@ -92,7 +92,7 @@ Name | Type | Description
 name | string | Name of the organization. (Eg: "organization")
 
 ###### Returns
-**github:Organization**
+**github:Organization , github:GitConnectorError**
 
 ***
 ## github:Repository
@@ -106,7 +106,7 @@ Name | Type | Description
 state | string | The state of the project. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
 
 ###### Returns
-**github:ProjectList**
+**github:ProjectList , github:GitConnectorError**
 
 ***
 ### getProject()
@@ -118,7 +118,7 @@ Name | Type | Description
 projectNumber | int | The integral number of the project.
 
 ###### Returns
-**github:Project**
+**github:Project , github:GitConnectorError**
 
 ***
 
@@ -131,7 +131,7 @@ Name | Type | Description
 state | string | The state of the issue. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
 
 ###### Returns
-**github:IssueList**
+**github:IssueList , github:GitConnectorError**
 
 ***
 
@@ -144,7 +144,7 @@ Name | Type | Description
 issueNumber | int | The integral number of the issue.
 
 ###### Returns
-**github:Issue**
+**github:Issue , github:GitConnectorError**
 
 ***
 
@@ -157,6 +157,45 @@ Name | Type | Description
 state | string | The state of the pull request. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_MERGED, github:GIT_STATE_ALL)
 
 ###### Returns
-**github:PullRequestList**
+**github:PullRequestList , github:GitConnectorError**
+
+***
+
+##github:Organization
+
+### getProjectList()
+Return a list of projects on the organization.
+
+###### Parameters
+Name | Type | Description
+-----|------|------------
+state | string | The state of the project. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
+
+###### Returns
+**github:ProjectList , github:GitConnectorError**
+
+***
+
+### getProject()
+Return a single project of the organization.
+
+###### Parameters
+Name | Type | Description
+-----|------|------------
+projectNumber | int | The integral number of the project.
+
+###### Returns
+**github:Project , github:GitConnectorError**
+
+***
+
+### getRepositoryList()
+Return the list of repositories of the organization.
+
+###### Parameters
+None
+
+###### Returns
+**github:RepositoryList , github:GitConnectorError**
 
 ***
