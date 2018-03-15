@@ -4,6 +4,10 @@
 
 The Ballerina GitHub connector allow users to access the GitHub API through ballerina. This connector uses the GitHub GraphQL API v4.0
 
+|Ballerina Version | Connector Version |
+|------------------|-------------------|
+|0.964.0 | 0.1 |
+
 ### Getting started
 
 * Clone the repository by running the following command
@@ -13,7 +17,7 @@ git clone https://github.com/vlgunarathne/connector-github.git
 * Import the package to your ballerina project.
 
 ##### Prerequisites
-Install the latest ballerina [distribution](https://ballerinalang.org/).
+Download the ballerina version 0.964.0 [distribution](https://ballerinalang.org/downloads/).
 
 ### Working with GitHub Connector Actions
 
@@ -28,7 +32,7 @@ All the actions return `struct objects` and `github:GitConnectorError`. If the a
     
     ////Get a single repository
     github:Repository repository;
-    repository, e = githubConnector.getRepository("vlgunarathne/connector-github");
+    repository, error = githubConnector.getRepository("vlgunarathne/connector-github");
     
 ```
 * Response
@@ -64,7 +68,7 @@ public struct Repository {
 ```
 
 ***
-### Connector API
+## Connector API
 
 ### getRepository()
 Return a single repository.
