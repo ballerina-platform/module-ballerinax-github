@@ -97,7 +97,7 @@ name | string | Name of the organization. (Eg: "organization")
 ***
 ## github:Repository
 
-### getProjects()
+### getProjectList()
 Return a list of projects in the repository.
 
 ###### Parameters
@@ -122,7 +122,7 @@ projectNumber | int | The integral number of the project.
 
 ***
 
-### getIssues()
+### getIssueList()
 Return a list of issues of the repository.
 
 ###### Parameters
