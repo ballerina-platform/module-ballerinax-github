@@ -66,7 +66,7 @@ public struct Repository {
 ***
 ### Connector API
 
-#### getRepository()
+### getRepository()
 Return a single repository.
 
 ###### Parameters
@@ -79,7 +79,7 @@ name | string | Name of the organization and repository. (Eg: "organization/repo
 
 ***
 
-#### getOrganization()
+### getOrganization()
 Return a single organization.
 
 ###### Parameters
@@ -93,7 +93,7 @@ name | string | Name of the organization. (Eg: "organization")
 ***
 ## github:Repository
 
-#### getProjects()
+### getProjects()
 Return a list of projects in the repository.
 
 ###### Parameters
@@ -105,7 +105,7 @@ state | string | The state of the project. (Eg: github:GIT_STATE_OPEN, github:GI
 **github:ProjectList**
 
 ***
-#### getProject()
+### getProject()
 Return a single project of the repository.
 
 ###### Parameters
@@ -118,7 +118,7 @@ projectNumber | int | The integral number of the project.
 
 ***
 
-#### getIssues()
+### getIssues()
 Return a list of issues of the repository.
 
 ###### Parameters
@@ -131,7 +131,7 @@ state | string | The state of the issue. (Eg: github:GIT_STATE_OPEN, github:GIT_
 
 ***
 
-#### getIssue()
+### getIssue()
 Return a single issue of the repository.
 
 ###### Parameters
@@ -144,7 +144,7 @@ issueNumber | int | The integral number of the issue.
 
 ***
 
-#### getPullRequestList()
+### getPullRequestList()
 Return a list of pull requests of the repository.
 
 ###### Parameters
