@@ -60,7 +60,6 @@ public struct Repository {
 ```
 
 ***
-
 ###Connector API
 
 ####getRepository()
