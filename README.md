@@ -22,6 +22,10 @@ All the actions return `struct objects` and `github:GitConnectorError`. If the a
 ##### Example
 * Request 
 ```ballerina
+    endpoint<github:GithubConnector> githubConnector {
+        create github:GithubConnector(ACCESS_TOKEN);
+    }
+    
     ////Get a single repository
     github:Repository repository;
     repository, e = githubConnector.getRepository("vlgunarathne/connector-github");
@@ -72,3 +76,83 @@ name | string | Name of the organization and repository. (Eg: "organization/repo
 
 ###### Returns
 **github:Repository**
+
+***
+
+#### getOrganization()
+Return a single organization.
+
+######Parameters
+Name | Type | Description
+-----|------|------------
+name | string | Name of the organization. (Eg: "organization")
+
+######Returns
+**github:Organization**
+
+***
+##github:Repository
+
+#### getProjects()
+Return a list of projects in the repository.
+
+######Parameters
+Name | Type | Description
+-----|------|------------
+state | string | The state of the project. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
+
+######Returns
+**github:ProjectList**
+
+***
+#### getProject()
+Return a single project of the repository.
+
+######Parameters
+Name | Type | Description
+-----|------|------------
+projectNumber | int | The integral number of the project.
+
+######Returns
+**github:Project**
+
+***
+
+#### getIssues()
+Return a list of issues of the repository.
+
+######Parameters
+Name | Type | Description
+-----|------|------------
+state | string | The state of the issue. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
+
+######Returns
+**github:IssueList**
+
+***
+
+#### getIssue()
+Return a single issue of the repository.
+
+######Parameters
+Name | Type | Description
+-----|------|------------
+issueNumber | int | The integral number of the issue.
+
+######Returns
+**github:Issue**
+
+***
+
+#### getPullRequestList()
+Return a list of pull requests of the repository.
+
+######Parameters
+Name | Type | Description
+-----|------|------------
+state | string | The state of the pull request. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_MERGED, github:GIT_STATE_ALL)
+
+######Returns
+**github:PullRequestList**
+
+***
