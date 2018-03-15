@@ -18,21 +18,17 @@
 
 package src.github;
 
-import ballerina.net.http;
 import ballerina.io;
+import ballerina.net.http;
 
 http:HttpClient gitHTTPClient = create http:HttpClient(GIT_API_URL, {});
 map metaData = {};
-//*********************************************************************************************************************
-//*********************************************************************************************************************
-//  Struct Templates
-//*********************************************************************************************************************
-//*********************************************************************************************************************
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              Project struct                                                       //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a github project"}
 public struct Project {
     string id;
     int databaseId;
@@ -67,8 +63,8 @@ public function <Project project> getColumnList () (ColumnList, GitConnectorErro
         connectorError = {message:["Project cannot be null"]};
         return null, connectorError;
     }
-    metaData["projectOwnerType"] = project.owner.__typename;
-    string projectOwnerType = project.owner.__typename;
+    metaData["projectOwnerType"] = project.owner.getOwnerType();
+    string projectOwnerType = project.owner.getOwnerType();
     if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION) && project.resourcePath != null) {
         string organization = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
         string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization}}",
@@ -132,8 +128,6 @@ function getProjectColumns (string ownerType, string gitQuery) (ColumnList, GitC
 
     return columnList, connectorError;
 }
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of Project struct                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,19 +135,30 @@ function getProjectColumns (string ownerType, string gitQuery) (ColumnList, GitC
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              RepositoryList struct                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a list of repositories"}
 public struct RepositoryList {
-    PageInfo pageInfo;
-    Repository[] nodes;
+    private:
+        PageInfo pageInfo;
+        Repository[] nodes;
 }
-
+//*********************************************************************************************************************
+// RepositoryList bound functions
+//*********************************************************************************************************************
+@Description {value:"Check if repository list next page is available"}
+@Return {value:"boolean: Return true or false"}
 public function <RepositoryList repositoryList> hasNextPage () (boolean) {
     return repositoryList.pageInfo.hasNextPage;
 }
 
+@Description {value:"Check if repository list previous page is available"}
+@Return {value:"boolean: Return true or false"}
 public function <RepositoryList repositoryList> hasPreviousPage () (boolean) {
     return repositoryList.pageInfo.hasPreviousPage;
 }
 
+@Description {value:"Get the next page of a repository list"}
+@Return {value:"RepositoryList: Repository list"}
+@Return {value:"GitConnectorError: Error"}
 public function <RepositoryList repositoryList> nextPage () (RepositoryList, GitConnectorError) {
     endpoint<http:HttpClient> gitClient {
         gitHTTPClient;
@@ -194,6 +199,8 @@ public function <RepositoryList repositoryList> nextPage () (RepositoryList, Git
     return null, connectorError;
 }
 
+@Description {value:"Get an array of repositories"}
+@Return {value:"RepositoryList[]: Array of repositories"}
 public function <RepositoryList repositoryList> getAllRepositories () (Repository[]) {
     return repositoryList.nodes;
 }
@@ -204,7 +211,7 @@ public function <RepositoryList repositoryList> getAllRepositories () (Repositor
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              Repository struct                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+@Description {value: "Represents a github repository"}
 public struct Repository {
     string id;
     string name;
@@ -367,7 +374,7 @@ public function <Repository repository> getProjects (string state) (Project[], G
     return projectArray, connectorError;
 } //TODO getProjectList
 
-@Description {value:"Get a single project of a specified repository."}
+@Description {value:"Get a single project of a repository."}
 @Param {value:"projectNumber: The number of the project"}
 @Return {value:"Project object"}
 @Return {value:"GitConnectorError: Error"}
@@ -418,9 +425,9 @@ public function <Repository repository> getProject (int projectNumber) (Project,
     return singleProject, connectorError;
 }
 
-@Description {value:"Get a list of issues of a specified repository."}
-@Param {value:"state: State of the repository (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
-@Return {value:"IssueList object"}
+@Description {value:"Get a list of issues of a repository."}
+@Param {value:"state: State of the issue (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
+@Return {value:"IssueList: Issue list object"}
 @Return {value:"GitConnectorError: Error"}
 public function <Repository repository> getIssueList (string state) (IssueList, GitConnectorError) {
 
@@ -470,6 +477,7 @@ public function <Repository repository> getIssueList (string state) (IssueList, 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              Organization struct                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a github organization"}
 public struct Organization {
     string id;
     string login;
@@ -487,9 +495,9 @@ public struct Organization {
 //*********************************************************************************************************************
 // Organization bound functions
 //*********************************************************************************************************************
-@Description {value:"Get all projects of an organization"}
-@Param {value:"state: State of the repository (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
-@Return {value:"Project[]:Array of projects"}
+@Description {value:"Get all projects of an organization."}
+@Param {value:"state: State of the project (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
+@Return {value:"Project[]: Array of projects"}
 @Return {value:"GitConnectorError: Error"}
 public function <Organization organization> getProjects (string state) (Project[], GitConnectorError) {
     endpoint<http:HttpClient> gitClient {
@@ -553,13 +561,12 @@ public function <Organization organization> getProjects (string state) (Project[
 
     }
     return projectArray, connectorError;
-}
+} //TODO getPojectList()
 
-@Description {value:"Get a single project of a specified organization."}
-@Param {value:"organization: Name of the organization"}
+@Description {value:"Get a single project of an organization."}
 @Param {value:"projectNumber: The number of the project"}
 @Return {value:"Project object"}
-@Return {value:"Error"}
+@Return {value:"GitConnectorError: Error"}
 public function <Organization organization> getProject (int projectNumber) (Project, GitConnectorError) {
     endpoint<http:HttpClient> gitClient {
         gitHTTPClient;
@@ -605,12 +612,10 @@ public function <Organization organization> getProject (int projectNumber) (Proj
     return singleProject, connectorError;
 }
 
-@Description {value:"Get a list of repositories of a specified organization."}
-@Param {value:"organization: Name of the organization"}
-@Param {value:"projectNumber: The number of the project"}
-@Return {value:"Project object"}
-@Return {value:"Error"}
-public function <Organization organization> getRepositories () (RepositoryList, GitConnectorError) {
+@Description {value:"Get a list of repositories of an organization."}
+@Return {value:"RepositoryList: Repository list object"}
+@Return {value:"GitConnectorError: Error"}
+public function <Organization organization> getRepositoryList () (RepositoryList, GitConnectorError) {
     endpoint<http:HttpClient> gitClient {
         gitHTTPClient;
     }
@@ -660,8 +665,8 @@ public function <Organization organization> getRepositories () (RepositoryList, 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              Column struct                                                        //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a github Column"}
 public struct Column {
-
     string id;
     string name;
     private:
@@ -670,6 +675,8 @@ public struct Column {
 //*********************************************************************************************************************
 // Column bound functions
 //*********************************************************************************************************************
+@Description {value: "Get a list of cards of a column"}
+@Return {value: "CardList: A card list object"}
 public function <Column column> getCardList () (CardList) {
     metaData["projectColumnId"] = column.id;
     return column.cards;
@@ -681,21 +688,30 @@ public function <Column column> getCardList () (CardList) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              CardList struct                                                      //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a list of cards of a column"}
 public struct CardList {
-    PageInfo pageInfo;
-    Card[] nodes;
+    private:
+        PageInfo pageInfo;
+        Card[] nodes;
 }
 //*********************************************************************************************************************
 // CardList bound functions
 //*********************************************************************************************************************
+@Description {value: "Check if the card list next page is available"}
+@Return {value: "boolean: Return true or false"}
 public function <CardList cardList> hasNextPage () (boolean) {
     return cardList.pageInfo.hasNextPage;
 }
 
+@Description {value: "Check if the card list previous page is available"}
+@Return {value: "boolean: Return true or false"}
 public function <CardList cardList> hasPreviousPage () (boolean) {
     return cardList.pageInfo.hasPreviousPage;
 }
 
+@Description {value: "Get the next page of the card list"}
+@Return {value: "CardList: Card list object"}
+@Return {value:"GitConnectorError: Error"}
 public function <CardList cardList> nextPage () (CardList, GitConnectorError) {
     GitConnectorError connectorError;
     if (cardList.hasNextPage()) {
@@ -732,6 +748,8 @@ public function <CardList cardList> nextPage () (CardList, GitConnectorError) {
     return null, connectorError;
 }
 
+@Description {value: "Get an array of all the cards"}
+@Return {value: "Card[]: Array of cards"}
 public function <CardList cardList> getAllCards () (Card[]) {
     return cardList.nodes;
 }
@@ -742,21 +760,30 @@ public function <CardList cardList> getAllCards () (Card[]) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              ColumnList struct                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a list of columns of a project"}
 public struct ColumnList {
-    private:PageInfo pageInfo;
+    private:
+        PageInfo pageInfo;
         Column[] nodes;
 }
 //*********************************************************************************************************************
 // ColumnList bound functions
 //*********************************************************************************************************************
+@Description {value: "Check if column list next page is available"}
+@Return {value: "boolean: Return true or false"}
 public function <ColumnList columnList> hasNextPage () (boolean) {
     return columnList.pageInfo.hasNextPage;
 }
 
+@Description {value: "Check if column list previosu page is available"}
+@Return {value: "boolean: Return true or false"}
 public function <ColumnList columnList> hasPreviousPage () (boolean) {
     return columnList.pageInfo.hasPreviousPage;
 }
 
+@Description {value: "Get the next page of colum list"}
+@Return {value: "ColumList: Column list object"}
+@Return {value:"GitConnectorError: Error"}
 public function <ColumnList columnList> nextPage () (ColumnList, GitConnectorError) {
     GitConnectorError connectorError;
     if (columnList.hasNextPage()) {
@@ -782,6 +809,8 @@ public function <ColumnList columnList> nextPage () (ColumnList, GitConnectorErr
     return null, connectorError;
 }
 
+@Description {value: "Get an array of all the columns"}
+@Return {value: "Column[]: Column array"}
 public function <ColumnList columnList> getAllColumns () (Column[]) {
     return columnList.nodes;
 }
@@ -789,21 +818,46 @@ public function <ColumnList columnList> getAllColumns () (Column[]) {
 //                                          End of ColumnList struct                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                               Creator struct                                                      //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a github Creator"}
 public struct Creator {
     string login;
     string resourcePath;
     string url;
     string avatarUrl;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                            End of Creator struct                                                  //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                              ProjectOwner struct                                                  //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a github project owner"}
 public struct ProjectOwner {
     string id;
     string projectsResourcePath;
     string projectsUrl;
     string viewerCanCreateProjects;
-    string __typename;
+    private:
+        string __typename;
 }
 
+@Description {value: "Get the type of the project owner"}
+@Return {value: "string: Type of the owner"}
+public function <ProjectOwner projectOwner> getOwnerType () (string) {
+    return projectOwner.__typename;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                           End of ProjectOwner struct                                              //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                            RepositoryOwner struct                                                 //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a github repository owner"}
 public struct RepositoryOwner {
     string id;
     string login;
@@ -811,14 +865,27 @@ public struct RepositoryOwner {
     string avatarUrl;
     string resourcePath;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                          End RepositoryOwner struct                                               //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                               Content struct                                                      //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a content in a github card"}
 public struct Content {
     string title;
     string url;
     string issueState;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                           End of Content struct                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                Issue struct                                                       //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a github issue"}
 public struct Issue {
     string id;
     string bodyText;
@@ -835,46 +902,73 @@ public struct Issue {
     string url;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                              End of Issue struct                                                  //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                IssueList struct                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a list of github issues"}
 public struct IssueList {
     private:
         PageInfo pageInfo;
         Issue[] nodes;
 }
 //*********************************************************************************************************************
-// ColumnList bound functions
+// IssueList bound functions
 //*********************************************************************************************************************
+@Description {value: "Check if issue list next page is available"}
+@Return {value: "boolean: Return true or false"}
 public function <IssueList issueList> hasNextPage () (boolean) {
     return issueList.pageInfo.hasNextPage;
 }
 
+@Description {value: "Check if issue list previous page is avaiable"}
+@Return {value: "boolean: Return ture or false"}
 public function <IssueList issueList> hasPreviousPage () (boolean) {
     return issueList.pageInfo.hasPreviousPage;
 }
+
+@Description {value: "Get an array of all the issues"}
+@Return {value: "Issue[]: Issue array"}
 public function <IssueList issueList> getAllIssues () (Issue[]) {
     return issueList.nodes;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                            End of IssueList struct                                                //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                Language struct                                                    //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a github language"}
 public struct Language {
     string id;
     string name;
     string color;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                             End of Language struct                                                //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public struct State {
-    string OPEN = "OPEN";
-    string CLOSED = "CLOSED";
-    string ALL = "OPEN,CLOSED";
-}
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                            GitConnectorError struct                                               //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "GitHub Connector Error"}
 public struct GitConnectorError {
     int statusCode;
     string[] message;
     string reasonPhrase;
     string server;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                         End of GitConnectorError struct                                           //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                              PullRequest struct                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a github pull request"}
 public struct PullRequest {
     string id;
     string title;
@@ -897,12 +991,47 @@ public struct PullRequest {
     string headRefName;
     string baseRefName;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                           End of PullRequest struct                                               //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                             PullRequestList struct                                                //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a list of github pull requests"}
 public struct PullRequestList {
     private:
         PageInfo pageInfo;
         PullRequest[] nodes;
 }
+//*********************************************************************************************************************
+// ColumnList bound functions
+//*********************************************************************************************************************
+@Description {value: "Check if pull request list next page is available"}
+@Return {value: "boolean: Return true or false"}
+public function <PullRequestList pullRequestList> hasNextPage () (boolean) {
+    return pullRequestList.pageInfo.hasNextPage;
+}
+
+@Description {value: "Check if pull request list previous page is avaiable"}
+@Return {value: "boolean: Return ture or false"}
+public function <PullRequestList pullRequestList> hasPreviousPage () (boolean) {
+    return pullRequestList.pageInfo.hasPreviousPage;
+}
+
+@Description {value: "Get an array of all the pull requests"}
+@Return {value: "PullRequest[]: PullRequest array"}
+public function <PullRequestList pullRequestList> getAllPullrequests () (PullRequest[]) {
+    return pullRequestList.nodes;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                          End of PullRequestList struct                                            //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                   Card struct                                                     //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a github card"}
 public struct Card {
     string id;
     string note;
@@ -914,27 +1043,53 @@ public struct Card {
     json column;
     json content;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                               End of Card struct                                                  //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-public struct PageInfo {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                PageInfo struct                                                    //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a github page information"}
+struct PageInfo {
     boolean hasNextPage;
     boolean hasPreviousPage;
     string startCursor;
     string endCursor;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                            End of PageInfo struct                                                 //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                 Label struct                                                      //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a github label"}
 public struct Label {
     string id;
     string name;
     string description;
     string color;
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                             End of Label struct                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                               LabelList struct                                                    //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value: "Represents a list of github labels"}
 public struct LabelList {
-    Label[] nodes;
+    private:
+        Label[] nodes;
+}
+
+@Description {value: "Get an array of labels"}
+@Return {value: "Lebel[]: Label array"}
+public function <LabelList labelList> getAllLabels () (Label[]) {
+    return labelList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              End of structs                                                       //
+//                                              End of LabelList struct                                                       //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

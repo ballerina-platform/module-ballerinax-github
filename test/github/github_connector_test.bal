@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package test.wso2.github;
+package test.github;
 
 import ballerina.test;
 import ballerina.util;
