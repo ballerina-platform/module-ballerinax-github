@@ -82,38 +82,38 @@ name | string | Name of the organization and repository. (Eg: "organization/repo
 #### getOrganization()
 Return a single organization.
 
-######Parameters
+###### Parameters
 Name | Type | Description
 -----|------|------------
 name | string | Name of the organization. (Eg: "organization")
 
-######Returns
+###### Returns
 **github:Organization**
 
 ***
-##github:Repository
+## github:Repository
 
 #### getProjects()
 Return a list of projects in the repository.
 
-######Parameters
+###### Parameters
 Name | Type | Description
 -----|------|------------
 state | string | The state of the project. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
 
-######Returns
+###### Returns
 **github:ProjectList**
 
 ***
 #### getProject()
 Return a single project of the repository.
 
-######Parameters
+###### Parameters
 Name | Type | Description
 -----|------|------------
 projectNumber | int | The integral number of the project.
 
-######Returns
+###### Returns
 **github:Project**
 
 ***
@@ -121,12 +121,12 @@ projectNumber | int | The integral number of the project.
 #### getIssues()
 Return a list of issues of the repository.
 
-######Parameters
+###### Parameters
 Name | Type | Description
 -----|------|------------
 state | string | The state of the issue. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
 
-######Returns
+###### Returns
 **github:IssueList**
 
 ***
@@ -134,12 +134,12 @@ state | string | The state of the issue. (Eg: github:GIT_STATE_OPEN, github:GIT_
 #### getIssue()
 Return a single issue of the repository.
 
-######Parameters
+###### Parameters
 Name | Type | Description
 -----|------|------------
 issueNumber | int | The integral number of the issue.
 
-######Returns
+###### Returns
 **github:Issue**
 
 ***
@@ -147,12 +147,12 @@ issueNumber | int | The integral number of the issue.
 #### getPullRequestList()
 Return a list of pull requests of the repository.
 
-######Parameters
+###### Parameters
 Name | Type | Description
 -----|------|------------
 state | string | The state of the pull request. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_MERGED, github:GIT_STATE_ALL)
 
-######Returns
+###### Returns
 **github:PullRequestList**
 
 ***
