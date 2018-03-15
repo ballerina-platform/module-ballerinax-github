@@ -12,10 +12,10 @@ git clone https://github.com/vlgunarathne/connector-github.git
 ```
 * Import the package to your ballerina project.
 
-#####Prerequisites
+##### Prerequisites
 Install the latest ballerina [distribution](https://ballerinalang.org/).
 
-###Working with GitHub Connector Actions
+### Working with GitHub Connector Actions
 
 All the actions return `struct objects` and `github:GitConnectorError`. If the actions was a success, then the requested struct object will be returned while the `github:GitConnectorError` will be **null** and vice-versa.
 
@@ -62,7 +62,7 @@ public struct Repository {
 ***
 ### Connector API
 
-####getRepository()
+#### getRepository()
 Return a single repository.
 
 ###### Parameters
