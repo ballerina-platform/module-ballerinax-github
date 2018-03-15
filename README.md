@@ -32,7 +32,7 @@ All the actions return `struct objects` and `github:GitConnectorError`. If the a
         create github:GithubConnector(ACCESS_TOKEN);
     }
     
-    ////Get a single repository
+    //Get a single repository
     github:Repository repository;
     repository, error = githubConnector.getRepository("vlgunarathne/connector-github");
     
@@ -72,6 +72,19 @@ public struct Repository {
 ***
 ## Connector API
 
+### API Reference
+- [getRepository()](https://github.com/vlgunarathne/connector-github#getrepository)
+    - [getProjectList()](https://github.com/vlgunarathne/connector-github#getprojectlist)
+    - [getProject()](https://github.com/vlgunarathne/connector-github#getproject)
+    - [getIssueList()](https://github.com/vlgunarathne/connector-github#getissuelist)
+    - [getIssue()](https://github.com/vlgunarathne/connector-github#getissue)
+    - [getPullRequestList()](https://github.com/vlgunarathne/connector-github#getpullrequestlist)
+
+- [getOrganization()](https://github.com/vlgunarathne/connector-github#getorganization)
+    - [getProjectList()](https://github.com/vlgunarathne/connector-github#getprojectlist-1)
+    - [getProject()](https://github.com/vlgunarathne/connector-github#getproject-1)
+    - [getRepositoryList()](https://github.com/vlgunarathne/connector-github#getrepositorylist)
+    
 ### getRepository()
 Return a single repository.
 
