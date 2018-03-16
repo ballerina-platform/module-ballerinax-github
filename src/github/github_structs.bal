@@ -85,7 +85,7 @@ public function <Project project> getColumnList () (ColumnList, GitConnectorErro
     return null, connectorError;
 }
 
-@Description {value:"Get all columns of a project"}
+@Description {value:"Get all columns of an organization project or repository project"}
 @Param {value:"ownerType: Repository or Organization"}
 @Param {value:"gitQuery: Graphql query"}
 @Return {value:"ColumnList: Column list object"}
@@ -130,6 +130,39 @@ function getProjectColumns (string ownerType, string gitQuery) (ColumnList, GitC
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of Project struct                                                 //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                 ProjectList struct                                                //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value:"Represents a list of projects"}
+public struct ProjectList {
+    private:
+        PageInfo pageInfo;
+        Project[] nodes;
+}
+//*********************************************************************************************************************
+// ProjectList bound functions
+//*********************************************************************************************************************
+@Description {value:"Check if project list next page is available"}
+@Return {value:"boolean: Return true or false"}
+public function <ProjectList projectList> hasNextPage () (boolean) {
+    return projectList.pageInfo.hasNextPage;
+}
+
+@Description {value:"Check if project list previous page is available"}
+@Return {value:"boolean: Return true or false"}
+public function <ProjectList projectList> hasPreviousPage () (boolean) {
+    return projectList.pageInfo.hasPreviousPage;
+}
+
+@Description {value:"Get an array of repositories"}
+@Return {value:"RepositoryList[]: Array of repositories"}
+public function <ProjectList projectList> getAllRepositories () (Project[]) {
+    return projectList.nodes;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                             End of ProjectList struct                                             //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -279,7 +312,7 @@ public function <Repository repository> getPullRequestList (string state) (PullR
     if (connectorError != null) {
         return null, connectorError;
     }
-    var githubPullRequestsJson, _ = (json) validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
+    var githubPullRequestsJson, _ = (json)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
     pullRequestList, _ = <PullRequestList>githubPullRequestsJson;
 
     return pullRequestList, connectorError;
@@ -290,7 +323,7 @@ public function <Repository repository> getPullRequestList (string state) (PullR
 @Param {value:"state: State of the repository (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
 @Return {value:"Project[]: Array of projects"}
 @Return {value:"GitConnectorError: Error"}
-public function <Repository repository> getProjects (string state) (Project[], GitConnectorError) {
+public function <Repository repository> getProjectList (string state) (ProjectList, GitConnectorError) {
     endpoint<http:HttpClient> gitClient {
         gitHTTPClient;
     }
@@ -299,12 +332,11 @@ public function <Repository repository> getProjects (string state) (Project[], G
 
     if (repository == null || state == null) {
         connectorError = {message:["Repository and state cannot be null"]};
-        return [], connectorError;
+        return null, connectorError;
     }
 
     boolean hasNextPage = true;
     http:HttpConnectorError httpError;
-    Project[] projectArray = [];
 
     http:OutRequest request = {};
     http:InResponse response = {};
@@ -317,42 +349,21 @@ public function <Repository repository> getProjects (string state) (Project[], G
 
     //Set headers and payload to the request
     constructRequest(request, query, gitAccessToken);
-    int i = 0;
-    //Iterate through multiple pages of results
-    while (hasNextPage) {
-        response, httpError = gitClient.post("", request);
-        if (httpError != null) {
-            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
-            return [], connectorError;
-        }
-        json validatedResponse;
-        //Check for empty payloads and errors
-        validatedResponse, connectorError = getValidatedResponse(response, GIT_PROJECTS);
-        if (connectorError != null) {
-            return [], connectorError;
-        }
-        var githubProjectsJson, _ = (json[])validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_NODES];
-        foreach projectJson in githubProjectsJson {
-            projectArray[i], _ = <Project>projectJson;
-            i = i + 1;
-        }
-
-        hasNextPage, _ = (boolean)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_PAGE_INFO]
-                                  [GIT_HAS_NEXT_PAGE];
-        if (hasNextPage) {
-            var endCursor, _ = (string)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS][GIT_PAGE_INFO]
-                                       [GIT_END_CURSOR];
-
-            string stringQueryNextPage = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}"
-            ,"{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":{{state}}
-            ,"{{GIT_END_CURSOR}}":"{{endCursor}}"},"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECTS_NEXT_PAGE}}"}`;
-            var queryNextPage, _ = <json>stringQueryNextPage;
-            request = {};
-            constructRequest(request, queryNextPage, gitAccessToken);
-        }
-
+    response, httpError = gitClient.post("", request);
+    if (httpError != null) {
+        connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+        return null, connectorError;
     }
-    return projectArray, connectorError;
+    json validatedResponse;
+    //Check for empty payloads and errors
+    validatedResponse, connectorError = getValidatedResponse(response, GIT_PROJECTS);
+    if (connectorError != null) {
+        return null, connectorError;
+    }
+    var githubProjectsJson, _ = (json)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS];
+    var projectList, _ = <ProjectList>githubProjectsJson;
+
+    return projectList, connectorError;
 } //TODO getProjectList
 
 @Description {value:"Get a single project of a repository."}
@@ -1002,9 +1013,11 @@ public function <PullRequestList pullRequestList> hasPreviousPage () (boolean) {
     return pullRequestList.pageInfo.hasPreviousPage;
 }
 
-@Description {value: "Get the next page of the pull request list"}
+@Description {value:"Get the next page of the pull request list"}
+@Return {value:"PullRequestList: PullRequest list object"}
+@Return {value:"GitConnectorError: Error"}
 public function <PullRequestList pullRequestList> nextPage () (PullRequestList, GitConnectorError) {
-    endpoint <http:HttpClient> gitClient {
+    endpoint<http:HttpClient> gitClient {
         gitHTTPClient;
     }
 
