@@ -20,9 +20,9 @@ public function main (string[] args) {
     //io:println(e);
 
     ////Get a list of projects of an organization
-    //github:Project[] responseProjectList;
-    //responseProjectList, e = organization.getProjects(github:GIT_STATE_OPEN);
-    //io:println(lengthof responseProjectList);
+    //github:ProjectList responseProjectList;
+    //responseProjectList, e = organization.getProjectList(github:GIT_STATE_OPEN);
+    //io:println(lengthof responseProjectList.getAllProjects());
     //io:println(e);
     //io:println("=========================================================");
 
@@ -41,7 +41,7 @@ public function main (string[] args) {
 
     ////Get a single repository
     //github:Repository repo;
-    //repo, e= githubConnector.getRepository("wso2/product-apim");
+    //repo, e= githubConnector.getRepository("vlgunarathne/ProLAd-ExpertSystem");
     //io:println(repo);
     //io:println(e);
     //io:println("=========================================================");
@@ -53,8 +53,8 @@ public function main (string[] args) {
     //io:println(e);
 
     ////Get a list of projects of a repository
-    //github:Project[] responseProjectList;
-    //responseProjectList, e = repo.getProjects(github:GIT_STATE_OPEN);
+    //github:ProjectList responseProjectList;
+    //responseProjectList, e = repo.getProjectList(github:GIT_STATE_OPEN);
     //io:println(responseProjectList);
     //io:println(e);
     //io:println("=========================================================");

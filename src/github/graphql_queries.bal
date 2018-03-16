@@ -24,6 +24,7 @@ public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $reposito
     projects(first:100, states:$states){
       pageInfo {
         hasNextPage,
+        hasPreviousPage,
         startCursor,
         endCursor
       },
@@ -106,6 +107,7 @@ public const string GET_ORGANIZATION_PROJECTS = "query ($organization: String!, 
     projects(first:100, states:$states){
       pageInfo {
         hasNextPage,
+        hasPreviousPage,
         startCursor,
         endCursor
       },
@@ -379,7 +381,6 @@ public const string GET_ORGANIZATION = "query ($organization: String!) {
     websiteUrl
   }
 }";
-//////////////////////////////////////////////////////////////////////////////////////////////////////////// TODO
 public const string GET_REPOSITORY_PROJECT_COLUMNS = "query ($owner: String!,$name:String!, $number: Int!){
   repository (owner:$owner, name:$name) {
     project (number : $number){
@@ -529,7 +530,7 @@ public const string GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE = "query ($owner: Str
     }
   }
  }";
-//TODO
+
 public const string GET_ORGANIZATION_PROJECT_COLUMNS = "query ($organization: String!, $number: Int!){
   organization (login:$organization) {
     project (number : $number) {
@@ -816,4 +817,3 @@ public const string GET_REPOSITORY_ISSUES = "query ($owner:String!, $name:String
     }
   }
 }";
-//

@@ -23,50 +23,51 @@ package src.github;
 //Constant related to graphql queries
 
 //String constants
-public const string GIT_API_URL = "https://api.github.com/graphql"; //TODO move this to a config file
-public const string GIT_CARDS = "cards";
-public const string GIT_COLUMNS = "columns";
-public const string GIT_DATA = "data";
-public const string GIT_EDGES = "edges";
-public const string GIT_END_CURSOR = "endCursor";
-public const string GIT_END_CURSOR_CARD = "endCursorCard";
-public const string GIT_END_CURSOR_COLUMN = "endCursorColumn";
-public const string GIT_HAS_NEXT_PAGE = "hasNextPage";
-public const string GIT_ISSUES = "issues";
-public const string GIT_MESSAGE = "message";
-public const string GIT_NAME = "name";
-public const string GIT_NODE = "node";
-public const string GIT_NODES = "nodes";
-public const string GIT_NUMBER = "number";
-public const string GIT_ORGANIZATION = "organization";
-public const string GIT_OWNER = "owner";
-public const string GIT_PAGE_INFO = "pageInfo";
-public const string GIT_PROJECT = "project";
-public const string GIT_PROJECTS = "projects";
-public const string GIT_PULL_REQUESTS = "pullRequests";
-public const string GIT_QUERY = "query";
-public const string GIT_REPOSITORIES = "repositories";
-public const string GIT_REPOSITORY = "repository";
-public const string GIT_REPOSITORY_OWNER = "repositoryOwner";
-public const string GIT_START_CURSOR = "startCursor";
-public const string GIT_STATES = "states";
+const string GIT_API_URL = "https://api.github.com/graphql";
+const string GIT_CARDS = "cards";
+const string GIT_COLUMNS = "columns";
+const string GIT_DATA = "data";
+const string GIT_EDGES = "edges";
+const string GIT_END_CURSOR = "endCursor";
+const string GIT_END_CURSOR_CARD = "endCursorCard";
+const string GIT_END_CURSOR_COLUMN = "endCursorColumn";
+const string GIT_HAS_NEXT_PAGE = "hasNextPage";
+const string GIT_ISSUES = "issues";
+const string GIT_MESSAGE = "message";
+const string GIT_NAME = "name";
+const string GIT_NODE = "node";
+const string GIT_NODES = "nodes";
+const string GIT_NUMBER = "number";
+const string GIT_ORGANIZATION = "organization";
+const string GIT_OWNER = "owner";
+const string GIT_PAGE_INFO = "pageInfo";
+const string GIT_PROJECT = "project";
+const string GIT_PROJECTS = "projects";
+const string GIT_PULL_REQUESTS = "pullRequests";
+const string GIT_QUERY = "query";
+const string GIT_REPOSITORIES = "repositories";
+const string GIT_REPOSITORY = "repository";
+const string GIT_REPOSITORY_OWNER = "repositoryOwner";
+const string GIT_START_CURSOR = "startCursor";
+const string GIT_STATES = "states";
+const string GIT_VARIABLES = "variables";
+
+// Public constants
 public const string GIT_STATE_ALL_ISSUE = "[\"OPEN\",\"CLOSED\"]";
 public const string GIT_STATE_ALL_PULL_REQUEST = "[\"OPEN\",\"CLOSED\",\"MERGED\"]";
 public const string GIT_STATE_CLOSED = "[\"CLOSED\"]";
 public const string GIT_STATE_MERGED = "[\"MERGED\"]";
 public const string GIT_STATE_OPEN = "[\"OPEN\"]";
-public const string GIT_VARIABLES = "variables";
-
 
 //Integer constants
-public const int GIT_INDEX_ZERO = 0;
-public const int GIT_INDEX_ONE = 1;
-public const int GIT_INDEX_TWO = 2;
+const int GIT_INDEX_ZERO = 0;
+const int GIT_INDEX_ONE = 1;
+const int GIT_INDEX_TWO = 2;
 
 //Errors
-public const string GIT_ERRORS = "errors";
-public const string GIT_ERROR_WHILE_RETRIEVING_DATA = "Error while retrieving data.";
-public const string GIT_ERROR_WHILE_RETRIEVING_PAYLOAD = "Error while retrieving payload.";
-public const string GIT_ERROR_WHILE_RETRIEVING_RESOURCE_PATH = "Error while retrieving project resource path.";
+const string GIT_ERRORS = "errors";
+const string GIT_ERROR_WHILE_RETRIEVING_DATA = "Error while retrieving data.";
+const string GIT_ERROR_WHILE_RETRIEVING_PAYLOAD = "Error while retrieving payload.";
+const string GIT_ERROR_WHILE_RETRIEVING_RESOURCE_PATH = "Error while retrieving project resource path.";
 
-public const string GIT_PATH_SEPARATOR = "/";
+const string GIT_PATH_SEPARATOR = "/";
