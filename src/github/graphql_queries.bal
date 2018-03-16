@@ -285,9 +285,10 @@ public const string GET_REPOSITORY = "query ($owner: String!, $name: String!){
 
 public const string GET_PULL_REQUESTS = "query ($owner: String!, $name: String!, $states:[PullRequestState!]){
 	repository(owner:$owner, name:$name){
-    pullRequests(first:100, states:$states) {
+    pullRequests(first:1, states:$states) {
       pageInfo{
         hasNextPage,
+        hasPreviousPage,
         startCursor,
         endCursor
       },
@@ -322,11 +323,12 @@ public const string GET_PULL_REQUESTS = "query ($owner: String!, $name: String!,
   }
 }";
 
-public const string GET_PULL_REQUESTS_NEXT_PAGE = "query ($owner: String!, $name: String!, $states:[PullRequestState!], $endCursor: String!){
+public const string GET_PULL_REQUESTS_NEXT_PAGE = "query ($owner: String!, $name: String!, $states:[PullRequestState!], $endCursorPullRequests: String!){
 	repository(owner:$owner, name:$name){
-    pullRequests(first:100, states:$states, after: $endCursor) {
+    pullRequests(first:1, states:$states, after: $endCursorPullRequests) {
       pageInfo{
         hasNextPage,
+        hasPreviousPage,
         startCursor,
         endCursor
       },
@@ -337,6 +339,7 @@ public const string GET_PULL_REQUESTS_NEXT_PAGE = "query ($owner: String!, $name
         updatedAt,
         closed,
         closedAt,
+        mergedAt,
         state,
         number,
         url,
@@ -352,7 +355,9 @@ public const string GET_PULL_REQUESTS_NEXT_PAGE = "query ($owner: String!, $name
           resourcePath,
           url,
           avatarUrl
-        }
+        },
+        headRefName,
+        baseRefName
       }
     }
   }

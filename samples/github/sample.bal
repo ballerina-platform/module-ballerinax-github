@@ -8,11 +8,9 @@ public function main (string[] args) {
     endpoint<github:GithubConnector> githubConnector {
         create github:GithubConnector(getAccessToken());
     }
-    io:println("Starting ...");
+    io:println("Starting samples...");
 
-    http:InResponse gitResponse = {};
     github:GitConnectorError e;
-    github:Repository sampleRepo = {name:"product-is", owner:{login:"wso2"}};
 
 
     ////Get a single organization
@@ -43,7 +41,7 @@ public function main (string[] args) {
 
     ////Get a single repository
     //github:Repository repo;
-    //repo, e= githubConnector.getRepository("wso2/docker-is");
+    //repo, e= githubConnector.getRepository("wso2/product-apim");
     //io:println(repo);
     //io:println(e);
     //io:println("=========================================================");
@@ -62,13 +60,17 @@ public function main (string[] args) {
     //io:println("=========================================================");
 
     ////Get a list of pull requests in a repository
-    //github:PullRequest[] prList;
-    //prList, e = repo.getPullRequests(github:GIT_STATE_OPEN);
-    //io:println(lengthof prList);
-    //io:println(prList);
+    //github:PullRequestList prList;
+    //prList, e = repo.getPullRequestList(github:GIT_STATE_OPEN);
+    //github:PullRequest pr = prList.getAllPullrequests()[0];
+    //io:println(pr.title);
     //io:println(e);
     //io:println("=========================================================");
 
+    //prList, e = prList.nextPage();
+    //pr = prList.getAllPullrequests()[0];
+    //io:println(pr.title);
+    //io:println(e);
     ////Get Repository Project
     //github:Project singleProject;
     //singleProject, e = repo.getProject(1);
