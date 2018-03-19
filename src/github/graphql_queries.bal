@@ -143,9 +143,9 @@ public const string GET_ORGANIZATION_PROJECTS = "query ($organization: String!, 
   }
 }";
 
-public const string GET_ORGANIZATION_PROJECTS_NEXT_PAGE = "query ($organization: String!, $states:[ProjectState!], $endCursor:String!){
+public const string GET_ORGANIZATION_PROJECTS_NEXT_PAGE = "query ($organization: String!, $states:[ProjectState!], $endCursorProjects:String!){
 	organization(login:$organization) {
-    projects(first:100, states:$states, after:$endCursor){
+    projects(first:100, states:$states, after:$endCursorProjects){
       pageInfo {
         hasNextPage,
         startCursor,

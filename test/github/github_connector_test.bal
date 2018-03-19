@@ -29,9 +29,8 @@ function beforeTestFunction () {
 }
 
 function testBoolean () {
-    //
-    test:assertBooleanEquals(true,false, "Value doesn't match");
-    io:println("Hello World!");
+    boolean b = returnTrue();
+    test:assertBooleanEquals(b,true, "Value doesn't match");
 }
 
 
@@ -44,4 +43,8 @@ public function main (string[] args)  {
     http:OutRequest request = {};
     http:InResponse response = {};
 
+}
+
+function returnTrue () (boolean) {
+    return true;
 }

@@ -138,6 +138,8 @@ function getProjectColumns (string ownerType, string gitQuery) (ColumnList, GitC
 @Description {value:"Represents a list of projects"}
 public struct ProjectList {
     private:
+        string listOwner;
+        string projectListQuery;
         PageInfo pageInfo;
         Project[] nodes;
 }
@@ -154,6 +156,51 @@ public function <ProjectList projectList> hasNextPage () (boolean) {
 @Return {value:"boolean: Return true or false"}
 public function <ProjectList projectList> hasPreviousPage () (boolean) {
     return projectList.pageInfo.hasPreviousPage;
+}
+
+@Description {value: "Gets the next page of a project list"}
+@Return {value: "ProjectList: Project list"}
+public function <ProjectList projectList> nextPage () (ProjectList, GitConnectorError) {
+    endpoint<http:HttpClient> gitClient {
+        gitHTTPClient;
+    }
+
+    GitConnectorError connectorError;
+    if (projectList.hasNextPage()) {
+        http:HttpConnectorError httpError;
+
+        http:OutRequest request = {};
+        http:InResponse response = {};
+
+        var query, _ = <json>projectList.projectListQuery;
+        query.variables.endCursorProjects = projectList.pageInfo.endCursor;
+        if (projectList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
+            query.query = GET_ORGANIZATION_PROJECTS_NEXT_PAGE;
+        }else if (projectList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
+            query.query = GET_REPOSITORY_PROJECTS_NEXT_PAGE;
+        }
+        //Set headers and payload to the request
+        constructRequest(request, query, gitAccessToken);
+        //Iterate through multiple pages of results
+        response, httpError = gitClient.post("", request);
+        if (httpError != null) {
+            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+            return null, connectorError;
+        }
+        json validatedResponse;
+        //Check for empty payloads and errors
+        validatedResponse, connectorError = getValidatedResponse(response, GIT_PROJECTS);
+        if (connectorError != null) {
+            return null, connectorError;
+        }
+        var projectsJson, _ = (json)validatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
+        var projList = <ProjectList, jsonToProjectList(query.toString(), projectList.listOwner)>projectsJson;
+
+        return projList, connectorError;
+    }
+    connectorError = {message:["Project list has no next page"]};
+
+    return null, connectorError;
 }
 
 @Description {value:"Get an array of repositories"}
@@ -526,7 +573,7 @@ public function <Organization organization> getProjectList (string state) (Proje
         return null, connectorError;
     }
     var githubProjectsJson, _ = (json)validatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECTS];
-        var projectList, _ = <ProjectList>githubProjectsJson;
+        var projectList = <ProjectList, jsonToProjectList(stringQuery, GIT_ORGANIZATION)>githubProjectsJson;
 
     return projectList, connectorError;
 }
@@ -626,8 +673,6 @@ public function <Organization organization> getRepositoryList () (RepositoryList
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                       End of Organization struct                                                  //
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -899,6 +944,8 @@ public function <IssueList issueList> hasPreviousPage () (boolean) {
     return issueList.pageInfo.hasPreviousPage;
 }
 
+// TODO nextPage()
+
 @Description {value:"Get an array of all the issues"}
 @Return {value:"Issue[]: Issue array"}
 public function <IssueList issueList> getAllIssues () (Issue[]) {
@@ -1035,7 +1082,7 @@ public function <PullRequestList pullRequestList> nextPage () (PullRequestList, 
 
 @Description {value:"Get an array of all the pull requests"}
 @Return {value:"PullRequest[]: PullRequest array"}
-public function <PullRequestList pullRequestList> getAllPullrequests () (PullRequest[]) {
+public function <PullRequestList pullRequestList> getAllPullRequests () (PullRequest[]) {
     return pullRequestList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

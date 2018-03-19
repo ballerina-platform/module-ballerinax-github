@@ -41,7 +41,7 @@ function getValidatedResponse (http:InResponse response, string validateComponen
     GitConnectorError connectorError;
     json responsePayload;
     try {
-        responsePayload = response.getJsonPayload();
+        responsePayload, _ = response.getJsonPayload();
         string[] payLoadKeys = responsePayload.getKeys();
         //Check all the keys in the payload to see if an error object is returned.
         foreach key in payLoadKeys {
