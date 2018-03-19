@@ -246,7 +246,7 @@ public function <RepositoryList repositoryList> nextPage () (RepositoryList, Git
 
     GitConnectorError connectorError;
     if (repositoryList.hasNextPage()) {
-        var stringQuery, _ = (string)metaData["repositoryListQuery"];
+        var stringQuery, _ = (string)metaData["repositoryListQuery"]; // TODO
         http:HttpConnectorError httpError;
 
         http:OutRequest request = {};
@@ -407,7 +407,7 @@ public function <Repository repository> getProjectList (string state) (ProjectLi
         return null, connectorError;
     }
     var githubProjectsJson, _ = (json)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS];
-    var projectList, _ = <ProjectList>githubProjectsJson;
+    var projectList = <ProjectList, jsonToProjectList(stringQuery, GIT_REPOSITORY)>githubProjectsJson;
 
     return projectList, connectorError;
 }
@@ -728,8 +728,8 @@ public function <CardList cardList> hasPreviousPage () (boolean) {
 public function <CardList cardList> nextPage () (CardList, GitConnectorError) {
     GitConnectorError connectorError;
     if (cardList.hasNextPage()) {
-        var stringQuery, _ = (string)metaData["projectColumnQuery"];
-        var projectColumnId, _ = (string)metaData["projectColumnId"];
+        var stringQuery, _ = (string)metaData["projectColumnQuery"]; // TODO
+        var projectColumnId, _ = (string)metaData["projectColumnId"]; // TODO
         var query, _ = <json>stringQuery;
         query.variables.endCursorCards = cardList.pageInfo.endCursor;
         var projectOwnerType, _ = (string)metaData["projectOwnerType"];
@@ -800,7 +800,7 @@ public function <ColumnList columnList> hasPreviousPage () (boolean) {
 public function <ColumnList columnList> nextPage () (ColumnList, GitConnectorError) {
     GitConnectorError connectorError;
     if (columnList.hasNextPage()) {
-        var stringQuery, _ = (string)metaData["projectColumnQuery"];
+        var stringQuery, _ = (string)metaData["projectColumnQuery"]; // TODO
         var query, _ = <json>stringQuery;
         query.variables.endCursorColumns = columnList.pageInfo.endCursor;
         var projectOwnerType, _ = (string)metaData["projectOwnerType"];
@@ -1046,7 +1046,7 @@ public function <PullRequestList pullRequestList> nextPage () (PullRequestList, 
 
     GitConnectorError connectorError;
     if (pullRequestList.hasNextPage()) {
-        var stringQuery, _ = (string)metaData["pullRequestListQuery"];
+        var stringQuery, _ = (string)metaData["pullRequestListQuery"]; // TODO
         http:HttpConnectorError httpError;
 
         http:OutRequest request = {};

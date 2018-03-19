@@ -61,9 +61,9 @@ public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $reposito
 
 }";
 
-public const string GET_REPOSITORY_PROJECTS_NEXT_PAGE = "query ($owner: String!, $repository: String!, $states:[ProjectState!], $endCursor: String!){
+public const string GET_REPOSITORY_PROJECTS_NEXT_PAGE = "query ($owner: String!, $repository: String!, $states:[ProjectState!], $endCursorProjects: String!){
 	repository(owner:$owner, name:$repository){
-    projects(first:100, states:$states, after:$endCursor){
+    projects(first:100, states:$states, after:$endCursorProjects){
       pageInfo {
         hasNextPage,
         startCursor,
@@ -287,7 +287,7 @@ public const string GET_REPOSITORY = "query ($owner: String!, $name: String!){
 
 public const string GET_PULL_REQUESTS = "query ($owner: String!, $name: String!, $states:[PullRequestState!]){
 	repository(owner:$owner, name:$name){
-    pullRequests(first:1, states:$states) {
+    pullRequests(first:100, states:$states) {
       pageInfo{
         hasNextPage,
         hasPreviousPage,
@@ -327,7 +327,7 @@ public const string GET_PULL_REQUESTS = "query ($owner: String!, $name: String!,
 
 public const string GET_PULL_REQUESTS_NEXT_PAGE = "query ($owner: String!, $name: String!, $states:[PullRequestState!], $endCursorPullRequests: String!){
 	repository(owner:$owner, name:$name){
-    pullRequests(first:1, states:$states, after: $endCursorPullRequests) {
+    pullRequests(first:100, states:$states, after: $endCursorPullRequests) {
       pageInfo{
         hasNextPage,
         hasPreviousPage,
@@ -534,7 +534,7 @@ public const string GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE = "query ($owner: Str
 public const string GET_ORGANIZATION_PROJECT_COLUMNS = "query ($organization: String!, $number: Int!){
   organization (login:$organization) {
     project (number : $number) {
-      columns (first:1) {
+      columns (first:100) {
         pageInfo {
           hasNextPage,
           hasPreviousPage,
@@ -544,7 +544,7 @@ public const string GET_ORGANIZATION_PROJECT_COLUMNS = "query ($organization: St
         nodes {
           id,
           name,
-          cards (first:1){
+          cards (first:100){
             pageInfo {
               hasNextPage,
               hasPreviousPage,
@@ -594,7 +594,7 @@ public const string GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE = "query ($organi
         nodes {
           id,
           name,
-          cards (first:1){
+          cards (first:100){
             pageInfo {
               hasNextPage,
               hasPreviousPage,
@@ -644,7 +644,7 @@ public const string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE = "query ($organiza
         nodes {
           id,
           name,
-          cards (first:1, after: $endCursorCards){
+          cards (first:100, after: $endCursorCards){
             pageInfo {
               hasNextPage,
               hasPreviousPage,
@@ -683,7 +683,7 @@ public const string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE = "query ($organiza
 
 public const string GET_ORGANIZATION_REPOSITORIES = "query ($organization: String!) {
   organization (login:$organization) {
-    repositories (first: 1) {
+    repositories (first: 100) {
       pageInfo {
         hasNextPage,
         hasPreviousPage,
@@ -729,7 +729,7 @@ public const string GET_ORGANIZATION_REPOSITORIES = "query ($organization: Strin
 
 public const string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE = "query ($organization: String!, $endCursorRepos: String!) {
   organization (login:$organization) {
-    repositories (first: 1, after: $endCursorRepos) {
+    repositories (first: 100, after: $endCursorRepos) {
       pageInfo {
         hasNextPage,
         hasPreviousPage,
