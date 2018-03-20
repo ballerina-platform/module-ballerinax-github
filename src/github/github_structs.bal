@@ -328,7 +328,6 @@ public function <Repository repository> getPullRequestList (string state) (PullR
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}"
     ,"{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}}},"{{GIT_QUERY}}":"{{GET_PULL_REQUESTS}}"}`;
 
-    metaData["pullRequestListQuery"] = stringQuery;
     var jsonQuery, _ = <json>stringQuery;
 
     //Set headers and payload to the request
@@ -346,7 +345,7 @@ public function <Repository repository> getPullRequestList (string state) (PullR
         return null, connectorError;
     }
     var githubPullRequestsJson, _ = (json)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
-    pullRequestList, _ = <PullRequestList>githubPullRequestsJson;
+    pullRequestList = <PullRequestList, jsonToPullRequestList(stringQuery)>githubPullRequestsJson;
 
     return pullRequestList, connectorError;
 
@@ -983,6 +982,7 @@ public struct PullRequest {
 @Description {value:"Represents a list of github pull requests"}
 public struct PullRequestList {
     private:
+        string pullrequestListQuery;
         PageInfo pageInfo;
         PullRequest[] nodes;
 }
@@ -1008,13 +1008,12 @@ public function <PullRequestList pullRequestList> nextPage () (PullRequestList, 
     
     GitConnectorError connectorError;
     if (pullRequestList.hasNextPage()) {
-        var stringQuery, _ = (string)metaData["pullRequestListQuery"]; // TODO:
         http:HttpConnectorError httpError;
 
         http:Request request = {};
         http:Response response = {};
 
-        var jsonQuery, _ = <json>stringQuery;
+        var jsonQuery, _ = <json>pullRequestList.pullrequestListQuery;
         jsonQuery.variables.endCursorPullRequests = pullRequestList.pageInfo.endCursor;
         jsonQuery["query"] = GET_PULL_REQUESTS_NEXT_PAGE;
         //Set headers and payload to the request
@@ -1032,7 +1031,7 @@ public function <PullRequestList pullRequestList> nextPage () (PullRequestList, 
             return null, connectorError;
         }
         var projectColumnsJson, _ = (json)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
-        var prList, _ = <PullRequestList>projectColumnsJson;
+        var prList = <PullRequestList, jsonToPullRequestList(pullRequestList.pullrequestListQuery)>projectColumnsJson;
 
         return prList, connectorError;
     }

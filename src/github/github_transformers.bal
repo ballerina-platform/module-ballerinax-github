@@ -44,3 +44,16 @@ transformer <json source_json, RepositoryList target_repositoryList> jsonToRepos
                                                        return repository;
                                                    });
 }
+
+//********************************
+// JSON --> PullRequestList
+//********************************
+transformer <json source_json, PullRequestList target_pullRequestList> jsonToPullRequestList (string stringQuery) {
+    target_pullRequestList.pullrequestListQuery = stringQuery;
+    target_pullRequestList.pageInfo, _ = <PageInfo>source_json.pageInfo;
+    target_pullRequestList.nodes = source_json.nodes.map(
+                                                   function (json node) (PullRequest) {
+                                                       var pullRequest, _ = <PullRequest> node;
+                                                       return pullRequest;
+                                                   });
+}
