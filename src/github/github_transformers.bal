@@ -7,13 +7,27 @@ package src.github;
 //********************************
 // JSON --> ProjectList
 //********************************
-transformer <json json_source, ProjectList projectList_target> jsonToProjectList (string stringQuery, string listOwner) {
-    projectList_target.listOwner = listOwner;
-    projectList_target.projectListQuery = stringQuery;
-    projectList_target.pageInfo, _ = <PageInfo>json_source.pageInfo;
-    projectList_target.nodes = json_source.nodes.map(
+transformer <json source_json, ProjectList target_projectList> jsonToProjectList (string listOwner, string stringQuery) {
+    target_projectList.listOwner = listOwner;
+    target_projectList.projectListQuery = stringQuery;
+    target_projectList.pageInfo, _ = <PageInfo>source_json.pageInfo;
+    target_projectList.nodes = source_json.nodes.map(
                                                    function (json node) (Project) {
                                                        var project, _ = <Project> node;
                                                        return project;
+                                                   });
+}
+
+//********************************
+// JSON --> ColumnList
+//********************************
+transformer <json source_json, ColumnList target_columnList> jsonToColumnList (string listOwner, string stringQuery) {
+    target_columnList.listOwner = listOwner;
+    target_columnList.columnListQuery = stringQuery;
+    target_columnList.pageInfo, _ = <PageInfo>source_json.pageInfo;
+    target_columnList.nodes = source_json.nodes.map(
+                                                   function (json node) (Column) {
+                                                       var column, _ = <Column> node;
+                                                       return column;
                                                    });
 }

@@ -23,7 +23,7 @@ import ballerina.net.http;
 string gitAccessToken = "";
 
 @Description {value:"GitHub client connector"}
-public struct GithubConnector {
+public struct GitHubConnector {
     string accessToken;
 }
 
@@ -31,9 +31,9 @@ public struct GithubConnector {
 @Param {value:"name: Name of the form owner/repository"}
 @Return {value:"Repository: Repository struct"}
 @Return {value:"error: Error"}
-public function <GithubConnector gitHubConnector> getRepository (string name) (Repository, GitConnectorError) {
+public function <GitHubConnector gitHubConnector> getRepository (string name) (Repository, GitConnectorError) {
     endpoint http:ClientEndpoint gitHubEndpoint {
-        targets: [{uri:"https://api.github.com/graphql"}]
+        targets: [{uri:GIT_API_URL}]
     };
     GitConnectorError connectorError;
 
@@ -41,7 +41,7 @@ public function <GithubConnector gitHubConnector> getRepository (string name) (R
         connectorError = {message:["Repository owner and name should be specified."]};
         return null, connectorError;
     }
-    string[] repoIdentifier = name.split("/");
+    string[] repoIdentifier = name.split(GIT_PATH_SEPARATOR);
     string repoOwner = repoIdentifier[GIT_INDEX_ZERO];
     string repoName = repoIdentifier[GIT_INDEX_ONE];
     http:Request request = {};
@@ -53,9 +53,10 @@ public function <GithubConnector gitHubConnector> getRepository (string name) (R
 
     var jsonQuery, _ = <json>stringQuery;
 
-    //Set headers and payload to the request
+    // Set headers and payload to the request
     constructRequest(request, jsonQuery, gitHubConnector.accessToken);
 
+    // Make an HTTP POST request 
     response, httpError = gitHubEndpoint -> post("", request);
     if (httpError != null) {
         connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
@@ -81,9 +82,9 @@ public function <GithubConnector gitHubConnector> getRepository (string name) (R
 @Param {value:"name: Name of the organization"}
 @Return {value:"Organization: Organization struct"}
 @Return {value:"GitConnectorError: Error"}
-public function <GithubConnector gitHubConnector> getOrganization (string name) (Organization, GitConnectorError) {
+public function <GitHubConnector gitHubConnector> getOrganization (string name) (Organization, GitConnectorError) {
     endpoint http:ClientEndpoint gitHubEndpoint {
-        targets: [{uri:"https://api.github.com/graphql"}]
+        targets: [{uri:GIT_API_URL}]
     };
 
     GitConnectorError connectorError;
@@ -105,6 +106,7 @@ public function <GithubConnector gitHubConnector> getOrganization (string name) 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitHubConnector.accessToken);
 
+    // Make an HTTP POST request
     response, httpError = gitHubEndpoint -> post("", request);
     if (httpError != null) {
         connectorError = {message:[httpError.message], statusCode:httpError.statusCode};

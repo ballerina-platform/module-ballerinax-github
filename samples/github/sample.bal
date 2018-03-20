@@ -5,7 +5,7 @@ import src.github;
 import ballerina.io;
 
 public function main (string[] args) {
-    github:GithubConnector githubConnector = { accessToken: getAccessToken()};
+    github:GitHubConnector githubConnector = { accessToken: getAccessToken()};
     io:println("Starting samples...");
 
     github:GitConnectorError e;
@@ -14,8 +14,8 @@ public function main (string[] args) {
     //Get a single organization
     github:Organization organization;
     organization, e = githubConnector.getOrganization("wso2");
-    io:println(organization);
-    io:println(e);
+    // io:println(organization);
+    // io:println(e);
 
     ////Get a list of projects of an organization
     //github:ProjectList responseProjectList;
@@ -24,17 +24,17 @@ public function main (string[] args) {
     //io:println(e);
     //io:println("=========================================================");
 
-     ////Get Organization Project
-     //github:Project singleProject;
-     //singleProject, e = organization.getProject(1);
-     //io:println(singleProject);
-     //io:print("Error : ");io:println(e);
+     //Get Organization Project
+     github:Project singleProject;
+     singleProject, e = organization.getProject(1);
+    //  io:println(singleProject);
+    //  io:print("Error : ");io:println(e);
 
 
-    //github:ColumnList columnList;
-    //columnList, e = singleProject.getColumnList();
-    //io:println(columnList);
-    //io:println(e);
+    github:ColumnList columnList;
+    columnList, e = singleProject.getColumnList();
+    io:println(columnList);
+    io:println(e);
 
 
     ////Get a single repository

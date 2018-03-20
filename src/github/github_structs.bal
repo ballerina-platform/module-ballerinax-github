@@ -21,9 +21,8 @@ package src.github;
 import ballerina.io;
 import ballerina.net.http;
 
-//http:HttpClient gitHTTPClient = create http:HttpClient(GIT_API_URL, {});
 endpoint http:ClientEndpoint gitHTTPClient {
-      targets: [{uri: "https://api.github.com/graphql"}]
+      targets: [{uri: GIT_API_URL}]
 };
 map metaData = {};
 
@@ -56,10 +55,7 @@ public struct Project {
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
 public function <Project project> getColumnList () (ColumnList, GitConnectorError) {
-    endpoint http:ClientEndpoint gitClient {
-        targets: [{uri:"https://api.github.com/graphql"}]
-    };
-
+    
     GitConnectorError connectorError = {};
 
     if (project == null) {
@@ -94,9 +90,7 @@ public function <Project project> getColumnList () (ColumnList, GitConnectorErro
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
 function getProjectColumns (string ownerType, string gitQuery) (ColumnList, GitConnectorError) {
-    endpoint http:ClientEndpoint gitClient {
-        targets: [{uri:"https://api.github.com/graphql"}]
-    };
+    
     GitConnectorError connectorError;
 
     if (ownerType == null || ownerType == "" || gitQuery == null || gitQuery == "") {
@@ -113,9 +107,9 @@ function getProjectColumns (string ownerType, string gitQuery) (ColumnList, GitC
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
-    int i = 0;
-    //Iterate through multiple pages of results
-    response, httpError = gitClient -> post("", request);
+    
+    // Make an HTTP POST request
+    response, httpError = gitHTTPClient -> post("", request);
     if (httpError != null) {
         connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
         return null, connectorError;
@@ -127,7 +121,7 @@ function getProjectColumns (string ownerType, string gitQuery) (ColumnList, GitC
         return null, connectorError;
     }
     var projectColumnsJson, _ = (json)validatedResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
-    var columnList, _ = <ColumnList>projectColumnsJson;
+    var columnList = <ColumnList, jsonToColumnList(ownerType, gitQuery)>projectColumnsJson;
 
     return columnList, connectorError;
 }
@@ -164,10 +158,7 @@ public function <ProjectList projectList> hasPreviousPage () (boolean) {
 @Description {value: "Gets the next page of a project list"}
 @Return {value: "ProjectList: Project list"}
 public function <ProjectList projectList> nextPage () (ProjectList, GitConnectorError) {
-    endpoint http:ClientEndpoint gitClient {
-        targets: [{uri:"https://api.github.com/graphql"}]
-    };
-
+    
     GitConnectorError connectorError;
     if (projectList.hasNextPage()) {
         http:HttpConnectorError httpError;
@@ -184,8 +175,8 @@ public function <ProjectList projectList> nextPage () (ProjectList, GitConnector
         }
         //Set headers and payload to the request
         constructRequest(request, jsonQuery, gitAccessToken);
-        //Iterate through multiple pages of results
-        response, httpError = gitClient -> post("", request);
+        
+        response, httpError = gitHTTPClient -> post("", request);
         if (httpError != null) {
             connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
             return null, connectorError;
@@ -197,7 +188,7 @@ public function <ProjectList projectList> nextPage () (ProjectList, GitConnector
             return null, connectorError;
         }
         var projectsJson, _ = (json)validatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
-        var projList = <ProjectList, jsonToProjectList(jsonQuery.toString(), projectList.listOwner)>projectsJson;
+        var projList = <ProjectList, jsonToProjectList(projectList.listOwner, jsonQuery.toString())>projectsJson;
 
         return projList, connectorError;
     }
@@ -243,10 +234,7 @@ public function <RepositoryList repositoryList> hasPreviousPage () (boolean) {
 @Return {value:"RepositoryList: Repository list"}
 @Return {value:"GitConnectorError: Error"}
 public function <RepositoryList repositoryList> nextPage () (RepositoryList, GitConnectorError) {
-    endpoint http:ClientEndpoint gitClient {
-        targets: [{uri:"https://api.github.com/graphql"}]
-    };
-
+    
     GitConnectorError connectorError;
     if (repositoryList.hasNextPage()) {
         var stringQuery, _ = (string)metaData["repositoryListQuery"]; // TODO
@@ -260,8 +248,8 @@ public function <RepositoryList repositoryList> nextPage () (RepositoryList, Git
         jsonQuery["query"] = GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE;
         //Set headers and payload to the request
         constructRequest(request, jsonQuery, gitAccessToken);
-        //Iterate through multiple pages of results
-        response, httpError = gitClient -> post("", request);
+        
+        response, httpError = gitHTTPClient -> post("", request);
         if (httpError != null) {
             connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
             return null, connectorError;
@@ -326,9 +314,7 @@ public struct Repository {
 @Return {value:"PullRequest[]: Array of pull requests"}
 @Return {value:"GitConnectorError: Error"}
 public function <Repository repository> getPullRequestList (string state) (PullRequestList, GitConnectorError) {
-    endpoint http:ClientEndpoint gitClient {
-        targets: [{uri:"https://api.github.com/graphql"}]
-    };
+    
     GitConnectorError connectorError;
 
     if (repository == null || state == "" || state == null) {
@@ -350,8 +336,8 @@ public function <Repository repository> getPullRequestList (string state) (PullR
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
-    //Iterate through multiple pages of results
-    response, httpError = gitClient -> post("", request);
+    
+    response, httpError = gitHTTPClient -> post("", request);
     if (httpError != null) {
         connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
         return null, connectorError;
@@ -374,10 +360,7 @@ public function <Repository repository> getPullRequestList (string state) (PullR
 @Return {value:"Project[]: Array of projects"}
 @Return {value:"GitConnectorError: Error"}
 public function <Repository repository> getProjectList (string state) (ProjectList, GitConnectorError) {
-    endpoint http:ClientEndpoint gitClient {
-        targets: [{uri:"https://api.github.com/graphql"}]
-    };
-
+    
     GitConnectorError connectorError;
 
     if (repository == null || state == null) {
@@ -398,7 +381,7 @@ public function <Repository repository> getProjectList (string state) (ProjectLi
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
-    response, httpError = gitClient -> post("", request);
+    response, httpError = gitHTTPClient -> post("", request);
     if (httpError != null) {
         connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
         return null, connectorError;
@@ -410,7 +393,7 @@ public function <Repository repository> getProjectList (string state) (ProjectLi
         return null, connectorError;
     }
     var githubProjectsJson, _ = (json)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS];
-    var projectList = <ProjectList, jsonToProjectList(stringQuery, GIT_REPOSITORY)>githubProjectsJson;
+    var projectList = <ProjectList, jsonToProjectList(GIT_REPOSITORY, stringQuery)>githubProjectsJson;
 
     return projectList, connectorError;
 }
@@ -420,10 +403,7 @@ public function <Repository repository> getProjectList (string state) (ProjectLi
 @Return {value:"Project object"}
 @Return {value:"GitConnectorError: Error"}
 public function <Repository repository> getProject (int projectNumber) (Project, GitConnectorError) {
-    endpoint http:ClientEndpoint gitClient {
-        targets: [{uri:"https://api.github.com/graphql"}]
-    };
-
+    
     GitConnectorError connectorError;
 
     if (repository == null || projectNumber <= 0) {
@@ -445,7 +425,7 @@ public function <Repository repository> getProject (int projectNumber) (Project,
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
 
-    response, httpError = gitClient -> post("", request);
+    response, httpError = gitHTTPClient -> post("", request);
     if (httpError != null) {
         connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
         return {}, connectorError;
@@ -472,10 +452,6 @@ public function <Repository repository> getProject (int projectNumber) (Project,
 @Return {value:"GitConnectorError: Error"}
 public function <Repository repository> getIssueList (string state) (IssueList, GitConnectorError) {
 
-    endpoint http:ClientEndpoint gitClient {
-        targets: [{uri:"https://api.github.com/graphql"}]
-    };
-
     GitConnectorError connectorError;
 
     if (repository == null) {
@@ -493,7 +469,7 @@ public function <Repository repository> getIssueList (string state) (IssueList, 
     http:Response response = {};
     http:HttpConnectorError httpError;
     constructRequest(request, jsonQuery, gitAccessToken);
-    response, httpError = gitClient -> post("", request);
+    response, httpError = gitHTTPClient -> post("", request);
     if (httpError != null) {
         connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
         return null, connectorError;
@@ -541,10 +517,7 @@ public struct Organization {
 @Return {value:"Project[]: Array of projects"}
 @Return {value:"GitConnectorError: Error"}
 public function <Organization organization> getProjectList (string state) (ProjectList, GitConnectorError) {
-    endpoint http:ClientEndpoint gitClient {
-        targets: [{uri:"https://api.github.com/graphql"}]
-    };
-
+    
     GitConnectorError connectorError;
 
     if (organization == null || state == null) {
@@ -564,7 +537,7 @@ public function <Organization organization> getProjectList (string state) (Proje
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
-    response, httpError = gitClient -> post("", request);
+    response, httpError = gitHTTPClient -> post("", request);
     if (httpError != null) {
         connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
         return null, connectorError;
@@ -576,7 +549,7 @@ public function <Organization organization> getProjectList (string state) (Proje
         return null, connectorError;
     }
     var githubProjectsJson, _ = (json)validatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECTS];
-        var projectList = <ProjectList, jsonToProjectList(stringQuery, GIT_ORGANIZATION)>githubProjectsJson;
+        var projectList = <ProjectList, jsonToProjectList(GIT_ORGANIZATION, stringQuery)>githubProjectsJson;
 
     return projectList, connectorError;
 }
@@ -586,10 +559,7 @@ public function <Organization organization> getProjectList (string state) (Proje
 @Return {value:"Project object"}
 @Return {value:"GitConnectorError: Error"}
 public function <Organization organization> getProject (int projectNumber) (Project, GitConnectorError) {
-    endpoint http:ClientEndpoint gitClient {
-        targets: [{uri:"https://api.github.com/graphql"}]
-    };
-
+    
     GitConnectorError connectorError;
 
     if (organization == null || projectNumber <= 0) {
@@ -609,7 +579,7 @@ public function <Organization organization> getProject (int projectNumber) (Proj
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
 
-    response, httpError = gitClient -> post("", request);
+    response, httpError = gitHTTPClient -> post("", request);
     if (httpError != null) {
         connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
         return {}, connectorError;
@@ -634,10 +604,7 @@ public function <Organization organization> getProject (int projectNumber) (Proj
 @Return {value:"RepositoryList: Repository list object"}
 @Return {value:"GitConnectorError: Error"}
 public function <Organization organization> getRepositoryList () (RepositoryList, GitConnectorError) {
-    endpoint http:ClientEndpoint gitClient {
-        targets: [{uri:"https://api.github.com/graphql"}]
-    };
-
+    
     GitConnectorError connectorError;
 
     if (organization == null) {
@@ -658,7 +625,7 @@ public function <Organization organization> getRepositoryList () (RepositoryList
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
-    response, httpError = gitClient -> post("", request);
+    response, httpError = gitHTTPClient -> post("", request);
     if (httpError != null) {
         connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
         return null, connectorError;
@@ -729,6 +696,7 @@ public function <CardList cardList> hasPreviousPage () (boolean) {
 @Return {value:"CardList: Card list object"}
 @Return {value:"GitConnectorError: Error"}
 public function <CardList cardList> nextPage () (CardList, GitConnectorError) {
+    
     GitConnectorError connectorError;
     if (cardList.hasNextPage()) {
         var stringQuery, _ = (string)metaData["projectColumnQuery"]; // TODO
@@ -779,6 +747,8 @@ public function <CardList cardList> getAllCards () (Card[]) {
 @Description {value:"Represents a list of columns of a project"}
 public struct ColumnList {
     private:
+        string listOwner;
+        string columnListQuery;
         PageInfo pageInfo;
         Column[] nodes;
 }
@@ -801,24 +771,20 @@ public function <ColumnList columnList> hasPreviousPage () (boolean) {
 @Return {value:"ColumList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
 public function <ColumnList columnList> nextPage () (ColumnList, GitConnectorError) {
+    
     GitConnectorError connectorError;
     if (columnList.hasNextPage()) {
-        var stringQuery, _ = (string)metaData["projectColumnQuery"]; // TODO
-        var jsonQuery, _ = <json>stringQuery;
+        var jsonQuery, _ = <json>columnList.columnListQuery;
         jsonQuery.variables.endCursorColumns = columnList.pageInfo.endCursor;
-        var projectOwnerType, _ = (string)metaData["projectOwnerType"];
-        if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION)) {
+        if (columnList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
             jsonQuery["query"] = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
-            metaData["projectColumnQuery"] = jsonQuery.toString();
 
             return getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString());
-        } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
+        } else if (columnList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
             jsonQuery["query"] = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
-            metaData["projectColumnQuery"] = jsonQuery.toString();
 
             return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString());
         }
-        io:println(jsonQuery);
     }
     connectorError = {message:["Column list has no next page"]};
 
@@ -1043,13 +1009,10 @@ public function <PullRequestList pullRequestList> hasPreviousPage () (boolean) {
 @Return {value:"PullRequestList: PullRequest list object"}
 @Return {value:"GitConnectorError: Error"}
 public function <PullRequestList pullRequestList> nextPage () (PullRequestList, GitConnectorError) {
-    endpoint http:ClientEndpoint gitClient {
-        targets: [{uri:"https://api.github.com/graphql"}]
-    };
-
+    
     GitConnectorError connectorError;
     if (pullRequestList.hasNextPage()) {
-        var stringQuery, _ = (string)metaData["pullRequestListQuery"]; // TODO
+        var stringQuery, _ = (string)metaData["pullRequestListQuery"]; // TODO:
         http:HttpConnectorError httpError;
 
         http:Request request = {};
@@ -1060,8 +1023,8 @@ public function <PullRequestList pullRequestList> nextPage () (PullRequestList, 
         jsonQuery["query"] = GET_PULL_REQUESTS_NEXT_PAGE;
         //Set headers and payload to the request
         constructRequest(request, jsonQuery, gitAccessToken);
-        //Iterate through multiple pages of results
-        response, httpError = gitClient -> post("", request);
+        
+        response, httpError = gitHTTPClient -> post("", request);
         if (httpError != null) {
             connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
             return null, connectorError;
