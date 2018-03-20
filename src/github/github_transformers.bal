@@ -57,3 +57,20 @@ transformer <json source_json, PullRequestList target_pullRequestList> jsonToPul
                                                        return pullRequest;
                                                    });
 }
+
+//********************************
+// JSON --> IssueList
+//********************************
+transformer <json source_json, IssueList target_issueList> jsonToIssueList (string stringQuery) {
+    target_issueList.issueListQuery = stringQuery;
+    target_issueList.pageInfo, _ = <PageInfo>source_json.pageInfo;
+    target_issueList.nodes = source_json.nodes.map(
+                                                   function (json node) (Issue) {
+                                                       var issue, _ = <Issue> node;
+                                                       return issue;
+                                                   });
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                           End of Connector Transformers                                           //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -36,12 +36,12 @@ public function main (string[] args) {
     // io:println(columnList);
     // io:println(e);
 
-    //Get a single repository
-    github:Repository repo;
-    repo, e= githubConnector.getRepository("wso2/product-is");
-    io:println(repo);
-    io:println(e);
-    io:println("=========================================================");
+    // //Get a single repository
+    // github:Repository repo;
+    // repo, e= githubConnector.getRepository("wso2/docker-is");
+    // io:println(repo);
+    // io:println(e);
+    // io:println("=========================================================");
 
     // //Get a all the repositories of Organization
     // github:RepositoryList repoList;
@@ -80,12 +80,15 @@ public function main (string[] args) {
     //io:print("Error : ");io:println(e);
     //io:println("=========================================================");
 
-    ////Get a list of issues of a repository
-    //github:IssueList issueList;
-    //issueList, e = repo.getIssueList(github:GIT_STATE_CLOSED);
-    //io:println(issueList);
-    //io:println(e);
+    // //Get a list of issues of a repository
+    // github:IssueList issueList;
+    // issueList, e = repo.getIssueList(github:GIT_STATE_CLOSED);
+    // io:println(issueList);
+    // io:println(e);
 
+    // issueList, e = issueList.nextPage();
+    // io:println(issueList);
+    // io:println(e);
     //github:ColumnList columnList;
     //columnList, e = singleProject.getColumnList();
     //io:println(columnList);

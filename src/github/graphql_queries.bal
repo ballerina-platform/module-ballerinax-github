@@ -817,3 +817,48 @@ public const string GET_REPOSITORY_ISSUES = "query ($owner:String!, $name:String
     }
   }
   }";
+
+public const string GET_REPOSITORY_ISSUES_NEXT_PAGE = "query ($owner:String!, $name:String!, $states:[IssueState!], $endCursorIssues: String!) {
+  repository(owner:$owner, name: $name) {
+    issues (first: 1, states:$states, after: $endCursorIssues) {
+      pageInfo {
+        hasNextPage,
+        hasPreviousPage,
+        startCursor,
+        endCursor
+      }
+      nodes {
+        id,
+        author {
+          login,
+          resourcePath,
+          url,
+          avatarUrl
+        },
+        bodyText,
+        closed,
+        closedAt,
+        createdAt,
+        editor {
+          login,
+          resourcePath,
+          url,
+          avatarUrl,
+        },
+        labels (first: 1){
+          nodes {
+            id,
+            name,
+            description,
+            color
+          }
+        },
+        number,
+        state,
+        title,
+        updatedAt,
+        url
+      }
+    }
+  }
+  }";

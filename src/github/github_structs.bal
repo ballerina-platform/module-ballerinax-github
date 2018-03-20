@@ -478,9 +478,8 @@ public function <Repository repository> getIssueList (string state) (IssueList, 
         return null, connectorError;
     }
     var githubIssuesJson, _ = (json)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
-    IssueList issueList; error err;
-    issueList, err = <IssueList>githubIssuesJson;
-    io:println(err);
+    var issueList = <IssueList, jsonToIssueList(stringQuery)>githubIssuesJson;
+    
     return issueList, connectorError;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -890,6 +889,7 @@ public struct Issue {
 @Description {value:"Represents a list of github issues"}
 public struct IssueList {
     private:
+        string issueListQuery;
         PageInfo pageInfo;
         Issue[] nodes;
 }
@@ -908,7 +908,45 @@ public function <IssueList issueList> hasPreviousPage () (boolean) {
     return issueList.pageInfo.hasPreviousPage;
 }
 
-// TODO nextPage()
+@Description {value:"Get the next page of the pull request list"}
+@Return {value:"PullRequestList: PullRequest list object"}
+@Return {value:"GitConnectorError: Error"}
+public function <IssueList issueList> nextPage () (IssueList, GitConnectorError) {
+    
+    GitConnectorError connectorError;
+    if (issueList.hasNextPage()) {
+        http:HttpConnectorError httpError;
+
+        http:Request request = {};
+        http:Response response = {};
+
+        var jsonQuery, _ = <json>issueList.issueListQuery;
+        jsonQuery.variables.endCursorIssues = issueList.pageInfo.endCursor;
+        jsonQuery["query"] = GET_REPOSITORY_ISSUES_NEXT_PAGE;
+        //Set headers and payload to the request
+        constructRequest(request, jsonQuery, gitAccessToken);
+        
+        response, httpError = gitHTTPClient -> post("", request);
+        if (httpError != null) {
+            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+            return null, connectorError;
+        }
+        json validatedResponse;
+        //Check for empty payloads and errors
+        validatedResponse, connectorError = getValidatedResponse(response, GIT_ISSUES);
+        if (connectorError != null) {
+            return null, connectorError;
+        }
+        var repositoryIssuesJson, _ = (json)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
+        var issuesList = <IssueList, jsonToIssueList(issueList.issueListQuery)>repositoryIssuesJson;
+
+        return issuesList, connectorError;
+    }
+    connectorError = {message:["Pull request list has no next page"]};
+
+    return null, connectorError;
+
+}
 
 @Description {value:"Get an array of all the issues"}
 @Return {value:"Issue[]: Issue array"}
