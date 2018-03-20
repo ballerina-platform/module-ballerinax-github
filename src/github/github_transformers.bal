@@ -39,7 +39,7 @@ transformer <json source_json, Column target_column> jsonToColumn (string string
     target_column.id = source_json.id.toString();
     target_column.name = source_json.name.toString();
     target_column.columnQuery = stringQuery;
-    target_column.cards = <CardList, jsonToCardList(source_json.id.toString(),"")>source_json.cards;
+    target_column.cards = <CardList, jsonToCardList(source_json.id.toString(),stringQuery)>source_json.cards;
 }
 
 //********************************
