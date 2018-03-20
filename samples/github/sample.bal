@@ -25,17 +25,16 @@ public function main (string[] args) {
     //io:println("=========================================================");
 
      //Get Organization Project
-     github:Project singleProject;
-     singleProject, e = organization.getProject(1);
+    //  github:Project singleProject;
+    //  singleProject, e = organization.getProject(1);
     //  io:println(singleProject);
     //  io:print("Error : ");io:println(e);
 
-
-    github:ColumnList columnList;
-    columnList, e = singleProject.getColumnList();
-    io:println(columnList);
-    io:println(e);
-
+    //Get project column list
+    // github:ColumnList columnList;
+    // columnList, e = singleProject.getColumnList();
+    // io:println(columnList);
+    // io:println(e);
 
     ////Get a single repository
     //github:Repository repo;
@@ -44,12 +43,15 @@ public function main (string[] args) {
     //io:println(e);
     //io:println("=========================================================");
 
-    ////Get a all the repositories of Organization
-    //github:RepositoryList repoList;
-    //repoList, e = organization.getRepositoryList();
-    //io:println(repoList);
-    //io:println(e);
+    // //Get a all the repositories of Organization
+    // github:RepositoryList repoList;
+    // repoList, e = organization.getRepositoryList();
+    // io:println(repoList);
+    // io:println(e);
 
+    // repoList, e = repoList.nextPage();
+    // io:println(repoList);
+    // io:println(e);
     ////Get a list of projects of a repository
     //github:ProjectList responseProjectList;
     //responseProjectList, e = repo.getProjectList(github:GIT_STATE_OPEN);

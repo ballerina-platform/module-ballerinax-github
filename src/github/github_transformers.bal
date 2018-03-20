@@ -31,3 +31,16 @@ transformer <json source_json, ColumnList target_columnList> jsonToColumnList (s
                                                        return column;
                                                    });
 }
+
+//********************************
+// JSON --> RepositoryList
+//********************************
+transformer <json source_json, RepositoryList target_repositoryList> jsonToRepositoryList (string stringQuery) {
+    target_repositoryList.repositoryListQuery = stringQuery;
+    target_repositoryList.pageInfo, _ = <PageInfo>source_json.pageInfo;
+    target_repositoryList.nodes = source_json.nodes.map(
+                                                   function (json node) (Repository) {
+                                                       var repository, _ = <Repository> node;
+                                                       return repository;
+                                                   });
+}

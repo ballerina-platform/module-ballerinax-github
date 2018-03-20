@@ -21,7 +21,7 @@ package src.github;
 //TODO Implement a QueryBuilder to programatically develop the queries
 public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $repository: String!, $states:[ProjectState!]){
 	repository(owner:$owner, name:$repository){
-    projects(first:100, states:$states){
+    projects(first:1, states:$states){
       pageInfo {
         hasNextPage,
         hasPreviousPage,
@@ -59,11 +59,11 @@ public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $reposito
     }
   }
 
-}";
+  }";
 
 public const string GET_REPOSITORY_PROJECTS_NEXT_PAGE = "query ($owner: String!, $repository: String!, $states:[ProjectState!], $endCursorProjects: String!){
 	repository(owner:$owner, name:$repository){
-    projects(first:100, states:$states, after:$endCursorProjects){
+    projects(first:1, states:$states, after:$endCursorProjects){
       pageInfo {
         hasNextPage,
         startCursor,
@@ -100,11 +100,11 @@ public const string GET_REPOSITORY_PROJECTS_NEXT_PAGE = "query ($owner: String!,
     }
   }
 
-}";
+  }";
 
 public const string GET_ORGANIZATION_PROJECTS = "query ($organization: String!, $states:[ProjectState!]){
 	organization(login:$organization) {
-    projects(first:100, states:$states){
+    projects(first:1, states:$states){
       pageInfo {
         hasNextPage,
         hasPreviousPage,
@@ -141,11 +141,11 @@ public const string GET_ORGANIZATION_PROJECTS = "query ($organization: String!, 
       }
     }
   }
-}";
+  }";
 
 public const string GET_ORGANIZATION_PROJECTS_NEXT_PAGE = "query ($organization: String!, $states:[ProjectState!], $endCursorProjects:String!){
 	organization(login:$organization) {
-    projects(first:100, states:$states, after:$endCursorProjects){
+    projects(first:1, states:$states, after:$endCursorProjects){
       pageInfo {
         hasNextPage,
         startCursor,
@@ -181,7 +181,7 @@ public const string GET_ORGANIZATION_PROJECTS_NEXT_PAGE = "query ($organization:
       }
     }
   }
-}";
+  }";
 
 public const string GET_REPOSITORY_PROJECT = "query ($owner: String!, $repository: String!, $number: Int!){
 	repository(owner:$owner, name:$repository) {
@@ -214,7 +214,7 @@ public const string GET_REPOSITORY_PROJECT = "query ($owner: String!, $repositor
         }
     }
   }
-}";
+  }";
 
 public const string GET_ORGANIZATION_PROJECT = "query ($organization: String!, $number: Int!){
 	organization(login:$organization) {
@@ -247,7 +247,7 @@ public const string GET_ORGANIZATION_PROJECT = "query ($organization: String!, $
         }
     }
   }
-}";
+  }";
 
 public const string GET_REPOSITORY = "query ($owner: String!, $name: String!){
 	repository(owner:$owner, name:$name){
@@ -283,11 +283,11 @@ public const string GET_REPOSITORY = "query ($owner: String!, $name: String!){
       color
     }
   }
-}";
+  }";
 
 public const string GET_PULL_REQUESTS = "query ($owner: String!, $name: String!, $states:[PullRequestState!]){
 	repository(owner:$owner, name:$name){
-    pullRequests(first:100, states:$states) {
+    pullRequests(first:1, states:$states) {
       pageInfo{
         hasNextPage,
         hasPreviousPage,
@@ -323,11 +323,11 @@ public const string GET_PULL_REQUESTS = "query ($owner: String!, $name: String!,
       }
     }
   }
-}";
+  }";
 
 public const string GET_PULL_REQUESTS_NEXT_PAGE = "query ($owner: String!, $name: String!, $states:[PullRequestState!], $endCursorPullRequests: String!){
 	repository(owner:$owner, name:$name){
-    pullRequests(first:100, states:$states, after: $endCursorPullRequests) {
+    pullRequests(first:1, states:$states, after: $endCursorPullRequests) {
       pageInfo{
         hasNextPage,
         hasPreviousPage,
@@ -363,7 +363,7 @@ public const string GET_PULL_REQUESTS_NEXT_PAGE = "query ($owner: String!, $name
       }
     }
   }
-}";
+  }";
 
 public const string GET_ORGANIZATION = "query ($organization: String!) {
   organization(login:$organization) {
@@ -380,11 +380,11 @@ public const string GET_ORGANIZATION = "query ($organization: String!) {
     url,
     websiteUrl
   }
-}";
+  }";
 public const string GET_REPOSITORY_PROJECT_COLUMNS = "query ($owner: String!,$name:String!, $number: Int!){
   repository (owner:$owner, name:$name) {
     project (number : $number){
-      columns (first:100){
+      columns (first:1){
         pageInfo {
           hasNextPage,
           hasPreviousPage,
@@ -394,7 +394,7 @@ public const string GET_REPOSITORY_PROJECT_COLUMNS = "query ($owner: String!,$na
         nodes {
           id,
           name,
-          cards (first:100){
+          cards (first:1){
             pageInfo {
               hasNextPage,
               hasPreviousPage,
@@ -429,12 +429,12 @@ public const string GET_REPOSITORY_PROJECT_COLUMNS = "query ($owner: String!,$na
       }
     }
   }
- }";
+  }";
 
 public const string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE = "query ($owner: String!,$name:String!, $number: Int!, $endCursorColumns: String!){
   repository (owner:$owner, name:$name) {
     project (number : $number){
-      columns (first:100){
+      columns (first:1){
         pageInfo {
           hasNextPage,
           hasPreviousPage,
@@ -444,7 +444,7 @@ public const string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE = "query ($owner: S
         nodes {
           id,
           name,
-          cards (first:100){
+          cards (first:1){
             pageInfo {
               hasNextPage,
               hasPreviousPage,
@@ -479,12 +479,12 @@ public const string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE = "query ($owner: S
       }
     }
   }
- }";
+  }";
 
 public const string GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE = "query ($owner: String!,$name:String!, $number: Int!, $endCursorCards: String!){
   repository (owner:$owner, name:$name) {
     project (number : $number){
-      columns (first:100){
+      columns (first:1){
         pageInfo {
           hasNextPage,
           hasPreviousPage,
@@ -494,7 +494,7 @@ public const string GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE = "query ($owner: Str
         nodes {
           id,
           name,
-          cards (first:100, after: $endCursorCards){
+          cards (first:1, after: $endCursorCards){
             pageInfo {
               hasNextPage,
               hasPreviousPage,
@@ -534,7 +534,7 @@ public const string GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE = "query ($owner: Str
 public const string GET_ORGANIZATION_PROJECT_COLUMNS = "query ($organization: String!, $number: Int!){
   organization (login:$organization) {
     project (number : $number) {
-      columns (first:100) {
+      columns (first:1) {
         pageInfo {
           hasNextPage,
           hasPreviousPage,
@@ -544,7 +544,7 @@ public const string GET_ORGANIZATION_PROJECT_COLUMNS = "query ($organization: St
         nodes {
           id,
           name,
-          cards (first:100){
+          cards (first:1){
             pageInfo {
               hasNextPage,
               hasPreviousPage,
@@ -584,7 +584,7 @@ public const string GET_ORGANIZATION_PROJECT_COLUMNS = "query ($organization: St
 public const string GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE = "query ($organization: String!, $number: Int!, $endCursorColumns: String!){
   organization (login:$organization) {
     project (number : $number) {
-      columns (first:100, after: $endCursorColumns) {
+      columns (first:1, after: $endCursorColumns) {
         pageInfo {
           hasNextPage,
           hasPreviousPage,
@@ -594,7 +594,7 @@ public const string GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE = "query ($organi
         nodes {
           id,
           name,
-          cards (first:100){
+          cards (first:1){
             pageInfo {
               hasNextPage,
               hasPreviousPage,
@@ -634,7 +634,7 @@ public const string GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE = "query ($organi
 public const string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE = "query ($organization: String!, $number: Int!, $endCursorCards: String!){
   organization (login:$organization) {
     project (number : $number) {
-      columns (first:100) {
+      columns (first:1) {
         pageInfo {
           hasNextPage,
           hasPreviousPage,
@@ -644,7 +644,7 @@ public const string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE = "query ($organiza
         nodes {
           id,
           name,
-          cards (first:100, after: $endCursorCards){
+          cards (first:1, after: $endCursorCards){
             pageInfo {
               hasNextPage,
               hasPreviousPage,
@@ -683,7 +683,7 @@ public const string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE = "query ($organiza
 
 public const string GET_ORGANIZATION_REPOSITORIES = "query ($organization: String!) {
   organization (login:$organization) {
-    repositories (first: 100) {
+    repositories (first: 1) {
       pageInfo {
         hasNextPage,
         hasPreviousPage,
@@ -725,11 +725,11 @@ public const string GET_ORGANIZATION_REPOSITORIES = "query ($organization: Strin
       }
     }
   }
-}";
+  }";
 
 public const string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE = "query ($organization: String!, $endCursorRepos: String!) {
   organization (login:$organization) {
-    repositories (first: 100, after: $endCursorRepos) {
+    repositories (first: 1, after: $endCursorRepos) {
       pageInfo {
         hasNextPage,
         hasPreviousPage,
@@ -771,11 +771,11 @@ public const string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE = "query ($organizat
       }
     }
   }
-}";
+  }";
 
 public const string GET_REPOSITORY_ISSUES = "query ($owner:String!, $name:String!, $states:[IssueState!]) {
   repository(owner:$owner, name: $name) {
-    issues (first: 100, states:$states) {
+    issues (first: 1, states:$states) {
       pageInfo {
         hasNextPage,
         hasPreviousPage,
@@ -800,7 +800,7 @@ public const string GET_REPOSITORY_ISSUES = "query ($owner:String!, $name:String
           url,
           avatarUrl,
         },
-        labels (first: 100){
+        labels (first: 1){
           nodes {
             id,
             name,
@@ -816,4 +816,4 @@ public const string GET_REPOSITORY_ISSUES = "query ($owner:String!, $name:String
       }
     }
   }
-}";
+  }";

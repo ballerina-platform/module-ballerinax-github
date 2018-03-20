@@ -62,13 +62,11 @@ public function <Project project> getColumnList () (ColumnList, GitConnectorErro
         connectorError = {message:["Project cannot be null"]};
         return null, connectorError;
     }
-    metaData["projectOwnerType"] = project.owner.getOwnerType();
     string projectOwnerType = project.owner.getOwnerType();
     if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION) && project.resourcePath != null) {
         string organization = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
         string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization}}",
             "{{GIT_NUMBER}}":{{project.number}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT_COLUMNS}}"}`;
-        metaData["projectColumnQuery"] = stringQuery;
         return getProjectColumns(GIT_ORGANIZATION, stringQuery);
 
     } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY) && project.resourcePath != null) {
@@ -78,7 +76,6 @@ public function <Project project> getColumnList () (ColumnList, GitConnectorErro
         string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{ownerName}}"
         ,"{{GIT_NAME}}":"{{repositoryName}}","{{GIT_NUMBER}}":{{project.number}}}
         ,"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECT_COLUMNS}}"}`;
-        metaData["projectColumnQuery"] = stringQuery;
         return getProjectColumns(GIT_REPOSITORY, stringQuery);
     }
     return null, connectorError;
@@ -212,6 +209,7 @@ public function <ProjectList projectList> getAllProjects () (Project[]) {
 @Description {value:"Represents a list of repositories"}
 public struct RepositoryList {
     private:
+        string repositoryListQuery;
         PageInfo pageInfo;
         Repository[] nodes;
 }
@@ -237,13 +235,12 @@ public function <RepositoryList repositoryList> nextPage () (RepositoryList, Git
     
     GitConnectorError connectorError;
     if (repositoryList.hasNextPage()) {
-        var stringQuery, _ = (string)metaData["repositoryListQuery"]; // TODO
         http:HttpConnectorError httpError;
 
         http:Request request = {};
         http:Response response = {};
 
-        var jsonQuery, _ = <json>stringQuery;
+        var jsonQuery, _ = <json>repositoryList.repositoryListQuery;
         jsonQuery.variables.endCursorRepos = repositoryList.pageInfo.endCursor;
         jsonQuery["query"] = GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE;
         //Set headers and payload to the request
@@ -261,7 +258,7 @@ public function <RepositoryList repositoryList> nextPage () (RepositoryList, Git
             return null, connectorError;
         }
         var repositoriesJson, _ = (json)validatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
-        var repoList, _ = <RepositoryList>repositoriesJson;
+        var repoList = <RepositoryList, jsonToRepositoryList(repositoryList.repositoryListQuery)>repositoriesJson;
 
         return repoList, connectorError;
     }
@@ -620,7 +617,6 @@ public function <Organization organization> getRepositoryList () (RepositoryList
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}"},
     "{{GIT_QUERY}}":"{{GET_ORGANIZATION_REPOSITORIES}}"}`;
-    metaData["repositoryListQuery"] = stringQuery;
     var jsonQuery, _ = <json>stringQuery;
 
     //Set headers and payload to the request
@@ -637,7 +633,7 @@ public function <Organization organization> getRepositoryList () (RepositoryList
         return null, connectorError;
     }
     var githubRepositoriesJson, _ = (json)validatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
-    repositoryList, _ = <RepositoryList>githubRepositoriesJson;
+    repositoryList = <RepositoryList, jsonToRepositoryList(stringQuery)>githubRepositoriesJson;
 
     return repositoryList, connectorError;
 }
