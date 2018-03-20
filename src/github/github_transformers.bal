@@ -19,6 +19,30 @@ transformer <json source_json, ProjectList target_projectList> jsonToProjectList
 }
 
 //********************************
+// JSON --> CardList
+//********************************
+transformer <json source_json, CardList target_cardList> jsonToCardList (string columnId, string stringQuery) {
+    target_cardList.columnId = columnId;
+    target_cardList.cardListQuery = stringQuery;
+    target_cardList.pageInfo, _ = <PageInfo>source_json.pageInfo;
+    target_cardList.nodes = source_json.nodes.map(
+                                                function (json node) (Card) {
+                                                    var card, _ = <Card> node;
+                                                    return card;
+                                                }); 
+}
+
+//********************************
+// JSON --> Column
+//********************************
+transformer <json source_json, Column target_column> jsonToColumn (string stringQuery) {
+    target_column.id = source_json.id.toString();
+    target_column.name = source_json.name.toString();
+    target_column.columnQuery = stringQuery;
+    target_column.cards = <CardList, jsonToCardList(source_json.id.toString(),"")>source_json.cards;
+}
+
+//********************************
 // JSON --> ColumnList
 //********************************
 transformer <json source_json, ColumnList target_columnList> jsonToColumnList (string listOwner, string stringQuery) {
@@ -27,10 +51,11 @@ transformer <json source_json, ColumnList target_columnList> jsonToColumnList (s
     target_columnList.pageInfo, _ = <PageInfo>source_json.pageInfo;
     target_columnList.nodes = source_json.nodes.map(
                                                    function (json node) (Column) {
-                                                       var column, _ = <Column> node;
+                                                       var column = <Column, jsonToColumn(stringQuery)> node;
                                                        return column;
                                                    });
 }
+
 
 //********************************
 // JSON --> RepositoryList

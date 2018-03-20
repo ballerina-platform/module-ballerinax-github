@@ -457,7 +457,6 @@ public function <Repository repository> getIssueList (string state) (IssueList, 
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}"
     ,"{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}}},"{{GIT_QUERY}}":"{{GET_REPOSITORY_ISSUES}}"}`;
-    metaData["issueListQuery"] = stringQuery;
     var jsonQuery, _ = <json>stringQuery;
 
     //Set headers and payload to the request
@@ -640,26 +639,22 @@ public function <Organization organization> getRepositoryList () (RepositoryList
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              Column struct                                                        //
+//                                                   Card struct                                                     //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-@Description {value:"Represents a github Column"}
-public struct Column {
+@Description {value:"Represents a github card"}
+public struct Card {
     string id;
-    string name;
-    private:
-        CardList cards;
-}
-//*********************************************************************************************************************
-// Column bound functions
-//*********************************************************************************************************************
-@Description {value:"Get a list of cards of a column"}
-@Return {value:"CardList: A card list object"}
-public function <Column column> getCardList () (CardList) {
-    metaData["projectColumnId"] = column.id;
-    return column.cards;
+    string note;
+    string state;
+    string createdAt;
+    string updatedAt;
+    string url;
+    Creator creator;
+    json column;
+    json content;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              End of Column struct                                                 //
+//                                               End of Card struct                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -668,6 +663,8 @@ public function <Column column> getCardList () (CardList) {
 @Description {value:"Represents a list of cards of a column"}
 public struct CardList {
     private:
+        string columnId;
+        string cardListQuery;
         PageInfo pageInfo;
         Card[] nodes;
 }
@@ -733,6 +730,30 @@ public function <CardList cardList> getAllCards () (Card[]) {
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of CardList struct                                                 //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                              Column struct                                                        //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@Description {value:"Represents a github Column"}
+public struct Column {
+    string id;
+    string name;
+    string columnQuery;
+    private:
+        CardList cards;
+}
+//*********************************************************************************************************************
+// Column bound functions
+//*********************************************************************************************************************
+@Description {value:"Get a list of cards of a column"}
+@Return {value:"CardList: A card list object"}
+public function <Column column> getCardList () (CardList) {
+    metaData["projectColumnId"] = column.id;
+    return column.cards;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                              End of Column struct                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1088,24 +1109,6 @@ public function <PullRequestList pullRequestList> getAllPullRequests () (PullReq
 //                                          End of PullRequestList struct                                            //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                   Card struct                                                     //
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-@Description {value:"Represents a github card"}
-public struct Card {
-    string id;
-    string note;
-    string state;
-    string createdAt;
-    string updatedAt;
-    string url;
-    Creator creator;
-    json column;
-    json content;
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                               End of Card struct                                                  //
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                PageInfo struct                                                    //
