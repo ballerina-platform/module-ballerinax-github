@@ -5,19 +5,17 @@ import src.github;
 import ballerina.io;
 
 public function main (string[] args) {
-    endpoint<github:GithubConnector> githubConnector {
-        create github:GithubConnector(getAccessToken());
-    }
+    github:GithubConnector githubConnector = { accessToken: getAccessToken()};
     io:println("Starting samples...");
 
     github:GitConnectorError e;
 
 
-    ////Get a single organization
-    //github:Organization organization;
-    //organization, e = githubConnector.getOrganization("wso2");
-    //io:println(organization);
-    //io:println(e);
+    //Get a single organization
+    github:Organization organization;
+    organization, e = githubConnector.getOrganization("wso2");
+    io:println(organization);
+    io:println(e);
 
     ////Get a list of projects of an organization
     //github:ProjectList responseProjectList;
@@ -39,12 +37,12 @@ public function main (string[] args) {
     //io:println(e);
 
 
-    //Get a single repository
-    github:Repository repo;
-    repo, e= githubConnector.getRepository("vlgunarathne/ProLAd-ExpertSystem");
-    io:println(repo);
-    io:println(e);
-    io:println("=========================================================");
+    ////Get a single repository
+    //github:Repository repo;
+    //repo, e= githubConnector.getRepository("vlgunarathne/ProLAd-ExpertSystem");
+    //io:println(repo);
+    //io:println(e);
+    //io:println("=========================================================");
 
     ////Get a all the repositories of Organization
     //github:RepositoryList repoList;
@@ -52,16 +50,16 @@ public function main (string[] args) {
     //io:println(repoList);
     //io:println(e);
 
-    //Get a list of projects of a repository
-    github:ProjectList responseProjectList;
-    responseProjectList, e = repo.getProjectList(github:GIT_STATE_OPEN);
-    io:println(responseProjectList);
-    io:println(e);
-    io:println("=========================================================");
-
-    responseProjectList, e = responseProjectList.nextPage();
-    io:println(responseProjectList);
-    io:println(e);
+    ////Get a list of projects of a repository
+    //github:ProjectList responseProjectList;
+    //responseProjectList, e = repo.getProjectList(github:GIT_STATE_OPEN);
+    //io:println(responseProjectList);
+    //io:println(e);
+    //io:println("=========================================================");
+    //
+    //responseProjectList, e = responseProjectList.nextPage();
+    //io:println(responseProjectList);
+    //io:println(e);
     ////Get a list of pull requests in a repository
     //github:PullRequestList prList;
     //prList, e = repo.getPullRequestList(github:GIT_STATE_OPEN);

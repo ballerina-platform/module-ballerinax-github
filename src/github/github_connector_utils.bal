@@ -24,20 +24,20 @@ import ballerina.net.http;
 @Param {value:"request: The http request object"}
 @Param {value:"query: GraphQL API query"}
 @Param {value:"accessToken: GitHub access token"}
-function constructRequest (http:OutRequest request, json query, string accessToken) {
+function constructRequest (http:Request request, json stringQuery, string accessToken) {
     gitAccessToken = accessToken;
     request.removeAllHeaders();
     request.addHeader("Authorization", "Bearer " + accessToken);
-    request.setJsonPayload(query);
+    request.setJsonPayload(stringQuery);
 
 }
 
 @Description {value:"Validate the http response"}
-@Param {value:"http:InResponse: The http response object"}
+@Param {value:"http:Response: The http response object"}
 @Param {value:"component:"}
 @Return {value:"json: The JSON payload in the response"}
 @Return {value:"GitConnectoError: GitConnectorError object"}
-function getValidatedResponse (http:InResponse response, string validateComponent) (json, GitConnectorError) {
+function getValidatedResponse (http:Response response, string validateComponent) (json, GitConnectorError) {
     GitConnectorError connectorError;
     json responsePayload;
     try {

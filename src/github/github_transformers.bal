@@ -7,9 +7,9 @@ package src.github;
 //********************************
 // JSON --> ProjectList
 //********************************
-transformer <json json_source, ProjectList projectList_target> jsonToProjectList (string query, string listOwner) {
+transformer <json json_source, ProjectList projectList_target> jsonToProjectList (string stringQuery, string listOwner) {
     projectList_target.listOwner = listOwner;
-    projectList_target.projectListQuery = query;
+    projectList_target.projectListQuery = stringQuery;
     projectList_target.pageInfo, _ = <PageInfo>json_source.pageInfo;
     projectList_target.nodes = json_source.nodes.map(
                                                    function (json node) (Project) {
