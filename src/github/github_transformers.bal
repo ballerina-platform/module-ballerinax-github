@@ -21,9 +21,10 @@ transformer <json source_json, ProjectList target_projectList> jsonToProjectList
 //********************************
 // JSON --> CardList
 //********************************
-transformer <json source_json, CardList target_cardList> jsonToCardList (string columnId, string stringQuery) {
+transformer <json source_json, CardList target_cardList> jsonToCardList (string columnId, string listOwner, string stringQuery) {
     target_cardList.columnId = columnId;
     target_cardList.cardListQuery = stringQuery;
+    target_cardList.listOwner = listOwner;
     target_cardList.pageInfo, _ = <PageInfo>source_json.pageInfo;
     target_cardList.nodes = source_json.nodes.map(
                                                 function (json node) (Card) {
@@ -35,23 +36,28 @@ transformer <json source_json, CardList target_cardList> jsonToCardList (string 
 //********************************
 // JSON --> Column
 //********************************
-transformer <json source_json, Column target_column> jsonToColumn (string stringQuery) {
+transformer <json source_json, Column target_column> jsonToColumn (string listOwner, string stringQuery) {
     target_column.id = source_json.id.toString();
     target_column.name = source_json.name.toString();
     target_column.columnQuery = stringQuery;
-    target_column.cards = <CardList, jsonToCardList(source_json.id.toString(),stringQuery)>source_json.cards;
+    target_column.listOwner = listOwner;
+    target_column.cards = <CardList, jsonToCardList(source_json.id.toString(), listOwner, stringQuery)>source_json.cards;
 }
 
 //********************************
 // JSON --> ColumnList
 //********************************
+string tempQuery;   // TODO: Change this once issue https://github.com/ballerina-lang/ballerina/issues/5485 is fixed.
+string tempOwner;
 transformer <json source_json, ColumnList target_columnList> jsonToColumnList (string listOwner, string stringQuery) {
+    tempQuery = stringQuery;
+    tempOwner = listOwner;
     target_columnList.listOwner = listOwner;
     target_columnList.columnListQuery = stringQuery;
     target_columnList.pageInfo, _ = <PageInfo>source_json.pageInfo;
     target_columnList.nodes = source_json.nodes.map(
                                                    function (json node) (Column) {
-                                                       var column = <Column, jsonToColumn(stringQuery)> node;
+                                                       var column = <Column, jsonToColumn(tempOwner, tempQuery)> node;
                                                        return column;
                                                    });
 }

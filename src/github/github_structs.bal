@@ -24,8 +24,6 @@ import ballerina.net.http;
 endpoint http:ClientEndpoint gitHTTPClient {
       targets: [{uri: GIT_API_URL}]
 };
-map metaData = {};
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              Project struct                                                       //
@@ -665,6 +663,7 @@ public struct CardList {
     private:
         string columnId;
         string cardListQuery;
+        string listOwner;
         PageInfo pageInfo;
         Card[] nodes;
 }
@@ -690,28 +689,25 @@ public function <CardList cardList> nextPage () (CardList, GitConnectorError) {
     
     GitConnectorError connectorError;
     if (cardList.hasNextPage()) {
-        var stringQuery, _ = (string)metaData["projectColumnQuery"]; // TODO
-        var projectColumnId, _ = (string)metaData["projectColumnId"]; // TODO
-        var jsonQuery, _ = <json>stringQuery;
+        var cardListColumnId = cardList.columnId;
+        var jsonQuery, _ = <json>cardList.cardListQuery;
         jsonQuery.variables.endCursorCards = cardList.pageInfo.endCursor;
-        var projectOwnerType, _ = (string)metaData["projectOwnerType"];
-        if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION)) {
-            jsonQuery["query"] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE; // TODO
-            metaData["projectColumnQuery"] = jsonQuery.toString();
+        
+        if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
+            jsonQuery["query"] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
             ColumnList columnList;
             columnList, _ = getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString());
             foreach column in columnList.getAllColumns() {
-                if (column.id == projectColumnId) {
+                if (column.id == cardListColumnId) {
                     return column.getCardList(), connectorError;
                 }
             }
-        } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
-            jsonQuery["query"] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE; //TODO
-            metaData["projectColumnQuery"] = jsonQuery.toString();
+        } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
+            jsonQuery["query"] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
             ColumnList columnList;
             columnList, _ = getProjectColumns(GIT_REPOSITORY, jsonQuery.toString());
             foreach column in columnList.getAllColumns() {
-                if (column.id == projectColumnId) {
+                if (column.id == cardListColumnId) {
                     return column.getCardList(), connectorError;
                 }
             }
@@ -740,6 +736,7 @@ public struct Column {
     string id;
     string name;
     string columnQuery;
+    string listOwner;
     private:
         CardList cards;
 }
@@ -749,7 +746,6 @@ public struct Column {
 @Description {value:"Get a list of cards of a column"}
 @Return {value:"CardList: A card list object"}
 public function <Column column> getCardList () (CardList) {
-    metaData["projectColumnId"] = column.id;
     return column.cards;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
