@@ -221,22 +221,22 @@ public struct RepositoryList {
 //*********************************************************************************************************************
 @Description {value:"Check if repository list next page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <RepositoryList repositoryList> hasNextPage () (boolean) {
+public function <RepositoryList repositoryList> hasNextPage () returns (boolean) {
     return repositoryList.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if repository list previous page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <RepositoryList repositoryList> hasPreviousPage () (boolean) {
+public function <RepositoryList repositoryList> hasPreviousPage () returns (boolean) {
     return repositoryList.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get the next page of a repository list"}
 @Return {value:"RepositoryList: Repository list"}
 @Return {value:"GitConnectorError: Error"}
-public function <RepositoryList repositoryList> nextPage () (RepositoryList, GitConnectorError) {
+public function <RepositoryList repositoryList> nextPage () returns RepositoryList|GitConnectorError {
     
-    GitConnectorError connectorError;
+    GitConnectorError connectorError = {};
     if (repositoryList.hasNextPage()) {
         http:HttpConnectorError httpError;
 
@@ -249,30 +249,32 @@ public function <RepositoryList repositoryList> nextPage () (RepositoryList, Git
         //Set headers and payload to the request
         constructRequest(request, jsonQuery, gitAccessToken);
         
-        response, httpError = gitHTTPClient -> post("", request);
-        if (httpError != null) {
-            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
-            return null, connectorError;
-        }
-        json validatedResponse;
-        //Check for empty payloads and errors
-        validatedResponse, connectorError = getValidatedResponse(response, GIT_REPOSITORIES);
-        if (connectorError != null) {
-            return null, connectorError;
-        }
-        var repositoriesJson, _ = (json)validatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
-        var repoList = <RepositoryList, jsonToRepositoryList(repositoryList.repositoryListQuery)>repositoriesJson;
+        var response = gitHTTPClient -> post("", request);
 
-        return repoList, connectorError;
+        //Check for empty payloads and errors
+        json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_REPOSITORIES);
+        
+        match validatedResponse {
+            json jsonValidatedResponse => {
+                var repositoriesJson, _ = (json)validatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
+                var repoList = <RepositoryList, jsonToRepositoryList(repositoryList.repositoryListQuery)>repositoriesJson;
+
+                return repoList;
+            }
+
+            GitConnectorError gitConError => {
+                return gitConError;
+            }
+        }         
     }
     connectorError = {message:["Repository list has no next page"]};
 
-    return null, connectorError;
+    return connectorError;
 }
 
 @Description {value:"Get an array of repositories"}
 @Return {value:"RepositoryList[]: Array of repositories"}
-public function <RepositoryList repositoryList> getAllRepositories () (Repository[]) {
+public function <RepositoryList repositoryList> getAllRepositories () returns (Repository[]) {
     return repositoryList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
