@@ -528,19 +528,16 @@ public struct Organization {
 @Param {value:"state: State of the project (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
 @Return {value:"Project[]: Array of projects"}
 @Return {value:"GitConnectorError: Error"}
-public function <Organization organization> getProjectList (string state) (ProjectList, GitConnectorError) {
+public function <Organization organization> getProjectList (string state) returns ProjectList|GitConnectorError {
     
-    GitConnectorError connectorError;
+    GitConnectorError connectorError = {};
 
     if (organization == null || state == null) {
         connectorError = {message:["Organization and state cannot be null."]};
-        return null, connectorError;
+        return connectorError;
     }
 
-    http:HttpConnectorError httpError;
-
     http:Request request = {};
-    http:Response response = {};
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}"
     ,"{{GIT_STATES}}":{{state}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECTS}}"}`;
@@ -549,30 +546,37 @@ public function <Organization organization> getProjectList (string state) (Proje
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
-    response, httpError = gitHTTPClient -> post("", request);
-    if (httpError != null) {
-        connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
-        return null, connectorError;
-    }
-    json validatedResponse;
-    //Check for empty payloads and errors
-    validatedResponse, connectorError = getValidatedResponse(response, GIT_PROJECTS);
-    if (connectorError != null) {
-        return null, connectorError;
-    }
-    var githubProjectsJson, _ = (json)validatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECTS];
-        var projectList = <ProjectList, jsonToProjectList(GIT_ORGANIZATION, stringQuery)>githubProjectsJson;
+    
+    // Make an HTTP POST request
+    var response = gitHTTPClient -> post("", request);
 
-    return projectList, connectorError;
+    //Check for empty payloads and errors
+    json|GitConnectoError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
+    
+    match validatedResponse {
+            json jsonValidatedResponse => {
+                var githubProjectsJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECTS];
+                var projectList = <ProjectList, jsonToProjectList(GIT_ORGANIZATION, stringQuery)>githubProjectsJson;
+
+                return projectList, connectorError;
+            }
+
+            GitConnectorError gitConError => {
+                return gitConError;
+            }
+	}
+    connectorError.message = ["No records found"];
+
+    return connectorError;
 }
 
 @Description {value:"Get a single project of an organization."}
 @Param {value:"projectNumber: The number of the project"}
 @Return {value:"Project object"}
 @Return {value:"GitConnectorError: Error"}
-public function <Organization organization> getProject (int projectNumber) (Project, GitConnectorError) {
+public function <Organization organization> getProject (int projectNumber) returns Project|GitConnectorError {
     
-    GitConnectorError connectorError;
+    GitConnectorError connectorError = {};
 
     if (organization == null || projectNumber <= 0) {
         connectorError = {message:["Organization cannot be null and project number should be positive integer."]};
@@ -580,55 +584,50 @@ public function <Organization organization> getProject (int projectNumber) (Proj
     }
 
     http:Request request = {};
-    http:Response response = {};
-    http:HttpConnectorError httpError;
-    Project singleProject;
 
-    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}","{{GIT_NUMBER}}":{{projectNumber}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT}}"}`;
+    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}",
+    "{{GIT_NUMBER}}":{{projectNumber}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT}}"}`;
 
     var jsonQuery, _ = <json>stringQuery;
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
+    
+    // Make an HTTP POST request
+    var response = gitHTTPClient -> post("", request);
 
-    response, httpError = gitHTTPClient -> post("", request);
-    if (httpError != null) {
-        connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
-        return {}, connectorError;
-    }
-    json validatedResponse;
-    validatedResponse, connectorError = getValidatedResponse(response, GIT_PROJECT);
-    if (connectorError != null) {
-        return null, connectorError;
-    }
-    try {
-        var githubProjectJson, _ = (json)validatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECT];
-        singleProject, _ = <Project>githubProjectJson;
-    } catch (error e) {
-        connectorError = {message:[e.message]};
-        return null, connectorError;
-    }
+    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
+    
+    match validatedResponse {
+            json jsonValidatedResponse => {
+                var githubProjectJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECT];
+                var singleProject, _ = <Project>githubProjectJson;
 
-    return singleProject, connectorError;
+                return singleProject;
+            }
+
+            GitConnectorError gitConError => {
+                return gitConError;
+            }
+	}
+    connectorError.message = ["No records found"];
+
+    return connectorError;
 }
 
 @Description {value:"Get a list of repositories of an organization."}
 @Return {value:"RepositoryList: Repository list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <Organization organization> getRepositoryList () (RepositoryList, GitConnectorError) {
+public function <Organization organization> getRepositoryList () returns RepositoryList|GitConnectorError {
     
-    GitConnectorError connectorError;
+    GitConnectorError connectorError = {};
 
     if (organization == null) {
         connectorError = {message:["Organization cannot be null."]};
         return null, connectorError;
     }
 
-    http:HttpConnectorError httpError;
-    RepositoryList repositoryList;
-
     http:Request request = {};
-    http:Response response = {};
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}"},
     "{{GIT_QUERY}}":"{{GET_ORGANIZATION_REPOSITORIES}}"}`;
@@ -636,21 +635,28 @@ public function <Organization organization> getRepositoryList () (RepositoryList
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
-    response, httpError = gitHTTPClient -> post("", request);
-    if (httpError != null) {
-        connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
-        return null, connectorError;
-    }
-    json validatedResponse;
-    //Check for empty payloads and errors
-    validatedResponse, connectorError = getValidatedResponse(response, GIT_REPOSITORIES);
-    if (connectorError != null) {
-        return null, connectorError;
-    }
-    var githubRepositoriesJson, _ = (json)validatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
-    repositoryList = <RepositoryList, jsonToRepositoryList(stringQuery)>githubRepositoriesJson;
+    
+    // Make an HTTP POST request
+    var response = gitHTTPClient -> post("", request);
 
-    return repositoryList, connectorError;
+    //Check for empty payloads and errors
+    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_REPOSITORIES);
+    
+    match validatedResponse {
+            json jsonValidatedResponse => {
+                var githubRepositoriesJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
+                var repositoryList = <RepositoryList, jsonToRepositoryList(stringQuery)>githubRepositoriesJson;
+
+                return repositoryList;
+            }
+
+            GitConnectorError gitConError => {
+                return gitConError;
+            }
+	}
+    connectorError.message = ["No records found"];
+
+    return connectorError;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                       End of Organization struct                                                  //

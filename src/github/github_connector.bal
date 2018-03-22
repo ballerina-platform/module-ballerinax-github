@@ -45,9 +45,7 @@ public function <GitHubConnector gitHubConnector> getRepository (string name) re
     string repoOwner = repoIdentifier[GIT_INDEX_ZERO];
     string repoName = repoIdentifier[GIT_INDEX_ONE];
     http:Request request = {};
-    http:Response response = {};
-    http:HttpConnectorError httpError;
-    Repository singleRepository;
+    Repository singleRepository = {};
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repoOwner}}","{{GIT_NAME}}":"{{repoName}}"},"{{GIT_QUERY}}":"{{GET_REPOSITORY}}"}`;
 
@@ -96,9 +94,7 @@ public function <GitHubConnector gitHubConnector> getOrganization (string name) 
         return connectorError;
     }
     http:Request request = {};
-    http:Response response = {};
-    http:HttpConnectorError httpError;
-    Organization singleOrganization;
+    Organization singleOrganization = {};
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{name}}"},
         "{{GIT_QUERY}}":"{{GET_ORGANIZATION}}"}`;
