@@ -76,7 +76,7 @@ public function <Project project> getColumnList () returns ColumnList|GitConnect
         ,"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECT_COLUMNS}}"}`;
         return getProjectColumns(GIT_REPOSITORY, stringQuery);
     }
-    connectorError.message = ["No records found"]
+    connectorError.message = ["No records found"];
     return connectorError;
 }
 
@@ -95,7 +95,6 @@ function getProjectColumns (string ownerType, string gitQuery) returns ColumnLis
     }
 
     http:Request request = {};
-    http:Response response = {};
 
     var jsonQuery, _ = <json>gitQuery;
 
@@ -120,8 +119,6 @@ function getProjectColumns (string ownerType, string gitQuery) returns ColumnLis
             return gitConError;
         }
     }
-    connectorError.message = ["No records found"];
-    return connectorError;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of Project struct                                                 //
@@ -161,7 +158,6 @@ public function <ProjectList projectList> nextPage () returns ProjectList|GitCon
     if (projectList.hasNextPage()) {
 
         http:Request request = {};
-        http:Response response = {};
 
         var jsonQuery, _ = <json>projectList.projectListQuery;
         jsonQuery.variables.endCursorProjects = projectList.pageInfo.endCursor;
@@ -184,7 +180,7 @@ public function <ProjectList projectList> nextPage () returns ProjectList|GitCon
                 var projectsJson, _ = <json>jsonValidatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
                 var projList = <ProjectList, jsonToProjectList(projectList.listOwner, jsonQuery.toString())>projectsJson;
 
-                return projList, connectorError;
+                return projList;
             }
 
             GitConnectorError gitConError => {
@@ -238,10 +234,8 @@ public function <RepositoryList repositoryList> nextPage () returns RepositoryLi
     
     GitConnectorError connectorError = {};
     if (repositoryList.hasNextPage()) {
-        http:HttpConnectorError httpError;
 
         http:Request request = {};
-        http:Response response = {};
 
         var jsonQuery, _ = <json>repositoryList.repositoryListQuery;
         jsonQuery.variables.endCursorRepos = repositoryList.pageInfo.endCursor;
@@ -326,7 +320,6 @@ public function <Repository repository> getPullRequestList (string state) return
     }
 
     http:Request request = {};
-    http:Response response = {};
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}"
     ,"{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}}},"{{GIT_QUERY}}":"{{GET_PULL_REQUESTS}}"}`;
@@ -354,9 +347,6 @@ public function <Repository repository> getPullRequestList (string state) return
                 return gitConError;
             }
     }
-    connectorError.message = ["No records found"];
-    
-    return connectorError;
 }
 
 @Description {value:"Get all projects of a repository"}
@@ -373,7 +363,6 @@ public function <Repository repository> getProjectList (string state) returns Pr
     }
 
     http:Request request = {};
-    http:Response response = {};
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}",
         "{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":{{state}}}
@@ -402,11 +391,6 @@ public function <Repository repository> getProjectList (string state) returns Pr
                 return gitConError;
             }
     }
-
-    connectorError.message = ["No records found"];
-
-    return connectorError;
-
 }
 
 @Description {value:"Get a single project of a repository."}
@@ -451,8 +435,6 @@ public function <Repository repository> getProject (int projectNumber) returns P
                 return gitConError;
             }
     }
-    connectorError.message = ["No records found"];
-    return connectorError;
 }
 
 @Description {value:"Get a list of issues of a repository."}
@@ -495,9 +477,6 @@ public function <Repository repository> getIssueList (string state) returns Issu
                 return gitConError;
             }
     }
-    connectorError.message = ["No records found"];
-
-    return connectorError;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of Repository struct                                                //
@@ -551,23 +530,20 @@ public function <Organization organization> getProjectList (string state) return
     var response = gitHTTPClient -> post("", request);
 
     //Check for empty payloads and errors
-    json|GitConnectoError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
+    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
     
     match validatedResponse {
             json jsonValidatedResponse => {
                 var githubProjectsJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECTS];
                 var projectList = <ProjectList, jsonToProjectList(GIT_ORGANIZATION, stringQuery)>githubProjectsJson;
 
-                return projectList, connectorError;
+                return projectList;
             }
 
             GitConnectorError gitConError => {
                 return gitConError;
             }
 	}
-    connectorError.message = ["No records found"];
-
-    return connectorError;
 }
 
 @Description {value:"Get a single project of an organization."}
@@ -580,7 +556,7 @@ public function <Organization organization> getProject (int projectNumber) retur
 
     if (organization == null || projectNumber <= 0) {
         connectorError = {message:["Organization cannot be null and project number should be positive integer."]};
-        return null, connectorError;
+        return connectorError;
     }
 
     http:Request request = {};
@@ -610,9 +586,6 @@ public function <Organization organization> getProject (int projectNumber) retur
                 return gitConError;
             }
 	}
-    connectorError.message = ["No records found"];
-
-    return connectorError;
 }
 
 @Description {value:"Get a list of repositories of an organization."}
@@ -624,7 +597,7 @@ public function <Organization organization> getRepositoryList () returns Reposit
 
     if (organization == null) {
         connectorError = {message:["Organization cannot be null."]};
-        return null, connectorError;
+        return connectorError;
     }
 
     http:Request request = {};
@@ -654,9 +627,6 @@ public function <Organization organization> getRepositoryList () returns Reposit
                 return gitConError;
             }
 	}
-    connectorError.message = ["No records found"];
-
-    return connectorError;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                       End of Organization struct                                                  //
@@ -724,14 +694,16 @@ public function <CardList cardList> nextPage () returns CardList|GitConnectorErr
             ColumnList|GitConnectorError columnList = getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString());
             match columnList {
                 ColumnList colList => {
-                    foreach column in columnList.getAllColumns() {
+                    foreach column in colList.getAllColumns() {
                         if (column.id == cardListColumnId) {
                             return column.getCardList();
                         }
                     }
                 }
 
-                GitConnectoError gitConError => {}
+                GitConnectorError gitConError => {
+                    return gitConError;
+                }
             }
             
         } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
@@ -739,16 +711,17 @@ public function <CardList cardList> nextPage () returns CardList|GitConnectorErr
             ColumnList|GitConnectorError columnList = getProjectColumns(GIT_REPOSITORY, jsonQuery.toString());
             match columnList {
                 ColumnList colList => {
-                    foreach column in columnList.getAllColumns() {
+                    foreach column in colList.getAllColumns() {
                         if (column.id == cardListColumnId) {
                             return column.getCardList();
                         }
                     }
                 }
 
-                GitConnectoError gitConError => {}
+                GitConnectorError gitConError => {
+                    return gitConError;
+                }
             }
-            
         }
     }
     connectorError.message = ["Card list has no next page"];
@@ -758,7 +731,7 @@ public function <CardList cardList> nextPage () returns CardList|GitConnectorErr
 
 @Description {value:"Get an array of all the cards"}
 @Return {value:"Card[]: Array of cards"}
-public function <CardList cardList> getAllCards () (Card[]) {
+public function <CardList cardList> getAllCards () returns (Card[]) {
     return cardList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -782,7 +755,7 @@ public struct Column {
 //*********************************************************************************************************************
 @Description {value:"Get a list of cards of a column"}
 @Return {value:"CardList: A card list object"}
-public function <Column column> getCardList () (CardList) {
+public function <Column column> getCardList () returns (CardList) {
     return column.cards;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -805,22 +778,22 @@ public struct ColumnList {
 //*********************************************************************************************************************
 @Description {value:"Check if column list next page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <ColumnList columnList> hasNextPage () (boolean) {
+public function <ColumnList columnList> hasNextPage () returns (boolean) {
     return columnList.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if column list previosu page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <ColumnList columnList> hasPreviousPage () (boolean) {
+public function <ColumnList columnList> hasPreviousPage () returns (boolean) {
     return columnList.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get the next page of column list"}
 @Return {value:"ColumList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <ColumnList columnList> nextPage () (ColumnList, GitConnectorError) {
+public function <ColumnList columnList> nextPage () returns ColumnList|GitConnectorError {
     
-    GitConnectorError connectorError;
+    GitConnectorError connectorError = {};
     if (columnList.hasNextPage()) {
         var jsonQuery, _ = <json>columnList.columnListQuery;
         jsonQuery.variables.endCursorColumns = columnList.pageInfo.endCursor;
@@ -836,12 +809,12 @@ public function <ColumnList columnList> nextPage () (ColumnList, GitConnectorErr
     }
     connectorError = {message:["Column list has no next page"]};
 
-    return null, connectorError;
+    return connectorError;
 }
 
 @Description {value:"Get an array of all the columns"}
 @Return {value:"Column[]: Column array"}
-public function <ColumnList columnList> getAllColumns () (Column[]) {
+public function <ColumnList columnList> getAllColumns () returns (Column[]) {
     return columnList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -879,7 +852,7 @@ public struct ProjectOwner {
 //*********************************************************************************************************************
 @Description {value:"Get the type of the project owner"}
 @Return {value:"string: Type of the owner"}
-public function <ProjectOwner projectOwner> getOwnerType () (string) {
+public function <ProjectOwner projectOwner> getOwnerType () returns (string) {
     return projectOwner.__typename;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -952,27 +925,25 @@ public struct IssueList {
 //*********************************************************************************************************************
 @Description {value:"Check if issue list next page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <IssueList issueList> hasNextPage () (boolean) {
+public function <IssueList issueList> hasNextPage () returns (boolean) {
     return issueList.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if issue list previous page is avaiable"}
 @Return {value:"boolean: Return ture or false"}
-public function <IssueList issueList> hasPreviousPage () (boolean) {
+public function <IssueList issueList> hasPreviousPage () returns (boolean) {
     return issueList.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get the next page of the pull request list"}
 @Return {value:"PullRequestList: PullRequest list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <IssueList issueList> nextPage () (IssueList, GitConnectorError) {
+public function <IssueList issueList> nextPage () returns IssueList|GitConnectorError {
     
-    GitConnectorError connectorError;
+    GitConnectorError connectorError = {};
     if (issueList.hasNextPage()) {
-        http:HttpConnectorError httpError;
 
         http:Request request = {};
-        http:Response response = {};
 
         var jsonQuery, _ = <json>issueList.issueListQuery;
         jsonQuery.variables.endCursorIssues = issueList.pageInfo.endCursor;
@@ -980,31 +951,34 @@ public function <IssueList issueList> nextPage () (IssueList, GitConnectorError)
         //Set headers and payload to the request
         constructRequest(request, jsonQuery, gitAccessToken);
         
-        response, httpError = gitHTTPClient -> post("", request);
-        if (httpError != null) {
-            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
-            return null, connectorError;
-        }
-        json validatedResponse;
+        // Make an HTTP POST request
+        var response = gitHTTPClient -> post("", request);
+
         //Check for empty payloads and errors
-        validatedResponse, connectorError = getValidatedResponse(response, GIT_ISSUES);
-        if (connectorError != null) {
-            return null, connectorError;
-        }
-        var repositoryIssuesJson, _ = (json)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
-        var issuesList = <IssueList, jsonToIssueList(issueList.issueListQuery)>repositoryIssuesJson;
+        json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_ISSUES);
+        match validatedResponse {
+            json jsonValidatedResponse => {
+                var repositoryIssuesJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
+                var issuesList = <IssueList, jsonToIssueList(issueList.issueListQuery)>repositoryIssuesJson;
 
-        return issuesList, connectorError;
+                return issuesList;
+            }
+
+            GitConnectorError gitConError => {
+                return gitConError;
+            }
+	    }
+
     }
-    connectorError = {message:["Pull request list has no next page"]};
+    connectorError.message = ["Pull request list has no next page"];
 
-    return null, connectorError;
+    return connectorError;
 
 }
 
 @Description {value:"Get an array of all the issues"}
 @Return {value:"Issue[]: Issue array"}
-public function <IssueList issueList> getAllIssues () (Issue[]) {
+public function <IssueList issueList> getAllIssues () returns (Issue[]) {
     return issueList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1083,59 +1057,62 @@ public struct PullRequestList {
 //*********************************************************************************************************************
 @Description {value:"Check if pull request list next page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <PullRequestList pullRequestList> hasNextPage () (boolean) {
+public function <PullRequestList pullRequestList> hasNextPage () returns (boolean) {
     return pullRequestList.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if pull request list previous page is avaiable"}
 @Return {value:"boolean: Return ture or false"}
-public function <PullRequestList pullRequestList> hasPreviousPage () (boolean) {
+public function <PullRequestList pullRequestList> hasPreviousPage () returns (boolean) {
     return pullRequestList.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get the next page of the pull request list"}
 @Return {value:"PullRequestList: PullRequest list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <PullRequestList pullRequestList> nextPage () (PullRequestList, GitConnectorError) {
+public function <PullRequestList pullRequestList> nextPage () returns PullRequestList|GitConnectorError {
     
-    GitConnectorError connectorError;
+    GitConnectorError connectorError = {};
     if (pullRequestList.hasNextPage()) {
-        http:HttpConnectorError httpError;
 
         http:Request request = {};
-        http:Response response = {};
 
         var jsonQuery, _ = <json>pullRequestList.pullrequestListQuery;
         jsonQuery.variables.endCursorPullRequests = pullRequestList.pageInfo.endCursor;
         jsonQuery["query"] = GET_PULL_REQUESTS_NEXT_PAGE;
+        
         //Set headers and payload to the request
         constructRequest(request, jsonQuery, gitAccessToken);
         
-        response, httpError = gitHTTPClient -> post("", request);
-        if (httpError != null) {
-            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
-            return null, connectorError;
-        }
-        json validatedResponse;
-        //Check for empty payloads and errors
-        validatedResponse, connectorError = getValidatedResponse(response, GIT_PULL_REQUESTS);
-        if (connectorError != null) {
-            return null, connectorError;
-        }
-        var projectColumnsJson, _ = (json)validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
-        var prList = <PullRequestList, jsonToPullRequestList(pullRequestList.pullrequestListQuery)>projectColumnsJson;
+        // Make an HTTP POST request
+        var response = gitHTTPClient -> post("", request);
 
-        return prList, connectorError;
+        //Check for empty payloads and errors
+        json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PULL_REQUESTS);
+        
+        match validatedResponse {
+            json jsonValidatedResponse => {
+                var projectColumnsJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
+                var prList = <PullRequestList, jsonToPullRequestList(pullRequestList.pullrequestListQuery)>projectColumnsJson;
+
+                return prList;
+            }
+
+            GitConnectorError gitConError => {
+                return gitConError;
+            }
+	    }
+
     }
     connectorError = {message:["Pull request list has no next page"]};
 
-    return null, connectorError;
+    return connectorError;
 
 }
 
 @Description {value:"Get an array of all the pull requests"}
 @Return {value:"PullRequest[]: PullRequest array"}
-public function <PullRequestList pullRequestList> getAllPullRequests () (PullRequest[]) {
+public function <PullRequestList pullRequestList> getAllPullRequests () returns (PullRequest[]) {
     return pullRequestList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1184,7 +1161,7 @@ public struct LabelList {
 //*********************************************************************************************************************
 @Description {value:"Get an array of labels"}
 @Return {value:"Lebel[]: Label array"}
-public function <LabelList labelList> getAllLabels () (Label[]) {
+public function <LabelList labelList> getAllLabels () returns (Label[]) {
     return labelList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -35,7 +35,7 @@ public function <GitHubConnector gitHubConnector> getRepository (string name) re
     endpoint http:ClientEndpoint gitHubEndpoint {
         targets: [{uri:GIT_API_URL}]
     };
-    GitConnectorError connectorError;
+    GitConnectorError connectorError = {};
 
     if (name == null || name == "") {
         connectorError = {message:["Repository owner and name should be specified."]};
@@ -87,7 +87,7 @@ public function <GitHubConnector gitHubConnector> getOrganization (string name) 
         targets: [{uri:GIT_API_URL}]
     };
 
-    GitConnectorError connectorError;
+    GitConnectorError connectorError = {};
 
     if (null == name || "" == name) {
         connectorError = {message:["Organization name should be specified."]};
