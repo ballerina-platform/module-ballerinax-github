@@ -52,13 +52,13 @@ public struct Project {
 @Description {value:"Get all columns of a project"}
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <Project project> getColumnList () (ColumnList, GitConnectorError) {
+public function <Project project> getColumnList () returns ColumnList|GitConnectorError {
     
     GitConnectorError connectorError = {};
 
     if (project == null) {
         connectorError = {message:["Project cannot be null"]};
-        return null, connectorError;
+        return connectorError;
     }
     string projectOwnerType = project.owner.getOwnerType();
     if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION) && project.resourcePath != null) {
@@ -76,7 +76,8 @@ public function <Project project> getColumnList () (ColumnList, GitConnectorErro
         ,"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECT_COLUMNS}}"}`;
         return getProjectColumns(GIT_REPOSITORY, stringQuery);
     }
-    return null, connectorError;
+    connectorError.message = ["No records found"]
+    return connectorError;
 }
 
 @Description {value:"Get all columns of an organization project or repository project"}
@@ -84,16 +85,14 @@ public function <Project project> getColumnList () (ColumnList, GitConnectorErro
 @Param {value:"gitQuery: Graphql query"}
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
-function getProjectColumns (string ownerType, string gitQuery) (ColumnList, GitConnectorError) {
+function getProjectColumns (string ownerType, string gitQuery) returns ColumnList|GitConnectorError {
     
-    GitConnectorError connectorError;
+    GitConnectorError connectorError = {};
 
     if (ownerType == null || ownerType == "" || gitQuery == null || gitQuery == "") {
         connectorError = {message:["Owner type and query cannot be null"]};
-        return null, connectorError;
+        return connectorError;
     }
-
-    http:HttpConnectorError httpError;
 
     http:Request request = {};
     http:Response response = {};
@@ -104,21 +103,25 @@ function getProjectColumns (string ownerType, string gitQuery) (ColumnList, GitC
     constructRequest(request, jsonQuery, gitAccessToken);
     
     // Make an HTTP POST request
-    response, httpError = gitHTTPClient -> post("", request);
-    if (httpError != null) {
-        connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
-        return null, connectorError;
-    }
-    json validatedResponse;
-    //Check for empty payloads and errors
-    validatedResponse, connectorError = getValidatedResponse(response, GIT_PROJECT);
-    if (connectorError != null) {
-        return null, connectorError;
-    }
-    var projectColumnsJson, _ = (json)validatedResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
-    var columnList = <ColumnList, jsonToColumnList(ownerType, gitQuery)>projectColumnsJson;
+    var response = gitHTTPClient -> post("", request);
 
-    return columnList, connectorError;
+    //Check for empty payloads and errors
+    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
+
+    match validatedResponse {
+        json jsonValidateResponse => {
+            var projectColumnsJson, _ = (json)validatedResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
+            var columnList = <ColumnList, jsonToColumnList(ownerType, gitQuery)>projectColumnsJson;
+
+            return columnList;
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
+    connectorError.message = ["No records found"];
+    return connectorError;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of Project struct                                                 //

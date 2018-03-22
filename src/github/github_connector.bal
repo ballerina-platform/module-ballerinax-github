@@ -59,7 +59,6 @@ public function <GitHubConnector gitHubConnector> getRepository (string name) re
     // Make an HTTP POST request 
     var response = gitHubEndpoint -> post("", request);
 
-    json validatedResponse;
     json|GitConnectorError validatedResponse  = getValidatedResponse(response, GIT_NAME);
     
     match validatedResponse {
@@ -112,7 +111,6 @@ public function <GitHubConnector gitHubConnector> getOrganization (string name) 
     // Make an HTTP POST request
     var response = gitHubEndpoint -> post("", request);
 
-    json validatedResponse;
     json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_NAME);
     
     match validatedResponse {
@@ -130,7 +128,6 @@ public function <GitHubConnector gitHubConnector> getOrganization (string name) 
             return gitConError;
         }
     }
-
 
     return singleOrganization;
 }
