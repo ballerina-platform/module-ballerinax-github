@@ -12,7 +12,7 @@ transformer <json source_json, ProjectList target_projectList> jsonToProjectList
     target_projectList.projectListQuery = stringQuery;
     target_projectList.pageInfo, _ = <PageInfo>source_json.pageInfo;
     target_projectList.nodes = source_json.nodes.map(
-                                                   function (json node) (Project) {
+                                                   function (json node) returns (Project) {
                                                        var project, _ = <Project> node;
                                                        return project;
                                                    });
@@ -27,7 +27,7 @@ transformer <json source_json, CardList target_cardList> jsonToCardList (string 
     target_cardList.listOwner = listOwner;
     target_cardList.pageInfo, _ = <PageInfo>source_json.pageInfo;
     target_cardList.nodes = source_json.nodes.map(
-                                                function (json node) (Card) {
+                                                function (json node) returns (Card) {
                                                     var card, _ = <Card> node;
                                                     return card;
                                                 }); 
@@ -56,7 +56,7 @@ transformer <json source_json, ColumnList target_columnList> jsonToColumnList (s
     target_columnList.columnListQuery = stringQuery;
     target_columnList.pageInfo, _ = <PageInfo>source_json.pageInfo;
     target_columnList.nodes = source_json.nodes.map(
-                                                   function (json node) (Column) {
+                                                   function (json node) returns (Column) {
                                                        var column = <Column, jsonToColumn(tempOwner, tempQuery)> node;
                                                        return column;
                                                    });
@@ -70,7 +70,7 @@ transformer <json source_json, RepositoryList target_repositoryList> jsonToRepos
     target_repositoryList.repositoryListQuery = stringQuery;
     target_repositoryList.pageInfo, _ = <PageInfo>source_json.pageInfo;
     target_repositoryList.nodes = source_json.nodes.map(
-                                                   function (json node) (Repository) {
+                                                   function (json node) returns (Repository) {
                                                        var repository, _ = <Repository> node;
                                                        return repository;
                                                    });
@@ -83,7 +83,7 @@ transformer <json source_json, PullRequestList target_pullRequestList> jsonToPul
     target_pullRequestList.pullrequestListQuery = stringQuery;
     target_pullRequestList.pageInfo, _ = <PageInfo>source_json.pageInfo;
     target_pullRequestList.nodes = source_json.nodes.map(
-                                                   function (json node) (PullRequest) {
+                                                   function (json node) returns (PullRequest) {
                                                        var pullRequest, _ = <PullRequest> node;
                                                        return pullRequest;
                                                    });
@@ -96,7 +96,7 @@ transformer <json source_json, IssueList target_issueList> jsonToIssueList (stri
     target_issueList.issueListQuery = stringQuery;
     target_issueList.pageInfo, _ = <PageInfo>source_json.pageInfo;
     target_issueList.nodes = source_json.nodes.map(
-                                                   function (json node) (Issue) {
+                                                   function (json node) returns (Issue) {
                                                        var issue, _ = <Issue> node;
                                                        return issue;
                                                    });

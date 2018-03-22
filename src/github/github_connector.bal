@@ -31,7 +31,7 @@ public struct GitHubConnector {
 @Param {value:"name: Name of the form owner/repository"}
 @Return {value:"Repository: Repository struct"}
 @Return {value:"error: Error"}
-public function <GitHubConnector gitHubConnector> getRepository (string name) (Repository, GitConnectorError) {
+public function <GitHubConnector gitHubConnector> getRepository (string name) returns Repository|GitConnectorError {
     endpoint http:ClientEndpoint gitHubEndpoint {
         targets: [{uri:GIT_API_URL}]
     };
@@ -39,7 +39,7 @@ public function <GitHubConnector gitHubConnector> getRepository (string name) (R
 
     if (name == null || name == "") {
         connectorError = {message:["Repository owner and name should be specified."]};
-        return null, connectorError;
+        return connectorError;
     }
     string[] repoIdentifier = name.split(GIT_PATH_SEPARATOR);
     string repoOwner = repoIdentifier[GIT_INDEX_ZERO];

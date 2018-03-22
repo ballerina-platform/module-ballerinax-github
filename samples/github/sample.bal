@@ -12,10 +12,10 @@ public function main (string[] args) {
 
 
     //Get a single organization
-    // github:Organization organization;
-    // organization, e = githubConnector.getOrganization("wso2");
-    // io:println(organization);
-    // io:println(e);
+    github:Organization organization;
+    organization, e = githubConnector.getOrganization("wso2");
+    io:println(organization);
+    io:println(e);
 
     ////Get a list of projects of an organization
     //github:ProjectList responseProjectList;
