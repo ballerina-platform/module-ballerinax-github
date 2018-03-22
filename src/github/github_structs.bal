@@ -698,22 +698,22 @@ public struct CardList {
 //*********************************************************************************************************************
 @Description {value:"Check if the card list next page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <CardList cardList> hasNextPage () (boolean) {
+public function <CardList cardList> hasNextPage () returns (boolean) {
     return cardList.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if the card list previous page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <CardList cardList> hasPreviousPage () (boolean) {
+public function <CardList cardList> hasPreviousPage () returns (boolean) {
     return cardList.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get the next page of the card list"}
 @Return {value:"CardList: Card list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <CardList cardList> nextPage () (CardList, GitConnectorError) {
+public function <CardList cardList> nextPage () returns CardList|GitConnectorError {
     
-    GitConnectorError connectorError;
+    GitConnectorError connectorError = {};
     if (cardList.hasNextPage()) {
         var cardListColumnId = cardList.columnId;
         var jsonQuery, _ = <json>cardList.cardListQuery;
@@ -721,28 +721,39 @@ public function <CardList cardList> nextPage () (CardList, GitConnectorError) {
         
         if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
             jsonQuery["query"] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
-            ColumnList columnList;
-            columnList, _ = getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString());
-            foreach column in columnList.getAllColumns() {
-                if (column.id == cardListColumnId) {
-                    return column.getCardList(), connectorError;
+            ColumnList|GitConnectorError columnList = getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString());
+            match columnList {
+                ColumnList colList => {
+                    foreach column in columnList.getAllColumns() {
+                        if (column.id == cardListColumnId) {
+                            return column.getCardList();
+                        }
+                    }
                 }
+
+                GitConnectoError gitConError => {}
             }
+            
         } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
             jsonQuery["query"] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
-            ColumnList columnList;
-            columnList, _ = getProjectColumns(GIT_REPOSITORY, jsonQuery.toString());
-            foreach column in columnList.getAllColumns() {
-                if (column.id == cardListColumnId) {
-                    return column.getCardList(), connectorError;
+            ColumnList|GitConnectorError columnList = getProjectColumns(GIT_REPOSITORY, jsonQuery.toString());
+            match columnList {
+                ColumnList colList => {
+                    foreach column in columnList.getAllColumns() {
+                        if (column.id == cardListColumnId) {
+                            return column.getCardList();
+                        }
+                    }
                 }
-            }
-        }
-        io:println(jsonQuery);
-    }
-    connectorError = {message:["Card list has no next page"]};
 
-    return null, connectorError;
+                GitConnectoError gitConError => {}
+            }
+            
+        }
+    }
+    connectorError.message = ["Card list has no next page"];
+
+    return connectorError;
 }
 
 @Description {value:"Get an array of all the cards"}
