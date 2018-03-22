@@ -19,6 +19,7 @@
 package src.github;
 
 import ballerina.net.http;
+import ballerina.mime;
 
 @Description {value:"Construct the request headers"}
 @Param {value:"request: The http request object"}
@@ -37,14 +38,24 @@ function constructRequest (http:Request request, json stringQuery, string access
 @Param {value:"component:"}
 @Return {value:"json: The JSON payload in the response"}
 @Return {value:"GitConnectoError: GitConnectorError object"}
-function getValidatedResponse (var response, string validateComponent) returns json|GitConnectorError {
-    GitConnectorError connectorError;
+function getValidatedResponse (http:Response response, string validateComponent) returns json|GitConnectorError {
+    GitConnectorError connectorError = {};
     json responsePayload;
 
     match response {
         http:Response gitResponse => {
             try {
-                responsePayload, _ = gitResponse.getJsonPayload();
+                var jsonPayload = gitResponse.getJsonPayload();
+
+                match jsonPayload {
+                    json jsonData => {
+                        responsePayload = jsonData;
+                    }
+                    mime:EntityError entityError => {
+                        connectorError = {message:[entityError.message]};
+                        return connectorError;
+                    }
+                }
                 string[] payLoadKeys = responsePayload.getKeys();
                 //Check all the keys in the payload to see if an error object is returned.
                 foreach key in payLoadKeys {

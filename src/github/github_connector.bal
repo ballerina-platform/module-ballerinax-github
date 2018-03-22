@@ -57,32 +57,35 @@ public function <GitHubConnector gitHubConnector> getRepository (string name) re
     constructRequest(request, jsonQuery, gitHubConnector.accessToken);
 
     // Make an HTTP POST request 
-    response, httpError = gitHubEndpoint -> post("", request);
-    if (httpError != null) {
-        connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
-        return null, connectorError;
-    }
-    json validatedResponse;
-    validatedResponse, connectorError = getValidatedResponse(response, GIT_NAME);
-    if (connectorError != null) {
-        return null, connectorError;
-    }
-    try {
-        var githubRepositoryJson, _ = (json)validatedResponse[GIT_DATA][GIT_REPOSITORY];
-        singleRepository, _ = <Repository>githubRepositoryJson;
-    } catch (error e) {
-        connectorError = {message:[e.message]};
-        return null, connectorError;
-    }
+    var response = gitHubEndpoint -> post("", request);
 
-    return singleRepository, connectorError;
+    json validatedResponse;
+    json|GitConnectorError validatedResponse  = getValidatedResponse(response, GIT_NAME);
+    
+    match validatedResponse {
+        json jsonValidatedResponse => {
+            try {
+                var githubRepositoryJson, _ = (json)jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY];
+                singleRepository, _ = <Repository>githubRepositoryJson;
+            } catch (error e) {
+                connectorError = {message:[e.message]};
+                return connectorError;
+            }
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
+    
+    return singleRepository;
 }
 
 @Description {value:"Get an organization"}
 @Param {value:"name: Name of the organization"}
 @Return {value:"Organization: Organization struct"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getOrganization (string name) (Organization, GitConnectorError) {
+public function <GitHubConnector gitHubConnector> getOrganization (string name) returns Organization|GitConnectorError {
     endpoint http:ClientEndpoint gitHubEndpoint {
         targets: [{uri:GIT_API_URL}]
     };
@@ -91,7 +94,7 @@ public function <GitHubConnector gitHubConnector> getOrganization (string name) 
 
     if (null == name || "" == name) {
         connectorError = {message:["Organization name should be specified."]};
-        return null, connectorError;
+        return connectorError;
     }
     http:Request request = {};
     http:Response response = {};
@@ -107,23 +110,27 @@ public function <GitHubConnector gitHubConnector> getOrganization (string name) 
     constructRequest(request, jsonQuery, gitHubConnector.accessToken);
 
     // Make an HTTP POST request
-    response, httpError = gitHubEndpoint -> post("", request);
-    if (httpError != null) {
-        connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
-        return null, connectorError;
-    }
+    var response = gitHubEndpoint -> post("", request);
+
     json validatedResponse;
-    validatedResponse, connectorError = getValidatedResponse(response, GIT_NAME);
-    if (connectorError != null) {
-        return null, connectorError;
-    }
-    try {
-        var githubRepositoryJson, _ = (json)validatedResponse[GIT_DATA][GIT_ORGANIZATION];
-        singleOrganization, _ = <Organization>githubRepositoryJson;
-    } catch (error e) {
-        connectorError = {message:[e.message]};
-        return null, connectorError;
+    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_NAME);
+    
+    match validatedResponse {
+        json jsonValidatedResponse => {
+            try {
+                var githubRepositoryJson, _ = (json)jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION];
+                singleOrganization, _ = <Organization>githubRepositoryJson;
+            } catch (error e) {
+                connectorError = {message:[e.message]};
+                return connectorError;
+            }
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
     }
 
-    return singleOrganization, connectorError;
+
+    return singleOrganization;
 }
