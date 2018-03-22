@@ -32,7 +32,7 @@ target
 *.ipr
 .idea
 .m2
-
+.vscode
 # Ignore ballerina files
 accessToken.bal
 
