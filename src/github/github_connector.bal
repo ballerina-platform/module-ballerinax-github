@@ -64,7 +64,7 @@ public function <GitHubConnector gitHubConnector> getRepository (string name) re
     match validatedResponse {
         json jsonValidatedResponse => {
             try {
-                var githubRepositoryJson, _ = (json)jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY];
+                var githubRepositoryJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY];
                 singleRepository, _ = <Repository>githubRepositoryJson;
             } catch (error e) {
                 connectorError = {message:[e.message]};
@@ -116,7 +116,7 @@ public function <GitHubConnector gitHubConnector> getOrganization (string name) 
     match validatedResponse {
         json jsonValidatedResponse => {
             try {
-                var githubRepositoryJson, _ = (json)jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION];
+                var githubRepositoryJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION];
                 singleOrganization, _ = <Organization>githubRepositoryJson;
             } catch (error e) {
                 connectorError = {message:[e.message]};

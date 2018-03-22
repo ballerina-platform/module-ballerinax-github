@@ -110,7 +110,7 @@ function getProjectColumns (string ownerType, string gitQuery) returns ColumnLis
 
     match validatedResponse {
         json jsonValidateResponse => {
-            var projectColumnsJson, _ = (json)validatedResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
+            var projectColumnsJson, _ = <json>validatedResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
             var columnList = <ColumnList, jsonToColumnList(ownerType, gitQuery)>projectColumnsJson;
 
             return columnList;
@@ -143,21 +143,21 @@ public struct ProjectList {
 //*********************************************************************************************************************
 @Description {value:"Check if project list next page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <ProjectList projectList> hasNextPage () (boolean) {
+public function <ProjectList projectList> hasNextPage () returns (boolean) {
     return projectList.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if project list previous page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <ProjectList projectList> hasPreviousPage () (boolean) {
+public function <ProjectList projectList> hasPreviousPage () returns (boolean) {
     return projectList.pageInfo.hasPreviousPage;
 }
 
 @Description {value: "Gets the next page of a project list"}
 @Return {value: "ProjectList: Project list"}
-public function <ProjectList projectList> nextPage () (ProjectList, GitConnectorError) {
+public function <ProjectList projectList> nextPage () returns ProjectList|GitConnectorError {
     
-    GitConnectorError connectorError;
+    GitConnectorError connectorError = {};
     if (projectList.hasNextPage()) {
         http:HttpConnectorError httpError;
 
@@ -174,30 +174,32 @@ public function <ProjectList projectList> nextPage () (ProjectList, GitConnector
         //Set headers and payload to the request
         constructRequest(request, jsonQuery, gitAccessToken);
         
-        response, httpError = gitHTTPClient -> post("", request);
-        if (httpError != null) {
-            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
-            return null, connectorError;
-        }
-        json validatedResponse;
-        //Check for empty payloads and errors
-        validatedResponse, connectorError = getValidatedResponse(response, GIT_PROJECTS);
-        if (connectorError != null) {
-            return null, connectorError;
-        }
-        var projectsJson, _ = (json)validatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
-        var projList = <ProjectList, jsonToProjectList(projectList.listOwner, jsonQuery.toString())>projectsJson;
+        var response = gitHTTPClient -> post("", request);
 
-        return projList, connectorError;
+        //Check for empty payloads and errors
+        json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
+        
+        match validatedResponse {
+            json jsonValidatedResponse => {
+                var projectsJson, _ = <json>validatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
+                var projList = <ProjectList, jsonToProjectList(projectList.listOwner, jsonQuery.toString())>projectsJson;
+
+                return projList, connectorError;
+            }
+
+            GitConnectorError gitConError => {
+                return gitConError;
+            }
+        }  
     }
     connectorError = {message:["Project list has no next page"]};
 
-    return null, connectorError;
+    return connectorError;
 }
 
 @Description {value:"Get an array of repositories"}
 @Return {value:"RepositoryList[]: Array of repositories"}
-public function <ProjectList projectList> getAllProjects () (Project[]) {
+public function <ProjectList projectList> getAllProjects () returns (Project[]) {
     return projectList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
