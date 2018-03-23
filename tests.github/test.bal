@@ -1,8 +1,8 @@
 package tests.github;
 
-import ballerina.net.http;
-import src.github;
-import ballerina.io;
+import ballerina/net.http;
+import github;
+import ballerina/io;
 
 public function main (string[] args) {
     github:GitHubConnector githubConnector = { accessToken: getAccessToken()};

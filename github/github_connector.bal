@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package src.github;
+package github;
 
 import ballerina.net.http;
 
@@ -49,7 +49,7 @@ public function <GitHubConnector gitHubConnector> getRepository (string name) re
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repoOwner}}","{{GIT_NAME}}":"{{repoName}}"},"{{GIT_QUERY}}":"{{GET_REPOSITORY}}"}`;
 
-    var jsonQuery, _ = <json>stringQuery;
+    var jsonQuery = <json>stringQuery;
 
     // Set headers and payload to the request
     constructRequest(request, jsonQuery, gitHubConnector.accessToken);
@@ -62,8 +62,8 @@ public function <GitHubConnector gitHubConnector> getRepository (string name) re
     match validatedResponse {
         json jsonValidatedResponse => {
             try {
-                var githubRepositoryJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY];
-                singleRepository, _ = <Repository>githubRepositoryJson;
+                var githubRepositoryJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY];
+                singleRepository =? <Repository>githubRepositoryJson;
             } catch (error e) {
                 connectorError = {message:[e.message]};
                 return connectorError;
@@ -99,7 +99,7 @@ public function <GitHubConnector gitHubConnector> getOrganization (string name) 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{name}}"},
         "{{GIT_QUERY}}":"{{GET_ORGANIZATION}}"}`;
 
-    var jsonQuery, _ = <json>stringQuery;
+    var jsonQuery = <json>stringQuery;
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitHubConnector.accessToken);
@@ -112,8 +112,8 @@ public function <GitHubConnector gitHubConnector> getOrganization (string name) 
     match validatedResponse {
         json jsonValidatedResponse => {
             try {
-                var githubRepositoryJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION];
-                singleOrganization, _ = <Organization>githubRepositoryJson;
+                var githubRepositoryJson = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION];
+                singleOrganization =? <Organization>githubRepositoryJson;
             } catch (error e) {
                 connectorError = {message:[e.message]};
                 return connectorError;

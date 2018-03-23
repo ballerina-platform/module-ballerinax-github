@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package src.github;
+package github;
 
 //TODO Implement a QueryBuilder to programatically develop the queries
 public const string GET_REPOSITORY_PROJECTS = "query ($owner: String!, $repository: String!, $states:[ProjectState!]){

@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package src.github;
+package github;
 
 import ballerina.net.http;
 import ballerina.mime;
@@ -61,11 +61,9 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                 foreach key in payLoadKeys {
                     if (GIT_ERRORS.equalsIgnoreCase(key)){
                         string[] errors = [];
-                        var errorList, _ = (json[])responsePayload[GIT_ERRORS];
-                        int i = 0;
-                        foreach singleError in errorList {
-                            errors[i], _ = (string)singleError[GIT_MESSAGE];
-                            i = i + 1;
+                        var errorList =? <json[]>responsePayload[GIT_ERRORS];
+                        foreach i, singleError in errorList {
+                            errors[i] =? <string>singleError[GIT_MESSAGE];
                         }
                         connectorError = {message:errors, statusCode:gitResponse.statusCode, reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
                         return connectorError;

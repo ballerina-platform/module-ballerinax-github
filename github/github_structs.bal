@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package src.github;
+package github;
 
 import ballerina.io;
 import ballerina.net.http;
@@ -96,7 +96,7 @@ function getProjectColumns (string ownerType, string gitQuery) returns ColumnLis
 
     http:Request request = {};
 
-    var jsonQuery, _ = <json>gitQuery;
+    var jsonQuery = <json>gitQuery;
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
@@ -109,7 +109,7 @@ function getProjectColumns (string ownerType, string gitQuery) returns ColumnLis
 
     match validatedResponse {
         json jsonValidateResponse => {
-            var projectColumnsJson, _ = <json>jsonValidateResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
+            var projectColumnsJson = <json>jsonValidateResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
             var columnList = <ColumnList, jsonToColumnList(ownerType, gitQuery)>projectColumnsJson;
 
             return columnList;
@@ -159,7 +159,7 @@ public function <ProjectList projectList> nextPage () returns ProjectList|GitCon
 
         http:Request request = {};
 
-        var jsonQuery, _ = <json>projectList.projectListQuery;
+        var jsonQuery = <json>projectList.projectListQuery;
         jsonQuery.variables.endCursorProjects = projectList.pageInfo.endCursor;
         if (projectList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
             jsonQuery["query"] = GET_ORGANIZATION_PROJECTS_NEXT_PAGE;
@@ -177,7 +177,7 @@ public function <ProjectList projectList> nextPage () returns ProjectList|GitCon
         
         match validatedResponse {
             json jsonValidatedResponse => {
-                var projectsJson, _ = <json>jsonValidatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
+                var projectsJson = <json>jsonValidatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
                 var projList = <ProjectList, jsonToProjectList(projectList.listOwner, jsonQuery.toString())>projectsJson;
 
                 return projList;
@@ -237,7 +237,7 @@ public function <RepositoryList repositoryList> nextPage () returns RepositoryLi
 
         http:Request request = {};
 
-        var jsonQuery, _ = <json>repositoryList.repositoryListQuery;
+        var jsonQuery = <json>repositoryList.repositoryListQuery;
         jsonQuery.variables.endCursorRepos = repositoryList.pageInfo.endCursor;
         jsonQuery["query"] = GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE;
         //Set headers and payload to the request
@@ -251,7 +251,7 @@ public function <RepositoryList repositoryList> nextPage () returns RepositoryLi
         
         match validatedResponse {
             json jsonValidatedResponse => {
-                var repositoriesJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
+                var repositoriesJson = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
                 var repoList = <RepositoryList, jsonToRepositoryList(repositoryList.repositoryListQuery)>repositoriesJson;
 
                 return repoList;
@@ -324,7 +324,7 @@ public function <Repository repository> getPullRequestList (string state) return
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}"
     ,"{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}}},"{{GIT_QUERY}}":"{{GET_PULL_REQUESTS}}"}`;
 
-    var jsonQuery, _ = <json>stringQuery;
+    var jsonQuery = <json>stringQuery;
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
@@ -337,7 +337,7 @@ public function <Repository repository> getPullRequestList (string state) return
     
     match validatedResponse {
             json jsonValidatedResponse => {
-                var githubPullRequestsJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
+                var githubPullRequestsJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
                 var pullRequestList = <PullRequestList, jsonToPullRequestList(stringQuery)>githubPullRequestsJson;
 
                 return pullRequestList;
@@ -368,7 +368,7 @@ public function <Repository repository> getProjectList (string state) returns Pr
         "{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":{{state}}}
         ,"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECTS}}"}`;
 
-    var jsonQuery, _ = <json>stringQuery;
+    var jsonQuery = <json>stringQuery;
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
@@ -381,7 +381,7 @@ public function <Repository repository> getProjectList (string state) returns Pr
 
     match validatedResponse {
             json jsonValidatedResponse => {
-                var githubProjectsJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS];
+                var githubProjectsJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS];
                 var projectList = <ProjectList, jsonToProjectList(GIT_REPOSITORY, stringQuery)>githubProjectsJson;
 
                 return projectList;
@@ -412,7 +412,7 @@ public function <Repository repository> getProject (int projectNumber) returns P
     ,"{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_NUMBER}}":{{projectNumber}}}
     ,"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECT}}"}`;
 
-    var jsonQuery, _ = <json>stringQuery;
+    var jsonQuery = <json>stringQuery;
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
@@ -425,8 +425,8 @@ public function <Repository repository> getProject (int projectNumber) returns P
     
     match validatedResponse {
             json jsonValidatedResponse => {
-                var githubProjectJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECT];
-                var singleProject, _ = <Project>githubProjectJson;
+                var githubProjectJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECT];
+                var singleProject =? <Project>githubProjectJson;
 
                 return singleProject;
             }
@@ -452,7 +452,7 @@ public function <Repository repository> getIssueList (string state) returns Issu
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}"
     ,"{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}}},"{{GIT_QUERY}}":"{{GET_REPOSITORY_ISSUES}}"}`;
-    var jsonQuery, _ = <json>stringQuery;
+    var jsonQuery = <json>stringQuery;
 
     http:Request request = {};
 
@@ -467,7 +467,7 @@ public function <Repository repository> getIssueList (string state) returns Issu
     
     match validatedResponse {
             json jsonValidatedResponse => {
-                var githubIssuesJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
+                var githubIssuesJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
                 var issueList = <IssueList, jsonToIssueList(stringQuery)>githubIssuesJson;
                 
                 return issueList;
@@ -521,7 +521,7 @@ public function <Organization organization> getProjectList (string state) return
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}"
     ,"{{GIT_STATES}}":{{state}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECTS}}"}`;
 
-    var jsonQuery, _ = <json>stringQuery;
+    var jsonQuery = <json>stringQuery;
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
@@ -534,7 +534,7 @@ public function <Organization organization> getProjectList (string state) return
     
     match validatedResponse {
             json jsonValidatedResponse => {
-                var githubProjectsJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECTS];
+                var githubProjectsJson = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECTS];
                 var projectList = <ProjectList, jsonToProjectList(GIT_ORGANIZATION, stringQuery)>githubProjectsJson;
 
                 return projectList;
@@ -564,7 +564,7 @@ public function <Organization organization> getProject (int projectNumber) retur
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}",
     "{{GIT_NUMBER}}":{{projectNumber}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT}}"}`;
 
-    var jsonQuery, _ = <json>stringQuery;
+    var jsonQuery = <json>stringQuery;
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
@@ -576,8 +576,8 @@ public function <Organization organization> getProject (int projectNumber) retur
     
     match validatedResponse {
             json jsonValidatedResponse => {
-                var githubProjectJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECT];
-                var singleProject, _ = <Project>githubProjectJson;
+                var githubProjectJson = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECT];
+                var singleProject =? <Project>githubProjectJson;
 
                 return singleProject;
             }
@@ -604,7 +604,7 @@ public function <Organization organization> getRepositoryList () returns Reposit
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}"},
     "{{GIT_QUERY}}":"{{GET_ORGANIZATION_REPOSITORIES}}"}`;
-    var jsonQuery, _ = <json>stringQuery;
+    var jsonQuery = <json>stringQuery;
 
     //Set headers and payload to the request
     constructRequest(request, jsonQuery, gitAccessToken);
@@ -617,7 +617,7 @@ public function <Organization organization> getRepositoryList () returns Reposit
     
     match validatedResponse {
             json jsonValidatedResponse => {
-                var githubRepositoriesJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
+                var githubRepositoriesJson = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
                 var repositoryList = <RepositoryList, jsonToRepositoryList(stringQuery)>githubRepositoriesJson;
 
                 return repositoryList;
@@ -686,7 +686,7 @@ public function <CardList cardList> nextPage () returns CardList|GitConnectorErr
     GitConnectorError connectorError = {};
     if (cardList.hasNextPage()) {
         var cardListColumnId = cardList.columnId;
-        var jsonQuery, _ = <json>cardList.cardListQuery;
+        var jsonQuery = <json>cardList.cardListQuery;
         jsonQuery.variables.endCursorCards = cardList.pageInfo.endCursor;
         
         if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
@@ -795,7 +795,7 @@ public function <ColumnList columnList> nextPage () returns ColumnList|GitConnec
     
     GitConnectorError connectorError = {};
     if (columnList.hasNextPage()) {
-        var jsonQuery, _ = <json>columnList.columnListQuery;
+        var jsonQuery = <json>columnList.columnListQuery;
         jsonQuery.variables.endCursorColumns = columnList.pageInfo.endCursor;
         if (columnList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
             jsonQuery["query"] = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
@@ -945,7 +945,7 @@ public function <IssueList issueList> nextPage () returns IssueList|GitConnector
 
         http:Request request = {};
 
-        var jsonQuery, _ = <json>issueList.issueListQuery;
+        var jsonQuery = <json>issueList.issueListQuery;
         jsonQuery.variables.endCursorIssues = issueList.pageInfo.endCursor;
         jsonQuery["query"] = GET_REPOSITORY_ISSUES_NEXT_PAGE;
         //Set headers and payload to the request
@@ -958,7 +958,7 @@ public function <IssueList issueList> nextPage () returns IssueList|GitConnector
         json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_ISSUES);
         match validatedResponse {
             json jsonValidatedResponse => {
-                var repositoryIssuesJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
+                var repositoryIssuesJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
                 var issuesList = <IssueList, jsonToIssueList(issueList.issueListQuery)>repositoryIssuesJson;
 
                 return issuesList;
@@ -1077,7 +1077,7 @@ public function <PullRequestList pullRequestList> nextPage () returns PullReques
 
         http:Request request = {};
 
-        var jsonQuery, _ = <json>pullRequestList.pullrequestListQuery;
+        var jsonQuery = <json>pullRequestList.pullrequestListQuery;
         jsonQuery.variables.endCursorPullRequests = pullRequestList.pageInfo.endCursor;
         jsonQuery["query"] = GET_PULL_REQUESTS_NEXT_PAGE;
         
@@ -1092,7 +1092,7 @@ public function <PullRequestList pullRequestList> nextPage () returns PullReques
         
         match validatedResponse {
             json jsonValidatedResponse => {
-                var projectColumnsJson, _ = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
+                var projectColumnsJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
                 var prList = <PullRequestList, jsonToPullRequestList(pullRequestList.pullrequestListQuery)>projectColumnsJson;
 
                 return prList;

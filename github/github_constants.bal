@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package src.github;
+package github;
 
 // Stated in alphabetical order
 
