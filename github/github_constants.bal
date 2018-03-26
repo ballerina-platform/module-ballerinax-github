@@ -45,6 +45,7 @@ const string GIT_PROJECT = "project";
 const string GIT_PROJECTS = "projects";
 const string GIT_PULL_REQUESTS = "pullRequests";
 const string GIT_QUERY = "query";
+const string GIT_RECORD_COUNT = "recordCount";
 const string GIT_REPOSITORIES = "repositories";
 const string GIT_REPOSITORY = "repository";
 const string GIT_REPOSITORY_OWNER = "repositoryOwner";
@@ -63,6 +64,7 @@ public const string GIT_STATE_OPEN = "[\"OPEN\"]";
 const int GIT_INDEX_ZERO = 0;
 const int GIT_INDEX_ONE = 1;
 const int GIT_INDEX_TWO = 2;
+const int GIT_MAX_RECORD_COUNT = 100;
 
 //Errors
 const string GIT_ERRORS = "errors";

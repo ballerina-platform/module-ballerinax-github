@@ -28,7 +28,7 @@ public function main (string[] args) {
     
     //Get a list of projects of an organization
     github:ProjectList projectList = {};
-    var responseProjectList = organization.getProjectList(github:GIT_STATE_OPEN);
+    var responseProjectList = organization.getProjectList(2, github:GIT_STATE_OPEN);
     match responseProjectList {
         github:ProjectList prjtList=> {
             projectList = prjtList;
@@ -70,7 +70,7 @@ public function main (string[] args) {
     
     //Get project column list
     github:ColumnList columnList = {};
-    var columns = orgProject.getColumnList();
+    var columns = orgProject.getColumnList(2);
     match columns {
         github:ColumnList colList => {
             columnList = colList;
@@ -107,7 +107,7 @@ public function main (string[] args) {
 
     //Get a all the repositories of Organization
     github:RepositoryList repositoryList = {};
-    var repoList = organization.getRepositoryList();
+    var repoList = organization.getRepositoryList(2);
     match repoList {
         github:RepositoryList repList => {
             repositoryList = repList;
@@ -149,7 +149,7 @@ public function main (string[] args) {
 
     //Get a list of projects of a repository
     github:ProjectList repoProjectList = {};
-    var responseRepoProjectList = repository.getProjectList(github:GIT_STATE_OPEN);
+    var responseRepoProjectList = repository.getProjectList(2, github:GIT_STATE_OPEN);
     match responseRepoProjectList {
         github:ProjectList prjtList => {
             repoProjectList = prjtList;
@@ -175,7 +175,7 @@ public function main (string[] args) {
 
     //Get a list of pull requests in a repository
     github:PullRequestList pullRequestList = {};
-    var prList = repository.getPullRequestList(github:GIT_STATE_OPEN);
+    var prList = repository.getPullRequestList(2, github:GIT_STATE_OPEN);
     match prList {
         github:PullRequestList pList => {
             pullRequestList = pList;
@@ -216,7 +216,7 @@ public function main (string[] args) {
 
     //Get a list of issues of a repository
     github:IssueList issueList = {};
-    var issues = repository.getIssueList(github:GIT_STATE_OPEN);
+    var issues = repository.getIssueList(2, github:GIT_STATE_OPEN);
     match issues {
         github:IssueList isList => {
             issueList = isList;

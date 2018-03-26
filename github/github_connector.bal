@@ -47,7 +47,8 @@ public function <GitHubConnector gitHubConnector> getRepository (string name) re
     http:Request request = {};
     Repository singleRepository = {};
 
-    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repoOwner}}","{{GIT_NAME}}":"{{repoName}}"},"{{GIT_QUERY}}":"{{GET_REPOSITORY}}"}`;
+    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repoOwner}}","{{GIT_NAME}}":"{{repoName}}"},
+    "{{GIT_QUERY}}":"{{GET_REPOSITORY}}"}`;
 
     var jsonQuery = <json>stringQuery;
 

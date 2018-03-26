@@ -52,7 +52,7 @@ public struct Project {
 @Description {value:"Get all columns of a project"}
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <Project project> getColumnList () returns ColumnList|GitConnectorError {
+public function <Project project> getColumnList (int recordCount) returns ColumnList|GitConnectorError {
     
     GitConnectorError connectorError = {};
 
@@ -60,11 +60,16 @@ public function <Project project> getColumnList () returns ColumnList|GitConnect
         connectorError = {message:["Project cannot be null"]};
         return connectorError;
     }
+
+    if (recordCount > GIT_MAX_RECORD_COUNT) {
+        connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
+        return connectorError;
+    }
     string projectOwnerType = project.owner.getOwnerType();
     if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION) && project.resourcePath != null) {
         string organization = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
         string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization}}",
-            "{{GIT_NUMBER}}":{{project.number}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT_COLUMNS}}"}`;
+            "{{GIT_NUMBER}}":{{project.number}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT_COLUMNS}}"}`;
         return getProjectColumns(GIT_ORGANIZATION, stringQuery);
 
     } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY) && project.resourcePath != null) {
@@ -72,7 +77,7 @@ public function <Project project> getColumnList () returns ColumnList|GitConnect
         string repositoryName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
 
         string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{ownerName}}"
-        ,"{{GIT_NAME}}":"{{repositoryName}}","{{GIT_NUMBER}}":{{project.number}}}
+        ,"{{GIT_NAME}}":"{{repositoryName}}","{{GIT_NUMBER}}":{{project.number}},"{{GIT_RECORD_COUNT}}":{{recordCount}}}
         ,"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECT_COLUMNS}}"}`;
         return getProjectColumns(GIT_REPOSITORY, stringQuery);
     }
@@ -94,11 +99,10 @@ function getProjectColumns (string ownerType, string gitQuery) returns ColumnLis
         return connectorError;
     }
 
-    http:Request request = {};
-
     var jsonQuery = <json>gitQuery;
 
     //Set headers and payload to the request
+    http:Request request = {};
     constructRequest(request, jsonQuery, gitAccessToken);
     
     // Make an HTTP POST request
@@ -154,10 +158,7 @@ public function <ProjectList projectList> hasPreviousPage () returns (boolean) {
 @Return {value: "ProjectList: Project list"}
 public function <ProjectList projectList> nextPage () returns ProjectList|GitConnectorError {
     
-    GitConnectorError connectorError = {};
     if (projectList.hasNextPage()) {
-
-        http:Request request = {};
 
         var jsonQuery = <json>projectList.projectListQuery;
         jsonQuery.variables.endCursorProjects = projectList.pageInfo.endCursor;
@@ -166,7 +167,9 @@ public function <ProjectList projectList> nextPage () returns ProjectList|GitCon
         }else if (projectList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
             jsonQuery["query"] = GET_REPOSITORY_PROJECTS_NEXT_PAGE;
         }
+
         //Set headers and payload to the request
+        http:Request request = {};
         constructRequest(request, jsonQuery, gitAccessToken);
         
         // Make an HTTP POST request
@@ -188,7 +191,8 @@ public function <ProjectList projectList> nextPage () returns ProjectList|GitCon
             }
         }  
     }
-    connectorError = {message:["Project list has no next page"]};
+
+    GitConnectorError connectorError = {message:["Project list has no next page"]};
 
     return connectorError;
 }
@@ -232,15 +236,14 @@ public function <RepositoryList repositoryList> hasPreviousPage () returns (bool
 @Return {value:"GitConnectorError: Error"}
 public function <RepositoryList repositoryList> nextPage () returns RepositoryList|GitConnectorError {
     
-    GitConnectorError connectorError = {};
     if (repositoryList.hasNextPage()) {
-
-        http:Request request = {};
 
         var jsonQuery = <json>repositoryList.repositoryListQuery;
         jsonQuery.variables.endCursorRepos = repositoryList.pageInfo.endCursor;
         jsonQuery["query"] = GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE;
+
         //Set headers and payload to the request
+        http:Request request = {};
         constructRequest(request, jsonQuery, gitAccessToken);
         
         // Make an HTTP POST request
@@ -262,7 +265,7 @@ public function <RepositoryList repositoryList> nextPage () returns RepositoryLi
             }
         }         
     }
-    connectorError = {message:["Repository list has no next page"]};
+    GitConnectorError connectorError = {message:["Repository list has no next page"]};
 
     return connectorError;
 }
@@ -310,7 +313,7 @@ public struct Repository {
 @Param {value:"state: State of the repository (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_MERGED, GIT_STATE_ALL)"}
 @Return {value:"PullRequest[]: Array of pull requests"}
 @Return {value:"GitConnectorError: Error"}
-public function <Repository repository> getPullRequestList (string state) returns PullRequestList|GitConnectorError {
+public function <Repository repository> getPullRequestList (int recordCount, string state) returns PullRequestList|GitConnectorError {
     
     GitConnectorError connectorError = {};
 
@@ -319,14 +322,19 @@ public function <Repository repository> getPullRequestList (string state) return
         return connectorError;
     }
 
-    http:Request request = {};
+    if (recordCount > GIT_MAX_RECORD_COUNT) {
+        connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
+        return connectorError;
+    }
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}"
-    ,"{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}}},"{{GIT_QUERY}}":"{{GET_PULL_REQUESTS}}"}`;
+    ,"{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},
+    "{{GIT_QUERY}}":"{{GET_PULL_REQUESTS}}"}`;
 
     var jsonQuery = <json>stringQuery;
 
     //Set headers and payload to the request
+    http:Request request = {};
     constructRequest(request, jsonQuery, gitAccessToken);
     
     // Make an HTTP POST request
@@ -353,7 +361,7 @@ public function <Repository repository> getPullRequestList (string state) return
 @Param {value:"state: State of the repository (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
 @Return {value:"Project[]: Array of projects"}
 @Return {value:"GitConnectorError: Error"}
-public function <Repository repository> getProjectList (string state) returns ProjectList|GitConnectorError {
+public function <Repository repository> getProjectList (int recordCount, string state) returns ProjectList|GitConnectorError {
     
     GitConnectorError connectorError = {};
 
@@ -362,15 +370,19 @@ public function <Repository repository> getProjectList (string state) returns Pr
         return connectorError;
     }
 
-    http:Request request = {};
+    if (recordCount > GIT_MAX_RECORD_COUNT) {
+        connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
+        return connectorError;
+    }
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}",
-        "{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":{{state}}}
+        "{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":{{state}},"{{GIT_RECORD_COUNT}}":{{recordCount}}}
         ,"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECTS}}"}`;
 
     var jsonQuery = <json>stringQuery;
 
     //Set headers and payload to the request
+    http:Request request = {};
     constructRequest(request, jsonQuery, gitAccessToken);
     
     // Make an HTTP POST request
@@ -406,7 +418,10 @@ public function <Repository repository> getProject (int projectNumber) returns P
         return connectorError;
     }
 
-    http:Request request = {};
+    if (recordCount > GIT_MAX_RECORD_COUNT) {
+        connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
+        return connectorError;
+    }
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}"
     ,"{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_NUMBER}}":{{projectNumber}}}
@@ -415,6 +430,7 @@ public function <Repository repository> getProject (int projectNumber) returns P
     var jsonQuery = <json>stringQuery;
 
     //Set headers and payload to the request
+    http:Request request = {};
     constructRequest(request, jsonQuery, gitAccessToken);
 
     // Make an HTTP POST request
@@ -441,7 +457,7 @@ public function <Repository repository> getProject (int projectNumber) returns P
 @Param {value:"state: State of the issue (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
 @Return {value:"IssueList: Issue list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <Repository repository> getIssueList (string state) returns IssueList|GitConnectorError {
+public function <Repository repository> getIssueList (int recordCount, string state) returns IssueList|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -450,13 +466,18 @@ public function <Repository repository> getIssueList (string state) returns Issu
         return connectorError;
     }
 
+    if (recordCount > GIT_MAX_RECORD_COUNT) {
+        connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
+        return connectorError;
+    }
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}"
-    ,"{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}}},"{{GIT_QUERY}}":"{{GET_REPOSITORY_ISSUES}}"}`;
+    ,"{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},
+    "{{GIT_QUERY}}":"{{GET_REPOSITORY_ISSUES}}"}`;
+
     var jsonQuery = <json>stringQuery;
 
-    http:Request request = {};
-
     //Set headers and payload to the request
+    http:Request request = {};
     constructRequest(request, jsonQuery, gitAccessToken);
 
     // Make an HTTP POST request
@@ -507,7 +528,7 @@ public struct Organization {
 @Param {value:"state: State of the project (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
 @Return {value:"Project[]: Array of projects"}
 @Return {value:"GitConnectorError: Error"}
-public function <Organization organization> getProjectList (string state) returns ProjectList|GitConnectorError {
+public function <Organization organization> getProjectList (int recordCount, string state) returns ProjectList|GitConnectorError {
     
     GitConnectorError connectorError = {};
 
@@ -516,14 +537,18 @@ public function <Organization organization> getProjectList (string state) return
         return connectorError;
     }
 
-    http:Request request = {};
+    if (recordCount > GIT_MAX_RECORD_COUNT) {
+        connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
+        return connectorError;
+    }
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}"
-    ,"{{GIT_STATES}}":{{state}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECTS}}"}`;
+    ,"{{GIT_STATES}}":{{state}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECTS}}"}`;
 
     var jsonQuery = <json>stringQuery;
 
     //Set headers and payload to the request
+    http:Request request = {};
     constructRequest(request, jsonQuery, gitAccessToken);
     
     // Make an HTTP POST request
@@ -559,7 +584,6 @@ public function <Organization organization> getProject (int projectNumber) retur
         return connectorError;
     }
 
-    http:Request request = {};
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}",
     "{{GIT_NUMBER}}":{{projectNumber}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT}}"}`;
@@ -567,6 +591,7 @@ public function <Organization organization> getProject (int projectNumber) retur
     var jsonQuery = <json>stringQuery;
 
     //Set headers and payload to the request
+    http:Request request = {};
     constructRequest(request, jsonQuery, gitAccessToken);
     
     // Make an HTTP POST request
@@ -591,7 +616,7 @@ public function <Organization organization> getProject (int projectNumber) retur
 @Description {value:"Get a list of repositories of an organization."}
 @Return {value:"RepositoryList: Repository list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <Organization organization> getRepositoryList () returns RepositoryList|GitConnectorError {
+public function <Organization organization> getRepositoryList (int recordCount) returns RepositoryList|GitConnectorError {
     
     GitConnectorError connectorError = {};
 
@@ -600,13 +625,17 @@ public function <Organization organization> getRepositoryList () returns Reposit
         return connectorError;
     }
 
-    http:Request request = {};
+    if (recordCount > GIT_MAX_RECORD_COUNT) {
+        connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
+        return connectorError;
+    }
 
-    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}"},
-    "{{GIT_QUERY}}":"{{GET_ORGANIZATION_REPOSITORIES}}"}`;
+    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}",
+    "{{GIT_RECORD_COUNT}}":{{recordCount}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_REPOSITORIES}}"}`;
     var jsonQuery = <json>stringQuery;
 
     //Set headers and payload to the request
+    http:Request request = {};
     constructRequest(request, jsonQuery, gitAccessToken);
     
     // Make an HTTP POST request
@@ -683,7 +712,6 @@ public function <CardList cardList> hasPreviousPage () returns (boolean) {
 @Return {value:"GitConnectorError: Error"}
 public function <CardList cardList> nextPage () returns CardList|GitConnectorError {
     
-    GitConnectorError connectorError = {};
     if (cardList.hasNextPage()) {
         var cardListColumnId = cardList.columnId;
         var jsonQuery = <json>cardList.cardListQuery;
@@ -724,7 +752,7 @@ public function <CardList cardList> nextPage () returns CardList|GitConnectorErr
             }
         }
     }
-    connectorError.message = ["Card list has no next page"];
+    GitConnectorError connectorError = {message:["Card list has no next page"]};
 
     return connectorError;
 }
@@ -793,7 +821,6 @@ public function <ColumnList columnList> hasPreviousPage () returns (boolean) {
 @Return {value:"GitConnectorError: Error"}
 public function <ColumnList columnList> nextPage () returns ColumnList|GitConnectorError {
     
-    GitConnectorError connectorError = {};
     if (columnList.hasNextPage()) {
         var jsonQuery = <json>columnList.columnListQuery;
         jsonQuery.variables.endCursorColumns = columnList.pageInfo.endCursor;
@@ -807,7 +834,7 @@ public function <ColumnList columnList> nextPage () returns ColumnList|GitConnec
             return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString());
         }
     }
-    connectorError = {message:["Column list has no next page"]};
+    GitConnectorError connectorError = {message:["Column list has no next page"]};
 
     return connectorError;
 }
@@ -943,12 +970,13 @@ public function <IssueList issueList> nextPage () returns IssueList|GitConnector
     GitConnectorError connectorError = {};
     if (issueList.hasNextPage()) {
 
-        http:Request request = {};
 
         var jsonQuery = <json>issueList.issueListQuery;
         jsonQuery.variables.endCursorIssues = issueList.pageInfo.endCursor;
         jsonQuery["query"] = GET_REPOSITORY_ISSUES_NEXT_PAGE;
+
         //Set headers and payload to the request
+        http:Request request = {};
         constructRequest(request, jsonQuery, gitAccessToken);
         
         // Make an HTTP POST request
@@ -970,7 +998,7 @@ public function <IssueList issueList> nextPage () returns IssueList|GitConnector
 	    }
 
     }
-    connectorError.message = ["Pull request list has no next page"];
+    GitConnectorError connectorError = {message:["Pull request list has no next page"]};
 
     return connectorError;
 
@@ -1072,16 +1100,14 @@ public function <PullRequestList pullRequestList> hasPreviousPage () returns (bo
 @Return {value:"GitConnectorError: Error"}
 public function <PullRequestList pullRequestList> nextPage () returns PullRequestList|GitConnectorError {
     
-    GitConnectorError connectorError = {};
     if (pullRequestList.hasNextPage()) {
-
-        http:Request request = {};
 
         var jsonQuery = <json>pullRequestList.pullrequestListQuery;
         jsonQuery.variables.endCursorPullRequests = pullRequestList.pageInfo.endCursor;
         jsonQuery["query"] = GET_PULL_REQUESTS_NEXT_PAGE;
         
         //Set headers and payload to the request
+        http:Request request = {};
         constructRequest(request, jsonQuery, gitAccessToken);
         
         // Make an HTTP POST request
@@ -1104,7 +1130,7 @@ public function <PullRequestList pullRequestList> nextPage () returns PullReques
 	    }
 
     }
-    connectorError = {message:["Pull request list has no next page"]};
+    GitConnectorError connectorError = {message:["Pull request list has no next page"]};
 
     return connectorError;
 
@@ -1165,6 +1191,6 @@ public function <LabelList labelList> getAllLabels () returns (Label[]) {
     return labelList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              End of LabelList struct                                                       //
+//                                              End of LabelList struct                                              //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
