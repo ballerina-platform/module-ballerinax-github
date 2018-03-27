@@ -14,26 +14,25 @@ The Ballerina GitHub connector allow users to access the GitHub API through ball
 
 * Clone the repository by running the following command
 ```
-git clone https://github.com/vlgunarathne/connector-github.git
+git clone https://github.com/wso2-ballerina/package-github
 ```
 * Import the package to your ballerina project.
 
 ##### Prerequisites
-Download the ballerina version 0.970.0-alpha1-SNAPSHOT [distribution](https://ballerinalang.org/downloads/).
+Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 
 ### Working with GitHub Connector Actions
 
-All the actions return `struct objects` and `github:GitConnectorError`. If the actions was a success, then the requested struct object will be returned while the `github:GitConnectorError` will be **null** and vice-versa.
+All the actions return `struct objects` or `github:GitConnectorError`. If the action was a success, then the requested struct object will be returned while the `github:GitConnectorError` will be **null** and vice-versa.
 
 ##### Example
 * Request 
 ```ballerina
     github:GitHubConnector githubConnector = { accessToken: getAccessToken()};
-    github:GitConnectorError e = {};
     
     //Get a single repository
     github:Repository repository = {};
-    var repo = githubConnector.getRepository("wso2/product-apim");
+    var repo = githubConnector.getRepository("wso2/package-github");
     match repo {
         github:Repository rep => {
             repository = rep;
@@ -77,17 +76,16 @@ public struct Repository {
 ## Connector API
 
 ### API Reference
-- [getRepository()](https://github.com/vlgunarathne/connector-github#getrepository)
-    - [getProjectList()](https://github.com/vlgunarathne/connector-github#getprojectlist)
-    - [getProject()](https://github.com/vlgunarathne/connector-github#getproject)
-    - [getIssueList()](https://github.com/vlgunarathne/connector-github#getissuelist)
-    - [getIssue()](https://github.com/vlgunarathne/connector-github#getissue)
-    - [getPullRequestList()](https://github.com/vlgunarathne/connector-github#getpullrequestlist)
+- [getRepository()](#getrepository)
+    - [getProjectList()](#getprojectlist)
+    - [getProject()](#getproject)
+    - [getIssueList()](#getissuelist)
+    - [getPullRequestList()](#getpullrequestlist)
 
-- [getOrganization()](https://github.com/vlgunarathne/connector-github#getorganization)
-    - [getProjectList()](https://github.com/vlgunarathne/connector-github#getprojectlist-1)
-    - [getProject()](https://github.com/vlgunarathne/connector-github#getproject-1)
-    - [getRepositoryList()](https://github.com/vlgunarathne/connector-github#getrepositorylist)
+- [getOrganization()](#getorganization)
+    - [getProjectList()](#getprojectlist-1)
+    - [getProject()](#getproject-1)
+    - [getRepositoryList()](#getrepositorylist)
     
 ### getRepository()
 Return a single repository.
@@ -151,19 +149,6 @@ state | string | The state of the issue. (Eg: github:GIT_STATE_OPEN, github:GIT_
 
 ###### Returns
 **github:IssueList , github:GitConnectorError**
-
-***
-
-### getIssue()
-Return a single issue of the repository.
-
-###### Parameters
-Name | Type | Description
------|------|------------
-issueNumber | int | The integral number of the issue.
-
-###### Returns
-**github:Issue , github:GitConnectorError**
 
 ***
 

@@ -1,4 +1,4 @@
-package tests.github;
+package tests;
 
 import ballerina/net.http;
 import github;
@@ -6,7 +6,7 @@ import ballerina/io;
 
 public function main (string[] args) {
     github:GitHubConnector githubConnector = { accessToken: getAccessToken()};
-    io:println("Starting samples...");
+    io:println("Starting tests...");
 
     github:GitConnectorError e = {};
 
@@ -239,6 +239,8 @@ public function main (string[] args) {
         }
     }
     io:println("=========================================================");
+
+    io:println("End of tests ...");
 
 }
 

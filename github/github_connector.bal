@@ -110,7 +110,7 @@ public function <GitHubConnector gitHubConnector> getOrganization (string name) 
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
-        // Set headers and payload to the request
+            // Set headers and payload to the request
             constructRequest(request, jsonQuery, gitHubConnector.accessToken);
         }
 
