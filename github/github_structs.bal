@@ -50,6 +50,7 @@ public struct Project {
 // Project bound functions
 //*********************************************************************************************************************
 @Description {value:"Get all columns of a project"}
+@Param {value: "recordCount: Specify number of records in the list"}
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
 public function <Project project> getColumnList (int recordCount) returns ColumnList|GitConnectorError {
@@ -164,6 +165,7 @@ public function <ProjectList projectList> hasPreviousPage () returns (boolean) {
 
 @Description {value:"Gets the next page of a project list"}
 @Return {value:"ProjectList: Project list"}
+@Return {value:"GitConnectorError: Error"}
 public function <ProjectList projectList> nextPage () returns ProjectList|GitConnectorError {
 
     if (projectList.hasNextPage()) {
@@ -215,8 +217,8 @@ public function <ProjectList projectList> nextPage () returns ProjectList|GitCon
     return connectorError;
 }
 
-@Description {value:"Get an array of repositories"}
-@Return {value:"RepositoryList[]: Array of repositories"}
+@Description {value:"Get an array of projects"}
+@Return {value:"Project[]: Array of projects"}
 public function <ProjectList projectList> getAllProjects () returns (Project[]) {
     return projectList.nodes;
 }
@@ -337,10 +339,11 @@ public struct Repository {
 //*********************************************************************************************************************
 @Description {value:"Get all pull requests of a repository"}
 @Param {value:"state: State of the repository (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_MERGED, GIT_STATE_ALL)"}
-@Return {value:"PullRequest[]: Array of pull requests"}
+@Param {value: "recordCount: Specify number of records in the list"}
+@Return {value:"PullRequestList: Pull request list"}
 @Return {value:"GitConnectorError: Error"}
 public function <Repository repository> getPullRequestList (int recordCount, string state)
-returns PullRequestList|GitConnectorError {
+                                                                        returns PullRequestList|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -393,10 +396,11 @@ returns PullRequestList|GitConnectorError {
 
 @Description {value:"Get all projects of a repository"}
 @Param {value:"state: State of the repository (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
-@Return {value:"Project[]: Array of projects"}
+@Param {value: "recordCount: Specify number of records in the list"}
+@Return {value:"ProjectList: Project list"}
 @Return {value:"GitConnectorError: Error"}
 public function <Repository repository> getProjectList (int recordCount, string state)
-returns ProjectList|GitConnectorError {
+                                                                            returns ProjectList|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -499,10 +503,11 @@ public function <Repository repository> getProject (int projectNumber) returns P
 
 @Description {value:"Get a list of issues of a repository."}
 @Param {value:"state: State of the issue (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
-@Return {value:"IssueList: Issue list object"}
+@Param {value: "recordCount: Specify number of records in the list"}
+@Return {value:"IssueList: Issue list"}
 @Return {value:"GitConnectorError: Error"}
 public function <Repository repository> getIssueList (int recordCount, string state)
-returns IssueList|GitConnectorError {
+                                                                                returns IssueList|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -576,12 +581,13 @@ public struct Organization {
 //*********************************************************************************************************************
 // Organization bound functions
 //*********************************************************************************************************************
-@Description {value:"Get all projects of an organization."}
+@Description {value:"Get all projects of an organization"}
 @Param {value:"state: State of the project (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
-@Return {value:"Project[]: Array of projects"}
+@Param {value: "recordCount: Specify number of records in the list"}
+@Return {value:"ProjectList: Project list"}
 @Return {value:"GitConnectorError: Error"}
 public function <Organization organization> getProjectList (int recordCount, string state)
-returns ProjectList|GitConnectorError {
+                                                                            returns ProjectList|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -682,10 +688,11 @@ public function <Organization organization> getProject (int projectNumber) retur
 }
 
 @Description {value:"Get a list of repositories of an organization."}
+@Param {value: "recordCount: Specify number of records in the list"}
 @Return {value:"RepositoryList: Repository list object"}
 @Return {value:"GitConnectorError: Error"}
 public function <Organization organization> getRepositoryList (int recordCount)
-returns RepositoryList|GitConnectorError {
+                                                                        returns RepositoryList|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -1056,8 +1063,8 @@ public function <IssueList issueList> hasPreviousPage () returns (boolean) {
     return issueList.pageInfo.hasPreviousPage;
 }
 
-@Description {value:"Get the next page of the pull request list"}
-@Return {value:"PullRequestList: PullRequest list object"}
+@Description {value:"Get the next page of the issue list"}
+@Return {value:"IssueList: Issue list"}
 @Return {value:"GitConnectorError: Error"}
 public function <IssueList issueList> nextPage () returns IssueList|GitConnectorError {
 
@@ -1096,7 +1103,7 @@ public function <IssueList issueList> nextPage () returns IssueList|GitConnector
         }
 
     }
-    GitConnectorError connectorError = {message:["Pull request list has no next page"]};
+    GitConnectorError connectorError = {message:["Issue list has no next page"]};
 
     return connectorError;
 
@@ -1292,7 +1299,7 @@ public struct LabelList {
 // LabelList bound functions
 //*********************************************************************************************************************
 @Description {value:"Get an array of labels"}
-@Return {value:"Lebel[]: Label array"}
+@Return {value:"Label[]: Label array"}
 public function <LabelList labelList> getAllLabels () returns (Label[]) {
     return labelList.nodes;
 }

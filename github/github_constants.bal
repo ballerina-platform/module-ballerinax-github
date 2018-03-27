@@ -20,7 +20,6 @@ package github;
 
 // Stated in alphabetical order
 
-//Constant related to graphql queries
 
 //String constants
 const string GIT_API_URL = "https://api.github.com/graphql";

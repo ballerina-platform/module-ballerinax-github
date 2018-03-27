@@ -14,26 +14,25 @@ The Ballerina GitHub connector allow users to access the GitHub API through ball
 
 * Clone the repository by running the following command
 ```
-git clone https://github.com/vlgunarathne/connector-github.git
+git clone https://github.com/wso2-ballerina/package-github
 ```
 * Import the package to your ballerina project.
 
 ##### Prerequisites
-Download the ballerina version 0.970.0-alpha1-SNAPSHOT [distribution](https://ballerinalang.org/downloads/).
+Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 
 ### Working with GitHub Connector Actions
 
-All the actions return `struct objects` and `github:GitConnectorError`. If the actions was a success, then the requested struct object will be returned while the `github:GitConnectorError` will be **null** and vice-versa.
+All the actions return `struct objects` or `github:GitConnectorError`. If the action was a success, then the requested struct object will be returned while the `github:GitConnectorError` will be **null** and vice-versa.
 
 ##### Example
 * Request 
 ```ballerina
     github:GitHubConnector githubConnector = { accessToken: getAccessToken()};
-    github:GitConnectorError e = {};
     
     //Get a single repository
     github:Repository repository = {};
-    var repo = githubConnector.getRepository("wso2/product-apim");
+    var repo = githubConnector.getRepository("wso2/package-github");
     match repo {
         github:Repository rep => {
             repository = rep;
@@ -77,17 +76,16 @@ public struct Repository {
 ## Connector API
 
 ### API Reference
-- [getRepository()](https://github.com/vlgunarathne/connector-github#getrepository)
-    - [getProjectList()](https://github.com/vlgunarathne/connector-github#getprojectlist)
-    - [getProject()](https://github.com/vlgunarathne/connector-github#getproject)
-    - [getIssueList()](https://github.com/vlgunarathne/connector-github#getissuelist)
-    - [getIssue()](https://github.com/vlgunarathne/connector-github#getissue)
-    - [getPullRequestList()](https://github.com/vlgunarathne/connector-github#getpullrequestlist)
+- [getRepository()](#getrepository)
+    - [getProjectList()](#getprojectlist)
+    - [getProject()](#getproject)
+    - [getIssueList()](#getissuelist)
+    - [getPullRequestList()](#getpullrequestlist)
 
-- [getOrganization()](https://github.com/vlgunarathne/connector-github#getorganization)
-    - [getProjectList()](https://github.com/vlgunarathne/connector-github#getprojectlist-1)
-    - [getProject()](https://github.com/vlgunarathne/connector-github#getproject-1)
-    - [getRepositoryList()](https://github.com/vlgunarathne/connector-github#getrepositorylist)
+- [getOrganization()](#getorganization)
+    - [getProjectList()](#getprojectlist-1)
+    - [getProject()](#getproject-1)
+    - [getRepositoryList()](#getrepositorylist)
     
 ### getRepository()
 Return a single repository.
@@ -98,7 +96,7 @@ Name | Type | Description
 name | string | Name of the organization and repository. (Eg: "organization/repository")
 
 ###### Returns
-* **github:Repository , github:GitConnectorError**
+* **github:Repository** or **github:GitConnectorError**
 
 ***
 
@@ -111,7 +109,7 @@ Name | Type | Description
 name | string | Name of the organization. (Eg: "organization")
 
 ###### Returns
-**github:Organization , github:GitConnectorError**
+**github:Organization** or **github:GitConnectorError**
 
 ***
 ## github:Repository
@@ -125,7 +123,7 @@ Name | Type | Description
 state | string | The state of the project. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
 
 ###### Returns
-**github:ProjectList , github:GitConnectorError**
+**github:ProjectList** or **github:GitConnectorError**
 
 ***
 ### getProject()
@@ -137,7 +135,7 @@ Name | Type | Description
 projectNumber | int | The integral number of the project.
 
 ###### Returns
-**github:Project , github:GitConnectorError**
+**github:Project** or **github:GitConnectorError**
 
 ***
 
@@ -150,20 +148,7 @@ Name | Type | Description
 state | string | The state of the issue. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
 
 ###### Returns
-**github:IssueList , github:GitConnectorError**
-
-***
-
-### getIssue()
-Return a single issue of the repository.
-
-###### Parameters
-Name | Type | Description
------|------|------------
-issueNumber | int | The integral number of the issue.
-
-###### Returns
-**github:Issue , github:GitConnectorError**
+**github:IssueList** or **github:GitConnectorError**
 
 ***
 
@@ -176,7 +161,7 @@ Name | Type | Description
 state | string | The state of the pull request. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_MERGED, github:GIT_STATE_ALL)
 
 ###### Returns
-**github:PullRequestList , github:GitConnectorError**
+**github:PullRequestList** or **github:GitConnectorError**
 
 ***
 
@@ -191,7 +176,7 @@ Name | Type | Description
 state | string | The state of the project. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
 
 ###### Returns
-**github:ProjectList , github:GitConnectorError**
+**github:ProjectList** or **github:GitConnectorError**
 
 ***
 
@@ -204,7 +189,7 @@ Name | Type | Description
 projectNumber | int | The integral number of the project.
 
 ###### Returns
-**github:Project , github:GitConnectorError**
+**github:Project** or **github:GitConnectorError**
 
 ***
 
@@ -215,7 +200,7 @@ Return the list of repositories of the organization.
 None
 
 ###### Returns
-**github:RepositoryList , github:GitConnectorError**
+**github:RepositoryList** or **github:GitConnectorError**
 
 ***
 
@@ -264,7 +249,7 @@ Return the next page of the repository list.
 None
 
 ###### Returns
-**github:RepositoryList , github:GitConnectorError**
+**github:RepositoryList** or **github:GitConnectorError**
 
 ***
 
@@ -309,7 +294,7 @@ Return the next page of the column list.
 None
 
 ###### Returns
-**github:ColumnList , github:GitConnectorError**
+**github:ColumnList** or **github:GitConnectorError**
 
 ***
 ### hasNextPage()
@@ -354,7 +339,7 @@ Return the next page of the card list.
 None
 
 ###### Returns
-**github:CardList , github:GitConnectorError**
+**github:CardList** or **github:GitConnectorError**
 
 ***
 ### hasNextPage()
