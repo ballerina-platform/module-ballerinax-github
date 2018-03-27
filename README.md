@@ -96,7 +96,7 @@ Name | Type | Description
 name | string | Name of the organization and repository. (Eg: "organization/repository")
 
 ###### Returns
-* **github:Repository , github:GitConnectorError**
+* **github:Repository** or **github:GitConnectorError**
 
 ***
 
@@ -109,7 +109,7 @@ Name | Type | Description
 name | string | Name of the organization. (Eg: "organization")
 
 ###### Returns
-**github:Organization , github:GitConnectorError**
+**github:Organization** or **github:GitConnectorError**
 
 ***
 ## github:Repository
@@ -123,7 +123,7 @@ Name | Type | Description
 state | string | The state of the project. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
 
 ###### Returns
-**github:ProjectList , github:GitConnectorError**
+**github:ProjectList** or **github:GitConnectorError**
 
 ***
 ### getProject()
@@ -135,7 +135,7 @@ Name | Type | Description
 projectNumber | int | The integral number of the project.
 
 ###### Returns
-**github:Project , github:GitConnectorError**
+**github:Project** or **github:GitConnectorError**
 
 ***
 
@@ -148,7 +148,7 @@ Name | Type | Description
 state | string | The state of the issue. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
 
 ###### Returns
-**github:IssueList , github:GitConnectorError**
+**github:IssueList** or **github:GitConnectorError**
 
 ***
 
@@ -161,7 +161,7 @@ Name | Type | Description
 state | string | The state of the pull request. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_MERGED, github:GIT_STATE_ALL)
 
 ###### Returns
-**github:PullRequestList , github:GitConnectorError**
+**github:PullRequestList** or **github:GitConnectorError**
 
 ***
 
@@ -176,7 +176,7 @@ Name | Type | Description
 state | string | The state of the project. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
 
 ###### Returns
-**github:ProjectList , github:GitConnectorError**
+**github:ProjectList** or **github:GitConnectorError**
 
 ***
 
@@ -189,7 +189,7 @@ Name | Type | Description
 projectNumber | int | The integral number of the project.
 
 ###### Returns
-**github:Project , github:GitConnectorError**
+**github:Project** or **github:GitConnectorError**
 
 ***
 
@@ -200,7 +200,7 @@ Return the list of repositories of the organization.
 None
 
 ###### Returns
-**github:RepositoryList , github:GitConnectorError**
+**github:RepositoryList** or **github:GitConnectorError**
 
 ***
 
@@ -249,7 +249,7 @@ Return the next page of the repository list.
 None
 
 ###### Returns
-**github:RepositoryList , github:GitConnectorError**
+**github:RepositoryList** or **github:GitConnectorError**
 
 ***
 
@@ -294,7 +294,7 @@ Return the next page of the column list.
 None
 
 ###### Returns
-**github:ColumnList , github:GitConnectorError**
+**github:ColumnList** or **github:GitConnectorError**
 
 ***
 ### hasNextPage()
@@ -339,7 +339,7 @@ Return the next page of the card list.
 None
 
 ###### Returns
-**github:CardList , github:GitConnectorError**
+**github:CardList** or **github:GitConnectorError**
 
 ***
 ### hasNextPage()
