@@ -6,7 +6,7 @@ The Ballerina GitHub connector allow users to access the GitHub API through ball
 
 |Ballerina Version | Connector Version |
 |------------------|-------------------|
-|0.964.0 | 0.1 |
+|0.970.0-alpha1-SNAPSHOT | 0.1 |
 
 ![Ballerina GitHub Connector Overview](BallerinaGitHubConnector_Overview.jpg)
 
@@ -19,7 +19,7 @@ git clone https://github.com/vlgunarathne/connector-github.git
 * Import the package to your ballerina project.
 
 ##### Prerequisites
-Download the ballerina version 0.964.0 [distribution](https://ballerinalang.org/downloads/).
+Download the ballerina version 0.970.0-alpha1-SNAPSHOT [distribution](https://ballerinalang.org/downloads/).
 
 ### Working with GitHub Connector Actions
 
@@ -28,18 +28,22 @@ All the actions return `struct objects` and `github:GitConnectorError`. If the a
 ##### Example
 * Request 
 ```ballerina
-    endpoint<github:GithubConnector> githubConnector {
-        create github:GithubConnector(ACCESS_TOKEN);
-    }
+    github:GitHubConnector githubConnector = { accessToken: getAccessToken()};
+    github:GitConnectorError e = {};
     
     //Get a single repository
-    github:Repository repository;
-    repository, error = githubConnector.getRepository("vlgunarathne/connector-github");
+    github:Repository repository = {};
+    var repo = githubConnector.getRepository("wso2/product-apim");
+    match repo {
+        github:Repository rep => {
+            repository = rep;
+            io:println(repository);
+        }
+        github:GitConnectorError err => {
+            io:println(err);
+        }
+    }
     
-```
-* Response
-```
-{id:"MDEwOlJlcG9zaXRvcnkxMjIxNjUzMjM=", name:"connector-github", createdAt:"2018-02-20T06:59:38Z", updatedAt:"2018-03-14T13:51:03Z", description:"Ballerina GitHub Connector ", forkCount:1, hasIssuesEnabled:true, hasWikiEnabled:true, homepageUrl:"null", isArchived:false, isFork:false, isLocked:false, isMirror:false, isPrivate:false, license:"null", lockReason:"null", mirrorUrl:"null", url:"https://github.com/vlgunarathne/connector-github", sshUrl:"git@github.com:vlgunarathne/connector-github.git", owner:{id:"MDQ6VXNlcjE2MDY0Njk2", login:"vlgunarathne", url:"https://github.com/vlgunarathne", avatarUrl:"https://avatars2.githubusercontent.com/u/16064696?v=4", resourcePath:"/vlgunarathne"}, primaryLanguage:{id:"MDg6TGFuZ3VhZ2U2NTU=", name:"Ballerina", color:"#FF5000"}}
 ```
 
 * Response struct

@@ -134,7 +134,7 @@ public function main (string[] args) {
 
     //Get a single repository
     github:Repository repository = {};
-    var repo = githubConnector.getRepository("wso2/carbon-apimgt");
+    var repo = githubConnector.getRepository("wso2/product-apim");
     match repo {
         github:Repository rep => {
             repository = rep;

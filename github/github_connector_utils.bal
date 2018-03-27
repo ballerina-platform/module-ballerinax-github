@@ -39,7 +39,8 @@ function constructRequest (http:Request request, json stringQuery, string access
 @Param {value:"validateComponent: The component to check in response"}
 @Return {value:"json: The JSON payload in the response"}
 @Return {value:"GitConnectorError: GitConnectorError object"}
-function getValidatedResponse (http:Response|http:HttpConnectorError response, string validateComponent) returns json|GitConnectorError {
+function getValidatedResponse (http:Response|http:HttpConnectorError response, string validateComponent)
+                                                                                    returns json|GitConnectorError {
     GitConnectorError connectorError = {};
     json responsePayload;
 
@@ -66,7 +67,8 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                         foreach i, singleError in errorList {
                             errors[i] =? <string>singleError[GIT_MESSAGE];
                         }
-                        connectorError = {message:errors, statusCode:gitResponse.statusCode, reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
+                        connectorError = {message:errors, statusCode:gitResponse.statusCode,
+                                             reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
                         return connectorError;
                     }
                 }
@@ -75,7 +77,8 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                 if (null == responsePayload[GIT_DATA][keyInData][validateComponent]) {
                     string[] errorMessage = [GIT_ERROR_WHILE_RETRIEVING_DATA];
                     responsePayload = null;
-                    connectorError = {message:errorMessage, statusCode:gitResponse.statusCode, reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
+                    connectorError = {message:errorMessage, statusCode:gitResponse.statusCode,
+                                         reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
                     return connectorError;
                 }
 
@@ -83,7 +86,8 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
             } catch (error e) {
                 string[] errorMessage = [GIT_ERROR_WHILE_RETRIEVING_PAYLOAD];
                 responsePayload = null;
-                connectorError = {message:errorMessage, statusCode:gitResponse.statusCode, reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
+                connectorError = {message:errorMessage, statusCode:gitResponse.statusCode,
+                                     reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
                 return connectorError;
             }
         }

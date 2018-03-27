@@ -22,7 +22,7 @@ import ballerina/io;
 import ballerina/net.http;
 
 endpoint http:ClientEndpoint gitHTTPClient {
-      targets: [{uri: GIT_API_URL}]
+    targets:[{uri:GIT_API_URL}]
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ public struct Project {
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
 public function <Project project> getColumnList (int recordCount) returns ColumnList|GitConnectorError {
-    
+
     GitConnectorError connectorError = {};
 
     if (project == null) {
@@ -69,7 +69,8 @@ public function <Project project> getColumnList (int recordCount) returns Column
     if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION) && project.resourcePath != null) {
         string organization = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
         string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization}}",
-            "{{GIT_NUMBER}}":{{project.number}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT_COLUMNS}}"}`;
+            "{{GIT_NUMBER}}":{{project.number}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},
+            "{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT_COLUMNS}}"}`;
         return getProjectColumns(GIT_ORGANIZATION, stringQuery);
 
     } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY) && project.resourcePath != null) {
@@ -91,7 +92,7 @@ public function <Project project> getColumnList (int recordCount) returns Column
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
 function getProjectColumns (string ownerType, string gitQuery) returns ColumnList|GitConnectorError {
-    
+
     GitConnectorError connectorError = {};
 
     if (ownerType == null || ownerType == "" || gitQuery == null || gitQuery == "") {
@@ -103,7 +104,7 @@ function getProjectColumns (string ownerType, string gitQuery) returns ColumnLis
     var convertedQuery = stringToJson(gitQuery);
     match convertedQuery {
         json jsonQuery => {
-            //Set headers and payload to the request
+        //Set headers and payload to the request
             constructRequest(request, jsonQuery, gitAccessToken);
         }
 
@@ -111,7 +112,7 @@ function getProjectColumns (string ownerType, string gitQuery) returns ColumnLis
             return gitConError;
         }
     }
-    
+
     // Make an HTTP POST request
     var response = gitHTTPClient -> post("", request);
 
@@ -161,10 +162,10 @@ public function <ProjectList projectList> hasPreviousPage () returns (boolean) {
     return projectList.pageInfo.hasPreviousPage;
 }
 
-@Description {value: "Gets the next page of a project list"}
-@Return {value: "ProjectList: Project list"}
+@Description {value:"Gets the next page of a project list"}
+@Return {value:"ProjectList: Project list"}
 public function <ProjectList projectList> nextPage () returns ProjectList|GitConnectorError {
-    
+
     if (projectList.hasNextPage()) {
 
         http:Request request = {};
@@ -175,7 +176,7 @@ public function <ProjectList projectList> nextPage () returns ProjectList|GitCon
                 jsonQuery.variables.endCursorProjects = projectList.pageInfo.endCursor;
                 if (projectList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
                     jsonQuery["query"] = GET_ORGANIZATION_PROJECTS_NEXT_PAGE;
-                }else if (projectList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
+                } else if (projectList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
                     jsonQuery["query"] = GET_REPOSITORY_PROJECTS_NEXT_PAGE;
                 }
                 dataQuery = jsonQuery;
@@ -193,11 +194,12 @@ public function <ProjectList projectList> nextPage () returns ProjectList|GitCon
 
         //Check for empty payloads and errors
         json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
-        
+
         match validatedResponse {
             json jsonValidatedResponse => {
                 var projectsJson = jsonValidatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
-                var projList = <ProjectList, jsonToProjectList(projectList.listOwner, dataQuery.toString())>projectsJson;
+                var projList =
+                <ProjectList, jsonToProjectList(projectList.listOwner, dataQuery.toString())>projectsJson;
 
                 return projList;
             }
@@ -205,7 +207,7 @@ public function <ProjectList projectList> nextPage () returns ProjectList|GitCon
             GitConnectorError gitConError => {
                 return gitConError;
             }
-        }  
+        }
     }
 
     GitConnectorError connectorError = {message:["Project list has no next page"]};
@@ -251,7 +253,7 @@ public function <RepositoryList repositoryList> hasPreviousPage () returns (bool
 @Return {value:"RepositoryList: Repository list"}
 @Return {value:"GitConnectorError: Error"}
 public function <RepositoryList repositoryList> nextPage () returns RepositoryList|GitConnectorError {
-    
+
     if (repositoryList.hasNextPage()) {
 
         http:Request request = {};
@@ -274,11 +276,12 @@ public function <RepositoryList repositoryList> nextPage () returns RepositoryLi
 
         //Check for empty payloads and errors
         json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_REPOSITORIES);
-        
+
         match validatedResponse {
             json jsonValidatedResponse => {
                 var repositoriesJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
-                var repoList = <RepositoryList, jsonToRepositoryList(repositoryList.repositoryListQuery)>repositoriesJson;
+                var repoList =
+                <RepositoryList, jsonToRepositoryList(repositoryList.repositoryListQuery)>repositoriesJson;
 
                 return repoList;
             }
@@ -286,7 +289,7 @@ public function <RepositoryList repositoryList> nextPage () returns RepositoryLi
             GitConnectorError gitConError => {
                 return gitConError;
             }
-        }         
+        }
     }
     GitConnectorError connectorError = {message:["Repository list has no next page"]};
 
@@ -336,8 +339,9 @@ public struct Repository {
 @Param {value:"state: State of the repository (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_MERGED, GIT_STATE_ALL)"}
 @Return {value:"PullRequest[]: Array of pull requests"}
 @Return {value:"GitConnectorError: Error"}
-public function <Repository repository> getPullRequestList (int recordCount, string state) returns PullRequestList|GitConnectorError {
-    
+public function <Repository repository> getPullRequestList (int recordCount, string state)
+returns PullRequestList|GitConnectorError {
+
     GitConnectorError connectorError = {};
 
     if (repository == null || state == "" || state == null) {
@@ -358,7 +362,7 @@ public function <Repository repository> getPullRequestList (int recordCount, str
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
-            //Set headers and payload to the request
+        //Set headers and payload to the request
             constructRequest(request, jsonQuery, gitAccessToken);
         }
 
@@ -366,24 +370,24 @@ public function <Repository repository> getPullRequestList (int recordCount, str
             return gitConError;
         }
     }
-    
+
     // Make an HTTP POST request
     var response = gitHTTPClient -> post("", request);
 
     //Check for empty payloads and errors
     json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PULL_REQUESTS);
-    
+
     match validatedResponse {
-            json jsonValidatedResponse => {
-                var githubPullRequestsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
-                var pullRequestList = <PullRequestList, jsonToPullRequestList(stringQuery)>githubPullRequestsJson;
+        json jsonValidatedResponse => {
+            var githubPullRequestsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
+            var pullRequestList = <PullRequestList, jsonToPullRequestList(stringQuery)>githubPullRequestsJson;
 
-                return pullRequestList;
-            }
+            return pullRequestList;
+        }
 
-            GitConnectorError gitConError => {
-                return gitConError;
-            }
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
     }
 }
 
@@ -391,8 +395,9 @@ public function <Repository repository> getPullRequestList (int recordCount, str
 @Param {value:"state: State of the repository (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
 @Return {value:"Project[]: Array of projects"}
 @Return {value:"GitConnectorError: Error"}
-public function <Repository repository> getProjectList (int recordCount, string state) returns ProjectList|GitConnectorError {
-    
+public function <Repository repository> getProjectList (int recordCount, string state)
+returns ProjectList|GitConnectorError {
+
     GitConnectorError connectorError = {};
 
     if (repository == null || state == null) {
@@ -413,7 +418,7 @@ public function <Repository repository> getProjectList (int recordCount, string 
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
-            //Set headers and payload to the request
+        //Set headers and payload to the request
             constructRequest(request, jsonQuery, gitAccessToken);
         }
 
@@ -421,7 +426,7 @@ public function <Repository repository> getProjectList (int recordCount, string 
             return gitConError;
         }
     }
-    
+
     // Make an HTTP POST request
     var response = gitHTTPClient -> post("", request);
 
@@ -429,16 +434,16 @@ public function <Repository repository> getProjectList (int recordCount, string 
     json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
 
     match validatedResponse {
-            json jsonValidatedResponse => {
-                var githubProjectsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS];
-                var projectList = <ProjectList, jsonToProjectList(GIT_REPOSITORY, stringQuery)>githubProjectsJson;
+        json jsonValidatedResponse => {
+            var githubProjectsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS];
+            var projectList = <ProjectList, jsonToProjectList(GIT_REPOSITORY, stringQuery)>githubProjectsJson;
 
-                return projectList;
-            }
+            return projectList;
+        }
 
-            GitConnectorError gitConError => {
-                return gitConError;
-            }
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
     }
 }
 
@@ -447,7 +452,7 @@ public function <Repository repository> getProjectList (int recordCount, string 
 @Return {value:"Project object"}
 @Return {value:"GitConnectorError: Error"}
 public function <Repository repository> getProject (int projectNumber) returns Project|GitConnectorError {
-    
+
     GitConnectorError connectorError = {};
 
     if (repository == null || projectNumber <= 0) {
@@ -463,7 +468,7 @@ public function <Repository repository> getProject (int projectNumber) returns P
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
-            //Set headers and payload to the request
+        //Set headers and payload to the request
             constructRequest(request, jsonQuery, gitAccessToken);
         }
 
@@ -477,18 +482,18 @@ public function <Repository repository> getProject (int projectNumber) returns P
 
     //Check for empty payloads and errors
     json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
-    
+
     match validatedResponse {
-            json jsonValidatedResponse => {
-                var githubProjectJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECT];
-                var singleProject =? <Project>githubProjectJson;
+        json jsonValidatedResponse => {
+            var githubProjectJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECT];
+            var singleProject =? <Project>githubProjectJson;
 
-                return singleProject;
-            }
+            return singleProject;
+        }
 
-            GitConnectorError gitConError => {
-                return gitConError;
-            }
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
     }
 }
 
@@ -496,7 +501,8 @@ public function <Repository repository> getProject (int projectNumber) returns P
 @Param {value:"state: State of the issue (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
 @Return {value:"IssueList: Issue list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <Repository repository> getIssueList (int recordCount, string state) returns IssueList|GitConnectorError {
+public function <Repository repository> getIssueList (int recordCount, string state)
+returns IssueList|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -531,18 +537,18 @@ public function <Repository repository> getIssueList (int recordCount, string st
 
     //Check for empty payloads and errors
     json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_ISSUES);
-    
-    match validatedResponse {
-            json jsonValidatedResponse => {
-                var githubIssuesJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
-                var issueList = <IssueList, jsonToIssueList(stringQuery)>githubIssuesJson;
-                
-                return issueList;
-            }
 
-            GitConnectorError gitConError => {
-                return gitConError;
-            }
+    match validatedResponse {
+        json jsonValidatedResponse => {
+            var githubIssuesJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
+            var issueList = <IssueList, jsonToIssueList(stringQuery)>githubIssuesJson;
+
+            return issueList;
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -574,8 +580,9 @@ public struct Organization {
 @Param {value:"state: State of the project (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)"}
 @Return {value:"Project[]: Array of projects"}
 @Return {value:"GitConnectorError: Error"}
-public function <Organization organization> getProjectList (int recordCount, string state) returns ProjectList|GitConnectorError {
-    
+public function <Organization organization> getProjectList (int recordCount, string state)
+returns ProjectList|GitConnectorError {
+
     GitConnectorError connectorError = {};
 
     if (organization == null || state == null) {
@@ -589,13 +596,14 @@ public function <Organization organization> getProjectList (int recordCount, str
     }
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}"
-    ,"{{GIT_STATES}}":{{state}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECTS}}"}`;
+    ,"{{GIT_STATES}}":{{state}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},
+    "{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECTS}}"}`;
 
     http:Request request = {};
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
-            //Set headers and payload to the request
+        //Set headers and payload to the request
             constructRequest(request, jsonQuery, gitAccessToken);
         }
 
@@ -603,25 +611,25 @@ public function <Organization organization> getProjectList (int recordCount, str
             return gitConError;
         }
     }
-    
+
     // Make an HTTP POST request
     var response = gitHTTPClient -> post("", request);
 
     //Check for empty payloads and errors
     json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
-    
+
     match validatedResponse {
-            json jsonValidatedResponse => {
-                var githubProjectsJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECTS];
-                var projectList = <ProjectList, jsonToProjectList(GIT_ORGANIZATION, stringQuery)>githubProjectsJson;
+        json jsonValidatedResponse => {
+            var githubProjectsJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECTS];
+            var projectList = <ProjectList, jsonToProjectList(GIT_ORGANIZATION, stringQuery)>githubProjectsJson;
 
-                return projectList;
-            }
+            return projectList;
+        }
 
-            GitConnectorError gitConError => {
-                return gitConError;
-            }
-	}
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
 }
 
 @Description {value:"Get a single project of an organization."}
@@ -629,7 +637,7 @@ public function <Organization organization> getProjectList (int recordCount, str
 @Return {value:"Project object"}
 @Return {value:"GitConnectorError: Error"}
 public function <Organization organization> getProject (int projectNumber) returns Project|GitConnectorError {
-    
+
     GitConnectorError connectorError = {};
 
     if (organization == null || projectNumber <= 0) {
@@ -645,7 +653,7 @@ public function <Organization organization> getProject (int projectNumber) retur
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
-            //Set headers and payload to the request
+        //Set headers and payload to the request
             constructRequest(request, jsonQuery, gitAccessToken);
         }
 
@@ -653,31 +661,32 @@ public function <Organization organization> getProject (int projectNumber) retur
             return gitConError;
         }
     }
-    
+
     // Make an HTTP POST request
     var response = gitHTTPClient -> post("", request);
 
     json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
-    
+
     match validatedResponse {
-            json jsonValidatedResponse => {
-                var githubProjectJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECT];
-                var singleProject =? <Project>githubProjectJson;
+        json jsonValidatedResponse => {
+            var githubProjectJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECT];
+            var singleProject =? <Project>githubProjectJson;
 
-                return singleProject;
-            }
+            return singleProject;
+        }
 
-            GitConnectorError gitConError => {
-                return gitConError;
-            }
-	}
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
 }
 
 @Description {value:"Get a list of repositories of an organization."}
 @Return {value:"RepositoryList: Repository list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <Organization organization> getRepositoryList (int recordCount) returns RepositoryList|GitConnectorError {
-    
+public function <Organization organization> getRepositoryList (int recordCount)
+returns RepositoryList|GitConnectorError {
+
     GitConnectorError connectorError = {};
 
     if (organization == null) {
@@ -705,25 +714,25 @@ public function <Organization organization> getRepositoryList (int recordCount) 
             return gitConError;
         }
     }
-    
+
     // Make an HTTP POST request
     var response = gitHTTPClient -> post("", request);
 
     //Check for empty payloads and errors
     json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_REPOSITORIES);
-    
+
     match validatedResponse {
-            json jsonValidatedResponse => {
-                var githubRepositoriesJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
-                var repositoryList = <RepositoryList, jsonToRepositoryList(stringQuery)>githubRepositoriesJson;
+        json jsonValidatedResponse => {
+            var githubRepositoriesJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
+            var repositoryList = <RepositoryList, jsonToRepositoryList(stringQuery)>githubRepositoriesJson;
 
-                return repositoryList;
-            }
+            return repositoryList;
+        }
 
-            GitConnectorError gitConError => {
-                return gitConError;
-            }
-	}
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                       End of Organization struct                                                  //
@@ -779,7 +788,7 @@ public function <CardList cardList> hasPreviousPage () returns (boolean) {
 @Return {value:"CardList: Card list object"}
 @Return {value:"GitConnectorError: Error"}
 public function <CardList cardList> nextPage () returns CardList|GitConnectorError {
-    
+
     if (cardList.hasNextPage()) {
         var cardListColumnId = cardList.columnId;
         var convertedQuery = stringToJson(cardList.cardListQuery);
@@ -897,7 +906,7 @@ public function <ColumnList columnList> hasPreviousPage () returns (boolean) {
 @Return {value:"ColumList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
 public function <ColumnList columnList> nextPage () returns ColumnList|GitConnectorError {
-    
+
     if (columnList.hasNextPage()) {
         var convertedQuery = stringToJson(columnList.columnListQuery);
         match convertedQuery {
@@ -1011,7 +1020,6 @@ public struct Issue {
     string closedAt;
     string createdAt;
     Creator author;
-    Creator editor;
     LabelList labels;
     int number;
     string state;
@@ -1052,7 +1060,7 @@ public function <IssueList issueList> hasPreviousPage () returns (boolean) {
 @Return {value:"PullRequestList: PullRequest list object"}
 @Return {value:"GitConnectorError: Error"}
 public function <IssueList issueList> nextPage () returns IssueList|GitConnectorError {
-    
+
     if (issueList.hasNextPage()) {
         http:Request request = {};
         var convertedQuery = stringToJson(issueList.issueListQuery);
@@ -1068,7 +1076,7 @@ public function <IssueList issueList> nextPage () returns IssueList|GitConnector
                 return gitConError;
             }
         }
-        
+
         // Make an HTTP POST request
         var response = gitHTTPClient -> post("", request);
 
@@ -1085,7 +1093,7 @@ public function <IssueList issueList> nextPage () returns IssueList|GitConnector
             GitConnectorError gitConError => {
                 return gitConError;
             }
-	    }
+        }
 
     }
     GitConnectorError connectorError = {message:["Pull request list has no next page"]};
@@ -1189,7 +1197,7 @@ public function <PullRequestList pullRequestList> hasPreviousPage () returns (bo
 @Return {value:"PullRequestList: PullRequest list object"}
 @Return {value:"GitConnectorError: Error"}
 public function <PullRequestList pullRequestList> nextPage () returns PullRequestList|GitConnectorError {
-    
+
     if (pullRequestList.hasNextPage()) {
 
         http:Request request = {};
@@ -1206,17 +1214,18 @@ public function <PullRequestList pullRequestList> nextPage () returns PullReques
                 return gitConError;
             }
         }
-        
+
         // Make an HTTP POST request
         var response = gitHTTPClient -> post("", request);
 
         //Check for empty payloads and errors
         json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PULL_REQUESTS);
-        
+
         match validatedResponse {
             json jsonValidatedResponse => {
                 var projectColumnsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
-                var prList = <PullRequestList, jsonToPullRequestList(pullRequestList.pullrequestListQuery)>projectColumnsJson;
+                var prList =
+                <PullRequestList, jsonToPullRequestList(pullRequestList.pullrequestListQuery)>projectColumnsJson;
 
                 return prList;
             }
@@ -1224,7 +1233,7 @@ public function <PullRequestList pullRequestList> nextPage () returns PullReques
             GitConnectorError gitConError => {
                 return gitConError;
             }
-	    }
+        }
 
     }
     GitConnectorError connectorError = {message:["Pull request list has no next page"]};

@@ -7,7 +7,8 @@ package github;
 //********************************
 // JSON --> ProjectList
 //********************************
-transformer <json source_json, ProjectList target_projectList> jsonToProjectList (string listOwner, string stringQuery) {
+transformer <json source_json, ProjectList target_projectList> jsonToProjectList
+                                                                            (string listOwner, string stringQuery) {
     target_projectList.listOwner = listOwner;
     target_projectList.projectListQuery = stringQuery;
     target_projectList.pageInfo =? <PageInfo>source_json.pageInfo;
@@ -21,7 +22,8 @@ transformer <json source_json, ProjectList target_projectList> jsonToProjectList
 //********************************
 // JSON --> CardList
 //********************************
-transformer <json source_json, CardList target_cardList> jsonToCardList (string columnId, string listOwner, string stringQuery) {
+transformer <json source_json, CardList target_cardList> jsonToCardList
+                                                            (string columnId, string listOwner, string stringQuery) {
     target_cardList.columnId = columnId;
     target_cardList.cardListQuery = stringQuery;
     target_cardList.listOwner = listOwner;
@@ -41,7 +43,8 @@ transformer <json source_json, Column target_column> jsonToColumn (string listOw
     target_column.name = source_json.name.toString();
     target_column.columnQuery = stringQuery;
     target_column.listOwner = listOwner;
-    target_column.cards = <CardList, jsonToCardList(source_json.id.toString(), listOwner, stringQuery)>source_json.cards;
+    target_column.cards =
+                        <CardList, jsonToCardList(source_json.id.toString(), listOwner, stringQuery)>source_json.cards;
 }
 
 //********************************
