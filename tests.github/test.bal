@@ -67,7 +67,7 @@ public function main (string[] args) {
         }
      }
     io:println("=========================================================");
-    
+
     //Get project column list
     github:ColumnList columnList = {};
     var columns = orgProject.getColumnList(2);
@@ -81,9 +81,9 @@ public function main (string[] args) {
         }
     }
     io:println("=========================================================");
-    
+
     github:Column column = columnList.getAllColumns()[0];
-    
+
     github:CardList cardList = column.getCardList();
     boolean hasNext = true;
     while (hasNext) {
@@ -134,7 +134,7 @@ public function main (string[] args) {
 
     //Get a single repository
     github:Repository repository = {};
-    var repo = githubConnector.getRepository("wso2/docker-is");
+    var repo = githubConnector.getRepository("wso2/carbon-apimgt");
     match repo {
         github:Repository rep => {
             repository = rep;

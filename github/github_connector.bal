@@ -18,7 +18,7 @@
 
 package github;
 
-import ballerina.net.http;
+import ballerina/net.http;
 
 string gitAccessToken = "";
 
@@ -44,16 +44,23 @@ public function <GitHubConnector gitHubConnector> getRepository (string name) re
     string[] repoIdentifier = name.split(GIT_PATH_SEPARATOR);
     string repoOwner = repoIdentifier[GIT_INDEX_ZERO];
     string repoName = repoIdentifier[GIT_INDEX_ONE];
-    http:Request request = {};
     Repository singleRepository = {};
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repoOwner}}","{{GIT_NAME}}":"{{repoName}}"},
     "{{GIT_QUERY}}":"{{GET_REPOSITORY}}"}`;
 
-    var jsonQuery = <json>stringQuery;
+    http:Request request = {};
+    var convertedQuery = stringToJson(stringQuery);
+    match convertedQuery {
+        json jsonQuery => {
+            // Set headers and payload to the request
+            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+        }
 
-    // Set headers and payload to the request
-    constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
 
     // Make an HTTP POST request 
     var response = gitHubEndpoint -> post("", request);
@@ -94,16 +101,23 @@ public function <GitHubConnector gitHubConnector> getOrganization (string name) 
         connectorError = {message:["Organization name should be specified."]};
         return connectorError;
     }
-    http:Request request = {};
     Organization singleOrganization = {};
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{name}}"},
         "{{GIT_QUERY}}":"{{GET_ORGANIZATION}}"}`;
 
-    var jsonQuery = <json>stringQuery;
+    http:Request request = {};
+    var convertedQuery = stringToJson(stringQuery);
+    match convertedQuery {
+        json jsonQuery => {
+        // Set headers and payload to the request
+            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+        }
 
-    //Set headers and payload to the request
-    constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
 
     // Make an HTTP POST request
     var response = gitHubEndpoint -> post("", request);

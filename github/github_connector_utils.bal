@@ -18,12 +18,13 @@
 
 package github;
 
-import ballerina.net.http;
-import ballerina.mime;
+import ballerina/net.http;
+import ballerina/mime;
+import ballerina/util;
 
 @Description {value:"Construct the request headers"}
 @Param {value:"request: The http request object"}
-@Param {value:"query: GraphQL API query"}
+@Param {value:"stringQuery: GraphQL API query"}
 @Param {value:"accessToken: GitHub access token"}
 function constructRequest (http:Request request, json stringQuery, string accessToken) {
     gitAccessToken = accessToken;
@@ -35,9 +36,9 @@ function constructRequest (http:Request request, json stringQuery, string access
 
 @Description {value:"Validate the http response"}
 @Param {value:"http:Response: The http response object"}
-@Param {value:"component:"}
+@Param {value:"validateComponent: The component to check in response"}
 @Return {value:"json: The JSON payload in the response"}
-@Return {value:"GitConnectoError: GitConnectorError object"}
+@Return {value:"GitConnectorError: GitConnectorError object"}
 function getValidatedResponse (http:Response|http:HttpConnectorError response, string validateComponent) returns json|GitConnectorError {
     GitConnectorError connectorError = {};
     json responsePayload;
@@ -59,7 +60,7 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                 string[] payLoadKeys = responsePayload.getKeys();
                 //Check all the keys in the payload to see if an error object is returned.
                 foreach key in payLoadKeys {
-                    if (GIT_ERRORS.equalsIgnoreCase(key)){
+                    if (GIT_ERRORS.equalsIgnoreCase(key)) {
                         string[] errors = [];
                         var errorList =? <json[]>responsePayload[GIT_ERRORS];
                         foreach i, singleError in errorList {
@@ -92,8 +93,26 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
             return connectorError;
         }
     }
-    
+
 
     return responsePayload;
 
+}
+
+@Description {value:"Convert string to json"}
+@Param {value:"source: The string to be converted"}
+@Return {value:"json: The converted Json"}
+@Return {value:"GitConnectorError: GitConnectorError object"}
+function stringToJson (string source) returns json|GitConnectorError {
+    GitConnectorError connectorError = {};
+    var parsedValue = util:parseJson(source);
+    match parsedValue {
+        json jsonValue => {
+            return jsonValue;
+        }
+        error parsedError => {
+            connectorError = {message:[parsedError.message]};
+            return connectorError;
+        }
+    }
 }

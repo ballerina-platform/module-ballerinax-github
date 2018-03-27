@@ -18,8 +18,8 @@
 
 package github;
 
-import ballerina.io;
-import ballerina.net.http;
+import ballerina/io;
+import ballerina/net.http;
 
 endpoint http:ClientEndpoint gitHTTPClient {
       targets: [{uri: GIT_API_URL}]
@@ -99,11 +99,18 @@ function getProjectColumns (string ownerType, string gitQuery) returns ColumnLis
         return connectorError;
     }
 
-    var jsonQuery = <json>gitQuery;
-
-    //Set headers and payload to the request
     http:Request request = {};
-    constructRequest(request, jsonQuery, gitAccessToken);
+    var convertedQuery = stringToJson(gitQuery);
+    match convertedQuery {
+        json jsonQuery => {
+            //Set headers and payload to the request
+            constructRequest(request, jsonQuery, gitAccessToken);
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
     
     // Make an HTTP POST request
     var response = gitHTTPClient -> post("", request);
@@ -113,7 +120,7 @@ function getProjectColumns (string ownerType, string gitQuery) returns ColumnLis
 
     match validatedResponse {
         json jsonValidateResponse => {
-            var projectColumnsJson = <json>jsonValidateResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
+            var projectColumnsJson = jsonValidateResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
             var columnList = <ColumnList, jsonToColumnList(ownerType, gitQuery)>projectColumnsJson;
 
             return columnList;
@@ -160,18 +167,27 @@ public function <ProjectList projectList> nextPage () returns ProjectList|GitCon
     
     if (projectList.hasNextPage()) {
 
-        var jsonQuery = <json>projectList.projectListQuery;
-        jsonQuery.variables.endCursorProjects = projectList.pageInfo.endCursor;
-        if (projectList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
-            jsonQuery["query"] = GET_ORGANIZATION_PROJECTS_NEXT_PAGE;
-        }else if (projectList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
-            jsonQuery["query"] = GET_REPOSITORY_PROJECTS_NEXT_PAGE;
+        http:Request request = {};
+        json dataQuery;
+        var convertedQuery = stringToJson(projectList.projectListQuery);
+        match convertedQuery {
+            json jsonQuery => {
+                jsonQuery.variables.endCursorProjects = projectList.pageInfo.endCursor;
+                if (projectList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
+                    jsonQuery["query"] = GET_ORGANIZATION_PROJECTS_NEXT_PAGE;
+                }else if (projectList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
+                    jsonQuery["query"] = GET_REPOSITORY_PROJECTS_NEXT_PAGE;
+                }
+                dataQuery = jsonQuery;
+                //Set headers and payload to the request
+                constructRequest(request, jsonQuery, gitAccessToken);
+            }
+
+            GitConnectorError gitConError => {
+                return gitConError;
+            }
         }
 
-        //Set headers and payload to the request
-        http:Request request = {};
-        constructRequest(request, jsonQuery, gitAccessToken);
-        
         // Make an HTTP POST request
         var response = gitHTTPClient -> post("", request);
 
@@ -180,8 +196,8 @@ public function <ProjectList projectList> nextPage () returns ProjectList|GitCon
         
         match validatedResponse {
             json jsonValidatedResponse => {
-                var projectsJson = <json>jsonValidatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
-                var projList = <ProjectList, jsonToProjectList(projectList.listOwner, jsonQuery.toString())>projectsJson;
+                var projectsJson = jsonValidatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
+                var projList = <ProjectList, jsonToProjectList(projectList.listOwner, dataQuery.toString())>projectsJson;
 
                 return projList;
             }
@@ -238,14 +254,21 @@ public function <RepositoryList repositoryList> nextPage () returns RepositoryLi
     
     if (repositoryList.hasNextPage()) {
 
-        var jsonQuery = <json>repositoryList.repositoryListQuery;
-        jsonQuery.variables.endCursorRepos = repositoryList.pageInfo.endCursor;
-        jsonQuery["query"] = GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE;
-
-        //Set headers and payload to the request
         http:Request request = {};
-        constructRequest(request, jsonQuery, gitAccessToken);
-        
+        var convertedQuery = stringToJson(repositoryList.repositoryListQuery);
+        match convertedQuery {
+            json jsonQuery => {
+                jsonQuery.variables.endCursorRepos = repositoryList.pageInfo.endCursor;
+                jsonQuery["query"] = GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE;
+                //Set headers and payload to the request
+                constructRequest(request, jsonQuery, gitAccessToken);
+            }
+
+            GitConnectorError gitConError => {
+                return gitConError;
+            }
+        }
+
         // Make an HTTP POST request
         var response = gitHTTPClient -> post("", request);
 
@@ -254,7 +277,7 @@ public function <RepositoryList repositoryList> nextPage () returns RepositoryLi
         
         match validatedResponse {
             json jsonValidatedResponse => {
-                var repositoriesJson = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
+                var repositoriesJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
                 var repoList = <RepositoryList, jsonToRepositoryList(repositoryList.repositoryListQuery)>repositoriesJson;
 
                 return repoList;
@@ -331,11 +354,18 @@ public function <Repository repository> getPullRequestList (int recordCount, str
     ,"{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},
     "{{GIT_QUERY}}":"{{GET_PULL_REQUESTS}}"}`;
 
-    var jsonQuery = <json>stringQuery;
-
-    //Set headers and payload to the request
     http:Request request = {};
-    constructRequest(request, jsonQuery, gitAccessToken);
+    var convertedQuery = stringToJson(stringQuery);
+    match convertedQuery {
+        json jsonQuery => {
+            //Set headers and payload to the request
+            constructRequest(request, jsonQuery, gitAccessToken);
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
     
     // Make an HTTP POST request
     var response = gitHTTPClient -> post("", request);
@@ -345,7 +375,7 @@ public function <Repository repository> getPullRequestList (int recordCount, str
     
     match validatedResponse {
             json jsonValidatedResponse => {
-                var githubPullRequestsJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
+                var githubPullRequestsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
                 var pullRequestList = <PullRequestList, jsonToPullRequestList(stringQuery)>githubPullRequestsJson;
 
                 return pullRequestList;
@@ -379,11 +409,18 @@ public function <Repository repository> getProjectList (int recordCount, string 
         "{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":{{state}},"{{GIT_RECORD_COUNT}}":{{recordCount}}}
         ,"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECTS}}"}`;
 
-    var jsonQuery = <json>stringQuery;
-
-    //Set headers and payload to the request
     http:Request request = {};
-    constructRequest(request, jsonQuery, gitAccessToken);
+    var convertedQuery = stringToJson(stringQuery);
+    match convertedQuery {
+        json jsonQuery => {
+            //Set headers and payload to the request
+            constructRequest(request, jsonQuery, gitAccessToken);
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
     
     // Make an HTTP POST request
     var response = gitHTTPClient -> post("", request);
@@ -393,7 +430,7 @@ public function <Repository repository> getProjectList (int recordCount, string 
 
     match validatedResponse {
             json jsonValidatedResponse => {
-                var githubProjectsJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS];
+                var githubProjectsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS];
                 var projectList = <ProjectList, jsonToProjectList(GIT_REPOSITORY, stringQuery)>githubProjectsJson;
 
                 return projectList;
@@ -418,20 +455,22 @@ public function <Repository repository> getProject (int projectNumber) returns P
         return connectorError;
     }
 
-    if (recordCount > GIT_MAX_RECORD_COUNT) {
-        connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
-        return connectorError;
-    }
-
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}"
     ,"{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_NUMBER}}":{{projectNumber}}}
     ,"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECT}}"}`;
 
-    var jsonQuery = <json>stringQuery;
-
-    //Set headers and payload to the request
     http:Request request = {};
-    constructRequest(request, jsonQuery, gitAccessToken);
+    var convertedQuery = stringToJson(stringQuery);
+    match convertedQuery {
+        json jsonQuery => {
+            //Set headers and payload to the request
+            constructRequest(request, jsonQuery, gitAccessToken);
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
 
     // Make an HTTP POST request
     var response = gitHTTPClient -> post("", request);
@@ -441,7 +480,7 @@ public function <Repository repository> getProject (int projectNumber) returns P
     
     match validatedResponse {
             json jsonValidatedResponse => {
-                var githubProjectJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECT];
+                var githubProjectJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECT];
                 var singleProject =? <Project>githubProjectJson;
 
                 return singleProject;
@@ -474,11 +513,18 @@ public function <Repository repository> getIssueList (int recordCount, string st
     ,"{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},
     "{{GIT_QUERY}}":"{{GET_REPOSITORY_ISSUES}}"}`;
 
-    var jsonQuery = <json>stringQuery;
-
-    //Set headers and payload to the request
     http:Request request = {};
-    constructRequest(request, jsonQuery, gitAccessToken);
+    var convertedQuery = stringToJson(stringQuery);
+    match convertedQuery {
+        json jsonQuery => {
+        //Set headers and payload to the request
+            constructRequest(request, jsonQuery, gitAccessToken);
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
 
     // Make an HTTP POST request
     var response = gitHTTPClient -> post("", request);
@@ -488,7 +534,7 @@ public function <Repository repository> getIssueList (int recordCount, string st
     
     match validatedResponse {
             json jsonValidatedResponse => {
-                var githubIssuesJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
+                var githubIssuesJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
                 var issueList = <IssueList, jsonToIssueList(stringQuery)>githubIssuesJson;
                 
                 return issueList;
@@ -545,11 +591,18 @@ public function <Organization organization> getProjectList (int recordCount, str
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}"
     ,"{{GIT_STATES}}":{{state}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECTS}}"}`;
 
-    var jsonQuery = <json>stringQuery;
-
-    //Set headers and payload to the request
     http:Request request = {};
-    constructRequest(request, jsonQuery, gitAccessToken);
+    var convertedQuery = stringToJson(stringQuery);
+    match convertedQuery {
+        json jsonQuery => {
+            //Set headers and payload to the request
+            constructRequest(request, jsonQuery, gitAccessToken);
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
     
     // Make an HTTP POST request
     var response = gitHTTPClient -> post("", request);
@@ -559,7 +612,7 @@ public function <Organization organization> getProjectList (int recordCount, str
     
     match validatedResponse {
             json jsonValidatedResponse => {
-                var githubProjectsJson = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECTS];
+                var githubProjectsJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECTS];
                 var projectList = <ProjectList, jsonToProjectList(GIT_ORGANIZATION, stringQuery)>githubProjectsJson;
 
                 return projectList;
@@ -588,11 +641,18 @@ public function <Organization organization> getProject (int projectNumber) retur
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}",
     "{{GIT_NUMBER}}":{{projectNumber}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT}}"}`;
 
-    var jsonQuery = <json>stringQuery;
-
-    //Set headers and payload to the request
     http:Request request = {};
-    constructRequest(request, jsonQuery, gitAccessToken);
+    var convertedQuery = stringToJson(stringQuery);
+    match convertedQuery {
+        json jsonQuery => {
+            //Set headers and payload to the request
+            constructRequest(request, jsonQuery, gitAccessToken);
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
     
     // Make an HTTP POST request
     var response = gitHTTPClient -> post("", request);
@@ -601,7 +661,7 @@ public function <Organization organization> getProject (int projectNumber) retur
     
     match validatedResponse {
             json jsonValidatedResponse => {
-                var githubProjectJson = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECT];
+                var githubProjectJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECT];
                 var singleProject =? <Project>githubProjectJson;
 
                 return singleProject;
@@ -632,11 +692,19 @@ public function <Organization organization> getRepositoryList (int recordCount) 
 
     string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}",
     "{{GIT_RECORD_COUNT}}":{{recordCount}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_REPOSITORIES}}"}`;
-    var jsonQuery = <json>stringQuery;
 
-    //Set headers and payload to the request
     http:Request request = {};
-    constructRequest(request, jsonQuery, gitAccessToken);
+    var convertedQuery = stringToJson(stringQuery);
+    match convertedQuery {
+        json jsonQuery => {
+        //Set headers and payload to the request
+            constructRequest(request, jsonQuery, gitAccessToken);
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
     
     // Make an HTTP POST request
     var response = gitHTTPClient -> post("", request);
@@ -646,7 +714,7 @@ public function <Organization organization> getRepositoryList (int recordCount) 
     
     match validatedResponse {
             json jsonValidatedResponse => {
-                var githubRepositoriesJson = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
+                var githubRepositoriesJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
                 var repositoryList = <RepositoryList, jsonToRepositoryList(stringQuery)>githubRepositoriesJson;
 
                 return repositoryList;
@@ -714,43 +782,52 @@ public function <CardList cardList> nextPage () returns CardList|GitConnectorErr
     
     if (cardList.hasNextPage()) {
         var cardListColumnId = cardList.columnId;
-        var jsonQuery = <json>cardList.cardListQuery;
-        jsonQuery.variables.endCursorCards = cardList.pageInfo.endCursor;
-        
-        if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
-            jsonQuery["query"] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
-            ColumnList|GitConnectorError columnList = getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString());
-            match columnList {
-                ColumnList colList => {
-                    foreach column in colList.getAllColumns() {
-                        if (column.id == cardListColumnId) {
-                            return column.getCardList();
+        var convertedQuery = stringToJson(cardList.cardListQuery);
+        match convertedQuery {
+            json jsonQuery => {
+                jsonQuery.variables.endCursorCards = cardList.pageInfo.endCursor;
+
+                if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
+                    jsonQuery["query"] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
+                    ColumnList|GitConnectorError columnList = getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString());
+                    match columnList {
+                        ColumnList colList => {
+                            foreach column in colList.getAllColumns() {
+                                if (column.id == cardListColumnId) {
+                                    return column.getCardList();
+                                }
+                            }
+                        }
+
+                        GitConnectorError gitConError => {
+                            return gitConError;
                         }
                     }
-                }
 
-                GitConnectorError gitConError => {
-                    return gitConError;
+                } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
+                    jsonQuery["query"] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
+                    ColumnList|GitConnectorError columnList = getProjectColumns(GIT_REPOSITORY, jsonQuery.toString());
+                    match columnList {
+                        ColumnList colList => {
+                            foreach column in colList.getAllColumns() {
+                                if (column.id == cardListColumnId) {
+                                    return column.getCardList();
+                                }
+                            }
+                        }
+
+                        GitConnectorError gitConError => {
+                            return gitConError;
+                        }
+                    }
                 }
             }
-            
-        } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
-            jsonQuery["query"] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
-            ColumnList|GitConnectorError columnList = getProjectColumns(GIT_REPOSITORY, jsonQuery.toString());
-            match columnList {
-                ColumnList colList => {
-                    foreach column in colList.getAllColumns() {
-                        if (column.id == cardListColumnId) {
-                            return column.getCardList();
-                        }
-                    }
-                }
 
-                GitConnectorError gitConError => {
-                    return gitConError;
-                }
+            GitConnectorError gitConError => {
+                return gitConError;
             }
         }
+
     }
     GitConnectorError connectorError = {message:["Card list has no next page"]};
 
@@ -822,17 +899,26 @@ public function <ColumnList columnList> hasPreviousPage () returns (boolean) {
 public function <ColumnList columnList> nextPage () returns ColumnList|GitConnectorError {
     
     if (columnList.hasNextPage()) {
-        var jsonQuery = <json>columnList.columnListQuery;
-        jsonQuery.variables.endCursorColumns = columnList.pageInfo.endCursor;
-        if (columnList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
-            jsonQuery["query"] = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
+        var convertedQuery = stringToJson(columnList.columnListQuery);
+        match convertedQuery {
+            json jsonQuery => {
+                jsonQuery.variables.endCursorColumns = columnList.pageInfo.endCursor;
+                if (columnList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
+                    jsonQuery["query"] = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
 
-            return getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString());
-        } else if (columnList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
-            jsonQuery["query"] = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
+                    return getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString());
+                } else if (columnList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
+                    jsonQuery["query"] = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
 
-            return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString());
+                    return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString());
+                }
+            }
+
+            GitConnectorError gitConError => {
+                return gitConError;
+            }
         }
+
     }
     GitConnectorError connectorError = {message:["Column list has no next page"]};
 
@@ -967,17 +1053,21 @@ public function <IssueList issueList> hasPreviousPage () returns (boolean) {
 @Return {value:"GitConnectorError: Error"}
 public function <IssueList issueList> nextPage () returns IssueList|GitConnectorError {
     
-    GitConnectorError connectorError = {};
     if (issueList.hasNextPage()) {
-
-
-        var jsonQuery = <json>issueList.issueListQuery;
-        jsonQuery.variables.endCursorIssues = issueList.pageInfo.endCursor;
-        jsonQuery["query"] = GET_REPOSITORY_ISSUES_NEXT_PAGE;
-
-        //Set headers and payload to the request
         http:Request request = {};
-        constructRequest(request, jsonQuery, gitAccessToken);
+        var convertedQuery = stringToJson(issueList.issueListQuery);
+        match convertedQuery {
+            json jsonQuery => {
+                jsonQuery.variables.endCursorIssues = issueList.pageInfo.endCursor;
+                jsonQuery["query"] = GET_REPOSITORY_ISSUES_NEXT_PAGE;
+                //Set headers and payload to the request
+                constructRequest(request, jsonQuery, gitAccessToken);
+            }
+
+            GitConnectorError gitConError => {
+                return gitConError;
+            }
+        }
         
         // Make an HTTP POST request
         var response = gitHTTPClient -> post("", request);
@@ -986,7 +1076,7 @@ public function <IssueList issueList> nextPage () returns IssueList|GitConnector
         json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_ISSUES);
         match validatedResponse {
             json jsonValidatedResponse => {
-                var repositoryIssuesJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
+                var repositoryIssuesJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
                 var issuesList = <IssueList, jsonToIssueList(issueList.issueListQuery)>repositoryIssuesJson;
 
                 return issuesList;
@@ -1102,13 +1192,20 @@ public function <PullRequestList pullRequestList> nextPage () returns PullReques
     
     if (pullRequestList.hasNextPage()) {
 
-        var jsonQuery = <json>pullRequestList.pullrequestListQuery;
-        jsonQuery.variables.endCursorPullRequests = pullRequestList.pageInfo.endCursor;
-        jsonQuery["query"] = GET_PULL_REQUESTS_NEXT_PAGE;
-        
-        //Set headers and payload to the request
         http:Request request = {};
-        constructRequest(request, jsonQuery, gitAccessToken);
+        var convertedQuery = stringToJson(pullRequestList.pullrequestListQuery);
+        match convertedQuery {
+            json jsonQuery => {
+                jsonQuery.variables.endCursorPullRequests = pullRequestList.pageInfo.endCursor;
+                jsonQuery["query"] = GET_PULL_REQUESTS_NEXT_PAGE;
+                //Set headers and payload to the request
+                constructRequest(request, jsonQuery, gitAccessToken);
+            }
+
+            GitConnectorError gitConError => {
+                return gitConError;
+            }
+        }
         
         // Make an HTTP POST request
         var response = gitHTTPClient -> post("", request);
@@ -1118,7 +1215,7 @@ public function <PullRequestList pullRequestList> nextPage () returns PullReques
         
         match validatedResponse {
             json jsonValidatedResponse => {
-                var projectColumnsJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
+                var projectColumnsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
                 var prList = <PullRequestList, jsonToPullRequestList(pullRequestList.pullrequestListQuery)>projectColumnsJson;
 
                 return prList;
