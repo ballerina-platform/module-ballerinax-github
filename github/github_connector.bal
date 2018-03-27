@@ -29,8 +29,8 @@ public struct GitHubConnector {
 
 @Description {value:"Get a repository of an owner"}
 @Param {value:"name: Name of the form owner/repository"}
-@Return {value:"Repository: Repository struct"}
-@Return {value:"error: Error"}
+@Return {value:"Repository: Repository object"}
+@Return {value:"GitConnectorError: Error"}
 public function <GitHubConnector gitHubConnector> getRepository (string name) returns Repository|GitConnectorError {
     endpoint http:ClientEndpoint gitHubEndpoint {
         targets: [{uri:GIT_API_URL}]
@@ -88,7 +88,7 @@ public function <GitHubConnector gitHubConnector> getRepository (string name) re
 
 @Description {value:"Get an organization"}
 @Param {value:"name: Name of the organization"}
-@Return {value:"Organization: Organization struct"}
+@Return {value:"Organization: Organization object"}
 @Return {value:"GitConnectorError: Error"}
 public function <GitHubConnector gitHubConnector> getOrganization (string name) returns Organization|GitConnectorError {
     endpoint http:ClientEndpoint gitHubEndpoint {
