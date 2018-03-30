@@ -27,7 +27,6 @@ import ballerina/util;
 @Param {value:"stringQuery: GraphQL API query"}
 @Param {value:"accessToken: GitHub access token"}
 function constructRequest (http:Request request, json stringQuery, string accessToken) {
-    gitAccessToken = accessToken;
     request.removeAllHeaders();
     request.addHeader("Authorization", "Bearer " + accessToken);
     request.setJsonPayload(stringQuery);
