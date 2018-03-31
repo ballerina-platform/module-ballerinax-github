@@ -267,8 +267,7 @@ public function <GitHubConnector gitHubConnector> getProjectListNextPage (Projec
         match validatedResponse {
             json jsonValidatedResponse => {
                 var projectsJson = jsonValidatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
-                var projList =
-                <ProjectList, jsonToProjectList(projectList.listOwner, dataQuery.toString())>projectsJson;
+                var projList =  jsonToProjectList(projectsJson, projectList.listOwner, dataQuery.toString());
 
                 return projList;
             }
@@ -315,8 +314,7 @@ public function <GitHubConnector gitHubConnector> getRepositoryListNextPage (Rep
         match validatedResponse {
             json jsonValidatedResponse => {
                 var repositoriesJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
-                var repoList =
-                <RepositoryList, jsonToRepositoryList(repositoryList.repositoryListQuery)>repositoriesJson;
+                var repoList =  jsonToRepositoryList(repositoriesJson, repositoryList.repositoryListQuery);
 
                 return repoList;
             }
@@ -377,7 +375,7 @@ returns PullRequestList|GitConnectorError {
     match validatedResponse {
         json jsonValidatedResponse => {
             var githubPullRequestsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
-            var pullRequestList = <PullRequestList, jsonToPullRequestList(stringQuery)>githubPullRequestsJson;
+            var pullRequestList = jsonToPullRequestList(githubPullRequestsJson, stringQuery);
 
             return pullRequestList;
         }
@@ -434,7 +432,7 @@ returns ProjectList|GitConnectorError {
     match validatedResponse {
         json jsonValidatedResponse => {
             var githubProjectsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS];
-            var projectList = <ProjectList, jsonToProjectList(GIT_REPOSITORY, stringQuery)>githubProjectsJson;
+            var projectList = jsonToProjectList(githubProjectsJson, GIT_REPOSITORY, stringQuery);
 
             return projectList;
         }
@@ -540,7 +538,7 @@ returns IssueList|GitConnectorError {
     match validatedResponse {
         json jsonValidatedResponse => {
             var githubIssuesJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
-            var issueList = <IssueList, jsonToIssueList(stringQuery)>githubIssuesJson;
+            var issueList = jsonToIssueList(githubIssuesJson, stringQuery);
 
             return issueList;
         }
@@ -597,7 +595,7 @@ returns ProjectList|GitConnectorError {
     match validatedResponse {
         json jsonValidatedResponse => {
             var githubProjectsJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECTS];
-            var projectList = <ProjectList, jsonToProjectList(GIT_ORGANIZATION, stringQuery)>githubProjectsJson;
+            var projectList = jsonToProjectList(githubProjectsJson, GIT_ORGANIZATION, stringQuery);
 
             return projectList;
         }
@@ -652,7 +650,7 @@ returns RepositoryList|GitConnectorError {
     match validatedResponse {
         json jsonValidatedResponse => {
             var githubRepositoriesJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
-            var repositoryList = <RepositoryList, jsonToRepositoryList(stringQuery)>githubRepositoriesJson;
+            var repositoryList = jsonToRepositoryList(githubRepositoriesJson, stringQuery);
 
             return repositoryList;
         }
@@ -808,7 +806,7 @@ public function <GitHubConnector gitHubConnector> getPullRequestListNextPage (Pu
     if (pullRequestList.hasNextPage()) {
 
         http:Request request = {};
-        var convertedQuery = stringToJson(pullRequestList.pullrequestListQuery);
+        var convertedQuery = stringToJson(pullRequestList.pullRequestListQuery);
         match convertedQuery {
             json jsonQuery => {
                 jsonQuery.variables.endCursorPullRequests = pullRequestList.pageInfo.endCursor;
@@ -831,8 +829,7 @@ public function <GitHubConnector gitHubConnector> getPullRequestListNextPage (Pu
         match validatedResponse {
             json jsonValidatedResponse => {
                 var projectColumnsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
-                var prList =
-                <PullRequestList, jsonToPullRequestList(pullRequestList.pullrequestListQuery)>projectColumnsJson;
+                var prList = jsonToPullRequestList(projectColumnsJson, pullRequestList.pullRequestListQuery);
 
                 return prList;
             }

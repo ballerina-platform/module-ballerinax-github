@@ -46,21 +46,21 @@ public function main (string[] args) {
     //}
     //io:println("=========================================================");
 
-    ////Get a list of projects of an organization
-    //github:ProjectList projectList = {};
-    //github:Organization projectListOrganization = {login:"wso2"};
-    //var responseProjectList = githubConnectorEP -> getOrganizationProjectList(projectListOrganization, 2, github:GIT_STATE_OPEN);
-    //match responseProjectList {
-    //    github:ProjectList prjtList=> {
-    //        projectList = prjtList;
-    //        io:println(projectList);
-    //    }
-    //
-    //    github:GitConnectorError err => {
-    //        io:println(err);
-    //    }
-    //}
-    //io:println("=========================================================");
+    //Get a list of projects of an organization
+    github:ProjectList projectList = {};
+    github:Organization projectListOrganization = {login:"wso2"};
+    var responseProjectList = githubConnectorEP -> getOrganizationProjectList(projectListOrganization, 2, github:GIT_STATE_OPEN);
+    match responseProjectList {
+        github:ProjectList prjtList=> {
+            projectList = prjtList;
+            io:println(projectList);
+        }
+
+        github:GitConnectorError err => {
+            io:println(err);
+        }
+    }
+    io:println("=========================================================");
     //// Next page
     //responseProjectList = githubConnectorEP -> getProjectListNextPage(projectList);
     //    match responseProjectList {
@@ -76,44 +76,44 @@ public function main (string[] args) {
     //io:println("=========================================================");
     //
 
-    //Get project column list
-    github:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
-    columnListProject.owner.setOwnerType("Organization");
-    github:ColumnList columnList = {};
-    var columns = githubConnectorEP -> getProjectColumnList(columnListProject, 2);
-    match columns {
-        github:ColumnList colList => {
-            columnList = colList;
-            io:println(columnList);
-        }
-        github:GitConnectorError err => {
-            io:println(err);
-        }
-    }
-    io:println("=========================================================");
-
-    github:Column column = columnList.getAllColumns()[0];
-
-    github:CardList cardList = column.getCardList();
-    boolean hasNext = true;
-    while (hasNext) {
-       foreach card in cardList.getAllCards() {
-           io:println(card.note);
-           io:println(card.content);
-           io:println("=========================");
-       }
-       hasNext = cardList.hasNextPage();
-       var cdl = githubConnectorEP -> getCardListNextPage(cardList);
-       match cdl {
-           github:CardList cd => {
-               cardList = cd;
-           }
-           github:GitConnectorError err => {
-               io:println(err);
-           }
-       }
-    }
-    io:println("=========================================================");
+    ////Get project column list
+    //github:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
+    //columnListProject.owner.setOwnerType("Organization");
+    //github:ColumnList columnList = {};
+    //var columns = githubConnectorEP -> getProjectColumnList(columnListProject, 2);
+    //match columns {
+    //    github:ColumnList colList => {
+    //        columnList = colList;
+    //        io:println(columnList);
+    //    }
+    //    github:GitConnectorError err => {
+    //        io:println(err);
+    //    }
+    //}
+    //io:println("=========================================================");
+    //
+    //github:Column column = columnList.getAllColumns()[0];
+    //
+    //github:CardList cardList = column.getCardList();
+    //boolean hasNext = true;
+    //while (hasNext) {
+    //   foreach card in cardList.getAllCards() {
+    //       io:println(card.note);
+    //       io:println(card.content);
+    //       io:println("=========================");
+    //   }
+    //   hasNext = cardList.hasNextPage();
+    //   var cdl = githubConnectorEP -> getCardListNextPage(cardList);
+    //   match cdl {
+    //       github:CardList cd => {
+    //           cardList = cd;
+    //       }
+    //       github:GitConnectorError err => {
+    //           io:println(err);
+    //       }
+    //   }
+    //}
+    //io:println("=========================================================");
     //
     ////Get a all the repositories of Organization
     //github:RepositoryList repositoryList = {};

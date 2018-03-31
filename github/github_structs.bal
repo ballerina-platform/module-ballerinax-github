@@ -478,7 +478,7 @@ public struct PullRequest {
 @Description {value:"Represents a list of github pull requests"}
 public struct PullRequestList {
     private:
-        string pullrequestListQuery;
+        string pullRequestListQuery;
         PageInfo pageInfo;
         PullRequest[] nodes;
 }
