@@ -101,6 +101,52 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
     return responsePayload;
 
 }
+@Description {value:"Get all columns of an organization project or repository project"}
+@Param {value:"ownerType: Repository or Organization"}
+@Param {value:"gitQuery: Graphql query"}
+@Return {value:"ColumnList: Column list object"}
+@Return {value:"GitConnectorError: Error"}
+function getProjectColumns (string ownerType, string gitQuery) returns ColumnList|GitConnectorError {
+
+    GitConnectorError connectorError = {};
+
+    if (ownerType == null || ownerType == "" || gitQuery == null || gitQuery == "") {
+        connectorError = {message:["Owner type and query cannot be null"]};
+        return connectorError;
+    }
+
+    http:Request request = {};
+    var convertedQuery = stringToJson(gitQuery);
+    match convertedQuery {
+        json jsonQuery => {
+        //Set headers and payload to the request
+            constructRequest(request, jsonQuery, gitAccessToken);
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
+
+    // Make an HTTP POST request
+    var response = gitHTTPClient -> post("", request);
+
+    //Check for empty payloads and errors
+    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
+
+    match validatedResponse {
+        json jsonValidateResponse => {
+            var projectColumnsJson = jsonValidateResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
+            var columnList = <ColumnList, jsonToColumnList(ownerType, gitQuery)>projectColumnsJson;
+
+            return columnList;
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
+}
 
 @Description {value:"Convert string to json"}
 @Param {value:"source: The string to be converted"}

@@ -15,24 +15,41 @@ public function main (string[] args) {
     github:GitConnectorError e = {};
 
 
-    //Get a single organization
-    github:Organization organization = {};
-    var organizationData = githubConnectorEP -> getOrganization("wso2");
-    match organizationData {
-        github:Organization org => {
-            organization = org;
-            io:println(organization);
-        }
+    ////Get a single organization
+    //github:Organization organization = {};
+    //var organizationData = githubConnectorEP -> getOrganization("wso2");
+    //match organizationData {
+    //    github:Organization org => {
+    //        organization = org;
+    //        io:println(organization);
+    //    }
+    //
+    //    github:GitConnectorError err => {
+    //        io:println(err);
+    //    }
+    //}
+    //io:println("=========================================================");
 
-        github:GitConnectorError err => {
-            io:println(err);
-        }
-    }
-    io:println("=========================================================");
-    
+    //// Get an organization project
+    //github:Project orgProject = {};
+    //github:Organization projectOrganization = {login:"wso2"};
+    //var projectData = githubConnectorEP -> getOrganizationProject(projectOrganization, 1);
+    //match projectData {
+    //    github:Project proj => {
+    //        orgProject = proj;
+    //        io:println(orgProject);
+    //    }
+    //
+    //    github:GitConnectorError err => {
+    //        io:println(err);
+    //    }
+    //}
+    //io:println("=========================================================");
+
     ////Get a list of projects of an organization
     //github:ProjectList projectList = {};
-    //var responseProjectList = organization.getProjectList(2, github:GIT_STATE_OPEN);
+    //github:Organization projectListOrganization = {login:"wso2"};
+    //var responseProjectList = githubConnectorEP -> getOrganizationProjectList(projectListOrganization, 2, github:GIT_STATE_OPEN);
     //match responseProjectList {
     //    github:ProjectList prjtList=> {
     //        projectList = prjtList;
@@ -45,7 +62,7 @@ public function main (string[] args) {
     //}
     //io:println("=========================================================");
     //// Next page
-    //responseProjectList = projectList.nextPage();
+    //responseProjectList = githubConnectorEP -> getProjectListNextPage(projectList);
     //    match responseProjectList {
     //    github:ProjectList prjtList=> {
     //        projectList = prjtList;
@@ -58,56 +75,45 @@ public function main (string[] args) {
     //}
     //io:println("=========================================================");
     //
-     //Get Organization Project
-     github:Project orgProject = {};
-     var singleProject = organization.getProject(1);
-     match singleProject {
-         github:Project prjt => {
-             orgProject = prjt;
-             io:println(orgProject);
-         }
-         github:GitConnectorError err => {
+
+    //Get project column list
+    github:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
+    columnListProject.owner.setOwnerType("Organization");
+    github:ColumnList columnList = {};
+    var columns = githubConnectorEP -> getProjectColumnList(columnListProject, 2);
+    match columns {
+        github:ColumnList colList => {
+            columnList = colList;
+            io:println(columnList);
+        }
+        github:GitConnectorError err => {
             io:println(err);
         }
-     }
+    }
     io:println("=========================================================");
-    //
-    ////Get project column list
-    //github:ColumnList columnList = {};
-    //var columns = orgProject.getColumnList(2);
-    //match columns {
-    //    github:ColumnList colList => {
-    //        columnList = colList;
-    //        io:println(columnList);
-    //    }
-    //    github:GitConnectorError err => {
-    //        io:println(err);
-    //    }
-    //}
-    //io:println("=========================================================");
-    //
-    //github:Column column = columnList.getAllColumns()[0];
-    //
-    //github:CardList cardList = column.getCardList();
-    //boolean hasNext = true;
-    //while (hasNext) {
-    //   foreach card in cardList.getAllCards() {
-    //       io:println(card.note);
-    //       io:println(card.content);
-    //       io:println("=========================");
-    //   }
-    //   hasNext = cardList.hasNextPage();
-    //   var cdl = cardList.nextPage();
-    //   match cdl {
-    //       github:CardList cd => {
-    //           cardList = cd;
-    //       }
-    //       github:GitConnectorError err => {
-    //           io:println(err);
-    //       }
-    //   }
-    //}
-    //io:println("=========================================================");
+
+    github:Column column = columnList.getAllColumns()[0];
+
+    github:CardList cardList = column.getCardList();
+    boolean hasNext = true;
+    while (hasNext) {
+       foreach card in cardList.getAllCards() {
+           io:println(card.note);
+           io:println(card.content);
+           io:println("=========================");
+       }
+       hasNext = cardList.hasNextPage();
+       var cdl = githubConnectorEP -> getCardListNextPage(cardList);
+       match cdl {
+           github:CardList cd => {
+               cardList = cd;
+           }
+           github:GitConnectorError err => {
+               io:println(err);
+           }
+       }
+    }
+    io:println("=========================================================");
     //
     ////Get a all the repositories of Organization
     //github:RepositoryList repositoryList = {};
@@ -135,20 +141,20 @@ public function main (string[] args) {
     //    }
     //}
     //io:println("=========================================================");
-    //
-    //Get a single repository
-    github:Repository repository = {};
-    var repo = githubConnectorEP -> getRepository("wso2/product-apim");
-    match repo {
-        github:Repository rep => {
-            repository = rep;
-            io:println(repository);
-        }
-        github:GitConnectorError err => {
-            io:println(err);
-        }
-    }
-    io:println("=========================================================");
+
+    ////Get a single repository
+    //github:Repository repository = {};
+    //var repo = githubConnectorEP -> getRepository("wso2/product-apim");
+    //match repo {
+    //    github:Repository rep => {
+    //        repository = rep;
+    //        io:println(repository);
+    //    }
+    //    github:GitConnectorError err => {
+    //        io:println(err);
+    //    }
+    //}
+    //io:println("=========================================================");
     //
     //
     ////Get a list of projects of a repository
