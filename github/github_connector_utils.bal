@@ -137,7 +137,7 @@ function getProjectColumns (string ownerType, string gitQuery) returns ColumnLis
     match validatedResponse {
         json jsonValidateResponse => {
             var projectColumnsJson = jsonValidateResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
-            var columnList = <ColumnList, jsonToColumnList(ownerType, gitQuery)>projectColumnsJson;
+            var columnList = jsonToColumnList(projectColumnsJson, ownerType, gitQuery);
 
             return columnList;
         }

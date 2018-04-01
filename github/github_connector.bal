@@ -147,7 +147,8 @@ public function <GitHubConnector gitHubConnector> getOrganization (string name) 
 @Param {value: "recordCount: Specify number of records in the list"}
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getProjectColumnList (Project project, int recordCount) returns ColumnList|GitConnectorError {
+public function <GitHubConnector gitHubConnector> getProjectColumnList (Project project, int recordCount)
+                                                                                returns ColumnList|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -185,7 +186,8 @@ public function <GitHubConnector gitHubConnector> getProjectColumnList (Project 
 @Param {value:"projectNumber: The number of the project"}
 @Return {value:"Project object"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getOrganizationProject (Organization organization, int projectNumber) returns Project|GitConnectorError {
+public function <GitHubConnector gitHubConnector> getOrganizationProject (Organization organization, int projectNumber)
+                                                                                    returns Project|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -233,7 +235,8 @@ public function <GitHubConnector gitHubConnector> getOrganizationProject (Organi
 @Description {value:"Gets the next page of a project list"}
 @Return {value:"ProjectList: Project list"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getProjectListNextPage (ProjectList projectList) returns ProjectList|GitConnectorError {
+public function <GitHubConnector gitHubConnector> getProjectListNextPage (ProjectList projectList)
+                                                                                returns ProjectList|GitConnectorError {
 
     if (projectList.hasNextPage()) {
 
@@ -286,7 +289,8 @@ public function <GitHubConnector gitHubConnector> getProjectListNextPage (Projec
 @Description {value:"Get the next page of a repository list"}
 @Return {value:"RepositoryList: Repository list"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getRepositoryListNextPage (RepositoryList repositoryList) returns RepositoryList|GitConnectorError {
+public function <GitHubConnector gitHubConnector> getRepositoryListNextPage (RepositoryList repositoryList)
+                                                                            returns RepositoryList|GitConnectorError {
 
     if (repositoryList.hasNextPage()) {
 
@@ -334,8 +338,8 @@ public function <GitHubConnector gitHubConnector> getRepositoryListNextPage (Rep
 @Param {value: "recordCount: Specify number of records in the list"}
 @Return {value:"PullRequestList: Pull request list"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getPullRequestList (Repository repository, int recordCount, string state)
-returns PullRequestList|GitConnectorError {
+public function <GitHubConnector gitHubConnector> getPullRequestList
+                    (Repository repository, string state, int recordCount) returns PullRequestList|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -391,8 +395,8 @@ returns PullRequestList|GitConnectorError {
 @Param {value: "recordCount: Specify number of records in the list"}
 @Return {value:"ProjectList: Project list"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getRepositoryProjectList (Repository repository, int recordCount, string state)
-returns ProjectList|GitConnectorError {
+public function <GitHubConnector gitHubConnector> getRepositoryProjectList
+                        (Repository repository, string state, int recordCount) returns ProjectList|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -447,7 +451,8 @@ returns ProjectList|GitConnectorError {
 @Param {value:"projectNumber: The number of the project"}
 @Return {value:"Project object"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getRepositoryProject (Repository repository, int projectNumber) returns Project|GitConnectorError {
+public function <GitHubConnector gitHubConnector> getRepositoryProject (Repository repository, int projectNumber)
+                                                                                    returns Project|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -498,8 +503,8 @@ public function <GitHubConnector gitHubConnector> getRepositoryProject (Reposito
 @Param {value: "recordCount: Specify number of records in the list"}
 @Return {value:"IssueList: Issue list"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getIssueList (Repository repository, int recordCount, string state)
-returns IssueList|GitConnectorError {
+public function <GitHubConnector gitHubConnector> getIssueList (Repository repository, string state, int recordCount)
+                                                                                returns IssueList|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -554,8 +559,8 @@ returns IssueList|GitConnectorError {
 @Param {value: "recordCount: Specify number of records in the list"}
 @Return {value:"ProjectList: Project list"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getOrganizationProjectList (Organization organization, int recordCount, string state)
-returns ProjectList|GitConnectorError {
+public function <GitHubConnector gitHubConnector> getOrganizationProjectList
+                    (Organization organization, string state, int recordCount) returns ProjectList|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -610,8 +615,8 @@ returns ProjectList|GitConnectorError {
 @Param {value: "recordCount: Specify number of records in the list"}
 @Return {value:"RepositoryList: Repository list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getOrganizationRepositoryList (Organization organization, int recordCount)
-returns RepositoryList|GitConnectorError {
+public function <GitHubConnector gitHubConnector> getOrganizationRepositoryList
+                                (Organization organization, int recordCount) returns RepositoryList|GitConnectorError {
 
     GitConnectorError connectorError = {};
 
@@ -664,7 +669,8 @@ returns RepositoryList|GitConnectorError {
 @Description {value:"Get the next page of the card list"}
 @Return {value:"CardList: Card list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getCardListNextPage (CardList cardList) returns CardList|GitConnectorError {
+public function <GitHubConnector gitHubConnector> getCardListNextPage (CardList cardList)
+                                                                                returns CardList|GitConnectorError {
 
     if (cardList.hasNextPage()) {
         var cardListColumnId = cardList.columnId;
@@ -723,7 +729,8 @@ public function <GitHubConnector gitHubConnector> getCardListNextPage (CardList 
 @Description {value:"Get the next page of column list"}
 @Return {value:"ColumList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getColumnListNextPage (ColumnList columnList) returns ColumnList|GitConnectorError {
+public function <GitHubConnector gitHubConnector> getColumnListNextPage (ColumnList columnList)
+                                                                                returns ColumnList|GitConnectorError {
 
     if (columnList.hasNextPage()) {
         var convertedQuery = stringToJson(columnList.columnListQuery);
@@ -755,7 +762,8 @@ public function <GitHubConnector gitHubConnector> getColumnListNextPage (ColumnL
 @Description {value:"Get the next page of the issue list"}
 @Return {value:"IssueList: Issue list"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getIssueListNextPage (IssueList issueList) returns IssueList|GitConnectorError {
+public function <GitHubConnector gitHubConnector> getIssueListNextPage (IssueList issueList)
+                                                                                returns IssueList|GitConnectorError {
 
     if (issueList.hasNextPage()) {
         http:Request request = {};
@@ -781,7 +789,7 @@ public function <GitHubConnector gitHubConnector> getIssueListNextPage (IssueLis
         match validatedResponse {
             json jsonValidatedResponse => {
                 var repositoryIssuesJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
-                var issuesList = <IssueList, jsonToIssueList(issueList.issueListQuery)>repositoryIssuesJson;
+                var issuesList = jsonToIssueList(repositoryIssuesJson, issueList.issueListQuery);
 
                 return issuesList;
             }
@@ -801,7 +809,8 @@ public function <GitHubConnector gitHubConnector> getIssueListNextPage (IssueLis
 @Description {value:"Get the next page of the pull request list"}
 @Return {value:"PullRequestList: PullRequest list object"}
 @Return {value:"GitConnectorError: Error"}
-public function <GitHubConnector gitHubConnector> getPullRequestListNextPage (PullRequestList pullRequestList) returns PullRequestList|GitConnectorError {
+public function <GitHubConnector gitHubConnector> getPullRequestListNextPage (PullRequestList pullRequestList)
+                                                                            returns PullRequestList|GitConnectorError {
 
     if (pullRequestList.hasNextPage()) {
 
