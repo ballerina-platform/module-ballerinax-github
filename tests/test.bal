@@ -1,6 +1,7 @@
 package tests;
 
 import ballerina/io;
+import ballerina/log;
 import ballerina/net.http;
 import ballerina/test;
 import wso2/github;
@@ -14,7 +15,7 @@ endpoint github:GitHubConnectorEndpoint githubConnectorEP {
 }
 function testGetOrganization () {
     //Get a single organization
-    io:println("githubConnectorEP -> getOrganization()");
+    log:printInfo("githubConnectorEP -> getOrganization()");
     github:Organization organization = {};
     var organizationData = githubConnectorEP -> getOrganization("wso2");
     match organizationData {
@@ -35,7 +36,7 @@ function testGetOrganization () {
 }
 function testGetOrganizationProject () {
     // Get an organization project
-    io:println("githubConnectorEP -> getOrganizationProject()");
+    log:printInfo("githubConnectorEP -> getOrganizationProject()");
     github:Project orgProject = {};
     github:Organization projectOrganization = {login:"wso2"};
     var projectData = githubConnectorEP -> getOrganizationProject(projectOrganization, 1);
@@ -57,7 +58,7 @@ function testGetOrganizationProject () {
 }
 function testGetOrganizationProjectList () {
     //Get a list of projects of an organization
-    io:println("githubConnectorEP -> getOrganizationProjectList()");
+    log:printInfo("githubConnectorEP -> getOrganizationProjectList()");
     int recordCount = 2;
     github:ProjectList projectList = {};
     github:Organization projectListOrganization = {login:"wso2"};
@@ -83,7 +84,7 @@ function testGetOrganizationProjectList () {
 }
 function testGetOrganizationProjectListNextPage () {
     //Get a list of projects of an organization
-    io:println("githubConnectorEP -> getOrganizationProjectListNextPage()");
+    log:printInfo("githubConnectorEP -> getOrganizationProjectListNextPage()");
     int recordCount = 2;
     github:ProjectList projectList = {};
     github:Organization projectListOrganization = {login:"wso2"};
@@ -119,7 +120,7 @@ function testGetOrganizationProjectListNextPage () {
 }
 function testGetProjectColumnList () {
     //Get project column list
-    io:println("githubConnectorEP -> getProjectColumnList()");
+    log:printInfo("githubConnectorEP -> getProjectColumnList()");
     int recordCount = 2;
     github:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
     columnListProject.owner.setOwnerType("Organization");
@@ -144,7 +145,7 @@ function testGetProjectColumnList () {
 }
 function testGetCardListOfColumn () {
     //Get column card list
-    io:println("column.getCardList()");
+    log:printInfo("column.getCardList()");
     int recordCount = 2;
     github:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
     columnListProject.owner.setOwnerType("Organization");
@@ -171,7 +172,7 @@ function testGetCardListOfColumn () {
 }
 function testGetCardListNextPage () {
     //Get card list next page
-    io:println("githubConnectorEP -> getCardListNextPage()");
+    log:printInfo("githubConnectorEP -> getCardListNextPage()");
     int recordCount = 2;
     github:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
     columnListProject.owner.setOwnerType("Organization");
@@ -206,7 +207,7 @@ function testGetCardListNextPage () {
 }
 function testGetOrganizationRepositoryList () {
     //Get a all the repositories of Organization
-    io:println("githubConnectorEP -> getOrganizationRepositoryList()");
+    log:printInfo("githubConnectorEP -> getOrganizationRepositoryList()");
     int recordCount = 2;
     github:Organization repositoryListOrganization = {login:"wso2"};
     github:RepositoryList repositoryList = {};
@@ -230,7 +231,7 @@ function testGetOrganizationRepositoryList () {
 }
 function testGetOrganizationRepositoryListNextPage () {
     //Get a all the repositories of Organization
-    io:println("githubConnectorEP -> getRepositoryListNextPage()");
+    log:printInfo("githubConnectorEP -> getRepositoryListNextPage()");
     int recordCount = 2;
     github:Organization repositoryListOrganization = {login:"wso2"};
     github:RepositoryList repositoryList = {};
@@ -264,7 +265,7 @@ function testGetOrganizationRepositoryListNextPage () {
 }
 function testGetRepository () {
     //Get a single repository
-    io:println("githubConnectorEP -> getRepository()");
+    log:printInfo("githubConnectorEP -> getRepository()");
     github:Repository repository = {};
     var repo = githubConnectorEP -> getRepository("wso2/product-apim");
     match repo {
@@ -284,7 +285,7 @@ function testGetRepository () {
 }
 function testGetRepositoryProject () {
     //Get a Repository Project
-    io:println("githubConnectorEP -> getRepositoryProject()");
+    log:printInfo("githubConnectorEP -> getRepositoryProject()");
     github:Repository projectRepository = {owner:{login:"wso2"}, name:"testgrid"};
     github:Project repositoryProject = {};
     var singleRepoProject = githubConnectorEP -> getRepositoryProject(projectRepository, 1);
@@ -305,7 +306,7 @@ function testGetRepositoryProject () {
 }
 function testGetRepositoryProjectList () {
     //Get a list of projects of a repository
-    io:println("githubConnectorEP -> getRepositoryProjectList()");
+    log:printInfo("githubConnectorEP -> getRepositoryProjectList()");
     int recordCount = 1;
     github:Repository projectRepositoryList = {name:"testgrid", owner:{login:"wso2"}};
     github:ProjectList repoProjectList = {};
@@ -330,7 +331,7 @@ function testGetRepositoryProjectList () {
 }
 function testGetRepositoryProjectListNextPage () {
     //Get a list of projects of a repository
-    io:println("githubConnectorEP -> getProjectListNextPage()");
+    log:printInfo("githubConnectorEP -> getProjectListNextPage()");
     int recordCount = 1;
     github:Repository projectRepository = {name:"ProLAd-ExpertSystem", owner:{login:"vlgunarathne"}};
     github:ProjectList repoProjectList = {};
@@ -364,7 +365,7 @@ function testGetRepositoryProjectListNextPage () {
 }
 function testGetPullRequestList () {
     //Get a list of pull requests in a repository
-    io:println("githubConnectorEP -> getPullRequestList()");
+    log:printInfo("githubConnectorEP -> getPullRequestList()");
     int recordCount = 2;
     github:Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
     github:PullRequestList pullRequestList = {};
@@ -388,7 +389,7 @@ function testGetPullRequestList () {
 }
 function testGetPullRequestListNextPage () {
     //Get a list of pull requests in a repository
-    io:println("githubConnectorEP -> getPullRequestListNextPage()");
+    log:printInfo("githubConnectorEP -> getPullRequestListNextPage()");
     int recordCount = 2;
     github:Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
     github:PullRequestList pullRequestList = {};
@@ -421,7 +422,7 @@ function testGetPullRequestListNextPage () {
 }
 function testGetIssueList () {
     //Get a list of issues of a repository
-    io:println("githubConnectorEP -> getIssueList()");
+    log:printInfo("githubConnectorEP -> getIssueList()");
     int recordCount = 2;
     github:Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
     github:IssueList issueList = {};
@@ -445,7 +446,7 @@ function testGetIssueList () {
 }
 function testGetIssueListNextPage () {
     //Get a list of issues of a repository
-    io:println("githubConnectorEP -> getIssueListNextPage()");
+    log:printInfo("githubConnectorEP -> getIssueListNextPage()");
     int recordCount = 2;
     github:Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
     github:IssueList issueList = {};
@@ -477,7 +478,7 @@ function testGetIssueListNextPage () {
     groups:["struct-bound-functions"]
 }
 function testRepositoryListHasNextPage () {
-    io:println("RepositoryList.hasNextPage()");
+    log:printInfo("RepositoryList.hasNextPage()");
     github:RepositoryList repositoryList = {};
 
     test:assertFalse(repositoryList.hasNextPage(), msg = "Failed RepositoryList.hasNextPage()");
@@ -487,7 +488,7 @@ function testRepositoryListHasNextPage () {
     groups:["struct-bound-functions"]
 }
 function testRepositoryListHasPreviousPage () {
-    io:println("RepositoryList.hasPreviousPage()");
+    log:printInfo("RepositoryList.hasPreviousPage()");
     github:RepositoryList repositoryList = {};
 
     test:assertFalse(repositoryList.hasPreviousPage(), msg = "Failed RepositoryList.hasPreviousPage()");
@@ -497,7 +498,7 @@ function testRepositoryListHasPreviousPage () {
     groups:["struct-bound-functions"]
 }
 function testRepositoryListGetAllRepositories () {
-    io:println("RepositoryList.getAllRepositories()");
+    log:printInfo("RepositoryList.getAllRepositories()");
     github:RepositoryList repositoryList = {};
     github:Repository[]|null repoArray = repositoryList.getAllRepositories();
 
@@ -508,7 +509,7 @@ function testRepositoryListGetAllRepositories () {
     groups:["struct-bound-functions"]
 }
 function testProjectListHasNextPage () {
-    io:println("ProjectList.hasNextPage()");
+    log:printInfo("ProjectList.hasNextPage()");
     github:ProjectList projectList = {};
 
     test:assertFalse(projectList.hasNextPage(), msg = "Failed ProjectList.hasNextPage()");
@@ -518,7 +519,7 @@ function testProjectListHasNextPage () {
     groups:["struct-bound-functions"]
 }
 function testProjectListHasPreviousPage () {
-    io:println("ProjectList.hasPreviousPage()");
+    log:printInfo("ProjectList.hasPreviousPage()");
     github:ProjectList projectList = {};
 
     test:assertFalse(projectList.hasPreviousPage(), msg = "Failed ProjectList.hasPreviousPage()");
@@ -528,7 +529,7 @@ function testProjectListHasPreviousPage () {
     groups:["struct-bound-functions"]
 }
 function testProjectListGetAllProjects () {
-    io:println("ProjectList.getAllRepositories()");
+    log:printInfo("ProjectList.getAllRepositories()");
     github:ProjectList projectList = {};
     github:Project[]|null projectArray = projectList.getAllProjects();
 
@@ -539,7 +540,7 @@ function testProjectListGetAllProjects () {
     groups:["struct-bound-functions"]
 }
 function testColumnGetCardList () {
-    io:println("Column.getCardList()");
+    log:printInfo("Column.getCardList()");
     github:Column column = {};
     github:CardList|null cardList = column.getCardList();
 
@@ -550,7 +551,7 @@ function testColumnGetCardList () {
     groups:["struct-bound-functions"]
 }
 function testColumnListHasNextPage () {
-    io:println("ColumnList.hasNextPage()");
+    log:printInfo("ColumnList.hasNextPage()");
     github:ColumnList columnList = {};
 
     test:assertFalse(columnList.hasNextPage(), msg = "Failed ColumnList.hasNextPage()");
@@ -560,7 +561,7 @@ function testColumnListHasNextPage () {
     groups:["struct-bound-functions"]
 }
 function testColumnListHasPreviousPage () {
-    io:println("ColumnList.hasPreviousPage()");
+    log:printInfo("ColumnList.hasPreviousPage()");
     github:ColumnList columnList = {};
 
     test:assertFalse(columnList.hasPreviousPage(), msg = "Failed ColumnList.hasPreviousPage()");
@@ -570,7 +571,7 @@ function testColumnListHasPreviousPage () {
     groups:["struct-bound-functions"]
 }
 function testColumnListGetAllColumns () {
-    io:println("ColumnList.getAllColumns()");
+    log:printInfo("ColumnList.getAllColumns()");
     github:ColumnList columnList = {};
     github:Column[]|null columnArray = columnList.getAllColumns();
 
@@ -581,7 +582,7 @@ function testColumnListGetAllColumns () {
     groups:["struct-bound-functions"]
 }
 function testCardListHasNextPage () {
-    io:println("CardList.hasNextPage()");
+    log:printInfo("CardList.hasNextPage()");
     github:CardList cardList = {};
 
     test:assertFalse(cardList.hasNextPage(), msg = "Failed CardList.hasNextPage()");
@@ -591,7 +592,7 @@ function testCardListHasNextPage () {
     groups:["struct-bound-functions"]
 }
 function testCardListHasPreviousPage () {
-    io:println("CardList.hasPreviousPage()");
+    log:printInfo("CardList.hasPreviousPage()");
     github:CardList cardList = {};
 
     test:assertFalse(cardList.hasPreviousPage(), msg = "Failed CardList.hasPreviousPage()");
@@ -601,7 +602,7 @@ function testCardListHasPreviousPage () {
     groups:["struct-bound-functions"]
 }
 function testCardListGetAllCards () {
-    io:println("CardList.getAllCards()");
+    log:printInfo("CardList.getAllCards()");
     github:CardList cardList = {};
     github:Card[]|null cardArray = cardList.getAllCards();
 
@@ -612,7 +613,7 @@ function testCardListGetAllCards () {
     groups:["struct-bound-functions"]
 }
 function testPullRequestListHasNextPage () {
-    io:println("PullRequestList.hasNextPage()");
+    log:printInfo("PullRequestList.hasNextPage()");
     github:PullRequestList pullRequestList = {};
 
     test:assertFalse(pullRequestList.hasNextPage(), msg = "Failed PullRequestList.hasNextPage()");
@@ -622,7 +623,7 @@ function testPullRequestListHasNextPage () {
     groups:["struct-bound-functions"]
 }
 function testPullRequestListHasPreviousPage () {
-    io:println("PullRequestList.hasPreviousPage()");
+    log:printInfo("PullRequestList.hasPreviousPage()");
     github:PullRequestList pullRequestList = {};
 
     test:assertFalse(pullRequestList.hasPreviousPage(), msg = "Failed PullRequestList.hasPreviousPage()");
@@ -632,7 +633,7 @@ function testPullRequestListHasPreviousPage () {
     groups:["struct-bound-functions"]
 }
 function testPullRequestListGetAllPullRequests () {
-    io:println("PullRequestList.getAllPullRequests()");
+    log:printInfo("PullRequestList.getAllPullRequests()");
     github:PullRequestList pullRequestList = {};
     github:PullRequest[]|null pullRequestArray = pullRequestList.getAllPullRequests();
 
@@ -644,7 +645,7 @@ function testPullRequestListGetAllPullRequests () {
     groups:["struct-bound-functions"]
 }
 function testIssueListHasNextPage () {
-    io:println("IssueList.hasNextPage()");
+    log:printInfo("IssueList.hasNextPage()");
     github:IssueList issueList = {};
 
     test:assertFalse(issueList.hasNextPage(), msg = "Failed IssueList.hasNextPage()");
@@ -654,7 +655,7 @@ function testIssueListHasNextPage () {
     groups:["struct-bound-functions"]
 }
 function testIssueListHasPreviousPage () {
-    io:println("IssueList.hasPreviousPage()");
+    log:printInfo("IssueList.hasPreviousPage()");
     github:IssueList issueList = {};
 
     test:assertFalse(issueList.hasPreviousPage(), msg = "Failed IssueList.hasPreviousPage()");
@@ -664,7 +665,7 @@ function testIssueListHasPreviousPage () {
     groups:["struct-bound-functions"]
 }
 function testIssueListGetAllIssues () {
-    io:println("IssueList.getAllIssues()");
+    log:printInfo("IssueList.getAllIssues()");
     github:IssueList issueList = {};
     github:Issue[]|null issueArray = issueList.getAllIssues();
 
@@ -675,7 +676,7 @@ function testIssueListGetAllIssues () {
     groups:["struct-bound-functions"]
 }
 function testLabelListGetAllLabels () {
-    io:println("LabelList.getAllLabels()");
+    log:printInfo("LabelList.getAllLabels()");
     github:LabelList labelList = {};
     github:Label[]|null labelArray = labelList.getAllLabels();
 
@@ -686,6 +687,7 @@ function testLabelListGetAllLabels () {
     groups:["struct-bound-functions"]
 }
 function testProjectOwnerGetOwnerType () {
+    log:printInfo("ProjectOwner.getOwnerType()");
     github:ProjectOwner projectOwner = {};
 
     test:assertEquals(typeof projectOwner.getOwnerType(), typeof string, msg = "Failed ProjectOwner.getOwnerType()");
@@ -695,6 +697,7 @@ function testProjectOwnerGetOwnerType () {
     groups:["struct-bound-functions"]
 }
 function testProjectOwnerSetOwnerType () {
+    log:printInfo("ProjectOwner.setOwnerType()");
     github:ProjectOwner projectOwner = {};
     projectOwner.setOwnerType("Organization");
     string ownerType = projectOwner.getOwnerType();
