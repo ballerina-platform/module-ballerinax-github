@@ -21,9 +21,6 @@ package github;
 import ballerina/io;
 import ballerina/net.http;
 
-endpoint http:ClientEndpoint gitHTTPClient {
-    targets:[{uri:GIT_API_URL}]
-};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              Organization struct                                                  //

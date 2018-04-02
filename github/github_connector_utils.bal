@@ -129,7 +129,7 @@ function getProjectColumns (string ownerType, string gitQuery) returns ColumnLis
     }
 
     // Make an HTTP POST request
-    var response = gitHTTPClient -> post("", request);
+    var response = gitHubEndpoint -> post("", request);
 
     //Check for empty payloads and errors
     json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECT);

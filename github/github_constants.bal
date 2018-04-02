@@ -22,7 +22,7 @@ package github;
 
 
 //String constants
-const string GIT_API_URL = "https://api.github.com/graphql";
+const string GIT_GRAPHQL_API_URL = "https://api.github.com/graphql";
 const string GIT_CARDS = "cards";
 const string GIT_COLUMNS = "columns";
 const string GIT_DATA = "data";
