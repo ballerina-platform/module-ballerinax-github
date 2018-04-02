@@ -636,7 +636,8 @@ function testPullRequestListGetAllPullRequests () {
     github:PullRequestList pullRequestList = {};
     github:PullRequest[]|null pullRequestArray = pullRequestList.getAllPullRequests();
 
-    test:assertEquals(typeof pullRequestArray, typeof github:PullRequest[], msg = "Failed PullRequestList.getAllPullRequests()");
+    test:assertEquals(typeof pullRequestArray, typeof github:PullRequest[],
+                      msg = "Failed PullRequestList.getAllPullRequests()");
 }
 
 @test:Config {
