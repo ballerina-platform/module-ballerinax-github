@@ -9,7 +9,9 @@ endpoint github:GitHubConnectorEndpoint githubConnectorEP {
     accessToken:getAccessToken()
 };
 
-@test:Config
+@test:Config {
+    groups:["network-calls"]
+}
 function testGetOrganization () {
     //Get a single organization
     io:println("githubConnectorEP -> getOrganization()");
@@ -28,7 +30,9 @@ function testGetOrganization () {
     test:assertEquals(organization.name, "WSO2", msg = "Failed getOrganization()");
 }
 
-@test:Config
+@test:Config {
+    groups:["network-calls"]
+}
 function testGetOrganizationProject () {
     // Get an organization project
     io:println("githubConnectorEP -> getOrganizationProject()");
@@ -48,7 +52,9 @@ function testGetOrganizationProject () {
     test:assertEquals(orgProject.number, 1, msg = "Failed getOrganizationProject()");
 }
 
-@test:Config
+@test:Config {
+    groups:["network-calls"]
+}
 function testGetOrganizationProjectList () {
     //Get a list of projects of an organization
     io:println("githubConnectorEP -> getOrganizationProjectList()");
@@ -72,7 +78,8 @@ function testGetOrganizationProjectList () {
 }
 
 @test:Config {
-    dependsOn:["testGetOrganizationProjectList"]
+    dependsOn:["testGetOrganizationProjectList"],
+    groups:["network-calls"]
 }
 function testGetOrganizationProjectListNextPage () {
     //Get a list of projects of an organization
@@ -107,7 +114,9 @@ function testGetOrganizationProjectListNextPage () {
     test:assertTrue(lengthEqualsRecords, msg = "Failed getProjectListNextPage()");
 }
 
-@test:Config
+@test:Config {
+    groups:["network-calls"]
+}
 function testGetProjectColumnList () {
     //Get project column list
     io:println("githubConnectorEP -> getProjectColumnList()");
@@ -130,7 +139,8 @@ function testGetProjectColumnList () {
 }
 
 @test:Config {
-    dependsOn:["testGetProjectColumnList"]
+    dependsOn:["testGetProjectColumnList"],
+    groups:["network-calls"]
 }
 function testGetCardListOfColumn () {
     //Get column card list
@@ -156,7 +166,8 @@ function testGetCardListOfColumn () {
 }
 
 @test:Config {
-    dependsOn:["testGetCardListOfColumn"]
+    dependsOn:["testGetCardListOfColumn"],
+    groups:["network-calls"]
 }
 function testGetCardListNextPage () {
     //Get card list next page
@@ -190,7 +201,9 @@ function testGetCardListNextPage () {
     test:assertTrue(lengthEqualsRecords, msg = "Failed getCardListNextPage()");
 }
 
-@test:Config
+@test:Config {
+    groups:["network-calls"]
+}
 function testGetOrganizationRepositoryList () {
     //Get a all the repositories of Organization
     io:println("githubConnectorEP -> getOrganizationRepositoryList()");
@@ -212,7 +225,8 @@ function testGetOrganizationRepositoryList () {
 }
 
 @test:Config {
-    dependsOn:["testGetOrganizationRepositoryList"]
+    dependsOn:["testGetOrganizationRepositoryList"],
+    groups:["network-calls"]
 }
 function testGetOrganizationRepositoryListNextPage () {
     //Get a all the repositories of Organization
@@ -245,7 +259,9 @@ function testGetOrganizationRepositoryListNextPage () {
     test:assertTrue(lengthEqualsRecords, msg = "Failed getRepositoryListNextPage()");
 }
 
-@test:Config
+@test:Config {
+    groups:["network-calls"]
+}
 function testGetRepository () {
     //Get a single repository
     io:println("githubConnectorEP -> getRepository()");
@@ -263,7 +279,9 @@ function testGetRepository () {
     test:assertEquals(repository.name, "product-apim", msg = "Failed getRepository()");
 }
 
-@test:Config
+@test:Config {
+    groups:["network-calls"]
+}
 function testGetRepositoryProject () {
     //Get a Repository Project
     io:println("githubConnectorEP -> getRepositoryProject()");
@@ -282,7 +300,9 @@ function testGetRepositoryProject () {
     test:assertEquals(repositoryProject.name, "TestGrid", msg = "Failed getRepositoryProject()");
 }
 
-@test:Config
+@test:Config {
+    groups:["network-calls"]
+}
 function testGetRepositoryProjectList () {
     //Get a list of projects of a repository
     io:println("githubConnectorEP -> getRepositoryProjectList()");
@@ -305,7 +325,8 @@ function testGetRepositoryProjectList () {
 }
 
 @test:Config {
-    dependsOn:["testGetRepositoryProjectList"]
+    dependsOn:["testGetRepositoryProjectList"],
+    groups:["network-calls"]
 }
 function testGetRepositoryProjectListNextPage () {
     //Get a list of projects of a repository
@@ -338,7 +359,9 @@ function testGetRepositoryProjectListNextPage () {
     test:assertTrue(lengthEqualsRecords, msg = "Failed getProjectListNextPage()");
 }
 
-@test:Config
+@test:Config {
+    groups:["network-calls"]
+}
 function testGetPullRequestList () {
     //Get a list of pull requests in a repository
     io:println("githubConnectorEP -> getPullRequestList()");
@@ -360,7 +383,8 @@ function testGetPullRequestList () {
 }
 
 @test:Config {
-    dependsOn:["testGetPullRequestList"]
+    dependsOn:["testGetPullRequestList"],
+    groups:["network-calls"]
 }
 function testGetPullRequestListNextPage () {
     //Get a list of pull requests in a repository
@@ -392,7 +416,9 @@ function testGetPullRequestListNextPage () {
     test:assertTrue(lengthEqualsRecords, msg = "Failed getPullRequestListNextPage()");
 }
 
-@test:Config
+@test:Config {
+    groups:["network-calls"]
+}
 function testGetIssueList () {
     //Get a list of issues of a repository
     io:println("githubConnectorEP -> getIssueList()");
@@ -414,7 +440,8 @@ function testGetIssueList () {
 }
 
 @test:Config {
-    dependsOn:["testGetIssueList"]
+    dependsOn:["testGetIssueList"],
+    groups:["network-calls"]
 }
 function testGetIssueListNextPage () {
     //Get a list of issues of a repository
@@ -445,3 +472,232 @@ function testGetIssueListNextPage () {
 
     test:assertTrue(lengthEqualsRecords, msg = "Failed getIssueListNextPage()");
 }
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testRepositoryListHasNextPage () {
+    io:println("RepositoryList.hasNextPage()");
+    github:RepositoryList repositoryList = {};
+
+    test:assertFalse(repositoryList.hasNextPage(), msg = "Failed RepositoryList.hasNextPage()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testRepositoryListHasPreviousPage () {
+    io:println("RepositoryList.hasPreviousPage()");
+    github:RepositoryList repositoryList = {};
+
+    test:assertFalse(repositoryList.hasPreviousPage(), msg = "Failed RepositoryList.hasPreviousPage()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testRepositoryListGetAllRepositories () {
+    io:println("RepositoryList.getAllRepositories()");
+    github:RepositoryList repositoryList = {};
+    github:Repository[] repoArray = repositoryList.getAllRepositories();
+
+    test:assertEquals(typeof repoArray, typeof github:Repository[], msg = "Failed RepositoryList.getAllRepositories()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testProjectListHasNextPage () {
+    io:println("ProjectList.hasNextPage()");
+    github:ProjectList projectList = {};
+
+    test:assertFalse(projectList.hasNextPage(), msg = "Failed ProjectList.hasNextPage()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testProjectListHasPreviousPage () {
+    io:println("ProjectList.hasPreviousPage()");
+    github:ProjectList projectList = {};
+
+    test:assertFalse(projectList.hasPreviousPage(), msg = "Failed ProjectList.hasPreviousPage()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testProjectListGetAllProjects () {
+    io:println("ProjectList.getAllRepositories()");
+    github:ProjectList projectList = {};
+    github:Project[]|null projectArray = projectList.getAllProjects();
+
+    test:assertEquals(typeof projectArray, typeof github:Project[], msg = "Failed ProjectList.getAllProjects()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testColumnGetCardList () {
+    io:println("Column.getCardList()");
+    github:Column column = {};
+    github:CardList|null cardList = column.getCardList();
+
+    test:assertEquals(typeof cardList, typeof github:CardList, msg = "Failed Column.getCardList()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testColumnListHasNextPage () {
+    io:println("ColumnList.hasNextPage()");
+    github:ColumnList columnList = {};
+
+    test:assertFalse(columnList.hasNextPage(), msg = "Failed ColumnList.hasNextPage()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testColumnListHasPreviousPage () {
+    io:println("ColumnList.hasPreviousPage()");
+    github:ColumnList columnList = {};
+
+    test:assertFalse(columnList.hasPreviousPage(), msg = "Failed ColumnList.hasPreviousPage()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testColumnListGetAllColumns () {
+    io:println("ColumnList.getAllColumns()");
+    github:ColumnList columnList = {};
+    github:Column[] columnArray = columnList.getAllColumns();
+
+    test:assertEquals(typeof columnArray, typeof github:Column[], msg = "Failed ColumnList.getAllColumns()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testCardListHasNextPage () {
+    io:println("CardList.hasNextPage()");
+    github:CardList cardList = {};
+
+    test:assertFalse(cardList.hasNextPage(), msg = "Failed CardList.hasNextPage()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testCardListHasPreviousPage () {
+    io:println("CardList.hasPreviousPage()");
+    github:CardList cardList = {};
+
+    test:assertFalse(cardList.hasPreviousPage(), msg = "Failed CardList.hasPreviousPage()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testCardListGetAllCards () {
+    io:println("CardList.getAllCards()");
+    github:CardList cardList = {};
+    github:Card[] cardArray = cardList.getAllCards();
+
+    test:assertEquals(typeof cardArray, typeof github:Card[], msg = "Failed CardList.getAllCards()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testPullRequestListHasNextPage () {
+    io:println("PullRequestList.hasNextPage()");
+    github:PullRequestList pullRequestList = {};
+
+    test:assertFalse(pullRequestList.hasNextPage(), msg = "Failed PullRequestList.hasNextPage()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testPullRequestListHasPreviousPage () {
+    io:println("PullRequestList.hasPreviousPage()");
+    github:PullRequestList pullRequestList = {};
+
+    test:assertFalse(pullRequestList.hasPreviousPage(), msg = "Failed PullRequestList.hasPreviousPage()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testPullRequestListGetAllPullRequests () {
+    io:println("PullRequestList.getAllPullRequests()");
+    github:PullRequestList pullRequestList = {};
+    github:PullRequest[] pullRequestArray = pullRequestList.getAllPullRequests();
+
+    test:assertEquals(typeof pullRequestArray, typeof github:PullRequest[], msg = "Failed PullRequestList.getAllPullRequests()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testIssueListHasNextPage () {
+    io:println("IssueList.hasNextPage()");
+    github:IssueList issueList = {};
+
+    test:assertFalse(issueList.hasNextPage(), msg = "Failed IssueList.hasNextPage()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testIssueListHasPreviousPage () {
+    io:println("IssueList.hasPreviousPage()");
+    github:IssueList issueList = {};
+
+    test:assertFalse(issueList.hasPreviousPage(), msg = "Failed IssueList.hasPreviousPage()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testIssueListGetAllIssues () {
+    io:println("IssueList.getAllIssues()");
+    github:IssueList issueList = {};
+    github:Issue[] issueArray = issueList.getAllIssues();
+
+    test:assertEquals(typeof issueArray, typeof github:Issue[], msg = "Failed IssueList.getAllIssues()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testLabelListGetAllLabels () {
+    io:println("LabelList.getAllLabels()");
+    github:LabelList labelList = {};
+    github:Label[] labelArray = labelList.getAllLabels();
+
+    test:assertEquals(typeof labelArray, typeof github:Label[], msg = "Failed LabelList.getAllLabels()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testProjectOwnerGetOwnerType () {
+    github:ProjectOwner projectOwner = {};
+
+    test:assertEquals(typeof projectOwner.getOwnerType(), typeof string, msg = "Failed ProjectOwner.getOwnerType()");
+}
+
+@test:Config {
+    groups:["struct-bound-functions"]
+}
+function testProjectOwnerSetOwnerType () {
+    github:ProjectOwner projectOwner = {};
+    projectOwner.setOwnerType("Organization");
+    string ownerType = projectOwner.getOwnerType();
+
+    test:assertEquals(ownerType, "Organization", msg = "Failed ProjectOwner.getOwnerType()");
+}
+
