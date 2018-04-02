@@ -499,7 +499,7 @@ function testRepositoryListHasPreviousPage () {
 function testRepositoryListGetAllRepositories () {
     io:println("RepositoryList.getAllRepositories()");
     github:RepositoryList repositoryList = {};
-    github:Repository[] repoArray = repositoryList.getAllRepositories();
+    github:Repository[]|null repoArray = repositoryList.getAllRepositories();
 
     test:assertEquals(typeof repoArray, typeof github:Repository[], msg = "Failed RepositoryList.getAllRepositories()");
 }
@@ -572,7 +572,7 @@ function testColumnListHasPreviousPage () {
 function testColumnListGetAllColumns () {
     io:println("ColumnList.getAllColumns()");
     github:ColumnList columnList = {};
-    github:Column[] columnArray = columnList.getAllColumns();
+    github:Column[]|null columnArray = columnList.getAllColumns();
 
     test:assertEquals(typeof columnArray, typeof github:Column[], msg = "Failed ColumnList.getAllColumns()");
 }
@@ -603,7 +603,7 @@ function testCardListHasPreviousPage () {
 function testCardListGetAllCards () {
     io:println("CardList.getAllCards()");
     github:CardList cardList = {};
-    github:Card[] cardArray = cardList.getAllCards();
+    github:Card[]|null cardArray = cardList.getAllCards();
 
     test:assertEquals(typeof cardArray, typeof github:Card[], msg = "Failed CardList.getAllCards()");
 }
@@ -634,7 +634,7 @@ function testPullRequestListHasPreviousPage () {
 function testPullRequestListGetAllPullRequests () {
     io:println("PullRequestList.getAllPullRequests()");
     github:PullRequestList pullRequestList = {};
-    github:PullRequest[] pullRequestArray = pullRequestList.getAllPullRequests();
+    github:PullRequest[]|null pullRequestArray = pullRequestList.getAllPullRequests();
 
     test:assertEquals(typeof pullRequestArray, typeof github:PullRequest[], msg = "Failed PullRequestList.getAllPullRequests()");
 }
@@ -665,7 +665,7 @@ function testIssueListHasPreviousPage () {
 function testIssueListGetAllIssues () {
     io:println("IssueList.getAllIssues()");
     github:IssueList issueList = {};
-    github:Issue[] issueArray = issueList.getAllIssues();
+    github:Issue[]|null issueArray = issueList.getAllIssues();
 
     test:assertEquals(typeof issueArray, typeof github:Issue[], msg = "Failed IssueList.getAllIssues()");
 }
@@ -676,7 +676,7 @@ function testIssueListGetAllIssues () {
 function testLabelListGetAllLabels () {
     io:println("LabelList.getAllLabels()");
     github:LabelList labelList = {};
-    github:Label[] labelArray = labelList.getAllLabels();
+    github:Label[]|null labelArray = labelList.getAllLabels();
 
     test:assertEquals(typeof labelArray, typeof github:Label[], msg = "Failed LabelList.getAllLabels()");
 }
@@ -700,4 +700,3 @@ function testProjectOwnerSetOwnerType () {
 
     test:assertEquals(ownerType, "Organization", msg = "Failed ProjectOwner.getOwnerType()");
 }
-
