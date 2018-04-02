@@ -18,7 +18,12 @@
 
 package github;
 
-@Description {value: "GitHub connector configuration"}
+@Description {value: "GitHub connector configurations can be setup here. In order to use this connector,
+the user will need to have a GitHub Personal Access Token. The token can be obtained by visiting
+
+https://github.com/<profile> -> Settings -> Developer Settings -> Personal access tokens
+
+and provide the obtained token to the GitHubConnectorConfiguration"}
 public struct GitHubConnectorConfiguration {
     string accessToken;
 }
@@ -43,7 +48,7 @@ public function <GitHubConnectorEndpoint githubConnectorEndpoint> init
 }
 
 @Description {value: "Register GitHub connector endpoint"}
-@Param {value: "typedesc: Service type"}
+@Param {value: "typedesc: Accepts types of data (int, float, string, boolean, etc)"}
 public function <GitHubConnectorEndpoint githubConnectorEndpoint> register (typedesc serviceType) {}
 
 @Description {value: "Start GitHub connector endpoint"}

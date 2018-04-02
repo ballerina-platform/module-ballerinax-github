@@ -142,7 +142,7 @@ public function <GitHubConnector gitHubConnector> getOrganization (string name) 
     return singleOrganization;
 }
 
-@Description {value:"Get all columns of a project"}
+@Description {value:"Get all columns of a project board"}
 @Param {value: "recordCount: Specify number of records in the list"}
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
