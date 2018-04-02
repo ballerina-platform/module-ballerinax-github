@@ -3,7 +3,7 @@ package tests;
 import ballerina/io;
 import ballerina/net.http;
 import ballerina/test;
-import github;
+import wso2/github;
 
 endpoint github:GitHubConnectorEndpoint githubConnectorEP {
     accessToken:getAccessToken()
