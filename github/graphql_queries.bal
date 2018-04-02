@@ -18,18 +18,38 @@
 
 package github;
 
-//TODO Implement a QueryBuilder to programatically develop the queries
-public const string GET_REPOSITORY_PROJECTS =
-"query ($owner: String!, $repository: String!, $states:[ProjectState!], $recordCount: Int!){
-	repository(owner:$owner, name:$repository){
-    projects(first:$recordCount, states:$states){
-      pageInfo {
+
+const string PAGE_INFO = "pageInfo {
         hasNextPage,
         hasPreviousPage,
         startCursor,
         endCursor
-      },
-      nodes {
+    }";
+
+const string CREATOR = "creator {
+          login,
+          resourcePath,
+          url,
+          avatarUrl
+      }";
+
+const string PROJECT_OWNER = "owner {
+          id,
+          projectsResourcePath,
+          projectsUrl,
+          viewerCanCreateProjects,
+          __typename
+      }";
+
+const string REPOSITORY_OWNER = "owner {
+          id,
+          login,
+          url,
+          avatarUrl,
+          resourcePath
+      }";
+
+const string PROJECTS_NODES = "nodes {
         id,
         databaseId,
         name,
@@ -43,149 +63,89 @@ public const string GET_REPOSITORY_PROJECTS =
         state,
         url,
         viewerCanUpdate,
-        creator {
+        " + CREATOR + ",
+        " + PROJECT_OWNER + "
+    }";
+
+const string PRIMARY_LANGUAGE = "primaryLanguage {
+          id,
+          name,
+          color
+      }";
+
+const string AUTHOR = "author {
           login,
           resourcePath,
           url,
           avatarUrl
-        }
-        owner {
-          id,
-          projectsResourcePath,
-          projectsUrl,
-          viewerCanCreateProjects,
-          __typename
-        }
-      }
+      }";
+
+const string COLUMN = "column {
+        id,
+        name,
+        url
+    }";
+
+const string EDITOR = "editor {
+          login,
+          resourcePath,
+          url,
+          avatarUrl,
+      }";
+
+const string LABELS = "labels (first: 100){
+          nodes {
+            id,
+            name,
+            description,
+            color
+          }
+      }";
+
+const string CONTENT = "content {
+                ... on Issue { title, url, issueState:state}
+                ... on PullRequest { title, url, prState:state}
+            }";
+
+public const string GET_REPOSITORY_PROJECTS =
+"query ($owner: String!, $repository: String!, $states:[ProjectState!], $recordCount: Int!){
+	repository(owner:$owner, name:$repository){
+    projects(first:$recordCount, states:$states){
+      " + PAGE_INFO + ",
+      " + PROJECTS_NODES + "
     }
   }
-
-  }";
+}";
 
 public const string GET_REPOSITORY_PROJECTS_NEXT_PAGE =
 "query ($owner: String!, $repository: String!, $states:[ProjectState!], $endCursorProjects: String!, $recordCount: Int!){
 	repository(owner:$owner, name:$repository){
     projects(first:$recordCount, states:$states, after:$endCursorProjects){
-      pageInfo {
-        hasNextPage,
-        startCursor,
-        endCursor
-      },
-      nodes {
-        id,
-        databaseId,
-        name,
-        body,
-        number,
-        createdAt,
-        updatedAt,
-        closed,
-        closedAt,
-        resourcePath,
-        state,
-        url,
-        viewerCanUpdate,
-        creator {
-          login,
-          resourcePath,
-          url,
-          avatarUrl
-        }
-        owner {
-          id,
-          projectsResourcePath,
-          projectsUrl,
-          viewerCanCreateProjects,
-          __typename
-        }
-      }
+      " + PAGE_INFO + ",
+      " + PROJECTS_NODES + "
     }
   }
-
-  }";
+}";
 
 public const string GET_ORGANIZATION_PROJECTS =
 "query ($organization: String!, $states:[ProjectState!], $recordCount: Int!){
 	organization(login:$organization) {
     projects(first:$recordCount, states:$states){
-      pageInfo {
-        hasNextPage,
-        hasPreviousPage,
-        startCursor,
-        endCursor
-      },
-      nodes {
-        id,
-        databaseId,
-        name,
-        body,
-        number,
-        createdAt,
-        updatedAt,
-        closed,
-        closedAt,
-        resourcePath,
-        state,
-        url,
-        viewerCanUpdate,
-        creator {
-          login,
-          resourcePath,
-          url,
-          avatarUrl
-        }
-        owner {
-          id,
-          projectsResourcePath,
-          projectsUrl,
-          viewerCanCreateProjects,
-          __typename
-        }
-      }
+      " + PAGE_INFO + ",
+      " + PROJECTS_NODES + "
     }
   }
-  }";
+}";
 
 public const string GET_ORGANIZATION_PROJECTS_NEXT_PAGE =
 "query ($organization: String!, $states:[ProjectState!], $endCursorProjects:String!, $recordCount: Int!){
 	organization(login:$organization) {
     projects(first:$recordCount, states:$states, after:$endCursorProjects){
-      pageInfo {
-        hasNextPage,
-        startCursor,
-        endCursor
-      },
-      nodes {
-        id,
-        databaseId,
-        name,
-        body,
-        number,
-        createdAt,
-        updatedAt,
-        closed,
-        closedAt,
-        resourcePath,
-        state,
-        url,
-        viewerCanUpdate,
-        creator {
-          login,
-          resourcePath,
-          url,
-          avatarUrl
-        }
-        owner {
-          id,
-          projectsResourcePath,
-          projectsUrl,
-          viewerCanCreateProjects,
-          __typename
-        }
-      }
+      " + PAGE_INFO + ",
+      " + PROJECTS_NODES + "
     }
   }
-  }";
+}";
 
 public const string GET_REPOSITORY_PROJECT =
 "query ($owner: String!, $repository: String!, $number: Int!){
@@ -204,22 +164,11 @@ public const string GET_REPOSITORY_PROJECT =
         state,
         url,
         viewerCanUpdate,
-        creator {
-          login,
-          resourcePath,
-          url,
-          avatarUrl
-        }
-        owner {
-          id,
-          projectsResourcePath,
-          projectsUrl,
-          viewerCanCreateProjects,
-          __typename
-        }
+        " + CREATOR + ",
+        " + PROJECT_OWNER + "
     }
   }
-  }";
+}";
 
 public const string GET_ORGANIZATION_PROJECT =
 "query ($organization: String!, $number: Int!){
@@ -238,22 +187,11 @@ public const string GET_ORGANIZATION_PROJECT =
         state,
         url,
         viewerCanUpdate,
-        creator {
-          login,
-          resourcePath,
-          url,
-          avatarUrl
-        }
-        owner {
-          id,
-          projectsResourcePath,
-          projectsUrl,
-          viewerCanCreateProjects,
-          __typename
-        }
+        " + CREATOR + ",
+        " + PROJECT_OWNER + "
     }
   }
-  }";
+}";
 
 public const string GET_REPOSITORY =
 "query ($owner: String!, $name: String!){
@@ -277,31 +215,16 @@ public const string GET_REPOSITORY =
     mirrorUrl,
     url,
     sshUrl,
-    owner {
-      id,
-      login,
-      url,
-      avatarUrl,
-      resourcePath
-    },
-    primaryLanguage {
-      id,
-      name,
-      color
-    }
+    " + REPOSITORY_OWNER + ",
+    " + PRIMARY_LANGUAGE + "
   }
-  }";
+}";
 
 public const string GET_PULL_REQUESTS =
 "query ($owner: String!, $name: String!, $states:[PullRequestState!], $recordCount: Int!){
 	repository(owner:$owner, name:$name){
     pullRequests(first:$recordCount, states:$states) {
-      pageInfo{
-        hasNextPage,
-        hasPreviousPage,
-        startCursor,
-        endCursor
-      },
+      " + PAGE_INFO + ",
       nodes {
         id,
         title,
@@ -320,29 +243,19 @@ public const string GET_PULL_REQUESTS =
         resourcePath,
         revertResourcePath,
         revertUrl,
-        author {
-          login,
-          resourcePath,
-          url,
-          avatarUrl
-        },
         headRefName,
-        baseRefName
+        baseRefName,
+        " + AUTHOR + "
       }
     }
   }
-  }";
+}";
 
 public const string GET_PULL_REQUESTS_NEXT_PAGE =
 "query ($owner: String!, $name: String!, $states:[PullRequestState!], $endCursorPullRequests: String!, $recordCount: Int!){
 	repository(owner:$owner, name:$name){
     pullRequests(first:$recordCount, states:$states, after: $endCursorPullRequests) {
-      pageInfo{
-        hasNextPage,
-        hasPreviousPage,
-        startCursor,
-        endCursor
-      },
+      " + PAGE_INFO + ",
       nodes {
         id,
         title,
@@ -361,18 +274,13 @@ public const string GET_PULL_REQUESTS_NEXT_PAGE =
         resourcePath,
         revertResourcePath,
         revertUrl,
-        author {
-          login,
-          resourcePath,
-          url,
-          avatarUrl
-        },
         headRefName,
-        baseRefName
+        baseRefName,
+        " + AUTHOR + "
       }
     }
   }
-  }";
+}";
 
 public const string GET_ORGANIZATION =
 "query ($organization: String!) {
@@ -390,69 +298,43 @@ public const string GET_ORGANIZATION =
     url,
     websiteUrl
   }
-  }";
+}";
+
 public const string GET_REPOSITORY_PROJECT_COLUMNS =
 "query ($owner: String!,$name:String!, $number: Int!, $recordCount: Int!){
   repository (owner:$owner, name:$name) {
     project (number : $number){
       columns (first:$recordCount){
-        pageInfo {
-          hasNextPage,
-          hasPreviousPage,
-          startCursor,
-          endCursor
-        }
+        " + PAGE_INFO + ",
         nodes {
           id,
           name,
           cards (first:$recordCount){
-            pageInfo {
-              hasNextPage,
-              hasPreviousPage,
-              startCursor,
-              endCursor
-            },
+            " + PAGE_INFO + ",
             nodes {
               id,
               note,
-              creator {
-                login,
-                resourcePath,
-                url,
-                avatarUrl
-              },
+              " + CREATOR + ",
               state,
               createdAt,
               updatedAt,
               url,
-              column {
-                id,
-                name,
-                url
-              },
-              content {
-                ... on Issue { title, url, issueState:state}
-                ... on PullRequest { title, url, prState:state}
-              }
+              " + COLUMN + ",
+              " + CONTENT + "
             }
           }
         }
       }
     }
   }
-  }";
+}";
 
 public const string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE =
 "query ($owner: String!,$name:String!, $number: Int!, $endCursorColumns: String!, $recordCount: Int!){
   repository (owner:$owner, name:$name) {
     project (number : $number){
       columns (first:$recordCount){
-        pageInfo {
-          hasNextPage,
-          hasPreviousPage,
-          startCursor,
-          endCursor
-        }
+        " + PAGE_INFO + ",
         nodes {
           id,
           name,
@@ -476,357 +358,210 @@ public const string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE =
               createdAt,
               updatedAt,
               url,
-              column {
-                id,
-                name,
-                url
-              },
-              content {
-                ... on Issue { title, url, issueState:state}
-                ... on PullRequest { title, url, prState:state}
-              }
+              " + COLUMN + ",
+              " + CONTENT + "
             }
           }
         }
       }
     }
   }
-  }";
+}";
 
 public const string GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE =
 "query ($owner: String!,$name:String!, $number: Int!, $endCursorCards: String!, $recordCount: Int!){
   repository (owner:$owner, name:$name) {
     project (number : $number){
       columns (first:$recordCount){
-        pageInfo {
-          hasNextPage,
-          hasPreviousPage,
-          startCursor,
-          endCursor
-        }
+        " + PAGE_INFO + ",
         nodes {
           id,
           name,
           cards (first:$recordCount, after: $endCursorCards){
-            pageInfo {
-              hasNextPage,
-              hasPreviousPage,
-              startCursor,
-              endCursor
-            },
+            " + PAGE_INFO + ",
             nodes {
               id,
               note,
-              creator {
-                login,
-                resourcePath,
-                url,
-                avatarUrl
-              },
+              " + CREATOR + ",
               state,
               createdAt,
               updatedAt,
               url,
-              column {
-                id,
-                name,
-                url
-              },
-              content {
-                ... on Issue { title, url, issueState:state}
-                ... on PullRequest { title, url, prState:state}
-              }
+              " + COLUMN + ",
+              " + CONTENT + "
             }
           }
         }
       }
     }
   }
- }";
+}";
 
 public const string GET_ORGANIZATION_PROJECT_COLUMNS =
 "query ($organization: String!, $number: Int!, $recordCount: Int!){
   organization (login:$organization) {
     project (number : $number) {
       columns (first:$recordCount) {
-        pageInfo {
-          hasNextPage,
-          hasPreviousPage,
-          startCursor,
-          endCursor
-        }
+        " + PAGE_INFO + ",
         nodes {
           id,
           name,
           cards (first:$recordCount){
-            pageInfo {
-              hasNextPage,
-              hasPreviousPage,
-              startCursor,
-              endCursor
-            },
+            " + PAGE_INFO + ",
             nodes {
               id,
               note,
-              creator {
-                login,
-                resourcePath,
-                url,
-                avatarUrl
-              },
+              " + CREATOR + ",
               state,
               createdAt,
               updatedAt,
               url,
-              column {
-                id,
-                name,
-                url
-              },
-              content {
-                ... on Issue { title, url, issueState:state}
-                ... on PullRequest { title, url, prState:state}
-              }
+              " + COLUMN + ",
+              " + CONTENT + "
             }
           }
         }
       }
     }
   }
- }";
+}";
 
 public const string GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE =
 "query ($organization: String!, $number: Int!, $endCursorColumns: String!, $recordCount: Int!){
   organization (login:$organization) {
     project (number : $number) {
       columns (first:$recordCount, after: $endCursorColumns) {
-        pageInfo {
-          hasNextPage,
-          hasPreviousPage,
-          startCursor,
-          endCursor
-        }
+        " + PAGE_INFO + ",
         nodes {
           id,
           name,
           cards (first:$recordCount){
-            pageInfo {
-              hasNextPage,
-              hasPreviousPage,
-              startCursor,
-              endCursor
-            },
+            " + PAGE_INFO + ",
             nodes {
               id,
               note,
-              creator {
-                login,
-                resourcePath,
-                url,
-                avatarUrl
-              },
+              " + CREATOR + ",
               state,
               createdAt,
               updatedAt,
               url,
-              column {
-                id,
-                name,
-                url
-              },
-              content {
-                ... on Issue { title, url, issueState:state}
-                ... on PullRequest { title, url, prState:state}
-              }
+              " + COLUMN + ",
+              " + CONTENT + "
             }
           }
         }
       }
     }
   }
- }";
+}";
 
 public const string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE =
 "query ($organization: String!, $number: Int!, $endCursorCards: String!, $recordCount: Int!){
   organization (login:$organization) {
     project (number : $number) {
       columns (first:$recordCount) {
-        pageInfo {
-          hasNextPage,
-          hasPreviousPage,
-          startCursor,
-          endCursor
-        }
+        " + PAGE_INFO + ",
         nodes {
           id,
           name,
           cards (first:$recordCount, after: $endCursorCards){
-            pageInfo {
-              hasNextPage,
-              hasPreviousPage,
-              startCursor,
-              endCursor
-            },
+            " + PAGE_INFO + ",
             nodes {
               id,
               note,
-              creator {
-                login,
-                resourcePath,
-                url,
-                avatarUrl
-              },
+              " + CREATOR + ",
               state,
               createdAt,
               updatedAt,
               url,
-              column {
-                id,
-                name,
-                url
-              },
-              content {
-                ... on Issue { title, url, issueState:state}
-                ... on PullRequest { title, url, prState:state}
-              }
+              " + COLUMN + ",
+              " + CONTENT + "
             }
           }
         }
       }
     }
   }
- }";
+}";
 
 public const string GET_ORGANIZATION_REPOSITORIES =
 "query ($organization: String!, $recordCount: Int!) {
   organization (login:$organization) {
     repositories (first: $recordCount) {
-      pageInfo {
-        hasNextPage,
-        hasPreviousPage,
-        startCursor,
-        endCursor
-      }
+      " + PAGE_INFO + ",
       nodes {
-    id,
-    name,
-    createdAt,
-    updatedAt,
-    description,
-    forkCount,
-    hasIssuesEnabled,
-    hasWikiEnabled,
-    homepageUrl,
-    isArchived,
-    isFork,
-    isLocked,
-    isMirror,
-    isPrivate,
-    license,
-    lockReason,
-    mirrorUrl,
-    url,
-    sshUrl,
-    owner {
-      id,
-      login,
-      url,
-      avatarUrl,
-      resourcePath
-    },
-    primaryLanguage {
-      id,
-      name,
-      color
-    }
+        id,
+        name,
+        createdAt,
+        updatedAt,
+        description,
+        forkCount,
+        hasIssuesEnabled,
+        hasWikiEnabled,
+        homepageUrl,
+        isArchived,
+        isFork,
+        isLocked,
+        isMirror,
+        isPrivate,
+        license,
+        lockReason,
+        mirrorUrl,
+        url,
+        sshUrl,
+        " + REPOSITORY_OWNER + ",
+        " + PRIMARY_LANGUAGE + "
       }
     }
   }
-  }";
+}";
 
 public const string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE =
 "query ($organization: String!, $endCursorRepos: String!, $recordCount: Int!) {
   organization (login:$organization) {
     repositories (first: $recordCount, after: $endCursorRepos) {
-      pageInfo {
-        hasNextPage,
-        hasPreviousPage,
-        startCursor,
-        endCursor
-      }
+      " + PAGE_INFO + ",
       nodes {
-    id,
-    name,
-    createdAt,
-    updatedAt,
-    description,
-    forkCount,
-    hasIssuesEnabled,
-    hasWikiEnabled,
-    homepageUrl,
-    isArchived,
-    isFork,
-    isLocked,
-    isMirror,
-    isPrivate,
-    license,
-    lockReason,
-    mirrorUrl,
-    url,
-    sshUrl,
-    owner {
-      id,
-      login,
-      url,
-      avatarUrl,
-      resourcePath
-    },
-    primaryLanguage {
-      id,
-      name,
-      color
-    }
+        id,
+        name,
+        createdAt,
+        updatedAt,
+        description,
+        forkCount,
+        hasIssuesEnabled,
+        hasWikiEnabled,
+        homepageUrl,
+        isArchived,
+        isFork,
+        isLocked,
+        isMirror,
+        isPrivate,
+        license,
+        lockReason,
+        mirrorUrl,
+        url,
+        sshUrl,
+        " + REPOSITORY_OWNER + ",
+        " + PRIMARY_LANGUAGE + "
       }
     }
   }
-  }";
+}";
 
 public const string GET_REPOSITORY_ISSUES =
 "query ($owner:String!, $name:String!, $states:[IssueState!], $recordCount: Int!) {
   repository(owner:$owner, name: $name) {
     issues (first: $recordCount, states:$states) {
-      pageInfo {
-        hasNextPage,
-        hasPreviousPage,
-        startCursor,
-        endCursor
-      }
+      " + PAGE_INFO + ",
       nodes {
         id,
-        author {
-          login,
-          resourcePath,
-          url,
-          avatarUrl
-        },
+        " + AUTHOR + ",
         bodyText,
         closed,
         closedAt,
         createdAt,
-        editor {
-          login,
-          resourcePath,
-          url,
-          avatarUrl,
-        },
-        labels (first: $recordCount){
-          nodes {
-            id,
-            name,
-            description,
-            color
-          }
-        },
+        " + EDITOR + ",
+        " + LABELS + ",
         number,
         state,
         title,
@@ -835,44 +570,22 @@ public const string GET_REPOSITORY_ISSUES =
       }
     }
   }
-  }";
+}";
 
 public const string GET_REPOSITORY_ISSUES_NEXT_PAGE =
 "query ($owner:String!, $name:String!, $states:[IssueState!], $endCursorIssues: String!, $recordCount: Int!) {
   repository(owner:$owner, name: $name) {
     issues (first: $recordCount, states:$states, after: $endCursorIssues) {
-      pageInfo {
-        hasNextPage,
-        hasPreviousPage,
-        startCursor,
-        endCursor
-      }
+      " + PAGE_INFO + ",
       nodes {
         id,
-        author {
-          login,
-          resourcePath,
-          url,
-          avatarUrl
-        },
+        " + AUTHOR + ",
         bodyText,
         closed,
         closedAt,
         createdAt,
-        editor {
-          login,
-          resourcePath,
-          url,
-          avatarUrl,
-        },
-        labels (first: $recordCount){
-          nodes {
-            id,
-            name,
-            description,
-            color
-          }
-        },
+        " + EDITOR + ",
+        " + LABELS + ",
         number,
         state,
         title,
@@ -881,4 +594,4 @@ public const string GET_REPOSITORY_ISSUES_NEXT_PAGE =
       }
     }
   }
-  }";
+}";
