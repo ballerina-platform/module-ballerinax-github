@@ -160,14 +160,16 @@ public function <GitHubConnector gitHubConnector> getProjectColumnList (Project 
     string projectOwnerType = project.owner.getOwnerType();
     if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION) && project.resourcePath != null) {
         string organization = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
-        string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS, [organization, project.number, recordCount]);
+        string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS,
+                                        [organization, project.number, recordCount]);
 
         return getProjectColumns(GIT_ORGANIZATION, stringQuery, gitHubConnector);
 
     } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY) && project.resourcePath != null) {
         string ownerName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_ONE];
         string repositoryName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
-        string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS, [ownerName, repositoryName, project.number, recordCount]);
+        string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS,
+                                        [ownerName, repositoryName, project.number, recordCount]);
 
         return getProjectColumns(GIT_REPOSITORY, stringQuery, gitHubConnector);
     }
@@ -349,7 +351,8 @@ public function <GitHubConnector gitHubConnector> getPullRequestList
         return connectorError;
     }
 
-    string stringQuery = io:sprintf(TEMPLATE_GET_PULL_REQUESTS, [repository.owner.login, repository.name, state, recordCount]);
+    string stringQuery = io:sprintf(TEMPLATE_GET_PULL_REQUESTS,
+                                    [repository.owner.login, repository.name, state, recordCount]);
 
     http:Request request = {};
     var convertedQuery = stringToJson(stringQuery);
@@ -406,7 +409,8 @@ public function <GitHubConnector gitHubConnector> getRepositoryProjectList
         return connectorError;
     }
 
-    string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECTS, [repository.owner.login, repository.name, state, recordCount]);
+    string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECTS,
+                                    [repository.owner.login, repository.name, state, recordCount]);
 
     http:Request request = {};
     var convertedQuery = stringToJson(stringQuery);
@@ -457,7 +461,8 @@ public function <GitHubConnector gitHubConnector> getRepositoryProject (Reposito
         return connectorError;
     }
 
-    string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT, [repository.owner.login, repository.name, projectNumber]);
+    string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT,
+                                    [repository.owner.login, repository.name, projectNumber]);
 
     http:Request request = {};
     var convertedQuery = stringToJson(stringQuery);
@@ -514,7 +519,8 @@ public function <GitHubConnector gitHubConnector> getIssueList (Repository repos
         return connectorError;
     }
 
-    string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_ISSUES, [repository.owner.login, repository.name, state, recordCount]);
+    string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_ISSUES,
+                                    [repository.owner.login, repository.name, state, recordCount]);
 
     http:Request request = {};
     var convertedQuery = stringToJson(stringQuery);
