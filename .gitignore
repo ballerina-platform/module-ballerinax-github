@@ -35,6 +35,6 @@ target
 .vscode/
 # Ignore ballerina files
 accessToken.bal
-
+temp.bal
 #Ignore doc files
 docs/
