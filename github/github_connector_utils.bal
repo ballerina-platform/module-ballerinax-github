@@ -19,7 +19,7 @@
 package github;
 
 import ballerina/mime;
-import ballerina/net.http;
+import ballerina/http;
 import ballerina/util;
 
 @Description {value:"Construct the request headers"}

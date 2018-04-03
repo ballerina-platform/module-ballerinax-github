@@ -2,7 +2,7 @@ package tests;
 
 import ballerina/io;
 import ballerina/log;
-import ballerina/net.http;
+import ballerina/http;
 import ballerina/test;
 import github;
 

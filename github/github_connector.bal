@@ -18,7 +18,7 @@
 
 package github;
 
-import ballerina/net.http;
+import ballerina/http;
 
 @Description {value:"GitHub client connector"}
 public struct GitHubConnector {
