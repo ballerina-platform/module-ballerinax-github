@@ -23,22 +23,22 @@ Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 
 ### Working with GitHub Connector Actions
 
-All the actions return `struct objects` or `github:GitConnectorError`. If the action was a success, then the requested struct object will be returned while the `github:GitConnectorError` will be **null** and vice-versa.
+All the actions return `struct objects` or `github4:GitConnectorError`. If the action was a success, then the requested struct object will be returned while the `github:GitConnectorError` will be **null** and vice-versa.
 
 ##### Example
 * Request 
 ```ballerina
-    github:GitHubConnector githubConnector = { accessToken: getAccessToken()};
+    github4:GitHubConnector githubConnector = { accessToken: getAccessToken()};
     
     //Get a single repository
-    github:Repository repository = {};
-    var repo = githubConnector.getRepository("wso2/package-github");
-    match repo {
-        github:Repository rep => {
+    github4:Repository repository = {};
+    var repo = githubConnector.getRepository(github);
+    github4repo {
+        github4:Repositgithub4p => {
             repository = rep;
             io:println(repository);
         }
-        github:GitConnectorError err => {
+        github4:GitConngithub4rror err => {
             io:println(err);
         }
     }
@@ -96,7 +96,7 @@ Name | Type | Description
 name | string | Name of the organization and repository. (Eg: "organization/repository")
 
 ###### Returns
-* **github:Repository** or **github:GitConnectorError**
+* **github:Repositgithub4or **github:GitConngithub4rror**
 
 ***
 
@@ -109,21 +109,19 @@ Name | Type | Description
 name | string | Name of the organization. (Eg: "organization")
 
 ###### Returns
-**github:Organization** or **github:GitConnectorError**
+**github:Organizgithub4* or **github:GitConngithub4rror**
 
 ***
-## github:Repository
-
-### getProjectList()
+## github:Repositgithub4## getProjectList()
 Return a list of projects in the repository.
 
 ###### Parameters
 Name | Type | Description
 -----|------|------------
-state | string | The state of the project. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
+state | string | The state of the project. (Eg: github:GIT_STAgithub4N, github:GIT_STAgithub4SED, github:GIT_STAgithub4 )
 
 ###### Returns
-**github:ProjectList** or **github:GitConnectorError**
+**github:Projectgithub4 or **github:GitConngithub4rror**
 
 ***
 ### getProject()
@@ -135,7 +133,7 @@ Name | Type | Description
 projectNumber | int | The integral number of the project.
 
 ###### Returns
-**github:Project** or **github:GitConnectorError**
+**github:Projectgithub4**github:GitConngithub4rror**
 
 ***
 
@@ -145,10 +143,10 @@ Return a list of issues of the repository.
 ###### Parameters
 Name | Type | Description
 -----|------|------------
-state | string | The state of the issue. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
+state | string | The state of the issue. (Eg: github:GIT_STAgithub4N, github:GIT_STAgithub4SED, github:GIT_STAgithub4 )
 
 ###### Returns
-**github:IssueList** or **github:GitConnectorError**
+**github:IssueLigithub4r **github:GitConngithub4rror**
 
 ***
 
@@ -158,25 +156,24 @@ Return a list of pull requests of the repository.
 ###### Parameters
 Name | Type | Description
 -----|------|------------
-state | string | The state of the pull request. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_MERGED, github:GIT_STATE_ALL)
+state | string | The state of the pull request. (Eg: github:GIT_STAgithub4N, github:GIT_STAgithub4SED, github:GIT_STAgithub4GED, github:GIT_STAgithub4)
 
 ###### Returns
-**github:PullRequestList** or **github:GitConnectorError**
+**github:PullReqgithub4st** or **github:GitConngithub4rror**
 
 ***
 
-## github:Organization
-
+## github:Organizgithub4
 ### getProjectList()
 Return a list of projects on the organization.
 
 ###### Parameters
 Name | Type | Description
 -----|------|------------
-state | string | The state of the project. (Eg: github:GIT_STATE_OPEN, github:GIT_STATE_CLOSED, github:GIT_STATE_ALL )
+state | string | The state of the project. (Eg: github:GIT_STAgithub4N, github:GIT_STAgithub4SED, github:GIT_STAgithub4 )
 
 ###### Returns
-**github:ProjectList** or **github:GitConnectorError**
+**github:Projectgithub4 or **github:GitConngithub4rror**
 
 ***
 
@@ -189,7 +186,7 @@ Name | Type | Description
 projectNumber | int | The integral number of the project.
 
 ###### Returns
-**github:Project** or **github:GitConnectorError**
+**github:Projectgithub4**github:GitConngithub4rror**
 
 ***
 
@@ -200,36 +197,30 @@ Return the list of repositories of the organization.
 None
 
 ###### Returns
-**github:RepositoryList** or **github:GitConnectorError**
+**github:Repositgithub4t** or **github:GitConngithub4rror**
 
 ***
 
-## github:Project
-
-### getColumnList()
+## github:Projectgithub4getColumnList()
 Return a list of columns in the project.
 
 ###### Parameters
 None
 
 ###### Returns
-**github:ColumnList**
-
+**github:ColumnLgithub4
 ***
 
 ## github:Column
-
-### getCardList()
+github4etCardList()
 Return a list of cards in the column.
 
 ###### Parameters
 None
 
 ###### Returns
-**github:CardList**
-
-***
-## github:RepositoryList
+**github:CardLisgithub4**
+## github:Repositgithub4t
 
 ### getAllRepositories()
 Return an array of repositories.
@@ -238,7 +229,7 @@ Return an array of repositories.
 None
 
 ###### Returns
-**github:Repository[]**
+**github:Repositgithub4*
 
 ***
 
@@ -249,7 +240,7 @@ Return the next page of the repository list.
 None
 
 ###### Returns
-**github:RepositoryList** or **github:GitConnectorError**
+**github:Repositgithub4t** or **github:GitConngithub4rror**
 
 ***
 
@@ -275,18 +266,14 @@ None
 
 ***
 
-## github:ColumnList
-
-### getAllColumns()
+## github:ColumnLgithub4## getAllColumns()
 Return an array of columns.
 
 ###### Parameters
 None
 
 ###### Returns
-**github:Column[]**
-
-***
+**github:Column[github**
 ### nextPage()
 Return the next page of the column list.
 
@@ -294,7 +281,7 @@ Return the next page of the column list.
 None
 
 ###### Returns
-**github:ColumnList** or **github:GitConnectorError**
+**github:ColumnLgithub4or **github:GitConngithub4rror**
 
 ***
 ### hasNextPage()
@@ -319,18 +306,14 @@ None
 
 ***
 
-## github:CardList
-
-### getAllCards()
+## github:CardLisgithub4 getAllCards()
 Return an array of cards.
 
 ###### Parameters
 None
 
 ###### Returns
-**github:Card[]**
-
-***
+**github:Card[]*github
 
 ### nextPage()
 Return the next page of the card list.
@@ -339,7 +322,7 @@ Return the next page of the card list.
 None
 
 ###### Returns
-**github:CardList** or **github:GitConnectorError**
+**github:CardLisgithub4 **github:GitConngithub4rror**
 
 ***
 ### hasNextPage()

@@ -17,7 +17,7 @@
 > Link(s) to product documentation that addresses the changes of this PR. If no doc impact, enter “N/A” plus brief explanation of why there’s no doc impact
 
 ## Training
-> Link to the PR for changes to the training content in https://github.com/wso2/WSO2-Training, if applicable
+> Link to the PR for changes to the training content in https://github4.com/wso2/WSO2-Training, if applicable
 
 ## Certification
 > Type “Sent” when you have provided new/updated certification questions, plus four answers for each question (correct answer highlighted in bold), based on this change. Certification questions/answers should be sent to certification@wso2.com and NOT pasted in this PR. If there is no impact on certification exams, type “N/A” and explain why.

@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package github;
+package github4;
 
 
 const string PAGE_INFO = "pageInfo {

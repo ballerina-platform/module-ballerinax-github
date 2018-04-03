@@ -22,9 +22,9 @@ import ballerina/io;
 import ballerina/log;
 import ballerina/http;
 import ballerina/test;
-import github;
+import github4;
 
-endpoint github:GitHubConnectorEndpoint githubConnectorEP {
+endpoint github4:GitHubConnectorEndpoint githubConnectorEP {
     accessToken:getAccessToken(),
     clientEndpointConfiguration: {}
 };
@@ -35,14 +35,14 @@ endpoint github:GitHubConnectorEndpoint githubConnectorEP {
 function testGetOrganization () {
     //Get a single organization
     log:printInfo("githubConnectorEP -> getOrganization()");
-    github:Organization organization = {};
+    github4:Organization organization = {};
     var organizationData = githubConnectorEP -> getOrganization("wso2");
     match organizationData {
-        github:Organization org => {
+        github4:Organization org => {
             organization = org;
         }
 
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -56,15 +56,15 @@ function testGetOrganization () {
 function testGetOrganizationProject () {
     // Get an organization project
     log:printInfo("githubConnectorEP -> getOrganizationProject()");
-    github:Project orgProject = {};
-    github:Organization projectOrganization = {login:"wso2"};
+    github4:Project orgProject = {};
+    github4:Organization projectOrganization = {login:"wso2"};
     var projectData = githubConnectorEP -> getOrganizationProject(projectOrganization, 1);
     match projectData {
-        github:Project proj => {
+        github4:Project proj => {
             orgProject = proj;
         }
 
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -79,16 +79,16 @@ function testGetOrganizationProjectList () {
     //Get a list of projects of an organization
     log:printInfo("githubConnectorEP -> getOrganizationProjectList()");
     int recordCount = 2;
-    github:ProjectList projectList = {};
-    github:Organization projectListOrganization = {login:"wso2"};
+    github4:ProjectList projectList = {};
+    github4:Organization projectListOrganization = {login:"wso2"};
     var responseProjectList = githubConnectorEP ->
-                              getOrganizationProjectList(projectListOrganization, github:GIT_STATE_OPEN, recordCount);
+                              getOrganizationProjectList(projectListOrganization, github4:GIT_STATE_OPEN, recordCount);
     match responseProjectList {
-        github:ProjectList prjtList=> {
+        github4:ProjectList prjtList => {
             projectList = prjtList;
         }
 
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -105,27 +105,27 @@ function testGetOrganizationProjectListNextPage () {
     //Get a list of projects of an organization
     log:printInfo("githubConnectorEP -> getOrganizationProjectListNextPage()");
     int recordCount = 2;
-    github:ProjectList projectList = {};
-    github:Organization projectListOrganization = {login:"wso2"};
+    github4:ProjectList projectList = {};
+    github4:Organization projectListOrganization = {login:"wso2"};
     var responseProjectList = githubConnectorEP ->
-                              getOrganizationProjectList(projectListOrganization, github:GIT_STATE_OPEN, 2);
+                              getOrganizationProjectList(projectListOrganization, github4:GIT_STATE_OPEN, 2);
     match responseProjectList {
-        github:ProjectList prjtList=> {
+        github4:ProjectList prjtList => {
             projectList = prjtList;
         }
 
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
     // Next page
     responseProjectList = githubConnectorEP -> getProjectListNextPage(projectList);
     match responseProjectList {
-        github:ProjectList prjtList=> {
+        github4:ProjectList prjtList => {
             projectList = prjtList;
         }
 
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -141,15 +141,15 @@ function testGetProjectColumnList () {
     //Get project column list
     log:printInfo("githubConnectorEP -> getProjectColumnList()");
     int recordCount = 2;
-    github:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
+    github4:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
     columnListProject.owner.setOwnerType("Organization");
-    github:ColumnList columnList = {};
+    github4:ColumnList columnList = {};
     var columns = githubConnectorEP -> getProjectColumnList(columnListProject, recordCount);
     match columns {
-        github:ColumnList colList => {
+        github4:ColumnList colList => {
             columnList = colList;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -166,20 +166,20 @@ function testGetCardListOfColumn () {
     //Get column card list
     log:printInfo("column.getCardList()");
     int recordCount = 2;
-    github:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
+    github4:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
     columnListProject.owner.setOwnerType("Organization");
-    github:ColumnList columnList = {};
+    github4:ColumnList columnList = {};
     var columns = githubConnectorEP -> getProjectColumnList(columnListProject, recordCount);
     match columns {
-        github:ColumnList colList => {
+        github4:ColumnList colList => {
             columnList = colList;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
-    github:Column column = columnList.getAllColumns()[0];
-    github:CardList cardList = column.getCardList();
+    github4:Column column = columnList.getAllColumns()[0];
+    github4:CardList cardList = column.getCardList();
     boolean lengthEqualsRecords = lengthof cardList.getAllCards() > 0;
 
     test:assertTrue(lengthEqualsRecords, msg = "Failed getCardList()");
@@ -193,26 +193,26 @@ function testGetCardListNextPage () {
     //Get card list next page
     log:printInfo("githubConnectorEP -> getCardListNextPage()");
     int recordCount = 2;
-    github:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
+    github4:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
     columnListProject.owner.setOwnerType("Organization");
-    github:ColumnList columnList = {};
+    github4:ColumnList columnList = {};
     var columns = githubConnectorEP -> getProjectColumnList(columnListProject, recordCount);
     match columns {
-        github:ColumnList colList => {
+        github4:ColumnList colList => {
             columnList = colList;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
-    github:Column column = columnList.getAllColumns()[0];
-    github:CardList cardList = column.getCardList();
+    github4:Column column = columnList.getAllColumns()[0];
+    github4:CardList cardList = column.getCardList();
     var cardListNextPage = githubConnectorEP -> getCardListNextPage(cardList);
     match cardListNextPage {
-        github:CardList cd => {
+        github4:CardList cd => {
             cardList = cd;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -228,14 +228,14 @@ function testGetOrganizationRepositoryList () {
     //Get a all the repositories of Organization
     log:printInfo("githubConnectorEP -> getOrganizationRepositoryList()");
     int recordCount = 2;
-    github:Organization repositoryListOrganization = {login:"wso2"};
-    github:RepositoryList repositoryList = {};
+    github4:Organization repositoryListOrganization = {login:"wso2"};
+    github4:RepositoryList repositoryList = {};
     var repoList = githubConnectorEP -> getOrganizationRepositoryList(repositoryListOrganization, recordCount);
     match repoList {
-        github:RepositoryList repList => {
+        github4:RepositoryList repList => {
             repositoryList = repList;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -252,25 +252,25 @@ function testGetOrganizationRepositoryListNextPage () {
     //Get a all the repositories of Organization
     log:printInfo("githubConnectorEP -> getRepositoryListNextPage()");
     int recordCount = 2;
-    github:Organization repositoryListOrganization = {login:"wso2"};
-    github:RepositoryList repositoryList = {};
+    github4:Organization repositoryListOrganization = {login:"wso2"};
+    github4:RepositoryList repositoryList = {};
     var repoList = githubConnectorEP -> getOrganizationRepositoryList(repositoryListOrganization, recordCount);
     match repoList {
-        github:RepositoryList repList => {
+        github4:RepositoryList repList => {
             repositoryList = repList;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
     // Next page
     repoList = githubConnectorEP -> getRepositoryListNextPage(repositoryList);
     match repoList {
-        github:RepositoryList repList=> {
+        github4:RepositoryList repList => {
             repositoryList = repList;
         }
 
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -285,13 +285,13 @@ function testGetOrganizationRepositoryListNextPage () {
 function testGetRepository () {
     //Get a single repository
     log:printInfo("githubConnectorEP -> getRepository()");
-    github:Repository repository = {};
+    github4:Repository repository = {};
     var repo = githubConnectorEP -> getRepository("wso2/product-apim");
     match repo {
-        github:Repository rep => {
+        github4:Repository rep => {
             repository = rep;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -305,14 +305,14 @@ function testGetRepository () {
 function testGetRepositoryProject () {
     //Get a Repository Project
     log:printInfo("githubConnectorEP -> getRepositoryProject()");
-    github:Repository projectRepository = {owner:{login:"wso2"}, name:"testgrid"};
-    github:Project repositoryProject = {};
+    github4:Repository projectRepository = {owner:{login:"wso2"}, name:"testgrid"};
+    github4:Project repositoryProject = {};
     var singleRepoProject = githubConnectorEP -> getRepositoryProject(projectRepository, 1);
     match singleRepoProject {
-        github:Project project => {
+        github4:Project project => {
             repositoryProject = project;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -327,15 +327,15 @@ function testGetRepositoryProjectList () {
     //Get a list of projects of a repository
     log:printInfo("githubConnectorEP -> getRepositoryProjectList()");
     int recordCount = 1;
-    github:Repository projectRepositoryList = {name:"testgrid", owner:{login:"wso2"}};
-    github:ProjectList repoProjectList = {};
+    github4:Repository projectRepositoryList = {name:"testgrid", owner:{login:"wso2"}};
+    github4:ProjectList repoProjectList = {};
     var responseRepoProjectList = githubConnectorEP ->
-                                  getRepositoryProjectList(projectRepositoryList, github:GIT_STATE_OPEN, recordCount);
+                                  getRepositoryProjectList(projectRepositoryList, github4:GIT_STATE_OPEN, recordCount);
     match responseRepoProjectList {
-        github:ProjectList prjtList => {
+        github4:ProjectList prjtList => {
             repoProjectList = prjtList;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -352,25 +352,25 @@ function testGetRepositoryProjectListNextPage () {
     //Get a list of projects of a repository
     log:printInfo("githubConnectorEP -> getProjectListNextPage()");
     int recordCount = 1;
-    github:Repository projectRepository = {name:"ProLAd-ExpertSystem", owner:{login:"vlgunarathne"}};
-    github:ProjectList repoProjectList = {};
+    github4:Repository projectRepository = {name:"ProLAd-ExpertSystem", owner:{login:"vlgunarathne"}};
+    github4:ProjectList repoProjectList = {};
     var responseRepoProjectList = githubConnectorEP ->
-                                  getRepositoryProjectList(projectRepository, github:GIT_STATE_OPEN, 1);
+                                  getRepositoryProjectList(projectRepository, github4:GIT_STATE_OPEN, 1);
     match responseRepoProjectList {
-        github:ProjectList prjtList => {
+        github4:ProjectList prjtList => {
             repoProjectList = prjtList;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
     // Next page
     responseRepoProjectList = githubConnectorEP -> getProjectListNextPage(repoProjectList);
     match responseRepoProjectList {
-        github:ProjectList prjList=> {
+        github4:ProjectList prjList => {
             repoProjectList = prjList;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -386,14 +386,14 @@ function testGetPullRequestList () {
     //Get a list of pull requests in a repository
     log:printInfo("githubConnectorEP -> getPullRequestList()");
     int recordCount = 2;
-    github:Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
-    github:PullRequestList pullRequestList = {};
-    var prList = githubConnectorEP -> getPullRequestList(pullRequestRepository, github:GIT_STATE_OPEN, recordCount);
+    github4:Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
+    github4:PullRequestList pullRequestList = {};
+    var prList = githubConnectorEP -> getPullRequestList(pullRequestRepository, github4:GIT_STATE_OPEN, recordCount);
     match prList {
-        github:PullRequestList pList => {
+        github4:PullRequestList pList => {
             pullRequestList = pList;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -410,24 +410,24 @@ function testGetPullRequestListNextPage () {
     //Get a list of pull requests in a repository
     log:printInfo("githubConnectorEP -> getPullRequestListNextPage()");
     int recordCount = 2;
-    github:Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
-    github:PullRequestList pullRequestList = {};
-    var prList = githubConnectorEP -> getPullRequestList(pullRequestRepository, github:GIT_STATE_OPEN, recordCount);
+    github4:Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
+    github4:PullRequestList pullRequestList = {};
+    var prList = githubConnectorEP -> getPullRequestList(pullRequestRepository, github4:GIT_STATE_OPEN, recordCount);
     match prList {
-        github:PullRequestList pList => {
+        github4:PullRequestList pList => {
             pullRequestList = pList;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
     // Next page
     prList = githubConnectorEP -> getPullRequestListNextPage(pullRequestList);
     match prList {
-        github:PullRequestList pList => {
+        github4:PullRequestList pList => {
             pullRequestList = pList;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -443,14 +443,14 @@ function testGetIssueList () {
     //Get a list of issues of a repository
     log:printInfo("githubConnectorEP -> getIssueList()");
     int recordCount = 2;
-    github:Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
-    github:IssueList issueList = {};
-    var issues = githubConnectorEP -> getIssueList(issueRepository, github:GIT_STATE_OPEN, recordCount);
+    github4:Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
+    github4:IssueList issueList = {};
+    var issues = githubConnectorEP -> getIssueList(issueRepository, github4:GIT_STATE_OPEN, recordCount);
     match issues {
-        github:IssueList isList => {
+        github4:IssueList isList => {
             issueList = isList;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -467,24 +467,24 @@ function testGetIssueListNextPage () {
     //Get a list of issues of a repository
     log:printInfo("githubConnectorEP -> getIssueListNextPage()");
     int recordCount = 2;
-    github:Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
-    github:IssueList issueList = {};
-    var issues = githubConnectorEP -> getIssueList(issueRepository, github:GIT_STATE_OPEN, recordCount);
+    github4:Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
+    github4:IssueList issueList = {};
+    var issues = githubConnectorEP -> getIssueList(issueRepository, github4:GIT_STATE_OPEN, recordCount);
     match issues {
-        github:IssueList isList => {
+        github4:IssueList isList => {
             issueList = isList;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
     // Next page
     issues = githubConnectorEP -> getIssueListNextPage(issueList);
     match issues {
-        github:IssueList isList => {
+        github4:IssueList isList => {
             issueList = isList;
         }
-        github:GitConnectorError err => {
+        github4:GitConnectorError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -498,7 +498,7 @@ function testGetIssueListNextPage () {
 }
 function testRepositoryListHasNextPage () {
     log:printInfo("RepositoryList.hasNextPage()");
-    github:RepositoryList repositoryList = {};
+    github4:RepositoryList repositoryList = {};
 
     test:assertFalse(repositoryList.hasNextPage(), msg = "Failed RepositoryList.hasNextPage()");
 }
@@ -508,7 +508,7 @@ function testRepositoryListHasNextPage () {
 }
 function testRepositoryListHasPreviousPage () {
     log:printInfo("RepositoryList.hasPreviousPage()");
-    github:RepositoryList repositoryList = {};
+    github4:RepositoryList repositoryList = {};
 
     test:assertFalse(repositoryList.hasPreviousPage(), msg = "Failed RepositoryList.hasPreviousPage()");
 }
@@ -518,10 +518,10 @@ function testRepositoryListHasPreviousPage () {
 }
 function testRepositoryListGetAllRepositories () {
     log:printInfo("RepositoryList.getAllRepositories()");
-    github:RepositoryList repositoryList = {};
-    github:Repository[]|null repoArray = repositoryList.getAllRepositories();
+    github4:RepositoryList repositoryList = {};
+    github4:Repository[]|null repoArray = repositoryList.getAllRepositories();
 
-    test:assertEquals(typeof repoArray, typeof github:Repository[], msg = "Failed RepositoryList.getAllRepositories()");
+    test:assertEquals(typeof repoArray, typeof github4:Repository[], msg = "Failed RepositoryList.getAllRepositories()");
 }
 
 @test:Config {
@@ -529,7 +529,7 @@ function testRepositoryListGetAllRepositories () {
 }
 function testProjectListHasNextPage () {
     log:printInfo("ProjectList.hasNextPage()");
-    github:ProjectList projectList = {};
+    github4:ProjectList projectList = {};
 
     test:assertFalse(projectList.hasNextPage(), msg = "Failed ProjectList.hasNextPage()");
 }
@@ -539,7 +539,7 @@ function testProjectListHasNextPage () {
 }
 function testProjectListHasPreviousPage () {
     log:printInfo("ProjectList.hasPreviousPage()");
-    github:ProjectList projectList = {};
+    github4:ProjectList projectList = {};
 
     test:assertFalse(projectList.hasPreviousPage(), msg = "Failed ProjectList.hasPreviousPage()");
 }
@@ -549,10 +549,10 @@ function testProjectListHasPreviousPage () {
 }
 function testProjectListGetAllProjects () {
     log:printInfo("ProjectList.getAllRepositories()");
-    github:ProjectList projectList = {};
-    github:Project[]|null projectArray = projectList.getAllProjects();
+    github4:ProjectList projectList = {};
+    github4:Project[]|null projectArray = projectList.getAllProjects();
 
-    test:assertEquals(typeof projectArray, typeof github:Project[], msg = "Failed ProjectList.getAllProjects()");
+    test:assertEquals(typeof projectArray, typeof github4:Project[], msg = "Failed ProjectList.getAllProjects()");
 }
 
 @test:Config {
@@ -560,10 +560,10 @@ function testProjectListGetAllProjects () {
 }
 function testColumnGetCardList () {
     log:printInfo("Column.getCardList()");
-    github:Column column = {};
-    github:CardList|null cardList = column.getCardList();
+    github4:Column column = {};
+    github4:CardList|null cardList = column.getCardList();
 
-    test:assertEquals(typeof cardList, typeof github:CardList, msg = "Failed Column.getCardList()");
+    test:assertEquals(typeof cardList, typeof github4:CardList, msg = "Failed Column.getCardList()");
 }
 
 @test:Config {
@@ -571,7 +571,7 @@ function testColumnGetCardList () {
 }
 function testColumnListHasNextPage () {
     log:printInfo("ColumnList.hasNextPage()");
-    github:ColumnList columnList = {};
+    github4:ColumnList columnList = {};
 
     test:assertFalse(columnList.hasNextPage(), msg = "Failed ColumnList.hasNextPage()");
 }
@@ -581,7 +581,7 @@ function testColumnListHasNextPage () {
 }
 function testColumnListHasPreviousPage () {
     log:printInfo("ColumnList.hasPreviousPage()");
-    github:ColumnList columnList = {};
+    github4:ColumnList columnList = {};
 
     test:assertFalse(columnList.hasPreviousPage(), msg = "Failed ColumnList.hasPreviousPage()");
 }
@@ -591,10 +591,10 @@ function testColumnListHasPreviousPage () {
 }
 function testColumnListGetAllColumns () {
     log:printInfo("ColumnList.getAllColumns()");
-    github:ColumnList columnList = {};
-    github:Column[]|null columnArray = columnList.getAllColumns();
+    github4:ColumnList columnList = {};
+    github4:Column[]|null columnArray = columnList.getAllColumns();
 
-    test:assertEquals(typeof columnArray, typeof github:Column[], msg = "Failed ColumnList.getAllColumns()");
+    test:assertEquals(typeof columnArray, typeof github4:Column[], msg = "Failed ColumnList.getAllColumns()");
 }
 
 @test:Config {
@@ -602,7 +602,7 @@ function testColumnListGetAllColumns () {
 }
 function testCardListHasNextPage () {
     log:printInfo("CardList.hasNextPage()");
-    github:CardList cardList = {};
+    github4:CardList cardList = {};
 
     test:assertFalse(cardList.hasNextPage(), msg = "Failed CardList.hasNextPage()");
 }
@@ -612,7 +612,7 @@ function testCardListHasNextPage () {
 }
 function testCardListHasPreviousPage () {
     log:printInfo("CardList.hasPreviousPage()");
-    github:CardList cardList = {};
+    github4:CardList cardList = {};
 
     test:assertFalse(cardList.hasPreviousPage(), msg = "Failed CardList.hasPreviousPage()");
 }
@@ -622,10 +622,10 @@ function testCardListHasPreviousPage () {
 }
 function testCardListGetAllCards () {
     log:printInfo("CardList.getAllCards()");
-    github:CardList cardList = {};
-    github:Card[]|null cardArray = cardList.getAllCards();
+    github4:CardList cardList = {};
+    github4:Card[]|null cardArray = cardList.getAllCards();
 
-    test:assertEquals(typeof cardArray, typeof github:Card[], msg = "Failed CardList.getAllCards()");
+    test:assertEquals(typeof cardArray, typeof github4:Card[], msg = "Failed CardList.getAllCards()");
 }
 
 @test:Config {
@@ -633,7 +633,7 @@ function testCardListGetAllCards () {
 }
 function testPullRequestListHasNextPage () {
     log:printInfo("PullRequestList.hasNextPage()");
-    github:PullRequestList pullRequestList = {};
+    github4:PullRequestList pullRequestList = {};
 
     test:assertFalse(pullRequestList.hasNextPage(), msg = "Failed PullRequestList.hasNextPage()");
 }
@@ -643,7 +643,7 @@ function testPullRequestListHasNextPage () {
 }
 function testPullRequestListHasPreviousPage () {
     log:printInfo("PullRequestList.hasPreviousPage()");
-    github:PullRequestList pullRequestList = {};
+    github4:PullRequestList pullRequestList = {};
 
     test:assertFalse(pullRequestList.hasPreviousPage(), msg = "Failed PullRequestList.hasPreviousPage()");
 }
@@ -653,10 +653,10 @@ function testPullRequestListHasPreviousPage () {
 }
 function testPullRequestListGetAllPullRequests () {
     log:printInfo("PullRequestList.getAllPullRequests()");
-    github:PullRequestList pullRequestList = {};
-    github:PullRequest[]|null pullRequestArray = pullRequestList.getAllPullRequests();
+    github4:PullRequestList pullRequestList = {};
+    github4:PullRequest[]|null pullRequestArray = pullRequestList.getAllPullRequests();
 
-    test:assertEquals(typeof pullRequestArray, typeof github:PullRequest[],
+    test:assertEquals(typeof pullRequestArray, typeof github4:PullRequest[],
                       msg = "Failed PullRequestList.getAllPullRequests()");
 }
 
@@ -665,7 +665,7 @@ function testPullRequestListGetAllPullRequests () {
 }
 function testIssueListHasNextPage () {
     log:printInfo("IssueList.hasNextPage()");
-    github:IssueList issueList = {};
+    github4:IssueList issueList = {};
 
     test:assertFalse(issueList.hasNextPage(), msg = "Failed IssueList.hasNextPage()");
 }
@@ -675,7 +675,7 @@ function testIssueListHasNextPage () {
 }
 function testIssueListHasPreviousPage () {
     log:printInfo("IssueList.hasPreviousPage()");
-    github:IssueList issueList = {};
+    github4:IssueList issueList = {};
 
     test:assertFalse(issueList.hasPreviousPage(), msg = "Failed IssueList.hasPreviousPage()");
 }
@@ -685,10 +685,10 @@ function testIssueListHasPreviousPage () {
 }
 function testIssueListGetAllIssues () {
     log:printInfo("IssueList.getAllIssues()");
-    github:IssueList issueList = {};
-    github:Issue[]|null issueArray = issueList.getAllIssues();
+    github4:IssueList issueList = {};
+    github4:Issue[]|null issueArray = issueList.getAllIssues();
 
-    test:assertEquals(typeof issueArray, typeof github:Issue[], msg = "Failed IssueList.getAllIssues()");
+    test:assertEquals(typeof issueArray, typeof github4:Issue[], msg = "Failed IssueList.getAllIssues()");
 }
 
 @test:Config {
@@ -696,10 +696,10 @@ function testIssueListGetAllIssues () {
 }
 function testLabelListGetAllLabels () {
     log:printInfo("LabelList.getAllLabels()");
-    github:LabelList labelList = {};
-    github:Label[]|null labelArray = labelList.getAllLabels();
+    github4:LabelList labelList = {};
+    github4:Label[]|null labelArray = labelList.getAllLabels();
 
-    test:assertEquals(typeof labelArray, typeof github:Label[], msg = "Failed LabelList.getAllLabels()");
+    test:assertEquals(typeof labelArray, typeof github4:Label[], msg = "Failed LabelList.getAllLabels()");
 }
 
 @test:Config {
@@ -707,7 +707,7 @@ function testLabelListGetAllLabels () {
 }
 function testProjectOwnerGetOwnerType () {
     log:printInfo("ProjectOwner.getOwnerType()");
-    github:ProjectOwner projectOwner = {};
+    github4:ProjectOwner projectOwner = {};
 
     test:assertEquals(typeof projectOwner.getOwnerType(), typeof string, msg = "Failed ProjectOwner.getOwnerType()");
 }
@@ -717,7 +717,7 @@ function testProjectOwnerGetOwnerType () {
 }
 function testProjectOwnerSetOwnerType () {
     log:printInfo("ProjectOwner.setOwnerType()");
-    github:ProjectOwner projectOwner = {};
+    github4:ProjectOwner projectOwner = {};
     projectOwner.setOwnerType("Organization");
     string ownerType = projectOwner.getOwnerType();
 

@@ -16,7 +16,7 @@
 // under the License.
 //
 
-package github;
+package github4;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           GitHub Connector Transformers                                           //
