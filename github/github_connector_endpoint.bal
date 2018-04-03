@@ -52,6 +52,7 @@ public function <GitHubConnectorEndpoint githubConnectorEndpoint> init
                                               };
     githubConnectorEndpoint.githubConnector.githubClientEndpoint.httpClient =
                 http:createHttpClient(GIT_GRAPHQL_API_URL, githubConnectorConfiguration.clientEndpointConfiguration);
+
 }
 
 @Description {value: "Register GitHub connector endpoint"}
