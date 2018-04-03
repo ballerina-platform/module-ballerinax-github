@@ -4,9 +4,9 @@
 
 The Ballerina GitHub connector allow users to access the GitHub API through ballerina. This connector uses the GitHub GraphQL API v4.0
 
-|Ballerina Version | Connector Version |
-|------------------|-------------------|
-|0.970.0-alpha1-SNAPSHOT | 0.2 |
+|Ballerina Version | Connector Version | GitHub API Version |
+|------------------|-------------------| ------------------ |
+|0.970.0-alpha1-SNAPSHOT | 0.970.0-alpha1-SNAPSHOT | v4
 
 ![Ballerina GitHub Connector Overview](BallerinaGitHubConnector_Overview.jpg)
 
@@ -28,19 +28,26 @@ All the actions return `struct objects` or `github4:GitConnectorError`. If the a
 ##### Example
 * Request 
 ```ballerina
-    github4:GitHubConnector githubConnector = { accessToken: getAccessToken()};
+    import github4;
+
+    public function main (string[] args) {
+        endpoint github4:GitHubConnectorEndpoint githubConnectorEP {
+            accessToken:getAccessToken(),
+            clientEndpointConfiguration: {}
+        };
     
-    //Get a single repository
-    github4:Repository repository = {};
-    var repo = githubConnector.getRepository(github);
-    github4repo {
-        github4:Repositgithub4p => {
-            repository = rep;
-            io:println(repository);
+        github4:Repository repository = {};
+        var repo = githubConnectorEP -> getRepository("wso2-ballerina/package-github");
+        match repo {
+            github4:Repository rep => {
+                repository = rep;
+            }
+            github4:GitConnectorError err => {
+                io:println(err);
+            }
         }
-        github4:GitConngithub4rror err => {
-            io:println(err);
-        }
+    
+        io:println(repository);
     }
     
 ```
