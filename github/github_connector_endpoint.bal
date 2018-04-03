@@ -18,6 +18,8 @@
 
 package github;
 
+import ballerina/net.http;
+
 @Description {value: "GitHub connector configurations can be setup here. In order to use this connector,
 the user will need to have a GitHub Personal Access Token. The token can be obtained by visiting
 
@@ -26,11 +28,12 @@ https://github.com/<profile> -> Settings -> Developer Settings -> Personal acces
 and provide the obtained token to the GitHubConnectorConfiguration"}
 public struct GitHubConnectorConfiguration {
     string accessToken;
+    http:ClientEndpointConfiguration clientEndpointConfiguration;
 }
 
 @Description {value: "GitHub connector configuration initializer"}
 public function <GitHubConnectorConfiguration githubConnectorConfiguration> GitHubConfiguration () {
-
+    githubConnectorConfiguration.clientEndpointConfiguration = {};
 }
 
 @Description {value: "GitHub connector endpoint"}
@@ -43,8 +46,12 @@ public struct GitHubConnectorEndpoint {
 @Param {value: "GitHubConnectorConfiguration: GitHub connector configuration"}
 public function <GitHubConnectorEndpoint githubConnectorEndpoint> init
                                                         (GitHubConnectorConfiguration githubConnectorConfiguration) {
-    githubConnectorEndpoint.githubConnector = { accessToken : githubConnectorConfiguration.accessToken};
-    gitAccessToken = githubConnectorConfiguration.accessToken;
+    githubConnectorEndpoint.githubConnector = {
+                                                  accessToken : githubConnectorConfiguration.accessToken,
+                                                  githubClientEndpoint : {}
+                                              };
+    githubConnectorEndpoint.githubConnector.githubClientEndpoint.httpClient =
+    http:createHttpClient(GIT_GRAPHQL_API_URL, githubConnectorConfiguration.clientEndpointConfiguration);
 }
 
 @Description {value: "Register GitHub connector endpoint"}

@@ -7,7 +7,8 @@ import ballerina/test;
 import github;
 
 endpoint github:GitHubConnectorEndpoint githubConnectorEP {
-    accessToken:getAccessToken()
+    accessToken:getAccessToken(),
+    clientEndpointConfiguration: {}
 };
 
 @test:Config {

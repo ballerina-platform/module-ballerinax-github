@@ -106,7 +106,9 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
 @Param {value:"gitQuery: Graphql query"}
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
-function getProjectColumns (string ownerType, string gitQuery) returns ColumnList|GitConnectorError {
+function getProjectColumns (string ownerType, string gitQuery, GitHubConnector gitHubConnector) returns ColumnList|GitConnectorError {
+
+    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -120,7 +122,7 @@ function getProjectColumns (string ownerType, string gitQuery) returns ColumnLis
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, gitAccessToken);
+            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
         }
 
         GitConnectorError gitConError => {
