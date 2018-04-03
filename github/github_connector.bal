@@ -45,8 +45,7 @@ public function <GitHubConnector gitHubConnector> getRepository (string name) re
     string repoName = repoIdentifier[GIT_INDEX_ONE];
     Repository singleRepository = {};
 
-    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repoOwner}}","{{GIT_NAME}}":"{{repoName}}"},
-    "{{GIT_QUERY}}":"{{GET_REPOSITORY}}"}`;
+    string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY, [repoOwner, repoName]);
 
     http:Request request = {};
     var convertedQuery = stringToJson(stringQuery);
@@ -101,8 +100,7 @@ public function <GitHubConnector gitHubConnector> getOrganization (string name) 
     }
     Organization singleOrganization = {};
 
-    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{name}}"},
-        "{{GIT_QUERY}}":"{{GET_ORGANIZATION}}"}`;
+    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION, [name]);
 
     http:Request request = {};
     var convertedQuery = stringToJson(stringQuery);
@@ -162,18 +160,15 @@ public function <GitHubConnector gitHubConnector> getProjectColumnList (Project 
     string projectOwnerType = project.owner.getOwnerType();
     if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION) && project.resourcePath != null) {
         string organization = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
-        string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization}}",
-            "{{GIT_NUMBER}}":{{project.number}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},
-            "{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT_COLUMNS}}"}`;
+        string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS, [organization, project.number, recordCount]);
+
         return getProjectColumns(GIT_ORGANIZATION, stringQuery, gitHubConnector);
 
     } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY) && project.resourcePath != null) {
         string ownerName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_ONE];
         string repositoryName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
+        string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS, [ownerName, repositoryName, project.number, recordCount]);
 
-        string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{ownerName}}"
-        ,"{{GIT_NAME}}":"{{repositoryName}}","{{GIT_NUMBER}}":{{project.number}},"{{GIT_RECORD_COUNT}}":{{recordCount}}}
-        ,"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECT_COLUMNS}}"}`;
         return getProjectColumns(GIT_REPOSITORY, stringQuery, gitHubConnector);
     }
     connectorError.message = ["No records found"];
@@ -195,9 +190,7 @@ public function <GitHubConnector gitHubConnector> getOrganizationProject (Organi
         return connectorError;
     }
 
-
-    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}",
-    "{{GIT_NUMBER}}":{{projectNumber}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECT}}"}`;
+    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT, [organization.login, projectNumber]);
 
     http:Request request = {};
     var convertedQuery = stringToJson(stringQuery);
@@ -356,9 +349,7 @@ public function <GitHubConnector gitHubConnector> getPullRequestList
         return connectorError;
     }
 
-    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}"
-    ,"{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},
-    "{{GIT_QUERY}}":"{{GET_PULL_REQUESTS}}"}`;
+    string stringQuery = io:sprintf(TEMPLATE_GET_PULL_REQUESTS, [repository.owner.login, repository.name, state, recordCount]);
 
     http:Request request = {};
     var convertedQuery = stringToJson(stringQuery);
@@ -415,9 +406,7 @@ public function <GitHubConnector gitHubConnector> getRepositoryProjectList
         return connectorError;
     }
 
-    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}",
-        "{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_STATES}}":{{state}},"{{GIT_RECORD_COUNT}}":{{recordCount}}}
-        ,"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECTS}}"}`;
+    string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECTS, [repository.owner.login, repository.name, state, recordCount]);
 
     http:Request request = {};
     var convertedQuery = stringToJson(stringQuery);
@@ -468,9 +457,7 @@ public function <GitHubConnector gitHubConnector> getRepositoryProject (Reposito
         return connectorError;
     }
 
-    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}"
-    ,"{{GIT_REPOSITORY}}":"{{repository.name}}","{{GIT_NUMBER}}":{{projectNumber}}}
-    ,"{{GIT_QUERY}}":"{{GET_REPOSITORY_PROJECT}}"}`;
+    string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT, [repository.owner.login, repository.name, projectNumber]);
 
     http:Request request = {};
     var convertedQuery = stringToJson(stringQuery);
@@ -526,9 +513,8 @@ public function <GitHubConnector gitHubConnector> getIssueList (Repository repos
         connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
         return connectorError;
     }
-    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_OWNER}}":"{{repository.owner.login}}"
-    ,"{{GIT_NAME}}":"{{repository.name}}","{{GIT_STATES}}":{{state}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},
-    "{{GIT_QUERY}}":"{{GET_REPOSITORY_ISSUES}}"}`;
+
+    string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_ISSUES, [repository.owner.login, repository.name, state, recordCount]);
 
     http:Request request = {};
     var convertedQuery = stringToJson(stringQuery);
@@ -585,9 +571,7 @@ public function <GitHubConnector gitHubConnector> getOrganizationProjectList
         return connectorError;
     }
 
-    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}"
-    ,"{{GIT_STATES}}":{{state}},"{{GIT_RECORD_COUNT}}":{{recordCount}}},
-    "{{GIT_QUERY}}":"{{GET_ORGANIZATION_PROJECTS}}"}`;
+    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECTS, [organization.login, state, recordCount]);
 
     http:Request request = {};
     var convertedQuery = stringToJson(stringQuery);
@@ -643,8 +627,7 @@ public function <GitHubConnector gitHubConnector> getOrganizationRepositoryList
         return connectorError;
     }
 
-    string stringQuery = string `{"{{GIT_VARIABLES}}":{"{{GIT_ORGANIZATION}}":"{{organization.login}}",
-    "{{GIT_RECORD_COUNT}}":{{recordCount}}},"{{GIT_QUERY}}":"{{GET_ORGANIZATION_REPOSITORIES}}"}`;
+    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_REPOSITORIES, [organization.login, recordCount]);
 
     http:Request request = {};
     var convertedQuery = stringToJson(stringQuery);

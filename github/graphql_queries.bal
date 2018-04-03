@@ -595,3 +595,47 @@ public const string GET_REPOSITORY_ISSUES_NEXT_PAGE =
     }
   }
 }";
+
+
+// String query templates
+
+const string TEMPLATE_GET_REPOSITORY = "{\"variables\":{\"owner\":\"%s\",\"name\":\"%s\"},\"query\":\""
+                                       + GET_REPOSITORY + "\"}";
+
+const string TEMPLATE_GET_ORGANIZATION = "{\"variables\":{\"organization\":\"%s\"},\"query\":\""
+                                         + GET_ORGANIZATION + "\"}";
+
+const string TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS = "{\"variables\":{\"organization\":\"%s\",\"number\":%d,
+                                        \"recordCount\":%d},\"query\":\"" + GET_ORGANIZATION_PROJECT_COLUMNS + "\"}";
+
+const string TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS = "{\"variables\":{\"owner\":\"%s\",\"name\":\"%s\",
+                            \"number\":%d,\"recordCount\":%d},\"query\":\"" + GET_REPOSITORY_PROJECT_COLUMNS + "\"}";
+
+const string TEMPLATE_GET_ORGANIZATION_PROJECT = "{\"variables\":{\"organization\":\"%s\",\"number\":%d},
+                                                                    \"query\":\"" + GET_ORGANIZATION_PROJECT + "\"}";
+
+const string TEMPLATE_GET_PULL_REQUESTS = "{\"variables\":{\"owner\":\"%s\",\"name\":\"%s\",\"states\":%s,
+                                                        \"recordCount\":%d},\"query\":\"" + GET_PULL_REQUESTS + "\"}";
+
+const string TEMPLATE_GET_REPOSITORY_PROJECTS = "{\"variables\":{\"owner\":\"%s\",\"repository\":\"%s\",
+                                    \"states\":%s,\"recordCount\":%d},\"query\":\"" + GET_REPOSITORY_PROJECTS + "\"}";
+
+const string TEMPLATE_GET_REPOSITORY_PROJECT = "{\"variables\":{\"owner\":\"%s\",\"repository\":\"%s\",
+                                                        \"number\":%d},\"query\":\"" + GET_REPOSITORY_PROJECT + "\"}";
+
+const string TEMPLATE_GET_REPOSITORY_ISSUES = "{\"variables\":{\"owner\":\"%s\",\"name\":\"%s\",\"states\":%s,
+                                                    \"recordCount\":%d},\"query\":\"" + GET_REPOSITORY_ISSUES + "\"}";
+
+const string TEMPLATE_GET_ORGANIZATION_PROJECTS = "{\"variables\":{\"organization\":\"%s\",\"states\":%s,
+                                                \"recordCount\":%d},\"query\":\"" + GET_ORGANIZATION_PROJECTS + "\"}";
+
+const string TEMPLATE_GET_ORGANIZATION_REPOSITORIES = "{\"variables\":{\"organization\":\"%s\",
+                                            \"recordCount\":%d},\"query\":\"" + GET_ORGANIZATION_REPOSITORIES + "\"}";
+
+
+
+
+
+
+
+

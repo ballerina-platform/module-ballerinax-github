@@ -18,7 +18,6 @@
 
 package github;
 
-// Stated in alphabetical order
 
 
 //String constants
@@ -36,21 +35,16 @@ const string GIT_MESSAGE = "message";
 const string GIT_NAME = "name";
 const string GIT_NODE = "node";
 const string GIT_NODES = "nodes";
-const string GIT_NUMBER = "number";
 const string GIT_ORGANIZATION = "organization";
 const string GIT_OWNER = "owner";
 const string GIT_PAGE_INFO = "pageInfo";
 const string GIT_PROJECT = "project";
 const string GIT_PROJECTS = "projects";
 const string GIT_PULL_REQUESTS = "pullRequests";
-const string GIT_QUERY = "query";
-const string GIT_RECORD_COUNT = "recordCount";
 const string GIT_REPOSITORIES = "repositories";
 const string GIT_REPOSITORY = "repository";
 const string GIT_REPOSITORY_OWNER = "repositoryOwner";
 const string GIT_START_CURSOR = "startCursor";
-const string GIT_STATES = "states";
-const string GIT_VARIABLES = "variables";
 
 // Public constants
 public const string GIT_STATE_ALL_ISSUE = "[\"OPEN\",\"CLOSED\"]";
