@@ -24,7 +24,7 @@ import ballerina/http;
 import ballerina/test;
 import github4;
 
-endpoint github4:GitHubConnectorEndpoint githubConnectorEP {
+endpoint github4:GitHubEndpoint githubEP {
     accessToken:getAccessToken(),
     clientEndpointConfiguration: {}
 };
@@ -34,9 +34,9 @@ endpoint github4:GitHubConnectorEndpoint githubConnectorEP {
 }
 function testGetOrganization () {
     //Get a single organization
-    log:printInfo("githubConnectorEP -> getOrganization()");
+    log:printInfo("githubEP -> getOrganization()");
     github4:Organization organization = {};
-    var organizationData = githubConnectorEP -> getOrganization("wso2");
+    var organizationData = githubEP -> getOrganization("wso2");
     match organizationData {
         github4:Organization org => {
             organization = org;
@@ -55,10 +55,10 @@ function testGetOrganization () {
 }
 function testGetOrganizationProject () {
     // Get an organization project
-    log:printInfo("githubConnectorEP -> getOrganizationProject()");
+    log:printInfo("githubEP -> getOrganizationProject()");
     github4:Project orgProject = {};
     github4:Organization projectOrganization = {login:"wso2"};
-    var projectData = githubConnectorEP -> getOrganizationProject(projectOrganization, 1);
+    var projectData = githubEP -> getOrganizationProject(projectOrganization, 1);
     match projectData {
         github4:Project proj => {
             orgProject = proj;
@@ -77,11 +77,11 @@ function testGetOrganizationProject () {
 }
 function testGetOrganizationProjectList () {
     //Get a list of projects of an organization
-    log:printInfo("githubConnectorEP -> getOrganizationProjectList()");
+    log:printInfo("githubEP -> getOrganizationProjectList()");
     int recordCount = 2;
     github4:ProjectList projectList = {};
     github4:Organization projectListOrganization = {login:"wso2"};
-    var responseProjectList = githubConnectorEP ->
+    var responseProjectList = githubEP ->
                               getOrganizationProjectList(projectListOrganization, github4:GIT_STATE_OPEN, recordCount);
     match responseProjectList {
         github4:ProjectList prjtList => {
@@ -103,11 +103,11 @@ function testGetOrganizationProjectList () {
 }
 function testGetOrganizationProjectListNextPage () {
     //Get a list of projects of an organization
-    log:printInfo("githubConnectorEP -> getOrganizationProjectListNextPage()");
+    log:printInfo("githubEP -> getOrganizationProjectListNextPage()");
     int recordCount = 2;
     github4:ProjectList projectList = {};
     github4:Organization projectListOrganization = {login:"wso2"};
-    var responseProjectList = githubConnectorEP ->
+    var responseProjectList = githubEP ->
                               getOrganizationProjectList(projectListOrganization, github4:GIT_STATE_OPEN, 2);
     match responseProjectList {
         github4:ProjectList prjtList => {
@@ -119,7 +119,7 @@ function testGetOrganizationProjectListNextPage () {
         }
     }
     // Next page
-    responseProjectList = githubConnectorEP -> getProjectListNextPage(projectList);
+    responseProjectList = githubEP -> getProjectListNextPage(projectList);
     match responseProjectList {
         github4:ProjectList prjtList => {
             projectList = prjtList;
@@ -139,12 +139,12 @@ function testGetOrganizationProjectListNextPage () {
 }
 function testGetProjectColumnList () {
     //Get project column list
-    log:printInfo("githubConnectorEP -> getProjectColumnList()");
+    log:printInfo("githubEP -> getProjectColumnList()");
     int recordCount = 2;
     github4:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
     columnListProject.owner.setOwnerType("Organization");
     github4:ColumnList columnList = {};
-    var columns = githubConnectorEP -> getProjectColumnList(columnListProject, recordCount);
+    var columns = githubEP -> getProjectColumnList(columnListProject, recordCount);
     match columns {
         github4:ColumnList colList => {
             columnList = colList;
@@ -169,7 +169,7 @@ function testGetCardListOfColumn () {
     github4:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
     columnListProject.owner.setOwnerType("Organization");
     github4:ColumnList columnList = {};
-    var columns = githubConnectorEP -> getProjectColumnList(columnListProject, recordCount);
+    var columns = githubEP -> getProjectColumnList(columnListProject, recordCount);
     match columns {
         github4:ColumnList colList => {
             columnList = colList;
@@ -191,12 +191,12 @@ function testGetCardListOfColumn () {
 }
 function testGetCardListNextPage () {
     //Get card list next page
-    log:printInfo("githubConnectorEP -> getCardListNextPage()");
+    log:printInfo("githubEP -> getCardListNextPage()");
     int recordCount = 2;
     github4:Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1", owner:{}};
     columnListProject.owner.setOwnerType("Organization");
     github4:ColumnList columnList = {};
-    var columns = githubConnectorEP -> getProjectColumnList(columnListProject, recordCount);
+    var columns = githubEP -> getProjectColumnList(columnListProject, recordCount);
     match columns {
         github4:ColumnList colList => {
             columnList = colList;
@@ -207,7 +207,7 @@ function testGetCardListNextPage () {
     }
     github4:Column column = columnList.getAllColumns()[0];
     github4:CardList cardList = column.getCardList();
-    var cardListNextPage = githubConnectorEP -> getCardListNextPage(cardList);
+    var cardListNextPage = githubEP -> getCardListNextPage(cardList);
     match cardListNextPage {
         github4:CardList cd => {
             cardList = cd;
@@ -226,11 +226,11 @@ function testGetCardListNextPage () {
 }
 function testGetOrganizationRepositoryList () {
     //Get a all the repositories of Organization
-    log:printInfo("githubConnectorEP -> getOrganizationRepositoryList()");
+    log:printInfo("githubEP -> getOrganizationRepositoryList()");
     int recordCount = 2;
     github4:Organization repositoryListOrganization = {login:"wso2"};
     github4:RepositoryList repositoryList = {};
-    var repoList = githubConnectorEP -> getOrganizationRepositoryList(repositoryListOrganization, recordCount);
+    var repoList = githubEP -> getOrganizationRepositoryList(repositoryListOrganization, recordCount);
     match repoList {
         github4:RepositoryList repList => {
             repositoryList = repList;
@@ -250,11 +250,11 @@ function testGetOrganizationRepositoryList () {
 }
 function testGetOrganizationRepositoryListNextPage () {
     //Get a all the repositories of Organization
-    log:printInfo("githubConnectorEP -> getRepositoryListNextPage()");
+    log:printInfo("githubEP -> getRepositoryListNextPage()");
     int recordCount = 2;
     github4:Organization repositoryListOrganization = {login:"wso2"};
     github4:RepositoryList repositoryList = {};
-    var repoList = githubConnectorEP -> getOrganizationRepositoryList(repositoryListOrganization, recordCount);
+    var repoList = githubEP -> getOrganizationRepositoryList(repositoryListOrganization, recordCount);
     match repoList {
         github4:RepositoryList repList => {
             repositoryList = repList;
@@ -264,7 +264,7 @@ function testGetOrganizationRepositoryListNextPage () {
         }
     }
     // Next page
-    repoList = githubConnectorEP -> getRepositoryListNextPage(repositoryList);
+    repoList = githubEP -> getRepositoryListNextPage(repositoryList);
     match repoList {
         github4:RepositoryList repList => {
             repositoryList = repList;
@@ -284,9 +284,9 @@ function testGetOrganizationRepositoryListNextPage () {
 }
 function testGetRepository () {
     //Get a single repository
-    log:printInfo("githubConnectorEP -> getRepository()");
+    log:printInfo("githubEP -> getRepository()");
     github4:Repository repository = {};
-    var repo = githubConnectorEP -> getRepository("wso2/product-apim");
+    var repo = githubEP -> getRepository("wso2/product-apim");
     match repo {
         github4:Repository rep => {
             repository = rep;
@@ -304,10 +304,10 @@ function testGetRepository () {
 }
 function testGetRepositoryProject () {
     //Get a Repository Project
-    log:printInfo("githubConnectorEP -> getRepositoryProject()");
+    log:printInfo("githubEP -> getRepositoryProject()");
     github4:Repository projectRepository = {owner:{login:"wso2"}, name:"testgrid"};
     github4:Project repositoryProject = {};
-    var singleRepoProject = githubConnectorEP -> getRepositoryProject(projectRepository, 1);
+    var singleRepoProject = githubEP -> getRepositoryProject(projectRepository, 1);
     match singleRepoProject {
         github4:Project project => {
             repositoryProject = project;
@@ -325,11 +325,11 @@ function testGetRepositoryProject () {
 }
 function testGetRepositoryProjectList () {
     //Get a list of projects of a repository
-    log:printInfo("githubConnectorEP -> getRepositoryProjectList()");
+    log:printInfo("githubEP -> getRepositoryProjectList()");
     int recordCount = 1;
     github4:Repository projectRepositoryList = {name:"testgrid", owner:{login:"wso2"}};
     github4:ProjectList repoProjectList = {};
-    var responseRepoProjectList = githubConnectorEP ->
+    var responseRepoProjectList = githubEP ->
                                   getRepositoryProjectList(projectRepositoryList, github4:GIT_STATE_OPEN, recordCount);
     match responseRepoProjectList {
         github4:ProjectList prjtList => {
@@ -350,11 +350,11 @@ function testGetRepositoryProjectList () {
 }
 function testGetRepositoryProjectListNextPage () {
     //Get a list of projects of a repository
-    log:printInfo("githubConnectorEP -> getProjectListNextPage()");
+    log:printInfo("githubEP -> getProjectListNextPage()");
     int recordCount = 1;
     github4:Repository projectRepository = {name:"ProLAd-ExpertSystem", owner:{login:"vlgunarathne"}};
     github4:ProjectList repoProjectList = {};
-    var responseRepoProjectList = githubConnectorEP ->
+    var responseRepoProjectList = githubEP ->
                                   getRepositoryProjectList(projectRepository, github4:GIT_STATE_OPEN, 1);
     match responseRepoProjectList {
         github4:ProjectList prjtList => {
@@ -365,7 +365,7 @@ function testGetRepositoryProjectListNextPage () {
         }
     }
     // Next page
-    responseRepoProjectList = githubConnectorEP -> getProjectListNextPage(repoProjectList);
+    responseRepoProjectList = githubEP -> getProjectListNextPage(repoProjectList);
     match responseRepoProjectList {
         github4:ProjectList prjList => {
             repoProjectList = prjList;
@@ -384,11 +384,11 @@ function testGetRepositoryProjectListNextPage () {
 }
 function testGetPullRequestList () {
     //Get a list of pull requests in a repository
-    log:printInfo("githubConnectorEP -> getPullRequestList()");
+    log:printInfo("githubEP -> getPullRequestList()");
     int recordCount = 2;
     github4:Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
     github4:PullRequestList pullRequestList = {};
-    var prList = githubConnectorEP -> getPullRequestList(pullRequestRepository, github4:GIT_STATE_OPEN, recordCount);
+    var prList = githubEP -> getPullRequestList(pullRequestRepository, github4:GIT_STATE_OPEN, recordCount);
     match prList {
         github4:PullRequestList pList => {
             pullRequestList = pList;
@@ -408,11 +408,11 @@ function testGetPullRequestList () {
 }
 function testGetPullRequestListNextPage () {
     //Get a list of pull requests in a repository
-    log:printInfo("githubConnectorEP -> getPullRequestListNextPage()");
+    log:printInfo("githubEP -> getPullRequestListNextPage()");
     int recordCount = 2;
     github4:Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
     github4:PullRequestList pullRequestList = {};
-    var prList = githubConnectorEP -> getPullRequestList(pullRequestRepository, github4:GIT_STATE_OPEN, recordCount);
+    var prList = githubEP -> getPullRequestList(pullRequestRepository, github4:GIT_STATE_OPEN, recordCount);
     match prList {
         github4:PullRequestList pList => {
             pullRequestList = pList;
@@ -422,7 +422,7 @@ function testGetPullRequestListNextPage () {
         }
     }
     // Next page
-    prList = githubConnectorEP -> getPullRequestListNextPage(pullRequestList);
+    prList = githubEP -> getPullRequestListNextPage(pullRequestList);
     match prList {
         github4:PullRequestList pList => {
             pullRequestList = pList;
@@ -441,11 +441,11 @@ function testGetPullRequestListNextPage () {
 }
 function testGetIssueList () {
     //Get a list of issues of a repository
-    log:printInfo("githubConnectorEP -> getIssueList()");
+    log:printInfo("githubEP -> getIssueList()");
     int recordCount = 2;
     github4:Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
     github4:IssueList issueList = {};
-    var issues = githubConnectorEP -> getIssueList(issueRepository, github4:GIT_STATE_OPEN, recordCount);
+    var issues = githubEP -> getIssueList(issueRepository, github4:GIT_STATE_OPEN, recordCount);
     match issues {
         github4:IssueList isList => {
             issueList = isList;
@@ -465,11 +465,11 @@ function testGetIssueList () {
 }
 function testGetIssueListNextPage () {
     //Get a list of issues of a repository
-    log:printInfo("githubConnectorEP -> getIssueListNextPage()");
+    log:printInfo("githubEP -> getIssueListNextPage()");
     int recordCount = 2;
     github4:Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
     github4:IssueList issueList = {};
-    var issues = githubConnectorEP -> getIssueList(issueRepository, github4:GIT_STATE_OPEN, recordCount);
+    var issues = githubEP -> getIssueList(issueRepository, github4:GIT_STATE_OPEN, recordCount);
     match issues {
         github4:IssueList isList => {
             issueList = isList;
@@ -479,7 +479,7 @@ function testGetIssueListNextPage () {
         }
     }
     // Next page
-    issues = githubConnectorEP -> getIssueListNextPage(issueList);
+    issues = githubEP -> getIssueListNextPage(issueList);
     match issues {
         github4:IssueList isList => {
             issueList = isList;

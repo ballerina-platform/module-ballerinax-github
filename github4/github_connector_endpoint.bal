@@ -37,36 +37,36 @@ public function <GitHubConnectorConfiguration githubConnectorConfiguration> GitH
 }
 
 @Description {value: "GitHub connector endpoint"}
-public struct GitHubConnectorEndpoint {
+public struct GitHubEndpoint {
     GitHubConnectorConfiguration githubConnectorConfiguration;
     GitHubConnector githubConnector;
 }
 
 @Description {value: "GitHub connector endpoint initialization function"}
 @Param {value: "GitHubConnectorConfiguration: GitHub connector configuration"}
-public function <GitHubConnectorEndpoint githubConnectorEndpoint> init
+public function <GitHubEndpoint githubEndpoint> init
                                                         (GitHubConnectorConfiguration githubConnectorConfiguration) {
-    githubConnectorEndpoint.githubConnector = {
+    githubEndpoint.githubConnector = {
                                                   accessToken : githubConnectorConfiguration.accessToken,
                                                   githubClientEndpoint : {}
                                               };
-    githubConnectorEndpoint.githubConnector.githubClientEndpoint.httpClient =
+    githubEndpoint.githubConnector.githubClientEndpoint.httpClient =
                 http:createHttpClient(GIT_GRAPHQL_API_URL, githubConnectorConfiguration.clientEndpointConfiguration);
 
 }
 
 @Description {value: "Register GitHub connector endpoint"}
 @Param {value: "typedesc: Accepts types of data (int, float, string, boolean, etc)"}
-public function <GitHubConnectorEndpoint githubConnectorEndpoint> register (typedesc serviceType) {}
+public function <GitHubEndpoint githubEndpoint> register (typedesc serviceType) {}
 
 @Description {value: "Start GitHub connector endpoint"}
-public function <GitHubConnectorEndpoint githubConnectorEndpoint> start () {}
+public function <GitHubEndpoint githubEndpoint> start () {}
 
 @Description {value: "Get GitHub connector endpoint client"}
 @Return {value: "GitHubConnector instance"}
-public function <GitHubConnectorEndpoint githubConnectorEndpoint> getClient () returns GitHubConnector {
-    return githubConnectorEndpoint.githubConnector;
+public function <GitHubEndpoint githubEndpoint> getClient () returns GitHubConnector {
+    return githubEndpoint.githubConnector;
 }
 
 @Description {value: "Stop GitHub connector endpoint"}
-public function <GitHubConnectorEndpoint githubConnectorEndpoint> stop () {}
+public function <GitHubEndpoint githubConnectorEndpoint> stop () {}

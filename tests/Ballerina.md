@@ -19,7 +19,7 @@ In order to run the tests, the user will need to have a GitHub Personal Access T
 and provide the obtained token to the GitHubConnectorConfiguration as follows
 
 ```ballerina
-endpoint github4:GitHubConnectorEndpoint githubConnectorEP {
+endpoint github4:GitHubEndpoint githubConnectorEP {
     accessToken:"<ACCESS_TOKEN>",
     clientEndpointConfiguration: {}
 };
