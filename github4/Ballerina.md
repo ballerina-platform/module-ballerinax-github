@@ -31,13 +31,13 @@ All the actions return `struct objects` or `github4:GitConnectorError`. If the a
     import github4;
 
     public function main (string[] args) {
-        endpoint github4:GitHubConnectorEndpoint githubConnectorEP {
+        endpoint github4:GitHubEndpoint githubEP {
             accessToken:"<ACCESS_TOKEN>",
             clientEndpointConfiguration: {}
         };
     
         github4:Repository repository = {};
-        var repo = githubConnectorEP -> getRepository("wso2-ballerina/package-github");
+        var repo = githubEP -> getRepository("wso2-ballerina/package-github");
         match repo {
             github4:Repository rep => {
                 repository = rep;
