@@ -1,7 +1,7 @@
 # Compiled class file
 *.class
 *.balx
-
+*.toml
 # Log file
 *.log
 
@@ -35,6 +35,6 @@ target
 .vscode/
 # Ignore ballerina files
 accessToken.bal
-
+temp.bal
 #Ignore doc files
 docs/

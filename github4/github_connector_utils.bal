@@ -16,10 +16,10 @@
 // under the License.
 //
 
-package github;
+package github4;
 
 import ballerina/mime;
-import ballerina/net.http;
+import ballerina/http;
 import ballerina/util;
 
 @Description {value:"Construct the request headers"}
@@ -27,7 +27,6 @@ import ballerina/util;
 @Param {value:"stringQuery: GraphQL API query"}
 @Param {value:"accessToken: GitHub access token"}
 function constructRequest (http:Request request, json stringQuery, string accessToken) {
-    gitAccessToken = accessToken;
     request.removeAllHeaders();
     request.addHeader("Authorization", "Bearer " + accessToken);
     request.setJsonPayload(stringQuery);
@@ -101,6 +100,54 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
 
     return responsePayload;
 
+}
+@Description {value:"Get all columns of an organization project or repository project"}
+@Param {value:"ownerType: Repository or Organization"}
+@Param {value:"gitQuery: Graphql query"}
+@Return {value:"ColumnList: Column list object"}
+@Return {value:"GitConnectorError: Error"}
+function getProjectColumns (string ownerType, string gitQuery, GitHubConnector gitHubConnector) returns ColumnList|GitConnectorError {
+
+    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+
+    GitConnectorError connectorError = {};
+
+    if (ownerType == null || ownerType == "" || gitQuery == null || gitQuery == "") {
+        connectorError = {message:["Owner type and query cannot be null"]};
+        return connectorError;
+    }
+
+    http:Request request = {};
+    var convertedQuery = stringToJson(gitQuery);
+    match convertedQuery {
+        json jsonQuery => {
+        //Set headers and payload to the request
+            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
+
+    // Make an HTTP POST request
+    var response = gitHubEndpoint -> post("", request);
+
+    //Check for empty payloads and errors
+    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
+
+    match validatedResponse {
+        json jsonValidateResponse => {
+            var projectColumnsJson = jsonValidateResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
+            var columnList = jsonToColumnList(projectColumnsJson, ownerType, gitQuery);
+
+            return columnList;
+        }
+
+        GitConnectorError gitConError => {
+            return gitConError;
+        }
+    }
 }
 
 @Description {value:"Convert string to json"}
