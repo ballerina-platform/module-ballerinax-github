@@ -50,9 +50,13 @@ public function <GitHubEndpoint githubEndpoint> init
                                                   accessToken : githubConnectorConfiguration.accessToken,
                                                   githubClientEndpoint : {}
                                               };
-    githubEndpoint.githubConnector.githubClientEndpoint.httpClient =
-                http:createHttpClient(GIT_GRAPHQL_API_URL, githubConnectorConfiguration.clientEndpointConfiguration);
 
+    // Set the target url to the GitHub API endpoint
+    githubConnectorConfiguration.clientEndpointConfiguration.targets = [];
+    githubConnectorConfiguration.clientEndpointConfiguration.targets = [{uri:GIT_GRAPHQL_API_URL}];
+
+    // Initialize the client endpoint with the configurations
+    githubEndpoint.githubConnector.githubClientEndpoint.init(githubConnectorConfiguration.clientEndpointConfiguration);
 }
 
 @Description {value: "Register GitHub connector endpoint"}

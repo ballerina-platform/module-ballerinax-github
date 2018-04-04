@@ -25,7 +25,7 @@ endpoint github4:GitHubEndpoint githubConnectorEP {
 };
 ```
 
-Run github4.tests :
+Run tests :
 ```
-ballerina test github4.tests/
+ballerina test github4
 ```
