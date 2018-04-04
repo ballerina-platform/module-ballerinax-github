@@ -387,7 +387,7 @@ function testGetPullRequestList () {
     int recordCount = 2;
     Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
     PullRequestList pullRequestList = {};
-    var prList = githubEP -> getPullRequestList(pullRequestRepository, GIT_STATE_OPEN, recordCount);
+    var prList = githubEP -> getPullRequestList(pullRequestRepository, GIT_STATE_CLOSED, recordCount);
     match prList {
         PullRequestList pList => {
             pullRequestList = pList;
@@ -411,7 +411,7 @@ function testGetPullRequestListNextPage () {
     int recordCount = 2;
     Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
     PullRequestList pullRequestList = {};
-    var prList = githubEP -> getPullRequestList(pullRequestRepository, GIT_STATE_OPEN, recordCount);
+    var prList = githubEP -> getPullRequestList(pullRequestRepository, GIT_STATE_CLOSED, recordCount);
     match prList {
         PullRequestList pList => {
             pullRequestList = pList;
@@ -444,7 +444,7 @@ function testGetIssueList () {
     int recordCount = 2;
     Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
     IssueList issueList = {};
-    var issues = githubEP -> getIssueList(issueRepository, GIT_STATE_OPEN, recordCount);
+    var issues = githubEP -> getIssueList(issueRepository, GIT_STATE_CLOSED, recordCount);
     match issues {
         IssueList isList => {
             issueList = isList;
@@ -468,7 +468,7 @@ function testGetIssueListNextPage () {
     int recordCount = 2;
     Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
     IssueList issueList = {};
-    var issues = githubEP -> getIssueList(issueRepository, GIT_STATE_OPEN, recordCount);
+    var issues = githubEP -> getIssueList(issueRepository, GIT_STATE_CLOSED, recordCount);
     match issues {
         IssueList isList => {
             issueList = isList;
