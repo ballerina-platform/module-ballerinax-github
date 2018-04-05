@@ -8,7 +8,7 @@ The Ballerina GitHub connector allow users to access the GitHub API through ball
 |------------------|-------------------| ------------------ |
 |0.970.0-alpha1-SNAPSHOT | 0.970.0-alpha1-SNAPSHOT | v4
 
-![Ballerina GitHub Connector Overview](../BallerinaGitHubConnector_Overview.jpg)
+![Ballerina GitHub Connector Overview](BallerinaGitHubConnector_Overview.jpg)
 
 ### Getting started
 
@@ -23,7 +23,7 @@ Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 
 ### Working with GitHub Connector Actions
 
-All the actions return `struct objects` or `github4:GitConnectorError`. If the action was a success, then the requested struct object will be returned while the `github:GitConnectorError` will be **null** and vice-versa.
+All the actions return `struct objects` or `github4:GitConnectorError`. If the action was a success, then the requested struct object will be returned while the `github4:GitConnectorError` will be **null** and vice-versa.
 
 ##### Example
 * Request 

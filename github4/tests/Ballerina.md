@@ -8,11 +8,11 @@ The Ballerina GitHub connector allow users to access the GitHub API through ball
 |------------------|-------------------| ------------------ |
 |0.970.0-alpha1-SNAPSHOT | 0.970.0-alpha1-SNAPSHOT | v4 |
 
-## Running tests
+## Running github4.tests
 
-All the tests inside this package will make HTTP calls to the GitHub GraphQL API v4. If the HTTP call fails, then so will the test case.
+All the github4.tests inside this package will make HTTP calls to the GitHub GraphQL API v4. If the HTTP call fails, then so will the test case.
 
-In order to run the tests, the user will need to have a GitHub Personal Access Token. The token can be obtained by visiting
+In order to run the github4.tests, the user will need to have a GitHub Personal Access Token. The token can be obtained by visiting
 
 **https://github.com/{profile} -> Settings -> Developer Settings -> Personal access tokens**
 
@@ -27,5 +27,5 @@ endpoint github4:GitHubEndpoint githubConnectorEP {
 
 Run tests :
 ```
-ballerina test tests/
+ballerina test github4
 ```

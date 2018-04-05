@@ -25,10 +25,10 @@
 ## Marketing
 > Link to drafts of marketing content that will describe and promote this feature, including product page changes, technical articles, blog posts, videos, etc., if applicable
 
-## Automation tests
- - Unit tests 
+## Automation github4.tests
+ - Unit github4.tests 
    > Code coverage information
- - Integration tests
+ - Integration github4.tests
    > Details about the test cases and coverage
 
 ## Security checks
