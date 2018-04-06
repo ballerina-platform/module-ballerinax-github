@@ -117,7 +117,7 @@ function getProjectColumns (string ownerType, string gitQuery, GitHubConnector g
         return connectorError;
     }
 
-    http:Request request = {};
+    http:Request request = new;
     var convertedQuery = stringToJson(gitQuery);
     match convertedQuery {
         json jsonQuery => {
