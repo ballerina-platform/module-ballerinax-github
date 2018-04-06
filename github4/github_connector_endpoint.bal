@@ -27,7 +27,7 @@ https://github.com/<profile> -> Settings -> Developer Settings -> Personal acces
 
 and provide the obtained token to the GitHubConnectorConfiguration"}
 @Field {value: "accessToken: The GitHub API access token"}
-@Filed {value: "clientEndpointConfiguration: Client endpoint configurations provided by the user"}
+@Field {value: "clientEndpointConfiguration: Client endpoint configurations provided by the user"}
 public type GitHubConnectorConfiguration {
         string accessToken;
         http:ClientEndpointConfiguration clientEndpointConfiguration = {};

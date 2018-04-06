@@ -722,3 +722,19 @@ function testProjectOwnerSetOwnerType () {
 
     test:assertEquals(ownerType, "Organization", msg = "Failed ProjectOwner.getOwnerType()");
 }
+
+@test:Config {
+    groups:["utility-functions"]
+}
+function testConstructRequest () {
+    http:Request request = new;
+    json samplePayload = {"query":"query body"};
+    string sampleToken = "12345";
+    string expectedToken = "Bearer " + sampleToken;
+    constructRequest(request, samplePayload, sampleToken);
+
+    json payloadInRequest = check request.getJsonPayload();
+    test:assertTrue(request.hasHeader("Authorization"), msg = "No Authorization header available");
+    test:assertEquals(request.getHeader("Authorization"), expectedToken, msg = "Token mismatch");
+    test:assertEquals(payloadInRequest, samplePayload, msg = "Payload mismatch");
+}
