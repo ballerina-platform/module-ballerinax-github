@@ -101,6 +101,7 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
     return responsePayload;
 
 }
+
 @Description {value:"Get all columns of an organization project or repository project"}
 @Param {value:"ownerType: Repository or Organization"}
 @Param {value:"gitQuery: Graphql query"}
