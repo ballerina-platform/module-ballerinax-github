@@ -26,7 +26,7 @@ package github4;
 // JSON --> ProjectList
 //********************************
 function jsonToProjectList (json source_json, string listOwner, string stringQuery) returns (ProjectList) {
-    ProjectList target_projectList = {};
+    ProjectList target_projectList = new;
     target_projectList.listOwner = listOwner;
     target_projectList.projectListQuery = stringQuery;
     target_projectList.pageInfo = check <PageInfo>source_json.pageInfo;
@@ -43,7 +43,7 @@ function jsonToProjectList (json source_json, string listOwner, string stringQue
 // JSON --> CardList
 //********************************
 function jsonToCardList (json source_json, string columnId, string listOwner, string stringQuery) returns (CardList) {
-    CardList target_cardList = {};
+    CardList target_cardList = new;
     target_cardList.columnId = columnId;
     target_cardList.cardListQuery = stringQuery;
     target_cardList.listOwner = listOwner;
@@ -60,19 +60,19 @@ function jsonToCardList (json source_json, string columnId, string listOwner, st
 // JSON --> Column
 //********************************
 function jsonToColumn (json source_json, string listOwner, string stringQuery) returns (Column) {
-    Column target_column = {};
-    target_column.id = source_json.id.toString();
-    target_column.name = source_json.name.toString();
+    Column target_column = new;
+    target_column.id = source_json.id.toString() ?: "";
+    target_column.name = source_json.name.toString() ?: "";
     target_column.columnQuery = stringQuery;
     target_column.listOwner = listOwner;
-    target_column.cards = jsonToCardList(source_json.cards,source_json.id.toString(), listOwner, stringQuery);
+    target_column.cards = jsonToCardList(source_json.cards, source_json.id.toString() ?: "", listOwner, stringQuery);
     return target_column;
 }
 //********************************
 // JSON --> ColumnList
 //********************************
 function jsonToColumnList (json source_json, string listOwner, string stringQuery) returns (ColumnList) {
-    ColumnList target_columnList = {};
+    ColumnList target_columnList = new;
     target_columnList.listOwner = listOwner;
     target_columnList.columnListQuery = stringQuery;
     target_columnList.pageInfo = check <PageInfo>source_json.pageInfo;
@@ -89,7 +89,7 @@ function jsonToColumnList (json source_json, string listOwner, string stringQuer
 // JSON --> RepositoryList
 //********************************
 function jsonToRepositoryList (json source_json, string stringQuery) returns (RepositoryList) {
-    RepositoryList target_repositoryList = {};
+    RepositoryList target_repositoryList = new;
     target_repositoryList.repositoryListQuery = stringQuery;
     target_repositoryList.pageInfo = check <PageInfo>source_json.pageInfo;
     var nodes = check <json[]> source_json.nodes;
@@ -104,7 +104,7 @@ function jsonToRepositoryList (json source_json, string stringQuery) returns (Re
 // JSON --> PullRequestList
 //********************************
 function jsonToPullRequestList (json source_json, string stringQuery) returns (PullRequestList) {
-    PullRequestList target_pullRequestList = {};
+    PullRequestList target_pullRequestList = new;
     target_pullRequestList.pullRequestListQuery = stringQuery;
     target_pullRequestList.pageInfo = check <PageInfo>source_json.pageInfo;
     var nodes = check <json[]> source_json.nodes;
@@ -119,7 +119,7 @@ function jsonToPullRequestList (json source_json, string stringQuery) returns (P
 // JSON --> IssueList
 //********************************
 function jsonToIssueList (json source_json, string stringQuery) returns (IssueList) {
-    IssueList target_issueList = {};
+    IssueList target_issueList = new;
     target_issueList.issueListQuery = stringQuery;
     target_issueList.pageInfo = check <PageInfo>source_json.pageInfo;
     var nodes = check <json[]>source_json.nodes;

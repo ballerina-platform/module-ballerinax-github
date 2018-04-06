@@ -50,14 +50,10 @@ public type GitHubClient object {
 @Param {value: "GitHubConnectorConfiguration: GitHub connector configuration"}
 public function GitHubClient::init(GitHubConnectorConfiguration githubConnectorConfig) {
 
-    githubConnector = {
-                        accessToken : githubConnectorConfig.accessToken,
-                        githubClientEndpoint : {}
-                      };
+    githubConnector.accessToken = githubConnectorConfig.accessToken;
 
     // Set the target url to the GitHub API endpoint
-    githubConnectorConfig.clientEndpointConfiguration.targets = [];
-    githubConnectorConfig.clientEndpointConfiguration.targets = [{uri:GIT_GRAPHQL_API_URL}];
+    githubConnectorConfig.clientEndpointConfiguration.targets = [{url:GIT_GRAPHQL_API_URL}];
 
     // Initialize the client endpoint with the configurations
     githubConnector.githubClientEndpoint.init(githubConnectorConfig.clientEndpointConfiguration);

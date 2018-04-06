@@ -57,7 +57,7 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                         return connectorError;
                     }
                 }
-                string[] payLoadKeys = responsePayload.getKeys();
+                string[] payLoadKeys = responsePayload.getKeys() ?: [];
                 //Check all the keys in the payload to see if an error object is returned.
                 foreach key in payLoadKeys {
                     if (GIT_ERRORS.equalsIgnoreCase(key)) {
@@ -71,8 +71,10 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                         return connectorError;
                     }
                 }
+
                 //If no error object is returned, then check if the response contains the requested data.
-                string keyInData = responsePayload[GIT_DATA].getKeys()[GIT_INDEX_ZERO];
+                string[] keySet = responsePayload[GIT_DATA].getKeys() ?: [];
+                string keyInData = keySet[GIT_INDEX_ZERO];
                 if (null == responsePayload[GIT_DATA][keyInData][validateComponent]) {
                     string[] errorMessage = [GIT_ERROR_WHILE_RETRIEVING_DATA];
                     responsePayload = null;
@@ -80,7 +82,6 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                                          reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
                     return connectorError;
                 }
-
 
             } catch (error e) {
                 string[] errorMessage = [GIT_ERROR_WHILE_RETRIEVING_PAYLOAD];
@@ -97,7 +98,6 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
         }
     }
 
-
     return responsePayload;
 
 }
@@ -106,9 +106,10 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
 @Param {value:"gitQuery: Graphql query"}
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
-function getProjectColumns (string ownerType, string gitQuery, GitHubConnector gitHubConnector) returns ColumnList|GitConnectorError {
+function getProjectColumns (string ownerType, string gitQuery, string accessToken,
+                                    http:ClientEndpoint githubClientEndpoint) returns ColumnList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -122,7 +123,7 @@ function getProjectColumns (string ownerType, string gitQuery, GitHubConnector g
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+            constructRequest(request, jsonQuery, accessToken);
         }
 
         GitConnectorError gitConError => {

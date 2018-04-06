@@ -24,7 +24,7 @@ import ballerina/http;
 public type GitHubConnector object{
     public {
         string accessToken;
-        http:ClientEndpoint githubClientEndpoint;
+        http:ClientEndpoint githubClientEndpoint = new;
     }
 
     public function getCardListNextPage(CardList cardList)
@@ -213,7 +213,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
         string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS,
                                         [organization, project.number, recordCount]);
 
-        return getProjectColumns(GIT_ORGANIZATION, stringQuery, gitHubConnector);
+        return getProjectColumns(GIT_ORGANIZATION, stringQuery, accessToken, githubClientEndpoint);
 
     } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY) && project.resourcePath != null) {
         string ownerName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_ONE];
@@ -221,7 +221,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
         string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS,
                                         [ownerName, repositoryName, project.number, recordCount]);
 
-        return getProjectColumns(GIT_REPOSITORY, stringQuery, gitHubConnector);
+        return getProjectColumns(GIT_REPOSITORY, stringQuery, accessToken, githubClientEndpoint);
     }
     connectorError.message = ["No records found"];
     return connectorError;
@@ -315,7 +315,7 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
         match validatedResponse {
             json jsonValidatedResponse => {
                 var projectsJson = jsonValidatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
-                var projList =  jsonToProjectList(projectsJson, projectList.listOwner, dataQuery.toString());
+                var projList =  jsonToProjectList(projectsJson, projectList.listOwner, dataQuery.toString() ?: "");
 
                 return projList;
             }
@@ -734,7 +734,7 @@ public function GitHubConnector::getCardListNextPage (CardList cardList)
                 if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
                     jsonQuery["query"] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
                     ColumnList|GitConnectorError columnList =
-                                getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString(), gitHubConnector);
+                                getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString() ?: "", accessToken, githubClientEndpoint);
                     match columnList {
                         ColumnList colList => {
                             foreach column in colList.getAllColumns() {
@@ -752,7 +752,7 @@ public function GitHubConnector::getCardListNextPage (CardList cardList)
                 } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
                     jsonQuery["query"] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
                     ColumnList|GitConnectorError columnList =
-                                getProjectColumns(GIT_REPOSITORY, jsonQuery.toString(), gitHubConnector);
+                                getProjectColumns(GIT_REPOSITORY, jsonQuery.toString() ?: "", accessToken, githubClientEndpoint);
                     match columnList {
                         ColumnList colList => {
                             foreach column in colList.getAllColumns() {
@@ -794,11 +794,13 @@ public function GitHubConnector::getColumnListNextPage (ColumnList columnList)
                 if (columnList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
                     jsonQuery["query"] = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
 
-                    return getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString(), gitHubConnector);
+                    return getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString() ?: "",
+                                                                                    accessToken, githubClientEndpoint);
                 } else if (columnList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
                     jsonQuery["query"] = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
 
-                    return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString(), gitHubConnector);
+                    return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString() ?: "",
+                                                                                    accessToken, githubClientEndpoint);
                 }
             }
 
