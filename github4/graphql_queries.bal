@@ -252,7 +252,8 @@ package github4;
 }";
 
 @final public string GET_PULL_REQUESTS_NEXT_PAGE =
-"query ($owner: String!, $name: String!, $states:[PullRequestState!], $endCursorPullRequests: String!, $recordCount: Int!){
+"query ($owner: String!, $name: String!, $states:[PullRequestState!], $endCursorPullRequests: String!,
+                                                                                                $recordCount: Int!){
 	repository(owner:$owner, name:$name){
     pullRequests(first:$recordCount, states:$states, after: $endCursorPullRequests) {
       " + PAGE_INFO + ",

@@ -733,8 +733,8 @@ public function GitHubConnector::getCardListNextPage (CardList cardList)
 
                 if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
                     jsonQuery["query"] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
-                    ColumnList|GitConnectorError columnList =
-                                getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString() ?: "", accessToken, githubClientEndpoint);
+                    ColumnList|GitConnectorError columnList = getProjectColumns(GIT_ORGANIZATION,
+                                                        jsonQuery.toString() ?: "", accessToken, githubClientEndpoint);
                     match columnList {
                         ColumnList colList => {
                             foreach column in colList.getAllColumns() {
@@ -751,8 +751,8 @@ public function GitHubConnector::getCardListNextPage (CardList cardList)
 
                 } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
                     jsonQuery["query"] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
-                    ColumnList|GitConnectorError columnList =
-                                getProjectColumns(GIT_REPOSITORY, jsonQuery.toString() ?: "", accessToken, githubClientEndpoint);
+                    ColumnList|GitConnectorError columnList = getProjectColumns(GIT_REPOSITORY,
+                                                        jsonQuery.toString() ?: "", accessToken, githubClientEndpoint);
                     match columnList {
                         ColumnList colList => {
                             foreach column in colList.getAllColumns() {
