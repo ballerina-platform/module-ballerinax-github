@@ -23,10 +23,10 @@ import ballerina/http;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              Organization struct                                                  //
+//                                              Organization object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a github organization"}
-public struct Organization {
+public type Organization {
     string id;
     string login;
     string name;
@@ -39,17 +39,17 @@ public struct Organization {
     string url;
     string websiteUrl;
     string avatarUrl;
-}
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                       End of Organization struct                                                  //
+//                                       End of Organization object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              Repository struct                                                    //
+//                                              Repository object                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a github repository"}
-public struct Repository {
+public type Repository {
     string id;
     string name;
     string createdAt;
@@ -71,50 +71,55 @@ public struct Repository {
     string sshUrl;
     RepositoryOwner owner;
     Language primaryLanguage;
-}
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                           End of Repository struct                                                //
+//                                           End of Repository object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              RepositoryList struct                                                //
+//                                              RepositoryList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a list of repositories"}
-public struct RepositoryList {
-    private:
+public type RepositoryList object {
+    private {
         string repositoryListQuery;
         PageInfo pageInfo;
         Repository[] nodes;
-}
+    }
+
+    public function hasNextPage () returns (boolean);
+    public function hasPreviousPage () returns (boolean);
+    public function getAllRepositories () returns (Repository[]);
+};
 //*********************************************************************************************************************
 // RepositoryList bound functions
 //*********************************************************************************************************************
 @Description {value:"Check if repository list next page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <RepositoryList repositoryList> hasNextPage () returns (boolean) {
+public function RepositoryList::hasNextPage () returns (boolean) {
     return repositoryList.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if repository list previous page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <RepositoryList repositoryList> hasPreviousPage () returns (boolean) {
+public function RepositoryList::hasPreviousPage () returns (boolean) {
     return repositoryList.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get an array of repositories"}
 @Return {value:"RepositoryList[]: Array of repositories"}
-public function <RepositoryList repositoryList> getAllRepositories () returns (Repository[]) {
+public function RepositoryList::getAllRepositories () returns (Repository[]) {
     return repositoryList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                         End of RepositoryList struct                                              //
+//                                         End of RepositoryList object                                              //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              Project struct                                                       //
+//                                              Project object                                                       //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a github project"}
-public struct Project {
+public type Project {
     string id;
     int databaseId;
     string name;
@@ -130,112 +135,128 @@ public struct Project {
     boolean viewerCanUpdate;
     Creator creator;
     ProjectOwner owner;
-}
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                             End of Project struct                                                 //
+//                                             End of Project object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                 ProjectList struct                                                //
+//                                                 ProjectList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a list of projects"}
-public struct ProjectList {
-    private:
+public type ProjectList object {
+    private {
         string listOwner;
         string projectListQuery;
         PageInfo pageInfo;
         Project[] nodes;
-}
+    }
+
+    public function hasNextPage () returns (boolean);
+    public function hasPreviousPage () returns (boolean);
+    public function getAllProjects () returns (Project[]);
+};
 //*********************************************************************************************************************
 // ProjectList bound functions
 //*********************************************************************************************************************
 @Description {value:"Check if project list next page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <ProjectList projectList> hasNextPage () returns (boolean) {
+public function ProjectList::hasNextPage () returns (boolean) {
     return projectList.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if project list previous page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <ProjectList projectList> hasPreviousPage () returns (boolean) {
+public function ProjectList::hasPreviousPage () returns (boolean) {
     return projectList.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get an array of projects"}
 @Return {value:"Project[]: Array of projects"}
-public function <ProjectList projectList> getAllProjects () returns (Project[]) {
+public function ProjectList::getAllProjects () returns (Project[]) {
     return projectList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                             End of ProjectList struct                                             //
+//                                             End of ProjectList object                                             //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              Column struct                                                        //
+//                                              Column object                                                        //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a github Column"}
-public struct Column {
-    string id;
-    string name;
-    string columnQuery;
-    string listOwner;
-    private:
+public type Column object {
+    public {
+        string id;
+        string name;
+        string columnQuery;
+        string listOwner;
+    }
+
+    private {
         CardList cards;
-}
+    }
+
+    public function getCardList () returns (CardList);
+};
 //*********************************************************************************************************************
 // Column bound functions
 //*********************************************************************************************************************
 @Description {value:"Get a list of cards of a column"}
 @Return {value:"CardList: A card list object"}
-public function <Column column> getCardList () returns (CardList) {
+public function Column::getCardList () returns (CardList) {
     return column.cards;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              End of Column struct                                                 //
+//                                              End of Column object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              ColumnList struct                                                    //
+//                                              ColumnList object                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a list of columns of a project"}
-public struct ColumnList {
-    private:
+public type ColumnList object {
+    private {
         string listOwner;
         string columnListQuery;
         PageInfo pageInfo;
         Column[] nodes;
-}
+    }
+
+    public function hasNextPage () returns (boolean);
+    public function hasPreviousPage () returns (boolean);
+    public function getAllColumns () returns (Column[]);
+};
 //*********************************************************************************************************************
 // ColumnList bound functions
 //*********************************************************************************************************************
 @Description {value:"Check if column list next page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <ColumnList columnList> hasNextPage () returns (boolean) {
+public function ColumnList::hasNextPage () returns (boolean) {
     return columnList.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if column list previosu page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <ColumnList columnList> hasPreviousPage () returns (boolean) {
+public function ColumnList::hasPreviousPage () returns (boolean) {
     return columnList.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get an array of all the columns"}
 @Return {value:"Column[]: Column array"}
-public function <ColumnList columnList> getAllColumns () returns (Column[]) {
+public function ColumnList::getAllColumns () returns (Column[]) {
     return columnList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                          End of ColumnList struct                                                 //
+//                                          End of ColumnList object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                   Card struct                                                     //
+//                                                   Card object                                                     //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a github card"}
-public struct Card {
+public type Card {
     string id;
     string note;
     string state;
@@ -245,52 +266,57 @@ public struct Card {
     Creator creator;
     json column;
     json content;
-}
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                               End of Card struct                                                  //
+//                                               End of Card object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              CardList struct                                                      //
+//                                              CardList object                                                      //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a list of cards of a column"}
-public struct CardList {
-    private:
+public type CardList object {
+    private {
         string columnId;
         string cardListQuery;
         string listOwner;
         PageInfo pageInfo;
         Card[] nodes;
-}
+    }
+
+    public function hasNextPage () returns (boolean);
+    public function hasPreviousPage () returns (boolean);
+    public function getAllCards () returns (Card[]);
+};
 //*********************************************************************************************************************
 // CardList bound functions
 //*********************************************************************************************************************
 @Description {value:"Check if the card list next page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <CardList cardList> hasNextPage () returns (boolean) {
+public function CardList::hasNextPage () returns (boolean) {
     return cardList.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if the card list previous page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <CardList cardList> hasPreviousPage () returns (boolean) {
+public function CardList::hasPreviousPage () returns (boolean) {
     return cardList.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get an array of all the cards"}
 @Return {value:"Card[]: Array of cards"}
-public function <CardList cardList> getAllCards () returns (Card[]) {
+public function CardList::getAllCards () returns (Card[]) {
     return cardList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                            End of CardList struct                                                 //
+//                                            End of CardList object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              PullRequest struct                                                   //
+//                                              PullRequest object                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a github pull request"}
-public struct PullRequest {
+public type PullRequest {
     string id;
     string title;
     string createdAt;
@@ -311,50 +337,55 @@ public struct PullRequest {
     Creator author;
     string headRefName;
     string baseRefName;
-}
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                           End of PullRequest struct                                               //
+//                                           End of PullRequest object                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                             PullRequestList struct                                                //
+//                                             PullRequestList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a list of github pull requests"}
-public struct PullRequestList {
-    private:
+public type PullRequestList object {
+    private {
         string pullRequestListQuery;
         PageInfo pageInfo;
         PullRequest[] nodes;
-}
+    }
+    
+    public function hasNextPage () returns (boolean);
+    public function hasPreviousPage () returns (boolean);
+    public function getAllPullRequests () returns (PullRequest[]);
+};
 //*********************************************************************************************************************
 // PullRequestList bound functions
 //*********************************************************************************************************************
 @Description {value:"Check if pull request list next page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <PullRequestList pullRequestList> hasNextPage () returns (boolean) {
+public function PullRequestList::hasNextPage () returns (boolean) {
     return pullRequestList.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if pull request list previous page is avaiable"}
 @Return {value:"boolean: Return ture or false"}
-public function <PullRequestList pullRequestList> hasPreviousPage () returns (boolean) {
+public function PullRequestList::hasPreviousPage () returns (boolean) {
     return pullRequestList.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get an array of all the pull requests"}
 @Return {value:"PullRequest[]: PullRequest array"}
-public function <PullRequestList pullRequestList> getAllPullRequests () returns (PullRequest[]) {
+public function PullRequestList::getAllPullRequests () returns (PullRequest[]) {
     return pullRequestList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                          End of PullRequestList struct                                            //
+//                                          End of PullRequestList object                                            //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                Issue struct                                                       //
+//                                                Issue object                                                       //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a github issue"}
-public struct Issue {
+public type Issue {
     string id;
     string bodyText;
     string closed;
@@ -367,181 +398,195 @@ public struct Issue {
     string title;
     string updatedAt;
     string url;
-}
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              End of Issue struct                                                  //
+//                                              End of Issue object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                IssueList struct                                                   //
+//                                                IssueList object                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a list of github issues"}
-public struct IssueList {
-    private:
+public type IssueList object {
+    private {
         string issueListQuery;
         PageInfo pageInfo;
         Issue[] nodes;
-}
+    }
+
+    public function hasNextPage () returns (boolean);
+    public function hasPreviousPage () returns (boolean);
+    public function getAllIssues () returns (Issue[]);
+};
 //*********************************************************************************************************************
 // IssueList bound functions
 //*********************************************************************************************************************
 @Description {value:"Check if issue list next page is available"}
 @Return {value:"boolean: Return true or false"}
-public function <IssueList issueList> hasNextPage () returns (boolean) {
+public function IssueList::hasNextPage () returns (boolean) {
     return issueList.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if issue list previous page is avaiable"}
 @Return {value:"boolean: Return ture or false"}
-public function <IssueList issueList> hasPreviousPage () returns (boolean) {
+public function IssueList::hasPreviousPage () returns (boolean) {
     return issueList.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get an array of all the issues"}
 @Return {value:"Issue[]: Issue array"}
-public function <IssueList issueList> getAllIssues () returns (Issue[]) {
+public function IssueList::getAllIssues () returns (Issue[]) {
     return issueList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                            End of IssueList struct                                                //
+//                                            End of IssueList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                               Creator struct                                                      //
+//                                               Creator object                                                      //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a github Creator"}
-public struct Creator {
+public type Creator {
     string login;
     string resourcePath;
     string url;
     string avatarUrl;
-}
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                            End of Creator struct                                                  //
+//                                            End of Creator object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              ProjectOwner struct                                                  //
+//                                              ProjectOwner object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a github project owner"}
-public struct ProjectOwner {
-    string id;
-    string projectsResourcePath;
-    string projectsUrl;
-    string viewerCanCreateProjects;
-    private:
+public type ProjectOwner object {
+    public {
+        string id;
+        string projectsResourcePath;
+        string projectsUrl;
+        string viewerCanCreateProjects;
+    }
+
+    private {
         string __typename;
-}
+
+    }
+
+    public function getOwnerType () returns (string);
+    public function setOwnerType (string ownerType);
+};
 //*********************************************************************************************************************
 // ProjectOwner bound functions
 //*********************************************************************************************************************
 @Description {value:"Get the type of the project owner"}
 @Return {value:"string: Type of the owner"}
-public function <ProjectOwner projectOwner> getOwnerType () returns (string) {
+public function ProjectOwner::getOwnerType () returns (string) {
     return projectOwner.__typename;
 }
 
 @Description {value:"Set the type of the project owner"}
-public function <ProjectOwner projectOwner> setOwnerType (string ownerType) {
+public function ProjectOwner::setOwnerType (string ownerType) {
     projectOwner.__typename = ownerType;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                           End of ProjectOwner struct                                              //
+//                                           End of ProjectOwner object                                              //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                            RepositoryOwner struct                                                 //
+//                                            RepositoryOwner object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a github repository owner"}
-public struct RepositoryOwner {
+public type RepositoryOwner {
     string id;
     string login;
     string url;
     string avatarUrl;
     string resourcePath;
-}
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                          End RepositoryOwner struct                                               //
+//                                          End RepositoryOwner object                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                               Content struct                                                      //
+//                                               Content object                                                      //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a content in a github card"}
-public struct Content {
+public type Content {
     string title;
     string url;
     string issueState;
-}
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                           End of Content struct                                                   //
+//                                           End of Content object                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                Language struct                                                    //
+//                                                Language object                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a github language"}
-public struct Language {
+public type Language {
     string id;
     string name;
     string color;
-}
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                             End of Language struct                                                //
+//                                             End of Language object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                            GitConnectorError struct                                               //
+//                                            GitConnectorError object                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"GitHub Connector Error"}
-public struct GitConnectorError {
+public type GitConnectorError {
     int statusCode;
     string[] message;
     string reasonPhrase;
     string server;
-}
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                         End of GitConnectorError struct                                           //
+//                                         End of GitConnectorError object                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                PageInfo struct                                                    //
+//                                                PageInfo object                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a github page information"}
-struct PageInfo {
+type PageInfo {
     boolean hasNextPage;
     boolean hasPreviousPage;
     string startCursor;
     string endCursor;
-}
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                            End of PageInfo struct                                                 //
+//                                            End of PageInfo object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                 Label struct                                                      //
+//                                                 Label object                                                      //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a github label"}
-public struct Label {
+public type Label {
     string id;
     string name;
     string description;
     string color;
-}
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                             End of Label struct                                                   //
+//                                             End of Label object                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                               LabelList struct                                                    //
+//                                               LabelList object                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Description {value:"Represents a list of github labels"}
-public struct LabelList {
-    private:
+public type LabelList object{
+    private{
         Label[] nodes;
-}
+    }
+};
 //*********************************************************************************************************************
 // LabelList bound functions
 //*********************************************************************************************************************
@@ -551,6 +596,6 @@ public function <LabelList labelList> getAllLabels () returns (Label[]) {
     return labelList.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              End of LabelList struct                                              //
+//                                              End of LabelList object                                              //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

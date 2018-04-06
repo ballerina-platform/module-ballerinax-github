@@ -62,9 +62,9 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                 foreach key in payLoadKeys {
                     if (GIT_ERRORS.equalsIgnoreCase(key)) {
                         string[] errors = [];
-                        var errorList =? <json[]>responsePayload[GIT_ERRORS];
+                        var errorList = check <json[]>responsePayload[GIT_ERRORS];
                         foreach i, singleError in errorList {
-                            errors[i] =? <string>singleError[GIT_MESSAGE];
+                            errors[i] = check <string>singleError[GIT_MESSAGE];
                         }
                         connectorError = {message:errors, statusCode:gitResponse.statusCode,
                                              reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};

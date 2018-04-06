@@ -19,21 +19,21 @@
 package github4;
 
 
-const string PAGE_INFO = "pageInfo {
+@final string PAGE_INFO = "pageInfo {
         hasNextPage,
         hasPreviousPage,
         startCursor,
         endCursor
     }";
 
-const string CREATOR = "creator {
+@final string CREATOR = "creator {
           login,
           resourcePath,
           url,
           avatarUrl
       }";
 
-const string PROJECT_OWNER = "owner {
+@final string PROJECT_OWNER = "owner {
           id,
           projectsResourcePath,
           projectsUrl,
@@ -41,7 +41,7 @@ const string PROJECT_OWNER = "owner {
           __typename
       }";
 
-const string REPOSITORY_OWNER = "owner {
+@final string REPOSITORY_OWNER = "owner {
           id,
           login,
           url,
@@ -49,7 +49,7 @@ const string REPOSITORY_OWNER = "owner {
           resourcePath
       }";
 
-const string PROJECTS_NODES = "nodes {
+@final string PROJECTS_NODES = "nodes {
         id,
         databaseId,
         name,
@@ -67,33 +67,33 @@ const string PROJECTS_NODES = "nodes {
         " + PROJECT_OWNER + "
     }";
 
-const string PRIMARY_LANGUAGE = "primaryLanguage {
+@final string PRIMARY_LANGUAGE = "primaryLanguage {
           id,
           name,
           color
       }";
 
-const string AUTHOR = "author {
+@final string AUTHOR = "author {
           login,
           resourcePath,
           url,
           avatarUrl
       }";
 
-const string COLUMN = "column {
+@final string COLUMN = "column {
         id,
         name,
         url
     }";
 
-const string EDITOR = "editor {
+@final string EDITOR = "editor {
           login,
           resourcePath,
           url,
           avatarUrl,
       }";
 
-const string LABELS = "labels (first: 100){
+@final string LABELS = "labels (first: 100){
           nodes {
             id,
             name,
@@ -102,12 +102,12 @@ const string LABELS = "labels (first: 100){
           }
       }";
 
-const string CONTENT = "content {
+@final string CONTENT = "content {
                 ... on Issue { title, url, issueState:state}
                 ... on PullRequest { title, url, prState:state}
             }";
 
-public const string GET_REPOSITORY_PROJECTS =
+@final public string GET_REPOSITORY_PROJECTS =
 "query ($owner: String!, $repository: String!, $states:[ProjectState!], $recordCount: Int!){
 	repository(owner:$owner, name:$repository){
     projects(first:$recordCount, states:$states){
@@ -117,7 +117,7 @@ public const string GET_REPOSITORY_PROJECTS =
   }
 }";
 
-public const string GET_REPOSITORY_PROJECTS_NEXT_PAGE =
+@final public string GET_REPOSITORY_PROJECTS_NEXT_PAGE =
 "query ($owner: String!, $repository: String!, $states:[ProjectState!], $endCursorProjects: String!, $recordCount: Int!){
 	repository(owner:$owner, name:$repository){
     projects(first:$recordCount, states:$states, after:$endCursorProjects){
@@ -127,7 +127,7 @@ public const string GET_REPOSITORY_PROJECTS_NEXT_PAGE =
   }
 }";
 
-public const string GET_ORGANIZATION_PROJECTS =
+@final public string GET_ORGANIZATION_PROJECTS =
 "query ($organization: String!, $states:[ProjectState!], $recordCount: Int!){
 	organization(login:$organization) {
     projects(first:$recordCount, states:$states){
@@ -137,7 +137,7 @@ public const string GET_ORGANIZATION_PROJECTS =
   }
 }";
 
-public const string GET_ORGANIZATION_PROJECTS_NEXT_PAGE =
+@final public string GET_ORGANIZATION_PROJECTS_NEXT_PAGE =
 "query ($organization: String!, $states:[ProjectState!], $endCursorProjects:String!, $recordCount: Int!){
 	organization(login:$organization) {
     projects(first:$recordCount, states:$states, after:$endCursorProjects){
@@ -147,7 +147,7 @@ public const string GET_ORGANIZATION_PROJECTS_NEXT_PAGE =
   }
 }";
 
-public const string GET_REPOSITORY_PROJECT =
+@final public string GET_REPOSITORY_PROJECT =
 "query ($owner: String!, $repository: String!, $number: Int!){
 	repository(owner:$owner, name:$repository) {
     project(number:$number) {
@@ -170,7 +170,7 @@ public const string GET_REPOSITORY_PROJECT =
   }
 }";
 
-public const string GET_ORGANIZATION_PROJECT =
+@final public string GET_ORGANIZATION_PROJECT =
 "query ($organization: String!, $number: Int!){
 	organization(login:$organization) {
     project(number:$number) {
@@ -193,7 +193,7 @@ public const string GET_ORGANIZATION_PROJECT =
   }
 }";
 
-public const string GET_REPOSITORY =
+@final public string GET_REPOSITORY =
 "query ($owner: String!, $name: String!){
 	repository(owner:$owner, name:$name){
     id,
@@ -220,7 +220,7 @@ public const string GET_REPOSITORY =
   }
 }";
 
-public const string GET_PULL_REQUESTS =
+@final public string GET_PULL_REQUESTS =
 "query ($owner: String!, $name: String!, $states:[PullRequestState!], $recordCount: Int!){
 	repository(owner:$owner, name:$name){
     pullRequests(first:$recordCount, states:$states) {
@@ -251,7 +251,7 @@ public const string GET_PULL_REQUESTS =
   }
 }";
 
-public const string GET_PULL_REQUESTS_NEXT_PAGE =
+@final public string GET_PULL_REQUESTS_NEXT_PAGE =
 "query ($owner: String!, $name: String!, $states:[PullRequestState!], $endCursorPullRequests: String!, $recordCount: Int!){
 	repository(owner:$owner, name:$name){
     pullRequests(first:$recordCount, states:$states, after: $endCursorPullRequests) {
@@ -282,7 +282,7 @@ public const string GET_PULL_REQUESTS_NEXT_PAGE =
   }
 }";
 
-public const string GET_ORGANIZATION =
+@final public string GET_ORGANIZATION =
 "query ($organization: String!) {
   organization(login:$organization) {
     avatarUrl,
@@ -300,7 +300,7 @@ public const string GET_ORGANIZATION =
   }
 }";
 
-public const string GET_REPOSITORY_PROJECT_COLUMNS =
+@final public string GET_REPOSITORY_PROJECT_COLUMNS =
 "query ($owner: String!,$name:String!, $number: Int!, $recordCount: Int!){
   repository (owner:$owner, name:$name) {
     project (number : $number){
@@ -329,7 +329,7 @@ public const string GET_REPOSITORY_PROJECT_COLUMNS =
   }
 }";
 
-public const string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE =
+@final public string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE =
 "query ($owner: String!,$name:String!, $number: Int!, $endCursorColumns: String!, $recordCount: Int!){
   repository (owner:$owner, name:$name) {
     project (number : $number){
@@ -368,7 +368,7 @@ public const string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE =
   }
 }";
 
-public const string GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE =
+@final public string GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE =
 "query ($owner: String!,$name:String!, $number: Int!, $endCursorCards: String!, $recordCount: Int!){
   repository (owner:$owner, name:$name) {
     project (number : $number){
@@ -397,7 +397,7 @@ public const string GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE =
   }
 }";
 
-public const string GET_ORGANIZATION_PROJECT_COLUMNS =
+@final public string GET_ORGANIZATION_PROJECT_COLUMNS =
 "query ($organization: String!, $number: Int!, $recordCount: Int!){
   organization (login:$organization) {
     project (number : $number) {
@@ -426,7 +426,7 @@ public const string GET_ORGANIZATION_PROJECT_COLUMNS =
   }
 }";
 
-public const string GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE =
+@final public string GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE =
 "query ($organization: String!, $number: Int!, $endCursorColumns: String!, $recordCount: Int!){
   organization (login:$organization) {
     project (number : $number) {
@@ -455,7 +455,7 @@ public const string GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE =
   }
 }";
 
-public const string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE =
+@final public string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE =
 "query ($organization: String!, $number: Int!, $endCursorCards: String!, $recordCount: Int!){
   organization (login:$organization) {
     project (number : $number) {
@@ -484,7 +484,7 @@ public const string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE =
   }
 }";
 
-public const string GET_ORGANIZATION_REPOSITORIES =
+@final public string GET_ORGANIZATION_REPOSITORIES =
 "query ($organization: String!, $recordCount: Int!) {
   organization (login:$organization) {
     repositories (first: $recordCount) {
@@ -516,7 +516,7 @@ public const string GET_ORGANIZATION_REPOSITORIES =
   }
 }";
 
-public const string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE =
+@final public string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE =
 "query ($organization: String!, $endCursorRepos: String!, $recordCount: Int!) {
   organization (login:$organization) {
     repositories (first: $recordCount, after: $endCursorRepos) {
@@ -548,7 +548,7 @@ public const string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE =
   }
 }";
 
-public const string GET_REPOSITORY_ISSUES =
+@final public string GET_REPOSITORY_ISSUES =
 "query ($owner:String!, $name:String!, $states:[IssueState!], $recordCount: Int!) {
   repository(owner:$owner, name: $name) {
     issues (first: $recordCount, states:$states) {
@@ -572,7 +572,7 @@ public const string GET_REPOSITORY_ISSUES =
   }
 }";
 
-public const string GET_REPOSITORY_ISSUES_NEXT_PAGE =
+@final public string GET_REPOSITORY_ISSUES_NEXT_PAGE =
 "query ($owner:String!, $name:String!, $states:[IssueState!], $endCursorIssues: String!, $recordCount: Int!) {
   repository(owner:$owner, name: $name) {
     issues (first: $recordCount, states:$states, after: $endCursorIssues) {
@@ -599,37 +599,37 @@ public const string GET_REPOSITORY_ISSUES_NEXT_PAGE =
 
 // String query templates
 
-const string TEMPLATE_GET_REPOSITORY = "{\"variables\":{\"owner\":\"%s\",\"name\":\"%s\"},\"query\":\""
+@final string TEMPLATE_GET_REPOSITORY = "{\"variables\":{\"owner\":\"%s\",\"name\":\"%s\"},\"query\":\""
                                        + GET_REPOSITORY + "\"}";
 
-const string TEMPLATE_GET_ORGANIZATION = "{\"variables\":{\"organization\":\"%s\"},\"query\":\""
+@final string TEMPLATE_GET_ORGANIZATION = "{\"variables\":{\"organization\":\"%s\"},\"query\":\""
                                          + GET_ORGANIZATION + "\"}";
 
-const string TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS = "{\"variables\":{\"organization\":\"%s\",\"number\":%d,
+@final string TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS = "{\"variables\":{\"organization\":\"%s\",\"number\":%d,
                                         \"recordCount\":%d},\"query\":\"" + GET_ORGANIZATION_PROJECT_COLUMNS + "\"}";
 
-const string TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS = "{\"variables\":{\"owner\":\"%s\",\"name\":\"%s\",
+@final string TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS = "{\"variables\":{\"owner\":\"%s\",\"name\":\"%s\",
                             \"number\":%d,\"recordCount\":%d},\"query\":\"" + GET_REPOSITORY_PROJECT_COLUMNS + "\"}";
 
-const string TEMPLATE_GET_ORGANIZATION_PROJECT = "{\"variables\":{\"organization\":\"%s\",\"number\":%d},
+@final string TEMPLATE_GET_ORGANIZATION_PROJECT = "{\"variables\":{\"organization\":\"%s\",\"number\":%d},
                                                                     \"query\":\"" + GET_ORGANIZATION_PROJECT + "\"}";
 
-const string TEMPLATE_GET_PULL_REQUESTS = "{\"variables\":{\"owner\":\"%s\",\"name\":\"%s\",\"states\":%s,
+@final string TEMPLATE_GET_PULL_REQUESTS = "{\"variables\":{\"owner\":\"%s\",\"name\":\"%s\",\"states\":%s,
                                                         \"recordCount\":%d},\"query\":\"" + GET_PULL_REQUESTS + "\"}";
 
-const string TEMPLATE_GET_REPOSITORY_PROJECTS = "{\"variables\":{\"owner\":\"%s\",\"repository\":\"%s\",
+@final string TEMPLATE_GET_REPOSITORY_PROJECTS = "{\"variables\":{\"owner\":\"%s\",\"repository\":\"%s\",
                                     \"states\":%s,\"recordCount\":%d},\"query\":\"" + GET_REPOSITORY_PROJECTS + "\"}";
 
-const string TEMPLATE_GET_REPOSITORY_PROJECT = "{\"variables\":{\"owner\":\"%s\",\"repository\":\"%s\",
+@final string TEMPLATE_GET_REPOSITORY_PROJECT = "{\"variables\":{\"owner\":\"%s\",\"repository\":\"%s\",
                                                         \"number\":%d},\"query\":\"" + GET_REPOSITORY_PROJECT + "\"}";
 
-const string TEMPLATE_GET_REPOSITORY_ISSUES = "{\"variables\":{\"owner\":\"%s\",\"name\":\"%s\",\"states\":%s,
+@final string TEMPLATE_GET_REPOSITORY_ISSUES = "{\"variables\":{\"owner\":\"%s\",\"name\":\"%s\",\"states\":%s,
                                                     \"recordCount\":%d},\"query\":\"" + GET_REPOSITORY_ISSUES + "\"}";
 
-const string TEMPLATE_GET_ORGANIZATION_PROJECTS = "{\"variables\":{\"organization\":\"%s\",\"states\":%s,
+@final string TEMPLATE_GET_ORGANIZATION_PROJECTS = "{\"variables\":{\"organization\":\"%s\",\"states\":%s,
                                                 \"recordCount\":%d},\"query\":\"" + GET_ORGANIZATION_PROJECTS + "\"}";
 
-const string TEMPLATE_GET_ORGANIZATION_REPOSITORIES = "{\"variables\":{\"organization\":\"%s\",
+@final string TEMPLATE_GET_ORGANIZATION_REPOSITORIES = "{\"variables\":{\"organization\":\"%s\",
                                             \"recordCount\":%d},\"query\":\"" + GET_ORGANIZATION_REPOSITORIES + "\"}";
 
 

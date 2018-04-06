@@ -29,10 +29,10 @@ function jsonToProjectList (json source_json, string listOwner, string stringQue
     ProjectList target_projectList = {};
     target_projectList.listOwner = listOwner;
     target_projectList.projectListQuery = stringQuery;
-    target_projectList.pageInfo =? <PageInfo>source_json.pageInfo;
-    json[] nodes =? <json[]> source_json.nodes;
+    target_projectList.pageInfo = check <PageInfo>source_json.pageInfo;
+    json[] nodes = check <json[]> source_json.nodes;
     foreach i, node in nodes {
-        var project =? <Project> node;
+        var project = check <Project> node;
         target_projectList.nodes[i] = project;
     }
 
@@ -47,10 +47,10 @@ function jsonToCardList (json source_json, string columnId, string listOwner, st
     target_cardList.columnId = columnId;
     target_cardList.cardListQuery = stringQuery;
     target_cardList.listOwner = listOwner;
-    target_cardList.pageInfo =? <PageInfo>source_json.pageInfo;
-    json[] nodes =? <json[]> source_json.nodes;
+    target_cardList.pageInfo = check <PageInfo>source_json.pageInfo;
+    json[] nodes = check <json[]> source_json.nodes;
     foreach i, node in nodes {
-        var card =? <Card> node;
+        var card = check <Card> node;
         target_cardList.nodes[i] = card;
     }
 
@@ -75,8 +75,8 @@ function jsonToColumnList (json source_json, string listOwner, string stringQuer
     ColumnList target_columnList = {};
     target_columnList.listOwner = listOwner;
     target_columnList.columnListQuery = stringQuery;
-    target_columnList.pageInfo =? <PageInfo>source_json.pageInfo;
-    json[] nodes =? <json[]>source_json.nodes;
+    target_columnList.pageInfo = check <PageInfo>source_json.pageInfo;
+    json[] nodes = check <json[]>source_json.nodes;
     foreach i, node in nodes {
         var column = jsonToColumn(node, listOwner, stringQuery);
         target_columnList.nodes[i] = column;
@@ -91,10 +91,10 @@ function jsonToColumnList (json source_json, string listOwner, string stringQuer
 function jsonToRepositoryList (json source_json, string stringQuery) returns (RepositoryList) {
     RepositoryList target_repositoryList = {};
     target_repositoryList.repositoryListQuery = stringQuery;
-    target_repositoryList.pageInfo =? <PageInfo>source_json.pageInfo;
-    var nodes =? <json[]> source_json.nodes;
+    target_repositoryList.pageInfo = check <PageInfo>source_json.pageInfo;
+    var nodes = check <json[]> source_json.nodes;
     foreach i, node in nodes {
-        var repository =? <Repository> node;
+        var repository = check <Repository> node;
         target_repositoryList.nodes[i] = repository;
     }
 
@@ -106,10 +106,10 @@ function jsonToRepositoryList (json source_json, string stringQuery) returns (Re
 function jsonToPullRequestList (json source_json, string stringQuery) returns (PullRequestList) {
     PullRequestList target_pullRequestList = {};
     target_pullRequestList.pullRequestListQuery = stringQuery;
-    target_pullRequestList.pageInfo =? <PageInfo>source_json.pageInfo;
-    var nodes =? <json[]> source_json.nodes;
+    target_pullRequestList.pageInfo = check <PageInfo>source_json.pageInfo;
+    var nodes = check <json[]> source_json.nodes;
     foreach i, node in nodes {
-        var pullRequest =? <PullRequest>node;
+        var pullRequest = check <PullRequest>node;
         target_pullRequestList.nodes[i] = pullRequest;
     }
 
@@ -121,10 +121,10 @@ function jsonToPullRequestList (json source_json, string stringQuery) returns (P
 function jsonToIssueList (json source_json, string stringQuery) returns (IssueList) {
     IssueList target_issueList = {};
     target_issueList.issueListQuery = stringQuery;
-    target_issueList.pageInfo =? <PageInfo>source_json.pageInfo;
-    var nodes =? <json[]>source_json.nodes;
+    target_issueList.pageInfo = check <PageInfo>source_json.pageInfo;
+    var nodes = check <json[]>source_json.nodes;
     foreach i, node in nodes {
-        var issue =? <Issue> node;
+        var issue = check <Issue> node;
         target_issueList.nodes[i] = issue;
     }
 

@@ -493,7 +493,7 @@ function testGetIssueListNextPage () {
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testRepositoryListHasNextPage () {
     log:printInfo("RepositoryList.hasNextPage()");
@@ -503,7 +503,7 @@ function testRepositoryListHasNextPage () {
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testRepositoryListHasPreviousPage () {
     log:printInfo("RepositoryList.hasPreviousPage()");
@@ -513,18 +513,18 @@ function testRepositoryListHasPreviousPage () {
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testRepositoryListGetAllRepositories () {
     log:printInfo("RepositoryList.getAllRepositories()");
     RepositoryList repositoryList = {};
-    Repository[]|null repoArray = repositoryList.getAllRepositories();
+    Repository[]? repoArray = repositoryList.getAllRepositories();
 
     test:assertEquals(typeof repoArray, typeof Repository[], msg = "Failed RepositoryList.getAllRepositories()");
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testProjectListHasNextPage () {
     log:printInfo("ProjectList.hasNextPage()");
@@ -534,7 +534,7 @@ function testProjectListHasNextPage () {
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testProjectListHasPreviousPage () {
     log:printInfo("ProjectList.hasPreviousPage()");
@@ -544,29 +544,29 @@ function testProjectListHasPreviousPage () {
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testProjectListGetAllProjects () {
     log:printInfo("ProjectList.getAllRepositories()");
     ProjectList projectList = {};
-    Project[]|null projectArray = projectList.getAllProjects();
+    Project[]? projectArray = projectList.getAllProjects();
 
     test:assertEquals(typeof projectArray, typeof Project[], msg = "Failed ProjectList.getAllProjects()");
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testColumnGetCardList () {
     log:printInfo("Column.getCardList()");
     Column column = {};
-    CardList|null cardList = column.getCardList();
+    CardList? cardList = column.getCardList();
 
     test:assertEquals(typeof cardList, typeof CardList, msg = "Failed Column.getCardList()");
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testColumnListHasNextPage () {
     log:printInfo("ColumnList.hasNextPage()");
@@ -576,7 +576,7 @@ function testColumnListHasNextPage () {
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testColumnListHasPreviousPage () {
     log:printInfo("ColumnList.hasPreviousPage()");
@@ -586,18 +586,18 @@ function testColumnListHasPreviousPage () {
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testColumnListGetAllColumns () {
     log:printInfo("ColumnList.getAllColumns()");
     ColumnList columnList = {};
-    Column[]|null columnArray = columnList.getAllColumns();
+    Column[]? columnArray = columnList.getAllColumns();
 
     test:assertEquals(typeof columnArray, typeof Column[], msg = "Failed ColumnList.getAllColumns()");
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testCardListHasNextPage () {
     log:printInfo("CardList.hasNextPage()");
@@ -607,7 +607,7 @@ function testCardListHasNextPage () {
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testCardListHasPreviousPage () {
     log:printInfo("CardList.hasPreviousPage()");
@@ -617,18 +617,18 @@ function testCardListHasPreviousPage () {
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testCardListGetAllCards () {
     log:printInfo("CardList.getAllCards()");
     CardList cardList = {};
-    Card[]|null cardArray = cardList.getAllCards();
+    Card[]? cardArray = cardList.getAllCards();
 
     test:assertEquals(typeof cardArray, typeof Card[], msg = "Failed CardList.getAllCards()");
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testPullRequestListHasNextPage () {
     log:printInfo("PullRequestList.hasNextPage()");
@@ -638,7 +638,7 @@ function testPullRequestListHasNextPage () {
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testPullRequestListHasPreviousPage () {
     log:printInfo("PullRequestList.hasPreviousPage()");
@@ -648,19 +648,19 @@ function testPullRequestListHasPreviousPage () {
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testPullRequestListGetAllPullRequests () {
     log:printInfo("PullRequestList.getAllPullRequests()");
     PullRequestList pullRequestList = {};
-    PullRequest[]|null pullRequestArray = pullRequestList.getAllPullRequests();
+    PullRequest[]? pullRequestArray = pullRequestList.getAllPullRequests();
 
     test:assertEquals(typeof pullRequestArray, typeof PullRequest[],
                       msg = "Failed PullRequestList.getAllPullRequests()");
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testIssueListHasNextPage () {
     log:printInfo("IssueList.hasNextPage()");
@@ -670,7 +670,7 @@ function testIssueListHasNextPage () {
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testIssueListHasPreviousPage () {
     log:printInfo("IssueList.hasPreviousPage()");
@@ -680,29 +680,29 @@ function testIssueListHasPreviousPage () {
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testIssueListGetAllIssues () {
     log:printInfo("IssueList.getAllIssues()");
     IssueList issueList = {};
-    Issue[]|null issueArray = issueList.getAllIssues();
+    Issue[]? issueArray = issueList.getAllIssues();
 
     test:assertEquals(typeof issueArray, typeof Issue[], msg = "Failed IssueList.getAllIssues()");
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testLabelListGetAllLabels () {
     log:printInfo("LabelList.getAllLabels()");
     LabelList labelList = {};
-    Label[]|null labelArray = labelList.getAllLabels();
+    Label[]? labelArray = labelList.getAllLabels();
 
     test:assertEquals(typeof labelArray, typeof Label[], msg = "Failed LabelList.getAllLabels()");
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testProjectOwnerGetOwnerType () {
     log:printInfo("ProjectOwner.getOwnerType()");
@@ -712,7 +712,7 @@ function testProjectOwnerGetOwnerType () {
 }
 
 @test:Config {
-    groups:["struct-bound-functions"]
+    groups:["object-functions"]
 }
 function testProjectOwnerSetOwnerType () {
     log:printInfo("ProjectOwner.setOwnerType()");

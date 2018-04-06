@@ -23,7 +23,7 @@ Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 
 ### Working with GitHub Connector Actions
 
-All the actions return `struct objects` or `github4:GitConnectorError`. If the action was a success, then the requested struct object will be returned while the `github4:GitConnectorError` will be **null** and vice-versa.
+All the actions return `objects` or `github4:GitConnectorError`. If the action was a success, then the requested object will be returned while the `github4:GitConnectorError` will be **null** and vice-versa.
 
 ##### Example
 * Request 
@@ -52,9 +52,9 @@ All the actions return `struct objects` or `github4:GitConnectorError`. If the a
     
 ```
 
-* Response struct
+* Response object
 ```ballerina
-public struct Repository {
+public type Repository {
     string id;
     string name;
     string createdAt;
