@@ -20,7 +20,7 @@ package github4;
 
 
 
-//String @finalants
+//String constants
 @final string GIT_GRAPHQL_API_URL = "https://api.github.com/graphql";
 @final string GIT_CARDS = "cards";
 @final string GIT_COLUMNS = "columns";
@@ -53,7 +53,7 @@ package github4;
 @final public string GIT_STATE_MERGED = "[\"MERGED\"]";
 @final public string GIT_STATE_OPEN = "[\"OPEN\"]";
 
-//Integer @finalants
+//Integer constants
 @final int GIT_INDEX_ZERO = 0;
 @final int GIT_INDEX_ONE = 1;
 @final int GIT_INDEX_TWO = 2;
