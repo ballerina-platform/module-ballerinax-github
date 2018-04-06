@@ -82,7 +82,7 @@ public type GitHubConnector object{
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getRepository (string name) returns Repository|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -97,12 +97,12 @@ public function GitHubConnector::getRepository (string name) returns Repository|
 
     string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY, [repoOwner, repoName]);
 
-    http:Request request = {};
+    http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
             // Set headers and payload to the request
-            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+            constructRequest(request, jsonQuery, accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -140,7 +140,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getOrganization (string name) returns Organization|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -152,12 +152,12 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
 
     string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION, [name]);
 
-    http:Request request = {};
+    http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
             // Set headers and payload to the request
-            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+            constructRequest(request, jsonQuery, accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -233,7 +233,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getOrganizationProject (Organization organization, int projectNumber)
                                                                                     returns Project|GitConnectorError {
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -244,12 +244,12 @@ public function GitHubConnector::getOrganizationProject (Organization organizati
 
     string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT, [organization.login, projectNumber]);
 
-    http:Request request = {};
+    http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+            constructRequest(request, jsonQuery, accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -281,11 +281,11 @@ public function GitHubConnector::getOrganizationProject (Organization organizati
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getProjectListNextPage (ProjectList projectList)
                                                                                 returns ProjectList|GitConnectorError {
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     if (projectList.hasNextPage()) {
 
-        http:Request request = {};
+        http:Request request = new;
         json dataQuery;
         var convertedQuery = stringToJson(projectList.projectListQuery);
         match convertedQuery {
@@ -298,7 +298,7 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
                 }
                 dataQuery = jsonQuery;
                 //Set headers and payload to the request
-                constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+                constructRequest(request, jsonQuery, accessToken);
             }
 
             GitConnectorError gitConError => {
@@ -336,18 +336,18 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getRepositoryListNextPage (RepositoryList repositoryList)
                                                                             returns RepositoryList|GitConnectorError {
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     if (repositoryList.hasNextPage()) {
 
-        http:Request request = {};
+        http:Request request = new;
         var convertedQuery = stringToJson(repositoryList.repositoryListQuery);
         match convertedQuery {
             json jsonQuery => {
                 jsonQuery.variables.endCursorRepos = repositoryList.pageInfo.endCursor;
                 jsonQuery["query"] = GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE;
                 //Set headers and payload to the request
-                constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+                constructRequest(request, jsonQuery, accessToken);
             }
 
             GitConnectorError gitConError => {
@@ -387,7 +387,7 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
 public function GitHubConnector::getPullRequestList
                     (Repository repository, string state, int recordCount) returns PullRequestList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -404,12 +404,12 @@ public function GitHubConnector::getPullRequestList
     string stringQuery = io:sprintf(TEMPLATE_GET_PULL_REQUESTS,
                                     [repository.owner.login, repository.name, state, recordCount]);
 
-    http:Request request = {};
+    http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+            constructRequest(request, jsonQuery, accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -445,7 +445,7 @@ public function GitHubConnector::getPullRequestList
 public function GitHubConnector::getRepositoryProjectList
                         (Repository repository, string state, int recordCount) returns ProjectList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -462,12 +462,12 @@ public function GitHubConnector::getRepositoryProjectList
     string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECTS,
                                     [repository.owner.login, repository.name, state, recordCount]);
 
-    http:Request request = {};
+    http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+            constructRequest(request, jsonQuery, accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -502,7 +502,7 @@ public function GitHubConnector::getRepositoryProjectList
 public function GitHubConnector::getRepositoryProject (Repository repository, int projectNumber)
                                                                                     returns Project|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -514,12 +514,12 @@ public function GitHubConnector::getRepositoryProject (Repository repository, in
     string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT,
                                     [repository.owner.login, repository.name, projectNumber]);
 
-    http:Request request = {};
+    http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+            constructRequest(request, jsonQuery, accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -555,7 +555,7 @@ public function GitHubConnector::getRepositoryProject (Repository repository, in
 public function GitHubConnector::getIssueList (Repository repository, string state, int recordCount)
                                                                                 returns IssueList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -572,12 +572,12 @@ public function GitHubConnector::getIssueList (Repository repository, string sta
     string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_ISSUES,
                                     [repository.owner.login, repository.name, state, recordCount]);
 
-    http:Request request = {};
+    http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+            constructRequest(request, jsonQuery, accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -613,7 +613,7 @@ public function GitHubConnector::getIssueList (Repository repository, string sta
 public function GitHubConnector::getOrganizationProjectList
                     (Organization organization, string state, int recordCount) returns ProjectList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -629,12 +629,12 @@ public function GitHubConnector::getOrganizationProjectList
 
     string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECTS, [organization.login, state, recordCount]);
 
-    http:Request request = {};
+    http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+            constructRequest(request, jsonQuery, accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -669,7 +669,7 @@ public function GitHubConnector::getOrganizationProjectList
 public function GitHubConnector::getOrganizationRepositoryList
                                 (Organization organization, int recordCount) returns RepositoryList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -685,12 +685,12 @@ public function GitHubConnector::getOrganizationRepositoryList
 
     string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_REPOSITORIES, [organization.login, recordCount]);
 
-    http:Request request = {};
+    http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+            constructRequest(request, jsonQuery, accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -819,17 +819,17 @@ public function GitHubConnector::getColumnListNextPage (ColumnList columnList)
 public function GitHubConnector::getIssueListNextPage (IssueList issueList)
                                                                                 returns IssueList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     if (issueList.hasNextPage()) {
-        http:Request request = {};
+        http:Request request = new;
         var convertedQuery = stringToJson(issueList.issueListQuery);
         match convertedQuery {
             json jsonQuery => {
                 jsonQuery.variables.endCursorIssues = issueList.pageInfo.endCursor;
                 jsonQuery["query"] = GET_REPOSITORY_ISSUES_NEXT_PAGE;
                 //Set headers and payload to the request
-                constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+                constructRequest(request, jsonQuery, accessToken);
             }
 
             GitConnectorError gitConError => {
@@ -868,18 +868,18 @@ public function GitHubConnector::getIssueListNextPage (IssueList issueList)
 public function GitHubConnector::getPullRequestListNextPage (PullRequestList pullRequestList)
                                                                             returns PullRequestList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     if (pullRequestList.hasNextPage()) {
 
-        http:Request request = {};
+        http:Request request = new;
         var convertedQuery = stringToJson(pullRequestList.pullRequestListQuery);
         match convertedQuery {
             json jsonQuery => {
                 jsonQuery.variables.endCursorPullRequests = pullRequestList.pageInfo.endCursor;
                 jsonQuery["query"] = GET_PULL_REQUESTS_NEXT_PAGE;
                 //Set headers and payload to the request
-                constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+                constructRequest(request, jsonQuery, accessToken);
             }
 
             GitConnectorError gitConError => {
