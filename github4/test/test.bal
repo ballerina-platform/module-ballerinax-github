@@ -739,3 +739,122 @@ function testConstructRequest () {
     test:assertEquals(payloadInRequest, samplePayload, msg = "Payload mismatch");
 }
 
+@test:Config {
+    groups:["utility-functions"]
+}
+function testGetValidatedResponseSuccess () {
+    log:printInfo("getValidatedResponse() successful payload");
+    http:Response sampleHttpResponse = new;
+
+    json samplePayload = {"data":{"org":{"name":"WSO2"}}};
+    sampleHttpResponse.setJsonPayload(samplePayload);
+
+    http:Response|http:HttpConnectorError response = sampleHttpResponse;
+
+    json|GitConnectorError validatedResponse = getValidatedResponse(response, "name");
+
+    match validatedResponse {
+        json jsonResponse => {
+            string orgName = jsonResponse.data.org.name.toString() ?: "";
+            test:assertEquals(orgName, "WSO2", msg = "Returned json data mismatch");
+        }
+        GitConnectorError err => {
+            test:assertFail(msg = err.message[0]);
+        }
+    }
+}
+
+@test:Config {
+    groups:["utility-functions"]
+}
+function testGetValidatedResponseError () {
+    log:printInfo("getValidatedResponse() error payload");
+
+    http:Response sampleHttpResponse = new;
+
+    json samplePayload = {"data":{"org":{"name":""}}, "errors":[{"message":"API error"}]};
+    sampleHttpResponse.setJsonPayload(samplePayload);
+
+    http:Response|http:HttpConnectorError response = sampleHttpResponse;
+
+    json|GitConnectorError validatedResponse = getValidatedResponse(response, "name");
+
+    match validatedResponse {
+        json jsonResponse => {
+            test:assertFail(msg = "Payload error should be handled");
+        }
+        GitConnectorError err => {
+            test:assertEquals(err.message[0], "API error", msg = "Validated response error mismatch");
+        }
+    }
+}
+
+@test:Config {
+    groups:["utility-functions"]
+}
+function testGetValidatedResponseNoRequestedData () {
+    log:printInfo("getValidatedResponse() no requested data");
+
+    http:Response sampleHttpResponse = new;
+
+    json samplePayload = {"data":{"org":{}}};
+    sampleHttpResponse.setJsonPayload(samplePayload);
+
+    http:Response|http:HttpConnectorError response = sampleHttpResponse;
+
+    json|GitConnectorError validatedResponse = getValidatedResponse(response, "name");
+
+    match validatedResponse {
+        json jsonResponse => {
+            test:assertFail(msg = "Payload error should be handled");
+        }
+        GitConnectorError err => {
+            test:assertEquals(err.message[0], "Error while retrieving data.", msg = "Validated response error mismatch");
+        }
+    }
+}
+
+@test:Config {
+    groups:["utility-functions"]
+}
+function testGetValidatedResponseNoPayload () {
+    log:printInfo("getValidatedResponse() no payload");
+
+    http:Response sampleHttpResponse = new;
+
+    http:Response|http:HttpConnectorError response = sampleHttpResponse;
+
+    json|GitConnectorError validatedResponse = getValidatedResponse(response, "name");
+
+    match validatedResponse {
+        json jsonResponse => {
+            test:assertFail(msg = "Payload error should be handled");
+        }
+        GitConnectorError err => {
+            test:assertEquals(err.message[0], "Error while retrieving payload.", msg = "Validated response error mismatch");
+        }
+    }
+}
+
+@test:Config {
+    groups:["utility-functions"]
+}
+function testGetValidatedResponseHttpError () {
+    log:printInfo("getValidatedResponse() HttpConnectorError");
+
+    http:HttpConnectorError sampleHttpError = {};
+    sampleHttpError.message = "HTTP Connector Error";
+
+    http:Response|http:HttpConnectorError response = sampleHttpError;
+
+    json|GitConnectorError validatedResponse = getValidatedResponse(response, "name");
+
+    match validatedResponse {
+        json jsonResponse => {
+            test:assertFail(msg = "HttpConnector error should be handled");
+        }
+        GitConnectorError err => {
+            test:assertEquals(err.message[0], "HTTP Connector Error", msg = "Validated response error mismatch");
+        }
+    }
+}

@@ -64,7 +64,7 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                         string[] errors = [];
                         var errorList = check <json[]>responsePayload[GIT_ERRORS];
                         foreach i, singleError in errorList {
-                            errors[i] = check <string>singleError[GIT_MESSAGE];
+                            errors[i] = singleError[GIT_MESSAGE].toString() ?: "Payload has errors";
                         }
                         connectorError = {message:errors, statusCode:gitResponse.statusCode,
                                              reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
