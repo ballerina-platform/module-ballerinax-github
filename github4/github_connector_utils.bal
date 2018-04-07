@@ -16,8 +16,6 @@
 // under the License.
 //
 
-package github4;
-
 import ballerina/mime;
 import ballerina/http;
 import ballerina/util;
