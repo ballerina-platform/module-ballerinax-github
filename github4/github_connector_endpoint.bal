@@ -16,8 +16,6 @@
 // under the License.
 //
 
-package github4;
-
 import ballerina/http;
 
 @Description {value: "GitHub connector configurations can be setup here. In order to use this connector,

@@ -16,9 +16,6 @@
 // under the License.
 //
 
-package github4;
-
-
 
 //String constants
 @final string GIT_GRAPHQL_API_URL = "https://api.github.com/graphql";

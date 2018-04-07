@@ -16,8 +16,6 @@
 // under the License.
 //
 
-package github4;
-
 import ballerina/io;
 import ballerina/log;
 import ballerina/http;
@@ -727,10 +725,12 @@ function testProjectOwnerSetOwnerType () {
     groups:["utility-functions"]
 }
 function testConstructRequest () {
+    log:printInfo("constructRequest()");
     http:Request request = new;
     json samplePayload = {"query":"query body"};
     string sampleToken = "12345";
     string expectedToken = "Bearer " + sampleToken;
+
     constructRequest(request, samplePayload, sampleToken);
 
     json payloadInRequest = check request.getJsonPayload();
@@ -738,3 +738,4 @@ function testConstructRequest () {
     test:assertEquals(request.getHeader("Authorization"), expectedToken, msg = "Token mismatch");
     test:assertEquals(payloadInRequest, samplePayload, msg = "Payload mismatch");
 }
+

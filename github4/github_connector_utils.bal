@@ -52,8 +52,8 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                     json jsonData => {
                         responsePayload = jsonData;
                     }
-                    mime:EntityError entityError => {
-                        connectorError = {message:[entityError.message]};
+                    http:PayloadError payloadError => {
+                        connectorError = {message:[payloadError.message]};
                         return connectorError;
                     }
                 }

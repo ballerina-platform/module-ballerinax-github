@@ -16,9 +16,6 @@
 // under the License.
 //
 
-package github4;
-
-
 @final string PAGE_INFO = "pageInfo {
         hasNextPage,
         hasPreviousPage,
