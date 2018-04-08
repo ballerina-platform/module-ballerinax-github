@@ -584,14 +584,16 @@ public type LabelList object{
     private{
         Label[] nodes;
     }
+
+    public function getAllLabels () returns (Label[]);
 };
 //*********************************************************************************************************************
 // LabelList bound functions
 //*********************************************************************************************************************
 @Description {value:"Get an array of labels"}
 @Return {value:"Label[]: Label array"}
-public function <LabelList labelList> getAllLabels () returns (Label[]) {
-    return labelList.nodes;
+public function LabelList::getAllLabels () returns (Label[]) {
+    return nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              End of LabelList object                                              //
