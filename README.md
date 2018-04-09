@@ -6,7 +6,7 @@ The Ballerina GitHub connector allow users to access the GitHub API through ball
 
 |Ballerina Version | Connector Version | GitHub API Version |
 |------------------|-------------------| ------------------ |
-|0.970.0-alpha1-SNAPSHOT | 0.970.0-alpha1-SNAPSHOT | v4
+|0.970.0-alpha1-SNAPSHOT | 0.9.0 | v4
 
 ![Ballerina GitHub Connector Overview](BallerinaGitHubConnector_Overview.jpg)
 
@@ -31,7 +31,7 @@ All the actions return `objects` or `github4:GitConnectorError`. If the action w
     import github4;
 
     public function main (string[] args) {
-        endpoint github4:GitHubEndpoint githubEP {
+        endpoint github4:Client githubEP {
             accessToken:getAccessToken(),
             clientEndpointConfiguration: {}
         };
