@@ -6,7 +6,7 @@ The Ballerina GitHub connector allow users to access the GitHub API through ball
 
 |Ballerina Version | Connector Version | GitHub API Version |
 |------------------|-------------------| ------------------ |
-|0.970.0-alpha1-SNAPSHOT | 0.970.0-alpha1-SNAPSHOT | v4 |
+|0.970.0-alpha1-SNAPSHOT | 0.9.0 | v4 |
 
 ## Running github4.tests
 
