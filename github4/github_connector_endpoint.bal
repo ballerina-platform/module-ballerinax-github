@@ -16,8 +16,6 @@
 // under the License.
 //
 
-package github4;
-
 import ballerina/http;
 
 @Description {value: "GitHub connector configurations can be setup here. In order to use this connector,
@@ -26,51 +24,69 @@ the user will need to have a GitHub Personal Access Token. The token can be obta
 https://github.com/<profile> -> Settings -> Developer Settings -> Personal access tokens
 
 and provide the obtained token to the GitHubConnectorConfiguration"}
-public struct GitHubConnectorConfiguration {
-    string accessToken;
-    http:ClientEndpointConfiguration clientEndpointConfiguration;
-}
+@Field {value: "accessToken: The GitHub API access token"}
+@Field {value: "clientEndpointConfiguration: Client endpoint configurations provided by the user"}
+public type GitHubConnectorConfiguration {
+        string accessToken;
+        http:ClientEndpointConfiguration clientEndpointConfiguration = {};
 
-@Description {value: "GitHub connector configuration initializer"}
-public function <GitHubConnectorConfiguration githubConnectorConfiguration> GitHubConfiguration () {
-    githubConnectorConfiguration.clientEndpointConfiguration = {};
-}
+};
 
 @Description {value: "GitHub connector endpoint"}
-public struct GitHubEndpoint {
-    GitHubConnectorConfiguration githubConnectorConfiguration;
-    GitHubConnector githubConnector;
-}
+@Field {value: "githubConnectorConfiguration: GitHub connector configurations
+                                                                    (Access token, Client endpoint configurations)"}
+@Field {value: "githubConnector: GitHub Connector object"}
+public type GitHubClient object {
+    public {
+        GitHubConnectorConfiguration githubConnectorConfiguration = {};
+        GitHubConnector githubConnector = new;
+    }
+
+    @Description {value: "GitHub connector endpoint initialization function"}
+    @Param {value: "GitHubConnectorConfiguration: GitHub connector configuration"}
+    public function init (GitHubConnectorConfiguration githubConnectorConfig);
+
+    @Description {value: "Register GitHub connector endpoint"}
+    @Param {value: "typedesc: Accepts types of data (int, float, string, boolean, etc)"}
+    public function register (typedesc serviceType);
+
+    @Description {value: "Start GitHub connector endpoint"}
+    public function start ();
+
+    @Description {value: "Return the GitHub connector client"}
+    @Return {value: "GitHubConnector client"}
+    public function getClient () returns GitHubConnector;
+
+    @Description {value: "Stop GitHub connector client"}
+    public function stop ();
+};
 
 @Description {value: "GitHub connector endpoint initialization function"}
 @Param {value: "GitHubConnectorConfiguration: GitHub connector configuration"}
-public function <GitHubEndpoint githubEndpoint> init
-                                                        (GitHubConnectorConfiguration githubConnectorConfiguration) {
-    githubEndpoint.githubConnector = {
-                                                  accessToken : githubConnectorConfiguration.accessToken,
-                                                  githubClientEndpoint : {}
-                                              };
+public function GitHubClient::init(GitHubConnectorConfiguration githubConnectorConfig) {
+
+    // Set the access token to the connector from configurations
+    githubConnector.accessToken = githubConnectorConfig.accessToken;
 
     // Set the target url to the GitHub API endpoint
-    githubConnectorConfiguration.clientEndpointConfiguration.targets = [];
-    githubConnectorConfiguration.clientEndpointConfiguration.targets = [{uri:GIT_GRAPHQL_API_URL}];
+    githubConnectorConfig.clientEndpointConfiguration.targets = [{url:GIT_GRAPHQL_API_URL}];
 
     // Initialize the client endpoint with the configurations
-    githubEndpoint.githubConnector.githubClientEndpoint.init(githubConnectorConfiguration.clientEndpointConfiguration);
+    githubConnector.githubClientEndpoint.init(githubConnectorConfig.clientEndpointConfiguration);
 }
 
 @Description {value: "Register GitHub connector endpoint"}
 @Param {value: "typedesc: Accepts types of data (int, float, string, boolean, etc)"}
-public function <GitHubEndpoint githubEndpoint> register (typedesc serviceType) {}
+public function GitHubClient::register (typedesc serviceType) {}
 
 @Description {value: "Start GitHub connector endpoint"}
-public function <GitHubEndpoint githubEndpoint> start () {}
+public function GitHubClient::start () {}
 
-@Description {value: "Get GitHub connector endpoint client"}
-@Return {value: "GitHubConnector instance"}
-public function <GitHubEndpoint githubEndpoint> getClient () returns GitHubConnector {
-    return githubEndpoint.githubConnector;
+@Description {value: "Return the GitHub connector client"}
+@Return {value: "GitHubConnector client"}
+public function GitHubClient::getClient () returns GitHubConnector {
+    return githubConnector;
 }
 
-@Description {value: "Stop GitHub connector endpoint"}
-public function <GitHubEndpoint githubConnectorEndpoint> stop () {}
+@Description {value: "Stop GitHub connector client"}
+public function GitHubClient::stop () {}

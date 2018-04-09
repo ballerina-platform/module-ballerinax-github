@@ -16,53 +16,50 @@
 // under the License.
 //
 
-package github4;
-
-
 
 //String constants
-const string GIT_GRAPHQL_API_URL = "https://api.github.com/graphql";
-const string GIT_CARDS = "cards";
-const string GIT_COLUMNS = "columns";
-const string GIT_DATA = "data";
-const string GIT_EDGES = "edges";
-const string GIT_END_CURSOR = "endCursor";
-const string GIT_END_CURSOR_CARD = "endCursorCard";
-const string GIT_END_CURSOR_COLUMN = "endCursorColumn";
-const string GIT_HAS_NEXT_PAGE = "hasNextPage";
-const string GIT_ISSUES = "issues";
-const string GIT_MESSAGE = "message";
-const string GIT_NAME = "name";
-const string GIT_NODE = "node";
-const string GIT_NODES = "nodes";
-const string GIT_ORGANIZATION = "organization";
-const string GIT_OWNER = "owner";
-const string GIT_PAGE_INFO = "pageInfo";
-const string GIT_PROJECT = "project";
-const string GIT_PROJECTS = "projects";
-const string GIT_PULL_REQUESTS = "pullRequests";
-const string GIT_REPOSITORIES = "repositories";
-const string GIT_REPOSITORY = "repository";
-const string GIT_REPOSITORY_OWNER = "repositoryOwner";
-const string GIT_START_CURSOR = "startCursor";
+@final string GIT_GRAPHQL_API_URL = "https://api.github.com/graphql";
+@final string GIT_CARDS = "cards";
+@final string GIT_COLUMNS = "columns";
+@final string GIT_DATA = "data";
+@final string GIT_EDGES = "edges";
+@final string GIT_END_CURSOR = "endCursor";
+@final string GIT_END_CURSOR_CARD = "endCursorCard";
+@final string GIT_END_CURSOR_COLUMN = "endCursorColumn";
+@final string GIT_HAS_NEXT_PAGE = "hasNextPage";
+@final string GIT_ISSUES = "issues";
+@final string GIT_MESSAGE = "message";
+@final string GIT_NAME = "name";
+@final string GIT_NODE = "node";
+@final string GIT_NODES = "nodes";
+@final string GIT_ORGANIZATION = "organization";
+@final string GIT_OWNER = "owner";
+@final string GIT_PAGE_INFO = "pageInfo";
+@final string GIT_PROJECT = "project";
+@final string GIT_PROJECTS = "projects";
+@final string GIT_PULL_REQUESTS = "pullRequests";
+@final string GIT_REPOSITORIES = "repositories";
+@final string GIT_REPOSITORY = "repository";
+@final string GIT_REPOSITORY_OWNER = "repositoryOwner";
+@final string GIT_START_CURSOR = "startCursor";
 
 // Public constants
-public const string GIT_STATE_ALL_ISSUE = "[\"OPEN\",\"CLOSED\"]";
-public const string GIT_STATE_ALL_PULL_REQUEST = "[\"OPEN\",\"CLOSED\",\"MERGED\"]";
-public const string GIT_STATE_CLOSED = "[\"CLOSED\"]";
-public const string GIT_STATE_MERGED = "[\"MERGED\"]";
-public const string GIT_STATE_OPEN = "[\"OPEN\"]";
+@final public string GIT_STATE_ALL_ISSUE = "[\"OPEN\",\"CLOSED\"]";
+@final public string GIT_STATE_ALL_PULL_REQUEST = "[\"OPEN\",\"CLOSED\",\"MERGED\"]";
+@final public string GIT_STATE_CLOSED = "[\"CLOSED\"]";
+@final public string GIT_STATE_MERGED = "[\"MERGED\"]";
+@final public string GIT_STATE_OPEN = "[\"OPEN\"]";
 
 //Integer constants
-const int GIT_INDEX_ZERO = 0;
-const int GIT_INDEX_ONE = 1;
-const int GIT_INDEX_TWO = 2;
-const int GIT_MAX_RECORD_COUNT = 100;
+@final int GIT_INDEX_ZERO = 0;
+@final int GIT_INDEX_ONE = 1;
+@final int GIT_INDEX_TWO = 2;
+@final int GIT_MAX_RECORD_COUNT = 100;
 
 //Errors
-const string GIT_ERRORS = "errors";
-const string GIT_ERROR_WHILE_RETRIEVING_DATA = "Error while retrieving data.";
-const string GIT_ERROR_WHILE_RETRIEVING_PAYLOAD = "Error while retrieving payload.";
-const string GIT_ERROR_WHILE_RETRIEVING_RESOURCE_PATH = "Error while retrieving project resource path.";
+@final string GIT_ERRORS = "errors";
+@final string GIT_ERROR_WHILE_RETRIEVING_DATA = "Error while retrieving data.";
+@final string GIT_ERROR_WHILE_RETRIEVING_PAYLOAD = "Error while retrieving payload.";
+@final string GIT_ERROR_WHILE_RETRIEVING_RESOURCE_PATH = "Error while retrieving project resource path.";
 
-const string GIT_PATH_SEPARATOR = "/";
+@final string GIT_PATH_SEPARATOR = "/";

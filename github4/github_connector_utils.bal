@@ -16,8 +16,6 @@
 // under the License.
 //
 
-package github4;
-
 import ballerina/mime;
 import ballerina/http;
 import ballerina/util;
@@ -52,27 +50,29 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                     json jsonData => {
                         responsePayload = jsonData;
                     }
-                    mime:EntityError entityError => {
-                        connectorError = {message:[entityError.message]};
+                    http:PayloadError payloadError => {
+                        connectorError = {message:[payloadError.message]};
                         return connectorError;
                     }
                 }
-                string[] payLoadKeys = responsePayload.getKeys();
+                string[] payLoadKeys = responsePayload.getKeys() ?: [];
                 //Check all the keys in the payload to see if an error object is returned.
                 foreach key in payLoadKeys {
                     if (GIT_ERRORS.equalsIgnoreCase(key)) {
                         string[] errors = [];
-                        var errorList =? <json[]>responsePayload[GIT_ERRORS];
+                        var errorList = check <json[]>responsePayload[GIT_ERRORS];
                         foreach i, singleError in errorList {
-                            errors[i] =? <string>singleError[GIT_MESSAGE];
+                            errors[i] = singleError[GIT_MESSAGE].toString() ?: "Payload has errors";
                         }
                         connectorError = {message:errors, statusCode:gitResponse.statusCode,
                                              reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
                         return connectorError;
                     }
                 }
+
                 //If no error object is returned, then check if the response contains the requested data.
-                string keyInData = responsePayload[GIT_DATA].getKeys()[GIT_INDEX_ZERO];
+                string[] keySet = responsePayload[GIT_DATA].getKeys() ?: [];
+                string keyInData = keySet[GIT_INDEX_ZERO];
                 if (null == responsePayload[GIT_DATA][keyInData][validateComponent]) {
                     string[] errorMessage = [GIT_ERROR_WHILE_RETRIEVING_DATA];
                     responsePayload = null;
@@ -80,7 +80,6 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                                          reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
                     return connectorError;
                 }
-
 
             } catch (error e) {
                 string[] errorMessage = [GIT_ERROR_WHILE_RETRIEVING_PAYLOAD];
@@ -97,18 +96,19 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
         }
     }
 
-
     return responsePayload;
 
 }
+
 @Description {value:"Get all columns of an organization project or repository project"}
 @Param {value:"ownerType: Repository or Organization"}
 @Param {value:"gitQuery: Graphql query"}
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
-function getProjectColumns (string ownerType, string gitQuery, GitHubConnector gitHubConnector) returns ColumnList|GitConnectorError {
+function getProjectColumns (string ownerType, string gitQuery, string accessToken,
+                                    http:ClientEndpoint githubClientEndpoint) returns ColumnList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = gitHubConnector.githubClientEndpoint;
+    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -117,12 +117,12 @@ function getProjectColumns (string ownerType, string gitQuery, GitHubConnector g
         return connectorError;
     }
 
-    http:Request request = {};
+    http:Request request = new;
     var convertedQuery = stringToJson(gitQuery);
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, gitHubConnector.accessToken);
+            constructRequest(request, jsonQuery, accessToken);
         }
 
         GitConnectorError gitConError => {
