@@ -36,7 +36,7 @@ public type GitHubConnectorConfiguration {
 @Field {value: "githubConnectorConfiguration: GitHub connector configurations
                                                                     (Access token, Client endpoint configurations)"}
 @Field {value: "githubConnector: GitHub Connector object"}
-public type GitHubClient object {
+public type Client object {
     public {
         GitHubConnectorConfiguration githubConnectorConfiguration = {};
         GitHubConnector githubConnector = new;
@@ -63,7 +63,7 @@ public type GitHubClient object {
 
 @Description {value: "GitHub connector endpoint initialization function"}
 @Param {value: "GitHubConnectorConfiguration: GitHub connector configuration"}
-public function GitHubClient::init(GitHubConnectorConfiguration githubConnectorConfig) {
+public function Client::init(GitHubConnectorConfiguration githubConnectorConfig) {
 
     // Set the access token to the connector from configurations
     githubConnector.accessToken = githubConnectorConfig.accessToken;
@@ -77,16 +77,16 @@ public function GitHubClient::init(GitHubConnectorConfiguration githubConnectorC
 
 @Description {value: "Register GitHub connector endpoint"}
 @Param {value: "typedesc: Accepts types of data (int, float, string, boolean, etc)"}
-public function GitHubClient::register (typedesc serviceType) {}
+public function Client::register (typedesc serviceType) {}
 
 @Description {value: "Start GitHub connector endpoint"}
-public function GitHubClient::start () {}
+public function Client::start () {}
 
 @Description {value: "Return the GitHub connector client"}
 @Return {value: "GitHubConnector client"}
-public function GitHubClient::getClient () returns GitHubConnector {
+public function Client::getClient () returns GitHubConnector {
     return githubConnector;
 }
 
 @Description {value: "Stop GitHub connector client"}
-public function GitHubClient::stop () {}
+public function Client::stop () {}

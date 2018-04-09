@@ -21,7 +21,7 @@ import ballerina/log;
 import ballerina/http;
 import ballerina/test;
 
-endpoint GitHubClient githubClient {
+endpoint Client githubClient {
     accessToken:getAccessToken(),
     clientEndpointConfiguration: {}
 };
