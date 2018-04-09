@@ -31,7 +31,7 @@ All the actions return `objects` or `github4:GitConnectorError`. If the action w
     import github4;
 
     public function main (string[] args) {
-        endpoint github4:GitHubEndpoint githubEP {
+        endpoint github4:Client githubEP {
             accessToken:getAccessToken(),
             clientEndpointConfiguration: {}
         };
