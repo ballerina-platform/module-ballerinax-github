@@ -72,13 +72,13 @@ public function Client::init(GitHubConnectorConfiguration githubConnectorConfig)
     githubConnectorConfig.clientEndpointConfiguration.targets = [{url:GIT_GRAPHQL_API_URL}];
 
     // Initialize the client endpoint with the configurations
-    githubConnector.githubClientEndpoint.init(githubConnectorConfig.clientEndpointConfiguration);
+    githubConnector.githubGraphQlClient.init(githubConnectorConfig.clientEndpointConfiguration);
 
     // Set the target url to the GitHub REST API endpoint
     githubConnectorConfig.clientEndpointConfiguration.targets = [{url:GIT_REST_API_URL}];
 
     // Initialize the client endpoint with the configurations
-    githubConnector.githubRESTEndpoint.init(githubConnectorConfig.clientEndpointConfiguration);
+    githubConnector.githubRestClient.init(githubConnectorConfig.clientEndpointConfiguration);
 }
 
 @Description {value: "Register GitHub connector endpoint"}
