@@ -396,6 +396,7 @@ public type Issue {
     string title;
     string updatedAt;
     string url;
+    AssigneeList assignees;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              End of Issue object                                                  //
