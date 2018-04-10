@@ -587,6 +587,7 @@ public type LabelList object{
     }
 
     public function getAllLabels () returns (Label[]);
+    public function setLabels (string[] labels);
 };
 //*********************************************************************************************************************
 // LabelList bound functions
@@ -595,6 +596,15 @@ public type LabelList object{
 @Return {value:"Label[]: Label array"}
 public function LabelList::getAllLabels () returns (Label[]) {
     return nodes;
+}
+
+public function LabelList::setLabels (string[] labels) {
+    Label[] labelList;
+    foreach i, label in labels {
+        labelList[i] = {name:label};
+    }
+
+    nodes = labelList;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              End of LabelList object                                              //
@@ -610,12 +620,21 @@ public type AssigneeList object {
     }
 
     public function getAllAssignees () returns (Assignee[]);
-}
+    public function setAssignees (string[] assignees);
+};
 //*********************************************************************************************************************
 // AssigneeList bound functions
 //*********************************************************************************************************************
 public function AssigneeList::getAllAssignees () returns (Assignee[]) {
     return nodes;
+}
+
+public function AssigneeList::setAssignees (string[] assignees) {
+    Assignee[] assigneeList;
+    foreach i, assignee in assignees {
+        assigneeList[i] = {login:assignee};
+    }
+    nodes = assigneeList;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of AssigneeList object                                             //
@@ -631,7 +650,7 @@ public type Assignee {
     string email;
     string bio;
     string url;
-}
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of Assignee object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

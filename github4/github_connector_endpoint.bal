@@ -68,11 +68,17 @@ public function Client::init(GitHubConnectorConfiguration githubConnectorConfig)
     // Set the access token to the connector from configurations
     githubConnector.accessToken = githubConnectorConfig.accessToken;
 
-    // Set the target url to the GitHub API endpoint
+    // Set the target url to the GitHub GraphQL API endpoint
     githubConnectorConfig.clientEndpointConfiguration.targets = [{url:GIT_GRAPHQL_API_URL}];
 
     // Initialize the client endpoint with the configurations
     githubConnector.githubClientEndpoint.init(githubConnectorConfig.clientEndpointConfiguration);
+
+    // Set the target url to the GitHub REST API endpoint
+    githubConnectorConfig.clientEndpointConfiguration.targets = [{url:GIT_REST_API_URL}];
+
+    // Initialize the client endpoint with the configurations
+    githubConnector.githubRESTEndpoint.init(githubConnectorConfig.clientEndpointConfiguration);
 }
 
 @Description {value: "Register GitHub connector endpoint"}

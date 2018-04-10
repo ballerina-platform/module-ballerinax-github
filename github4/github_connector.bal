@@ -23,56 +23,118 @@ public type GitHubConnector object{
     public {
         string accessToken;
         http:Client githubClientEndpoint = new;
+        http:Client githubRESTEndpoint = new;
     }
 
-    public function getCardListNextPage(CardList cardList)
+    public function createRepositoryIssue (Repository repository, Issue issue)
+                    returns Issue|GitConnectorError;
+
+    public function getCardListNextPage (CardList cardList)
                     returns CardList|GitConnectorError;
 
-    public function getColumnListNextPage(ColumnList columnList)
+    public function getColumnListNextPage (ColumnList columnList)
                     returns ColumnList|GitConnectorError;
 
-    public function getIssueList(Repository repository, string state, int recordCount)
+    public function getIssueList (Repository repository, string state, int recordCount)
                     returns IssueList|GitConnectorError;
 
-    public function getIssueListNextPage(IssueList issueList)
+    public function getIssueListNextPage (IssueList issueList)
                     returns IssueList|GitConnectorError;
 
-    public function getOrganization(string name)
+    public function getOrganization (string name)
                     returns Organization|GitConnectorError;
 
-    public function getOrganizationProject(Organization organization, int projectNumber)
+    public function getOrganizationProject (Organization organization, int projectNumber)
                     returns Project|GitConnectorError;
 
-    public function getOrganizationProjectList(Organization organization, string state, int recordCount)
+    public function getOrganizationProjectList (Organization organization, string state, int recordCount)
                     returns ProjectList|GitConnectorError;
 
-    public function getOrganizationRepositoryList(Organization organization, int recordCount)
+    public function getOrganizationRepositoryList (Organization organization, int recordCount)
                     returns RepositoryList|GitConnectorError;
 
-    public function getProjectColumnList(Project project, int recordCount)
+    public function getProjectColumnList (Project project, int recordCount)
                     returns ColumnList|GitConnectorError;
 
-    public function getProjectListNextPage(ProjectList projectList)
+    public function getProjectListNextPage (ProjectList projectList)
                     returns ProjectList|GitConnectorError;
 
-    public function getPullRequestList(Repository repository, string state, int recordCount)
+    public function getPullRequestList (Repository repository, string state, int recordCount)
                     returns PullRequestList|GitConnectorError;
 
-    public function getPullRequestListNextPage(PullRequestList pullRequestList)
+    public function getPullRequestListNextPage (PullRequestList pullRequestList)
                     returns PullRequestList|GitConnectorError;
 
-    public function getRepository(string name)
+    public function getRepository (string name)
                     returns Repository|GitConnectorError;
     
-    public function getRepositoryListNextPage(RepositoryList repositoryList)
+    public function getRepositoryListNextPage (RepositoryList repositoryList)
                     returns RepositoryList|GitConnectorError;
 
-    public function getRepositoryProject(Repository repository, int projectNumber)
+    public function getRepositoryProject (Repository repository, int projectNumber)
                     returns Project|GitConnectorError;
 
-    public function getRepositoryProjectList(Repository repository, string state, int recordCount)
+    public function getRepositoryProjectList (Repository repository, string state, int recordCount)
                     returns ProjectList|GitConnectorError;
 };
+
+@Description {value: "Creates a new issue in a repository."}
+@Param {value:"Repository: Repository object"}
+@Param {value: "Issue: Issue object"}
+@Return {value: "Issue: Create issue object"}
+@Return {value:"GitConnectorError: Error"}
+public function GitHubConnector::createRepositoryIssue (Repository repository, Issue issue) returns Issue|GitConnectorError{
+
+    endpoint http:Client gitHubEndpoint = githubRESTEndpoint;
+
+    GitConnectorError connectorError = {};
+
+    if (repository.name == "" || issue.title == "") {
+        connectorError = {message:["Repository and issue should be specified."]};
+        return connectorError;
+    }
+
+    json[] labelList;
+    foreach i, label in issue.labels.getAllLabels() {
+        labelList[i] = label.name;
+    }
+
+    json[] assigneeList;
+    foreach i, assignee in issue.assignees.getAllAssignees() {
+        assigneeList[i] = assignee.login;
+    }
+
+    json issueJsonPayload = {"title":issue.title, "body":issue.bodyText, "labels":labelList, "assignees":assigneeList};
+
+    http:Request request = new;
+    constructRequest(request, issueJsonPayload, accessToken);
+
+    string repositoryName = repository.name;
+    string repositoryOwner = repository.owner.login;
+    string endpointResource = "/repos"+ GIT_PATH_SEPARATOR + repositoryOwner + GIT_PATH_SEPARATOR + repositoryName
+                                                                                    + GIT_PATH_SEPARATOR + "issues";
+    // Make an HTTP POST request
+    var response = gitHubEndpoint -> post(endpointResource, request);
+
+    match response {
+        http:Response httpResponse => {
+            json jsonPayload = httpResponse.getJsonPayload() but { http:PayloadError => null };
+
+            if (jsonPayload != null) {
+                var issueObject = jsonToIssue(jsonPayload);
+                return issueObject;
+            } else {
+                connectorError = {message:["Error in creating issue"]};
+                return connectorError;
+            }
+        }
+
+        http:HttpConnectorError httpError => {
+            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+            return connectorError;
+        }
+    }
+}
 
 @Description {value:"Get a repository of an owner"}
 @Param {value:"name: Name of the form owner/repository"}

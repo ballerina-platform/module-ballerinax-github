@@ -54,6 +54,7 @@ function jsonToCardList (json source_json, string columnId, string listOwner, st
 
     return target_cardList;
 }
+
 //********************************
 // JSON --> Column
 //********************************
@@ -66,6 +67,7 @@ function jsonToColumn (json source_json, string listOwner, string stringQuery) r
     target_column.cards = jsonToCardList(source_json.cards, source_json.id.toString() ?: "", listOwner, stringQuery);
     return target_column;
 }
+
 //********************************
 // JSON --> ColumnList
 //********************************
@@ -98,6 +100,7 @@ function jsonToRepositoryList (json source_json, string stringQuery) returns (Re
 
     return target_repositoryList;
 }
+
 //********************************
 // JSON --> PullRequestList
 //********************************
@@ -113,6 +116,7 @@ function jsonToPullRequestList (json source_json, string stringQuery) returns (P
 
     return target_pullRequestList;
 }
+
 //********************************
 // JSON --> IssueList
 //********************************
@@ -127,6 +131,39 @@ function jsonToIssueList (json source_json, string stringQuery) returns (IssueLi
     }
 
     return target_issueList;
+}
+
+//********************************
+// JSON --> Issue
+//********************************
+function jsonToIssue(json source_json) returns (Issue) {
+    Issue target_issue;
+    target_issue.id = source_json.id.toString() ?: "";
+    target_issue.title =  source_json.title.toString() ?: "";
+    target_issue.bodyText = source_json.body.toString() ?: "";
+    target_issue.closedAt = source_json.closed_at.toString() ?: "";
+    target_issue.createdAt = source_json.created_at.toString() ?: "";
+    target_issue.author.login = source_json.user.login.toString() ?: "";
+    target_issue.author.url = source_json.user.url.toString() ?: "";
+    target_issue.author.avatarUrl = source_json.user.avatar_url.toString() ?: "";
+    string stringNumber = source_json.number.toString() ?: "";
+    int intNumber = check <int>stringNumber;
+    target_issue.number = intNumber;
+    json[] labelList = check <json[]> source_json.labels;
+    string[] stringLabelList;
+    foreach i, label in labelList {
+       stringLabelList[i] = label.name.toString() ?: "";
+    }
+    target_issue.labels.setLabels(stringLabelList);
+
+    json[] assigneeList = check <json[]> source_json.assignees;
+    string[] stringAssigneeList;
+    foreach i, assignee in assigneeList {
+        stringAssigneeList[i] = assignee.login.toString() ?: "";
+    }
+    target_issue.assignees.setAssignees(stringAssigneeList);
+
+    return target_issue;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of Connector Transformers                                           //

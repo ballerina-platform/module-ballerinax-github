@@ -491,6 +491,29 @@ function testGetIssueListNextPage () {
 }
 
 @test:Config {
+    groups:["network-calls"]
+}
+function testCreateIssue () {
+    log:printInfo("githubClient -> createRepositoryIssue()");
+    Issue newIssue = {title: "This is a test issue", bodyText:"This is the body of the test issue"};
+    newIssue.labels.setLabels(["bug", "issue"]);
+    newIssue.assignees.setAssignees(["vlgunarathne"]);
+
+    Repository issueRepository = {owner:{login:"vlgunarathne"}, name:"ballerina-connector-test"};
+
+    var createdIssue = githubClient -> createRepositoryIssue (issueRepository, newIssue);
+
+    match createdIssue {
+        Issue issue => {
+            test:assertEquals(issue.title, "This is a test issue", msg = "Failed createRepositoryIssue()");
+        }
+        GitConnectorError err => {
+            test:assertFail(msg = err.message[0]);
+        }
+    }
+}
+
+@test:Config {
     groups:["object-functions"]
 }
 function testRepositoryListHasNextPage () {
