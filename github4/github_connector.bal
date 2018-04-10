@@ -22,7 +22,7 @@ import ballerina/http;
 public type GitHubConnector object{
     public {
         string accessToken;
-        http:ClientEndpoint githubClientEndpoint = new;
+        http:Client githubClientEndpoint = new;
     }
 
     public function getCardListNextPage(CardList cardList)
@@ -80,7 +80,7 @@ public type GitHubConnector object{
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getRepository (string name) returns Repository|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -138,7 +138,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getOrganization (string name) returns Organization|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -231,7 +231,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getOrganizationProject (Organization organization, int projectNumber)
                                                                                     returns Project|GitConnectorError {
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -279,7 +279,7 @@ public function GitHubConnector::getOrganizationProject (Organization organizati
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getProjectListNextPage (ProjectList projectList)
                                                                                 returns ProjectList|GitConnectorError {
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
 
     if (projectList.hasNextPage()) {
 
@@ -334,7 +334,7 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getRepositoryListNextPage (RepositoryList repositoryList)
                                                                             returns RepositoryList|GitConnectorError {
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
 
     if (repositoryList.hasNextPage()) {
 
@@ -385,7 +385,7 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
 public function GitHubConnector::getPullRequestList
                     (Repository repository, string state, int recordCount) returns PullRequestList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -443,7 +443,7 @@ public function GitHubConnector::getPullRequestList
 public function GitHubConnector::getRepositoryProjectList
                         (Repository repository, string state, int recordCount) returns ProjectList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -500,7 +500,7 @@ public function GitHubConnector::getRepositoryProjectList
 public function GitHubConnector::getRepositoryProject (Repository repository, int projectNumber)
                                                                                     returns Project|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -553,7 +553,7 @@ public function GitHubConnector::getRepositoryProject (Repository repository, in
 public function GitHubConnector::getIssueList (Repository repository, string state, int recordCount)
                                                                                 returns IssueList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -611,7 +611,7 @@ public function GitHubConnector::getIssueList (Repository repository, string sta
 public function GitHubConnector::getOrganizationProjectList
                     (Organization organization, string state, int recordCount) returns ProjectList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -667,7 +667,7 @@ public function GitHubConnector::getOrganizationProjectList
 public function GitHubConnector::getOrganizationRepositoryList
                                 (Organization organization, int recordCount) returns RepositoryList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
@@ -819,7 +819,7 @@ public function GitHubConnector::getColumnListNextPage (ColumnList columnList)
 public function GitHubConnector::getIssueListNextPage (IssueList issueList)
                                                                                 returns IssueList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
 
     if (issueList.hasNextPage()) {
         http:Request request = new;
@@ -868,7 +868,7 @@ public function GitHubConnector::getIssueListNextPage (IssueList issueList)
 public function GitHubConnector::getPullRequestListNextPage (PullRequestList pullRequestList)
                                                                             returns PullRequestList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
 
     if (pullRequestList.hasNextPage()) {
 

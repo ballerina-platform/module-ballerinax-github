@@ -106,9 +106,9 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
 @Return {value:"ColumnList: Column list object"}
 @Return {value:"GitConnectorError: Error"}
 function getProjectColumns (string ownerType, string gitQuery, string accessToken,
-                                    http:ClientEndpoint githubClientEndpoint) returns ColumnList|GitConnectorError {
+                                    http:Client githubClientEndpoint) returns ColumnList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
 
     GitConnectorError connectorError = {};
 
