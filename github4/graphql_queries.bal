@@ -564,7 +564,16 @@
         state,
         title,
         updatedAt,
-        url
+        url,
+        assignees (first: 100){
+          nodes {
+            id,
+            login,
+            email,
+            bio,
+            url
+          }
+        }
       }
     }
   }
@@ -588,7 +597,16 @@
         state,
         title,
         updatedAt,
-        url
+        url,
+        assignees (first: 100){
+          nodes {
+            id,
+            login,
+            email,
+            bio,
+            url
+          }
+        }
       }
     }
   }

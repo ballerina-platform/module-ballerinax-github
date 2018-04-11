@@ -22,57 +22,119 @@ import ballerina/http;
 public type GitHubConnector object{
     public {
         string accessToken;
-        http:ClientEndpoint githubClientEndpoint = new;
+        http:Client githubGraphQlClient = new;
+        http:Client githubRestClient = new;
     }
 
-    public function getCardListNextPage(CardList cardList)
+    public function createIssue (Repository repository, Issue issue)
+                    returns Issue|GitConnectorError;
+
+    public function getCardListNextPage (CardList cardList)
                     returns CardList|GitConnectorError;
 
-    public function getColumnListNextPage(ColumnList columnList)
+    public function getColumnListNextPage (ColumnList columnList)
                     returns ColumnList|GitConnectorError;
 
-    public function getIssueList(Repository repository, string state, int recordCount)
+    public function getIssueList (Repository repository, string state, int recordCount)
                     returns IssueList|GitConnectorError;
 
-    public function getIssueListNextPage(IssueList issueList)
+    public function getIssueListNextPage (IssueList issueList)
                     returns IssueList|GitConnectorError;
 
-    public function getOrganization(string name)
+    public function getOrganization (string name)
                     returns Organization|GitConnectorError;
 
-    public function getOrganizationProject(Organization organization, int projectNumber)
+    public function getOrganizationProject (Organization organization, int projectNumber)
                     returns Project|GitConnectorError;
 
-    public function getOrganizationProjectList(Organization organization, string state, int recordCount)
+    public function getOrganizationProjectList (Organization organization, string state, int recordCount)
                     returns ProjectList|GitConnectorError;
 
-    public function getOrganizationRepositoryList(Organization organization, int recordCount)
+    public function getOrganizationRepositoryList (Organization organization, int recordCount)
                     returns RepositoryList|GitConnectorError;
 
-    public function getProjectColumnList(Project project, int recordCount)
+    public function getProjectColumnList (Project project, int recordCount)
                     returns ColumnList|GitConnectorError;
 
-    public function getProjectListNextPage(ProjectList projectList)
+    public function getProjectListNextPage (ProjectList projectList)
                     returns ProjectList|GitConnectorError;
 
-    public function getPullRequestList(Repository repository, string state, int recordCount)
+    public function getPullRequestList (Repository repository, string state, int recordCount)
                     returns PullRequestList|GitConnectorError;
 
-    public function getPullRequestListNextPage(PullRequestList pullRequestList)
+    public function getPullRequestListNextPage (PullRequestList pullRequestList)
                     returns PullRequestList|GitConnectorError;
 
-    public function getRepository(string name)
+    public function getRepository (string name)
                     returns Repository|GitConnectorError;
     
-    public function getRepositoryListNextPage(RepositoryList repositoryList)
+    public function getRepositoryListNextPage (RepositoryList repositoryList)
                     returns RepositoryList|GitConnectorError;
 
-    public function getRepositoryProject(Repository repository, int projectNumber)
+    public function getRepositoryProject (Repository repository, int projectNumber)
                     returns Project|GitConnectorError;
 
-    public function getRepositoryProjectList(Repository repository, string state, int recordCount)
+    public function getRepositoryProjectList (Repository repository, string state, int recordCount)
                     returns ProjectList|GitConnectorError;
 };
+
+@Description {value: "Creates a new issue in a repository."}
+@Param {value:"Repository: Repository object"}
+@Param {value: "Issue: Issue object"}
+@Return {value: "Issue: Create issue object"}
+@Return {value:"GitConnectorError: Error"}
+public function GitHubConnector::createIssue (Repository repository, Issue issue) returns Issue|GitConnectorError {
+
+    endpoint http:Client gitHubEndpoint = githubRestClient;
+
+    GitConnectorError connectorError = {};
+
+    if (repository.name == "" || issue.title == "") {
+        connectorError = {message:["Repository and issue should be specified."]};
+        return connectorError;
+    }
+
+    json[] labelList;
+    foreach i, label in issue.labels.getAllLabels() {
+        labelList[i] = label.name;
+    }
+
+    json[] assigneeList;
+    foreach i, assignee in issue.assignees.getAllAssignees() {
+        assigneeList[i] = assignee.login;
+    }
+
+    json issueJsonPayload = {"title":issue.title, "body":issue.bodyText, "labels":labelList, "assignees":assigneeList};
+
+    http:Request request = new;
+    constructRequest(request, issueJsonPayload, accessToken);
+
+    string repositoryName = repository.name;
+    string repositoryOwner = repository.owner.login;
+    string endpointResource = "/repos"+ GIT_PATH_SEPARATOR + repositoryOwner + GIT_PATH_SEPARATOR + repositoryName
+                                                                                    + GIT_PATH_SEPARATOR + "issues";
+    // Make an HTTP POST request
+    var response = gitHubEndpoint -> post(endpointResource, request);
+
+    match response {
+        http:Response httpResponse => {
+            json jsonPayload = httpResponse.getJsonPayload() but { http:PayloadError => null };
+
+            if (jsonPayload != null) {
+                var issueObject = jsonToIssue(jsonPayload);
+                return issueObject;
+            } else {
+                connectorError = {message:["Error in creating issue"]};
+                return connectorError;
+            }
+        }
+
+        http:HttpConnectorError httpError => {
+            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+            return connectorError;
+        }
+    }
+}
 
 @Description {value:"Get a repository of an owner"}
 @Param {value:"name: Name of the form owner/repository"}
@@ -80,7 +142,7 @@ public type GitHubConnector object{
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getRepository (string name) returns Repository|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -117,7 +179,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
         json jsonValidatedResponse => {
             try {
                 var githubRepositoryJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY];
-                singleRepository = check <Repository>githubRepositoryJson;
+                singleRepository = jsonToRepository(githubRepositoryJson);
             } catch (error e) {
                 connectorError = {message:[e.message]};
                 return connectorError;
@@ -138,7 +200,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getOrganization (string name) returns Organization|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -211,7 +273,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
         string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS,
                                         [organization, project.number, recordCount]);
 
-        return getProjectColumns(GIT_ORGANIZATION, stringQuery, accessToken, githubClientEndpoint);
+        return getProjectColumns(GIT_ORGANIZATION, stringQuery, accessToken, githubGraphQlClient);
 
     } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY) && project.resourcePath != null) {
         string ownerName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_ONE];
@@ -219,7 +281,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
         string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS,
                                         [ownerName, repositoryName, project.number, recordCount]);
 
-        return getProjectColumns(GIT_REPOSITORY, stringQuery, accessToken, githubClientEndpoint);
+        return getProjectColumns(GIT_REPOSITORY, stringQuery, accessToken, githubGraphQlClient);
     }
     connectorError.message = ["No records found"];
     return connectorError;
@@ -231,7 +293,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getOrganizationProject (Organization organization, int projectNumber)
                                                                                     returns Project|GitConnectorError {
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -279,7 +341,7 @@ public function GitHubConnector::getOrganizationProject (Organization organizati
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getProjectListNextPage (ProjectList projectList)
                                                                                 returns ProjectList|GitConnectorError {
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
 
     if (projectList.hasNextPage()) {
 
@@ -334,7 +396,7 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getRepositoryListNextPage (RepositoryList repositoryList)
                                                                             returns RepositoryList|GitConnectorError {
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
 
     if (repositoryList.hasNextPage()) {
 
@@ -385,7 +447,7 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
 public function GitHubConnector::getPullRequestList
                     (Repository repository, string state, int recordCount) returns PullRequestList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -443,7 +505,7 @@ public function GitHubConnector::getPullRequestList
 public function GitHubConnector::getRepositoryProjectList
                         (Repository repository, string state, int recordCount) returns ProjectList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -500,7 +562,7 @@ public function GitHubConnector::getRepositoryProjectList
 public function GitHubConnector::getRepositoryProject (Repository repository, int projectNumber)
                                                                                     returns Project|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -553,7 +615,7 @@ public function GitHubConnector::getRepositoryProject (Repository repository, in
 public function GitHubConnector::getIssueList (Repository repository, string state, int recordCount)
                                                                                 returns IssueList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -611,7 +673,7 @@ public function GitHubConnector::getIssueList (Repository repository, string sta
 public function GitHubConnector::getOrganizationProjectList
                     (Organization organization, string state, int recordCount) returns ProjectList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -667,7 +729,7 @@ public function GitHubConnector::getOrganizationProjectList
 public function GitHubConnector::getOrganizationRepositoryList
                                 (Organization organization, int recordCount) returns RepositoryList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -732,7 +794,7 @@ public function GitHubConnector::getCardListNextPage (CardList cardList)
                 if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
                     jsonQuery["query"] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
                     ColumnList|GitConnectorError columnList = getProjectColumns(GIT_ORGANIZATION,
-                                                        jsonQuery.toString() ?: "", accessToken, githubClientEndpoint);
+                                                        jsonQuery.toString() ?: "", accessToken, githubGraphQlClient);
                     match columnList {
                         ColumnList colList => {
                             foreach column in colList.getAllColumns() {
@@ -750,7 +812,7 @@ public function GitHubConnector::getCardListNextPage (CardList cardList)
                 } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
                     jsonQuery["query"] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
                     ColumnList|GitConnectorError columnList = getProjectColumns(GIT_REPOSITORY,
-                                                        jsonQuery.toString() ?: "", accessToken, githubClientEndpoint);
+                                                        jsonQuery.toString() ?: "", accessToken, githubGraphQlClient);
                     match columnList {
                         ColumnList colList => {
                             foreach column in colList.getAllColumns() {
@@ -793,12 +855,12 @@ public function GitHubConnector::getColumnListNextPage (ColumnList columnList)
                     jsonQuery["query"] = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
 
                     return getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString() ?: "",
-                                                                                    accessToken, githubClientEndpoint);
+                                                                                    accessToken, githubGraphQlClient);
                 } else if (columnList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
                     jsonQuery["query"] = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
 
                     return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString() ?: "",
-                                                                                    accessToken, githubClientEndpoint);
+                                                                                    accessToken, githubGraphQlClient);
                 }
             }
 
@@ -819,7 +881,7 @@ public function GitHubConnector::getColumnListNextPage (ColumnList columnList)
 public function GitHubConnector::getIssueListNextPage (IssueList issueList)
                                                                                 returns IssueList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
 
     if (issueList.hasNextPage()) {
         http:Request request = new;
@@ -868,7 +930,7 @@ public function GitHubConnector::getIssueListNextPage (IssueList issueList)
 public function GitHubConnector::getPullRequestListNextPage (PullRequestList pullRequestList)
                                                                             returns PullRequestList|GitConnectorError {
 
-    endpoint http:ClientEndpoint gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
 
     if (pullRequestList.hasNextPage()) {
 

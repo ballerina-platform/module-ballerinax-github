@@ -17,8 +17,11 @@
 //
 
 
-//String constants
+// Endpoint URLs
 @final string GIT_GRAPHQL_API_URL = "https://api.github.com/graphql";
+@final string GIT_REST_API_URL = "https://api.github.com/";
+
+// String constants
 @final string GIT_CARDS = "cards";
 @final string GIT_COLUMNS = "columns";
 @final string GIT_DATA = "data";
