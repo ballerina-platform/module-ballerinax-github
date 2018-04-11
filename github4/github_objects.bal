@@ -56,12 +56,12 @@ public type Repository {
     int forkCount;
     boolean hasIssuesEnabled;
     boolean hasWikiEnabled;
-    string homepageUrl;
     boolean isArchived;
     boolean isFork;
     boolean isLocked;
     boolean isMirror;
     boolean isPrivate;
+    string homepageUrl;
     string license;
     string lockReason;
     string mirrorUrl;

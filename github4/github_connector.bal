@@ -179,7 +179,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
         json jsonValidatedResponse => {
             try {
                 var githubRepositoryJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY];
-                singleRepository = check <Repository>githubRepositoryJson;
+                singleRepository = jsonToRepository(githubRepositoryJson);
             } catch (error e) {
                 connectorError = {message:[e.message]};
                 return connectorError;

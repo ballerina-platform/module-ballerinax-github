@@ -94,7 +94,7 @@ function jsonToRepositoryList (json source_json, string stringQuery) returns (Re
     target_repositoryList.pageInfo = check <PageInfo>source_json.pageInfo;
     var nodes = check <json[]> source_json.nodes;
     foreach i, node in nodes {
-        var repository = check <Repository> node;
+        var repository = jsonToRepository(node);
         target_repositoryList.nodes[i] = repository;
     }
 
@@ -136,7 +136,7 @@ function jsonToIssueList (json source_json, string stringQuery) returns (IssueLi
 //********************************
 // JSON --> Issue
 //********************************
-function jsonToIssue(json source_json) returns (Issue) {
+function jsonToIssue (json source_json) returns (Issue) {
     Issue target_issue;
     target_issue.id = source_json.id.toString() ?: "";
     target_issue.title =  source_json.title.toString() ?: "";
@@ -164,6 +164,60 @@ function jsonToIssue(json source_json) returns (Issue) {
     target_issue.assignees.setAssignees(stringAssigneeList);
 
     return target_issue;
+}
+
+//********************************
+// JSON --> Repository
+//********************************
+function jsonToRepository (json source_json) returns (Repository) {
+    Repository target_repository;
+    target_repository.id = source_json.id.toString() ?: "";
+    target_repository.name = source_json.name.toString() ?: "";
+    target_repository.createdAt = source_json.createdAt.toString() ?: "";
+    target_repository.updatedAt = source_json.updatedAt.toString() ?: "";
+    target_repository.description = source_json.description.toString() ?: "";
+    string stringForkCount = source_json.forkCount.toString() ?: "0";
+    int intForkCount = check <int>stringForkCount;
+    target_repository.forkCount = intForkCount;
+
+    string stringHasWikiEnabled = source_json.hasWikiEnabled.toString() ?: "";
+    boolean booleanHasWikiEnabled = <boolean>stringHasWikiEnabled;
+    target_repository.hasWikiEnabled = booleanHasWikiEnabled;
+
+    string stringHasIssuesEnabled = source_json.hasIssuesEnabled.toString() ?: "";
+    boolean booleanHasIssuesEnabled = <boolean>stringHasIssuesEnabled;
+    target_repository.hasIssuesEnabled = booleanHasIssuesEnabled;
+
+    string stringIsArchived = source_json.isArchived.toString() ?: "";
+    boolean booleanIsArchived = <boolean>stringIsArchived;
+    target_repository.isArchived = booleanIsArchived;
+
+    string stringIsFork = source_json.isFork.toString() ?: "";
+    boolean booleanIsFork = <boolean>stringIsFork;
+    target_repository.isFork = booleanIsFork;
+
+    string stringIsLocked = source_json.isLocked.toString() ?: "";
+    boolean booleanIsLocked = <boolean>stringIsLocked;
+    target_repository.isLocked = booleanIsLocked;
+
+    string stringIsMirror = source_json.isMirror.toString() ?: "";
+    boolean booleanIsMirror = <boolean>stringIsMirror;
+    target_repository.isMirror = booleanIsMirror;
+
+    string stringIsPrivate = source_json.isPrivate.toString() ?: "";
+    boolean booleanIsPrivate = <boolean>stringIsPrivate;
+    target_repository.isPrivate = booleanIsPrivate;
+
+    target_repository.homepageUrl = source_json.homepageUrl.toString() ?: "";
+    target_repository.license = source_json.license.toString() ?: "";
+    target_repository.lockReason = source_json.lockReason.toString() ?: "";
+    target_repository.mirrorUrl = source_json.mirrorUrl.toString() ?: "";
+    target_repository.url = source_json.url.toString() ?: "";
+    target_repository.sshUrl = source_json.sshUrl.toString() ?: "";
+    target_repository.owner = source_json.owner == null ? {} : check <RepositoryOwner>source_json.owner;
+    target_repository.primaryLanguage = source_json.primaryLanguage == null ? {} : check <Language>source_json.primaryLanguage;
+
+    return target_repository;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of Connector Transformers                                           //
