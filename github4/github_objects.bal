@@ -95,19 +95,19 @@ public type RepositoryList object {
 @Description {value:"Check if repository list next page is available"}
 @Return {value:"boolean: Return true or false"}
 public function RepositoryList::hasNextPage () returns (boolean) {
-    return pageInfo.hasNextPage;
+    return self.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if repository list previous page is available"}
 @Return {value:"boolean: Return true or false"}
 public function RepositoryList::hasPreviousPage () returns (boolean) {
-    return pageInfo.hasPreviousPage;
+    return self.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get an array of repositories"}
 @Return {value:"RepositoryList[]: Array of repositories"}
 public function RepositoryList::getAllRepositories () returns (Repository[]) {
-    return nodes;
+    return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                         End of RepositoryList object                                              //
@@ -161,19 +161,19 @@ public type ProjectList object {
 @Description {value:"Check if project list next page is available"}
 @Return {value:"boolean: Return true or false"}
 public function ProjectList::hasNextPage () returns (boolean) {
-    return pageInfo.hasNextPage;
+    return self.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if project list previous page is available"}
 @Return {value:"boolean: Return true or false"}
 public function ProjectList::hasPreviousPage () returns (boolean) {
-    return pageInfo.hasPreviousPage;
+    return self.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get an array of projects"}
 @Return {value:"Project[]: Array of projects"}
 public function ProjectList::getAllProjects () returns (Project[]) {
-    return nodes;
+    return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of ProjectList object                                             //
@@ -203,7 +203,7 @@ public type Column object {
 @Description {value:"Get a list of cards of a column"}
 @Return {value:"CardList: A card list object"}
 public function Column::getCardList () returns (CardList) {
-    return cards;
+    return self.cards;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              End of Column object                                                 //
@@ -231,19 +231,19 @@ public type ColumnList object {
 @Description {value:"Check if column list next page is available"}
 @Return {value:"boolean: Return true or false"}
 public function ColumnList::hasNextPage () returns (boolean) {
-    return pageInfo.hasNextPage;
+    return self.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if column list previosu page is available"}
 @Return {value:"boolean: Return true or false"}
 public function ColumnList::hasPreviousPage () returns (boolean) {
-    return pageInfo.hasPreviousPage;
+    return self.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get an array of all the columns"}
 @Return {value:"Column[]: Column array"}
 public function ColumnList::getAllColumns () returns (Column[]) {
-    return nodes;
+    return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          End of ColumnList object                                                 //
@@ -292,19 +292,19 @@ public type CardList object {
 @Description {value:"Check if the card list next page is available"}
 @Return {value:"boolean: Return true or false"}
 public function CardList::hasNextPage () returns (boolean) {
-    return pageInfo.hasNextPage;
+    return self.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if the card list previous page is available"}
 @Return {value:"boolean: Return true or false"}
 public function CardList::hasPreviousPage () returns (boolean) {
-    return pageInfo.hasPreviousPage;
+    return self.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get an array of all the cards"}
 @Return {value:"Card[]: Array of cards"}
 public function CardList::getAllCards () returns (Card[]) {
-    return nodes;
+    return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of CardList object                                                 //
@@ -361,19 +361,19 @@ public type PullRequestList object {
 @Description {value:"Check if pull request list next page is available"}
 @Return {value:"boolean: Return true or false"}
 public function PullRequestList::hasNextPage () returns (boolean) {
-    return pageInfo.hasNextPage;
+    return self.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if pull request list previous page is avaiable"}
 @Return {value:"boolean: Return ture or false"}
 public function PullRequestList::hasPreviousPage () returns (boolean) {
-    return pageInfo.hasPreviousPage;
+    return self.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get an array of all the pull requests"}
 @Return {value:"PullRequest[]: PullRequest array"}
 public function PullRequestList::getAllPullRequests () returns (PullRequest[]) {
-    return nodes;
+    return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          End of PullRequestList object                                            //
@@ -423,19 +423,19 @@ public type IssueList object {
 @Description {value:"Check if issue list next page is available"}
 @Return {value:"boolean: Return true or false"}
 public function IssueList::hasNextPage () returns (boolean) {
-    return pageInfo.hasNextPage;
+    return self.pageInfo.hasNextPage;
 }
 
 @Description {value:"Check if issue list previous page is avaiable"}
 @Return {value:"boolean: Return ture or false"}
 public function IssueList::hasPreviousPage () returns (boolean) {
-    return pageInfo.hasPreviousPage;
+    return self.pageInfo.hasPreviousPage;
 }
 
 @Description {value:"Get an array of all the issues"}
 @Return {value:"Issue[]: Issue array"}
 public function IssueList::getAllIssues () returns (Issue[]) {
-    return nodes;
+    return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of IssueList object                                                //
@@ -469,7 +469,6 @@ public type ProjectOwner object {
 
     private {
         string __typename;
-
     }
 
     public function getOwnerType () returns (string);
@@ -481,12 +480,12 @@ public type ProjectOwner object {
 @Description {value:"Get the type of the project owner"}
 @Return {value:"string: Type of the owner"}
 public function ProjectOwner::getOwnerType () returns (string) {
-    return __typename;
+    return self.__typename;
 }
 
 @Description {value:"Set the type of the project owner"}
 public function ProjectOwner::setOwnerType (string ownerType) {
-    __typename = ownerType;
+    self.__typename = ownerType;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of ProjectOwner object                                              //
@@ -595,7 +594,7 @@ public type LabelList object{
 @Description {value:"Get an array of labels"}
 @Return {value:"Label[]: Label array"}
 public function LabelList::getAllLabels () returns (Label[]) {
-    return nodes;
+    return self.nodes;
 }
 
 public function LabelList::setLabels (string[] labels) {
@@ -604,7 +603,7 @@ public function LabelList::setLabels (string[] labels) {
         labelList[i] = {name:label};
     }
 
-    nodes = labelList;
+    self.nodes = labelList;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              End of LabelList object                                              //
@@ -626,7 +625,7 @@ public type AssigneeList object {
 // AssigneeList bound functions
 //*********************************************************************************************************************
 public function AssigneeList::getAllAssignees () returns (Assignee[]) {
-    return nodes;
+    return self.nodes;
 }
 
 public function AssigneeList::setAssignees (string[] assignees) {
@@ -634,7 +633,7 @@ public function AssigneeList::setAssignees (string[] assignees) {
     foreach i, assignee in assignees {
         assigneeList[i] = {login:assignee};
     }
-    nodes = assigneeList;
+    self.nodes = assigneeList;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of AssigneeList object                                             //

@@ -539,9 +539,9 @@ function testRepositoryListHasPreviousPage () {
 function testRepositoryListGetAllRepositories () {
     log:printInfo("RepositoryList.getAllRepositories()");
     RepositoryList repositoryList = new;
-    Repository[]? repoArray = repositoryList.getAllRepositories();
-
-    test:assertEquals(typeof repoArray, typeof Repository[], msg = "Failed RepositoryList.getAllRepositories()");
+    var repoArray = repositoryList.getAllRepositories();
+    Repository[] sampleRepoArray;
+    test:assertEquals(repoArray, sampleRepoArray, msg = "Failed RepositoryList.getAllRepositories()");
 }
 
 @test:Config {
@@ -570,9 +570,9 @@ function testProjectListHasPreviousPage () {
 function testProjectListGetAllProjects () {
     log:printInfo("ProjectList.getAllRepositories()");
     ProjectList projectList = new;
-    Project[]? projectArray = projectList.getAllProjects();
-
-    test:assertEquals(typeof projectArray, typeof Project[], msg = "Failed ProjectList.getAllProjects()");
+    var projectArray = projectList.getAllProjects();
+    Project[] sampleProjectArray;
+    test:assertEquals(projectArray, sampleProjectArray, msg = "Failed ProjectList.getAllProjects()");
 }
 
 @test:Config {
@@ -581,9 +581,9 @@ function testProjectListGetAllProjects () {
 function testColumnGetCardList () {
     log:printInfo("Column.getCardList()");
     Column column = new;
-    CardList? cardList = column.getCardList();
-
-    test:assertEquals(typeof cardList, typeof CardList, msg = "Failed Column.getCardList()");
+    var cardList = column.getCardList();
+    CardList sampleCardList = new;
+    test:assertEquals(cardList, sampleCardList, msg = "Failed Column.getCardList()");
 }
 
 @test:Config {
@@ -612,9 +612,9 @@ function testColumnListHasPreviousPage () {
 function testColumnListGetAllColumns () {
     log:printInfo("ColumnList.getAllColumns()");
     ColumnList columnList = new;
-    Column[]? columnArray = columnList.getAllColumns();
-
-    test:assertEquals(typeof columnArray, typeof Column[], msg = "Failed ColumnList.getAllColumns()");
+    var columnArray = columnList.getAllColumns();
+    Column[] sampleColumnArray;
+    test:assertEquals(columnArray, sampleColumnArray, msg = "Failed ColumnList.getAllColumns()");
 }
 
 @test:Config {
@@ -643,9 +643,9 @@ function testCardListHasPreviousPage () {
 function testCardListGetAllCards () {
     log:printInfo("CardList.getAllCards()");
     CardList cardList = new;
-    Card[]? cardArray = cardList.getAllCards();
-
-    test:assertEquals(typeof cardArray, typeof Card[], msg = "Failed CardList.getAllCards()");
+    var cardArray = cardList.getAllCards();
+    Card[] sampleCardArray;
+    test:assertEquals(cardArray, sampleCardArray, msg = "Failed CardList.getAllCards()");
 }
 
 @test:Config {
@@ -674,10 +674,9 @@ function testPullRequestListHasPreviousPage () {
 function testPullRequestListGetAllPullRequests () {
     log:printInfo("PullRequestList.getAllPullRequests()");
     PullRequestList pullRequestList = new;
-    PullRequest[]? pullRequestArray = pullRequestList.getAllPullRequests();
-
-    test:assertEquals(typeof pullRequestArray, typeof PullRequest[],
-                      msg = "Failed PullRequestList.getAllPullRequests()");
+    var pullRequestArray = pullRequestList.getAllPullRequests();
+    PullRequest[] samplePullRequestArray;
+    test:assertEquals(pullRequestArray, samplePullRequestArray, msg = "Failed PullRequestList.getAllPullRequests()");
 }
 
 @test:Config {
@@ -706,9 +705,9 @@ function testIssueListHasPreviousPage () {
 function testIssueListGetAllIssues () {
     log:printInfo("IssueList.getAllIssues()");
     IssueList issueList = new;
-    Issue[]? issueArray = issueList.getAllIssues();
-
-    test:assertEquals(typeof issueArray, typeof Issue[], msg = "Failed IssueList.getAllIssues()");
+    var issueArray = issueList.getAllIssues();
+    Issue[] sampleIssueArray;
+    test:assertEquals(issueArray, sampleIssueArray, msg = "Failed IssueList.getAllIssues()");
 }
 
 @test:Config {
@@ -717,9 +716,9 @@ function testIssueListGetAllIssues () {
 function testLabelListGetAllLabels () {
     log:printInfo("LabelList.getAllLabels()");
     LabelList labelList = new;
-    Label[]? labelArray = labelList.getAllLabels();
-
-    test:assertEquals(typeof labelArray, typeof Label[], msg = "Failed LabelList.getAllLabels()");
+    var labelArray = labelList.getAllLabels();
+    Label[] sampleLabelArray;
+    test:assertEquals(labelArray, sampleLabelArray, msg = "Failed LabelList.getAllLabels()");
 }
 
 @test:Config {
@@ -728,8 +727,7 @@ function testLabelListGetAllLabels () {
 function testProjectOwnerGetOwnerType () {
     log:printInfo("ProjectOwner.getOwnerType()");
     ProjectOwner projectOwner = new;
-
-    test:assertEquals(typeof projectOwner.getOwnerType(), typeof string, msg = "Failed ProjectOwner.getOwnerType()");
+    test:assertEquals(projectOwner.getOwnerType(), "", msg = "Failed ProjectOwner.getOwnerType()");
 }
 
 @test:Config {
@@ -832,7 +830,8 @@ function testGetValidatedResponseNoRequestedData () {
             test:assertFail(msg = "Payload error should be handled");
         }
         GitConnectorError err => {
-            test:assertEquals(err.message[0], "Error while retrieving data.", msg = "Validated response error mismatch");
+            test:assertEquals(err.message[0], "Error while retrieving data.",
+                                                                msg = "Validated response error mismatch");
         }
     }
 }
@@ -854,7 +853,8 @@ function testGetValidatedResponseNoPayload () {
             test:assertFail(msg = "Payload error should be handled");
         }
         GitConnectorError err => {
-            test:assertEquals(err.message[0], "Error while retrieving payload.", msg = "Validated response error mismatch");
+            test:assertEquals(err.message[0], "Error while retrieving payload.",
+                                                                msg = "Validated response error mismatch");
         }
     }
 }

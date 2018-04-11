@@ -28,7 +28,7 @@ and provide the obtained token to the GitHubConnectorConfiguration"}
 @Field {value: "clientEndpointConfiguration: Client endpoint configurations provided by the user"}
 public type GitHubConnectorConfiguration {
         string accessToken;
-        http:ClientEndpointConfiguration clientEndpointConfiguration = {};
+        http:ClientEndpointConfig clientEndpointConfiguration = {};
 
 };
 
@@ -66,19 +66,19 @@ public type Client object {
 public function Client::init(GitHubConnectorConfiguration githubConnectorConfig) {
 
     // Set the access token to the connector from configurations
-    githubConnector.accessToken = githubConnectorConfig.accessToken;
+    self.githubConnector.accessToken = githubConnectorConfig.accessToken;
 
     // Set the target url to the GitHub GraphQL API endpoint
     githubConnectorConfig.clientEndpointConfiguration.targets = [{url:GIT_GRAPHQL_API_URL}];
 
     // Initialize the client endpoint with the configurations
-    githubConnector.githubGraphQlClient.init(githubConnectorConfig.clientEndpointConfiguration);
+    self.githubConnector.githubGraphQlClient.init(githubConnectorConfig.clientEndpointConfiguration);
 
     // Set the target url to the GitHub REST API endpoint
     githubConnectorConfig.clientEndpointConfiguration.targets = [{url:GIT_REST_API_URL}];
 
     // Initialize the client endpoint with the configurations
-    githubConnector.githubRestClient.init(githubConnectorConfig.clientEndpointConfiguration);
+    self.githubConnector.githubRestClient.init(githubConnectorConfig.clientEndpointConfiguration);
 }
 
 @Description {value: "Register GitHub connector endpoint"}
@@ -91,7 +91,7 @@ public function Client::start () {}
 @Description {value: "Return the GitHub connector client"}
 @Return {value: "GitHubConnector client"}
 public function Client::getClient () returns GitHubConnector {
-    return githubConnector;
+    return self.githubConnector;
 }
 
 @Description {value: "Stop GitHub connector client"}

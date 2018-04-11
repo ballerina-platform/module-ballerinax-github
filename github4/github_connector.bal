@@ -85,7 +85,7 @@ public type GitHubConnector object{
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::createIssue (Repository repository, Issue issue) returns Issue|GitConnectorError {
 
-    endpoint http:Client gitHubEndpoint = githubRestClient;
+    endpoint http:Client gitHubEndpoint = self.githubRestClient;
 
     GitConnectorError connectorError = {};
 
@@ -107,7 +107,7 @@ public function GitHubConnector::createIssue (Repository repository, Issue issue
     json issueJsonPayload = {"title":issue.title, "body":issue.bodyText, "labels":labelList, "assignees":assigneeList};
 
     http:Request request = new;
-    constructRequest(request, issueJsonPayload, accessToken);
+    constructRequest(request, issueJsonPayload, self.accessToken);
 
     string repositoryName = repository.name;
     string repositoryOwner = repository.owner.login;
@@ -142,7 +142,7 @@ public function GitHubConnector::createIssue (Repository repository, Issue issue
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getRepository (string name) returns Repository|GitConnectorError {
 
-    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
+    endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -162,7 +162,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
     match convertedQuery {
         json jsonQuery => {
             // Set headers and payload to the request
-            constructRequest(request, jsonQuery, accessToken);
+            constructRequest(request, jsonQuery, self.accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -200,7 +200,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getOrganization (string name) returns Organization|GitConnectorError {
 
-    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
+    endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -217,7 +217,7 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
     match convertedQuery {
         json jsonQuery => {
             // Set headers and payload to the request
-            constructRequest(request, jsonQuery, accessToken);
+            constructRequest(request, jsonQuery, self.accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -273,7 +273,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
         string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS,
                                         [organization, project.number, recordCount]);
 
-        return getProjectColumns(GIT_ORGANIZATION, stringQuery, accessToken, githubGraphQlClient);
+        return getProjectColumns(GIT_ORGANIZATION, stringQuery, self.accessToken, self.githubGraphQlClient);
 
     } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY) && project.resourcePath != null) {
         string ownerName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_ONE];
@@ -281,7 +281,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
         string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS,
                                         [ownerName, repositoryName, project.number, recordCount]);
 
-        return getProjectColumns(GIT_REPOSITORY, stringQuery, accessToken, githubGraphQlClient);
+        return getProjectColumns(GIT_REPOSITORY, stringQuery, self.accessToken, self.githubGraphQlClient);
     }
     connectorError.message = ["No records found"];
     return connectorError;
@@ -293,7 +293,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getOrganizationProject (Organization organization, int projectNumber)
                                                                                     returns Project|GitConnectorError {
-    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
+    endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -309,7 +309,7 @@ public function GitHubConnector::getOrganizationProject (Organization organizati
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, accessToken);
+            constructRequest(request, jsonQuery, self.accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -341,7 +341,7 @@ public function GitHubConnector::getOrganizationProject (Organization organizati
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getProjectListNextPage (ProjectList projectList)
                                                                                 returns ProjectList|GitConnectorError {
-    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
+    endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     if (projectList.hasNextPage()) {
 
@@ -358,7 +358,7 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
                 }
                 dataQuery = jsonQuery;
                 //Set headers and payload to the request
-                constructRequest(request, jsonQuery, accessToken);
+                constructRequest(request, jsonQuery, self.accessToken);
             }
 
             GitConnectorError gitConError => {
@@ -396,7 +396,7 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
 @Return {value:"GitConnectorError: Error"}
 public function GitHubConnector::getRepositoryListNextPage (RepositoryList repositoryList)
                                                                             returns RepositoryList|GitConnectorError {
-    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
+    endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     if (repositoryList.hasNextPage()) {
 
@@ -407,7 +407,7 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
                 jsonQuery.variables.endCursorRepos = repositoryList.pageInfo.endCursor;
                 jsonQuery["query"] = GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE;
                 //Set headers and payload to the request
-                constructRequest(request, jsonQuery, accessToken);
+                constructRequest(request, jsonQuery, self.accessToken);
             }
 
             GitConnectorError gitConError => {
@@ -447,7 +447,7 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
 public function GitHubConnector::getPullRequestList
                     (Repository repository, string state, int recordCount) returns PullRequestList|GitConnectorError {
 
-    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
+    endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -469,7 +469,7 @@ public function GitHubConnector::getPullRequestList
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, accessToken);
+            constructRequest(request, jsonQuery, self.accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -505,7 +505,7 @@ public function GitHubConnector::getPullRequestList
 public function GitHubConnector::getRepositoryProjectList
                         (Repository repository, string state, int recordCount) returns ProjectList|GitConnectorError {
 
-    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
+    endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -527,7 +527,7 @@ public function GitHubConnector::getRepositoryProjectList
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, accessToken);
+            constructRequest(request, jsonQuery, self.accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -562,7 +562,7 @@ public function GitHubConnector::getRepositoryProjectList
 public function GitHubConnector::getRepositoryProject (Repository repository, int projectNumber)
                                                                                     returns Project|GitConnectorError {
 
-    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
+    endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -579,7 +579,7 @@ public function GitHubConnector::getRepositoryProject (Repository repository, in
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, accessToken);
+            constructRequest(request, jsonQuery, self.accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -615,7 +615,7 @@ public function GitHubConnector::getRepositoryProject (Repository repository, in
 public function GitHubConnector::getIssueList (Repository repository, string state, int recordCount)
                                                                                 returns IssueList|GitConnectorError {
 
-    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
+    endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -637,7 +637,7 @@ public function GitHubConnector::getIssueList (Repository repository, string sta
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, accessToken);
+            constructRequest(request, jsonQuery, self.accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -673,7 +673,7 @@ public function GitHubConnector::getIssueList (Repository repository, string sta
 public function GitHubConnector::getOrganizationProjectList
                     (Organization organization, string state, int recordCount) returns ProjectList|GitConnectorError {
 
-    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
+    endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -694,7 +694,7 @@ public function GitHubConnector::getOrganizationProjectList
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, accessToken);
+            constructRequest(request, jsonQuery, self.accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -729,7 +729,7 @@ public function GitHubConnector::getOrganizationProjectList
 public function GitHubConnector::getOrganizationRepositoryList
                                 (Organization organization, int recordCount) returns RepositoryList|GitConnectorError {
 
-    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
+    endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     GitConnectorError connectorError = {};
 
@@ -750,7 +750,7 @@ public function GitHubConnector::getOrganizationRepositoryList
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, accessToken);
+            constructRequest(request, jsonQuery, self.accessToken);
         }
 
         GitConnectorError gitConError => {
@@ -794,7 +794,7 @@ public function GitHubConnector::getCardListNextPage (CardList cardList)
                 if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
                     jsonQuery["query"] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
                     ColumnList|GitConnectorError columnList = getProjectColumns(GIT_ORGANIZATION,
-                                                        jsonQuery.toString() ?: "", accessToken, githubGraphQlClient);
+                                                        jsonQuery.toString() ?: "", self.accessToken, self.githubGraphQlClient);
                     match columnList {
                         ColumnList colList => {
                             foreach column in colList.getAllColumns() {
@@ -812,7 +812,7 @@ public function GitHubConnector::getCardListNextPage (CardList cardList)
                 } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
                     jsonQuery["query"] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
                     ColumnList|GitConnectorError columnList = getProjectColumns(GIT_REPOSITORY,
-                                                        jsonQuery.toString() ?: "", accessToken, githubGraphQlClient);
+                                                        jsonQuery.toString() ?: "", self.accessToken, self.githubGraphQlClient);
                     match columnList {
                         ColumnList colList => {
                             foreach column in colList.getAllColumns() {
@@ -855,12 +855,12 @@ public function GitHubConnector::getColumnListNextPage (ColumnList columnList)
                     jsonQuery["query"] = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
 
                     return getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString() ?: "",
-                                                                                    accessToken, githubGraphQlClient);
+                                                                                    self.accessToken, self.githubGraphQlClient);
                 } else if (columnList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
                     jsonQuery["query"] = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
 
                     return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString() ?: "",
-                                                                                    accessToken, githubGraphQlClient);
+                                                                                    self.accessToken, self.githubGraphQlClient);
                 }
             }
 
@@ -881,7 +881,7 @@ public function GitHubConnector::getColumnListNextPage (ColumnList columnList)
 public function GitHubConnector::getIssueListNextPage (IssueList issueList)
                                                                                 returns IssueList|GitConnectorError {
 
-    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
+    endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     if (issueList.hasNextPage()) {
         http:Request request = new;
@@ -891,7 +891,7 @@ public function GitHubConnector::getIssueListNextPage (IssueList issueList)
                 jsonQuery.variables.endCursorIssues = issueList.pageInfo.endCursor;
                 jsonQuery["query"] = GET_REPOSITORY_ISSUES_NEXT_PAGE;
                 //Set headers and payload to the request
-                constructRequest(request, jsonQuery, accessToken);
+                constructRequest(request, jsonQuery, self.accessToken);
             }
 
             GitConnectorError gitConError => {
@@ -930,7 +930,7 @@ public function GitHubConnector::getIssueListNextPage (IssueList issueList)
 public function GitHubConnector::getPullRequestListNextPage (PullRequestList pullRequestList)
                                                                             returns PullRequestList|GitConnectorError {
 
-    endpoint http:Client gitHubEndpoint = githubGraphQlClient;
+    endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     if (pullRequestList.hasNextPage()) {
 
@@ -941,7 +941,7 @@ public function GitHubConnector::getPullRequestListNextPage (PullRequestList pul
                 jsonQuery.variables.endCursorPullRequests = pullRequestList.pageInfo.endCursor;
                 jsonQuery["query"] = GET_PULL_REQUESTS_NEXT_PAGE;
                 //Set headers and payload to the request
-                constructRequest(request, jsonQuery, accessToken);
+                constructRequest(request, jsonQuery, self.accessToken);
             }
 
             GitConnectorError gitConError => {

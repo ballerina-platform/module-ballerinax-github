@@ -51,7 +51,7 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                         responsePayload = jsonData;
                     }
                     http:PayloadError payloadError => {
-                        connectorError = {message:[payloadError.message]};
+                        connectorError = {message:[GIT_ERROR_WHILE_RETRIEVING_PAYLOAD]};
                         return connectorError;
                     }
                 }
