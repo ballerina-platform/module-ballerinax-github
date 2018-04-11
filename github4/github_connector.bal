@@ -18,7 +18,11 @@
 
 import ballerina/http;
 
-@Description {value:"GitHub client connector"}
+documentation {GitHub client connector
+    F{{accessToken}} - Access token for GitHub API
+    F{{githubGraphQlClient}} - Http client for GitHub GraphQL API
+    F{{githubRestClient}} - Http client for GitHub REST API
+}
 public type GitHubConnector object{
     public {
         string accessToken;
