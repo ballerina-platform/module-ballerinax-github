@@ -494,18 +494,18 @@ function testGetIssueListNextPage () {
     groups:["network-calls"]
 }
 function testCreateIssue () {
-    log:printInfo("githubClient -> createRepositoryIssue()");
+    log:printInfo("githubClient -> createIssue()");
     Issue newIssue = {title: "This is a test issue", bodyText:"This is the body of the test issue"};
     newIssue.labels.setLabels(["bug", "issue"]);
     newIssue.assignees.setAssignees(["vlgunarathne"]);
 
     Repository issueRepository = {owner:{login:"vlgunarathne"}, name:"ballerina-connector-test"};
 
-    var createdIssue = githubClient -> createRepositoryIssue (issueRepository, newIssue);
+    var createdIssue = githubClient -> createIssue (issueRepository, newIssue);
 
     match createdIssue {
         Issue issue => {
-            test:assertEquals(issue.title, "This is a test issue", msg = "Failed createRepositoryIssue()");
+            test:assertEquals(issue.title, "This is a test issue", msg = "Failed createIssue()");
         }
         GitConnectorError err => {
             test:assertFail(msg = err.message[0]);

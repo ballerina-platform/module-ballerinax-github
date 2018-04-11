@@ -26,7 +26,7 @@ public type GitHubConnector object{
         http:Client githubRestClient = new;
     }
 
-    public function createRepositoryIssue (Repository repository, Issue issue)
+    public function createIssue (Repository repository, Issue issue)
                     returns Issue|GitConnectorError;
 
     public function getCardListNextPage (CardList cardList)
@@ -83,7 +83,7 @@ public type GitHubConnector object{
 @Param {value: "Issue: Issue object"}
 @Return {value: "Issue: Create issue object"}
 @Return {value:"GitConnectorError: Error"}
-public function GitHubConnector::createRepositoryIssue (Repository repository, Issue issue) returns Issue|GitConnectorError{
+public function GitHubConnector::createIssue (Repository repository, Issue issue) returns Issue|GitConnectorError{
 
     endpoint http:Client gitHubEndpoint = githubRestClient;
 
