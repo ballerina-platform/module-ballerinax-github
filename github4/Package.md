@@ -23,7 +23,7 @@ Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 
 ### Working with GitHub Connector Actions
 
-All the actions return `objects` or `github4:GitConnectorError`. If the action was a success, then the requested object will be returned while the `github4:GitConnectorError` will be **null** and vice-versa.
+All the actions return `objects` or `github4:GitClientError`. If the action was a success, then the requested object will be returned while the `github4:GitClientError` will be **null** and vice-versa.
 
 ##### Example
 * Request 
@@ -42,7 +42,7 @@ All the actions return `objects` or `github4:GitConnectorError`. If the action w
             github4:Repository rep => {
                 repository = rep;
             }
-            github4:GitConnectorError err => {
+            github4:GitClientError err => {
                 io:println(err);
             }
         }

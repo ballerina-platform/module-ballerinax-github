@@ -37,7 +37,7 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function createIssue (Repository repository, Issue issue)
-                    returns Issue|GitConnectorError;
+                    returns Issue|GitClientError;
 
     documentation { Get the next page of the card list
         P{{cardList}} - Card list object
@@ -45,7 +45,7 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getCardListNextPage (CardList cardList)
-                    returns CardList|GitConnectorError;
+                    returns CardList|GitClientError;
 
     documentation { Get the next page of column list
         P{{columnList}} - Column list object
@@ -53,7 +53,7 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getColumnListNextPage (ColumnList columnList)
-                    returns ColumnList|GitConnectorError;
+                    returns ColumnList|GitClientError;
 
     documentation { Get a list of issues of a repository
         P{{repository}} - Repository object
@@ -63,7 +63,7 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getIssueList (Repository repository, string state, int recordCount)
-                    returns IssueList|GitConnectorError;
+                    returns IssueList|GitClientError;
 
     documentation { Get the next page of the issue list
         P{{issueList}} - Issue list object
@@ -71,7 +71,7 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getIssueListNextPage (IssueList issueList)
-                    returns IssueList|GitConnectorError;
+                    returns IssueList|GitClientError;
 
     documentation { Get an organization
         P{{name}} - Name of the organization
@@ -79,7 +79,7 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getOrganization (string name)
-                    returns Organization|GitConnectorError;
+                    returns Organization|GitClientError;
 
     documentation { Get a single project of an organization
         P{{organization}} - Organization object
@@ -88,7 +88,7 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getOrganizationProject (Organization organization, int projectNumber)
-                    returns Project|GitConnectorError;
+                    returns Project|GitClientError;
 
     documentation { Get all projects of an organization
         P{{organization}} - Organization object
@@ -98,7 +98,7 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getOrganizationProjectList (Organization organization, string state, int recordCount)
-                    returns ProjectList|GitConnectorError;
+                    returns ProjectList|GitClientError;
 
     documentation { Get a list of repositories of an organization
         P{{organization}} - Organization object
@@ -107,7 +107,7 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getOrganizationRepositoryList (Organization organization, int recordCount)
-                    returns RepositoryList|GitConnectorError;
+                    returns RepositoryList|GitClientError;
 
     documentation { Get all columns of a project board
         P{{project}} - Project object
@@ -116,14 +116,14 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getProjectColumnList (Project project, int recordCount)
-                    returns ColumnList|GitConnectorError;
+                    returns ColumnList|GitClientError;
     documentation { Gets the next page of a project list
         P{{projectList}} - Project list object
         R{{}} - Project list object of next page
         R{{}} - Connector error
     }
     public function getProjectListNextPage (ProjectList projectList)
-                    returns ProjectList|GitConnectorError;
+                    returns ProjectList|GitClientError;
 
     documentation { Get all pull requests of a repository
         P{{repository}} - Repository object
@@ -133,7 +133,7 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getPullRequestList (Repository repository, string state, int recordCount)
-                    returns PullRequestList|GitConnectorError;
+                    returns PullRequestList|GitClientError;
 
     documentation { Get the next page of the pull request list
         P{{pullRequestList}} - Pull request list object
@@ -141,7 +141,7 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getPullRequestListNextPage (PullRequestList pullRequestList)
-                    returns PullRequestList|GitConnectorError;
+                    returns PullRequestList|GitClientError;
 
     documentation { Get a repository of an owner
         P{{name}} - Name of the repository and its owner Format: ("owner/repository")
@@ -149,7 +149,7 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getRepository (string name)
-                    returns Repository|GitConnectorError;
+                    returns Repository|GitClientError;
 
     documentation { Get the next page of a repository list
         P{{repositoryList}} - Repository list object
@@ -157,7 +157,7 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getRepositoryListNextPage (RepositoryList repositoryList)
-                    returns RepositoryList|GitConnectorError;
+                    returns RepositoryList|GitClientError;
 
     documentation { Get a single project of a repository
         P{{repository}} - Repository object
@@ -166,7 +166,7 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getRepositoryProject (Repository repository, int projectNumber)
-                    returns Project|GitConnectorError;
+                    returns Project|GitClientError;
 
     documentation { Get all projects of a repository
         P{{repository}} - Repository object
@@ -176,15 +176,15 @@ public type GitHubConnector object{
         R{{}} - Connector error
     }
     public function getRepositoryProjectList (Repository repository, string state, int recordCount)
-                    returns ProjectList|GitConnectorError;
+                    returns ProjectList|GitClientError;
 };
 
 
-public function GitHubConnector::createIssue (Repository repository, Issue issue) returns Issue|GitConnectorError {
+public function GitHubConnector::createIssue (Repository repository, Issue issue) returns Issue|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubRestClient;
 
-    GitConnectorError connectorError = {};
+    GitClientError connectorError = {};
 
     if (repository.name == "" || issue.title == "") {
         connectorError = {message:["Repository and issue should be specified."]};
@@ -233,7 +233,7 @@ public function GitHubConnector::createIssue (Repository repository, Issue issue
     }
 }
 
-public function GitHubConnector::getCardListNextPage (CardList cardList) returns CardList|GitConnectorError {
+public function GitHubConnector::getCardListNextPage (CardList cardList) returns CardList|GitClientError {
 
     if (cardList.hasNextPage()) {
         var cardListColumnId = cardList.columnId;
@@ -244,7 +244,7 @@ public function GitHubConnector::getCardListNextPage (CardList cardList) returns
 
                 if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
                     jsonQuery["query"] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
-                    ColumnList|GitConnectorError columnList = getProjectColumns(GIT_ORGANIZATION,
+                    ColumnList|GitClientError columnList = getProjectColumns(GIT_ORGANIZATION,
                         jsonQuery.toString() ?: "", self.accessToken, self.githubGraphQlClient);
                     match columnList {
                         ColumnList colList => {
@@ -255,14 +255,14 @@ public function GitHubConnector::getCardListNextPage (CardList cardList) returns
                             }
                         }
 
-                        GitConnectorError gitConError => {
+                        GitClientError gitConError => {
                             return gitConError;
                         }
                     }
 
                 } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
                     jsonQuery["query"] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
-                    ColumnList|GitConnectorError columnList = getProjectColumns(GIT_REPOSITORY,
+                    ColumnList|GitClientError columnList = getProjectColumns(GIT_REPOSITORY,
                         jsonQuery.toString() ?: "", self.accessToken, self.githubGraphQlClient);
                     match columnList {
                         ColumnList colList => {
@@ -273,25 +273,25 @@ public function GitHubConnector::getCardListNextPage (CardList cardList) returns
                             }
                         }
 
-                        GitConnectorError gitConError => {
+                        GitClientError gitConError => {
                             return gitConError;
                         }
                     }
                 }
             }
 
-            GitConnectorError gitConError => {
+            GitClientError gitConError => {
                 return gitConError;
             }
         }
 
     }
-    GitConnectorError connectorError = {message:["Card list has no next page"]};
+    GitClientError connectorError = {message:["Card list has no next page"]};
 
     return connectorError;
 }
 
-public function GitHubConnector::getColumnListNextPage (ColumnList columnList) returns ColumnList|GitConnectorError {
+public function GitHubConnector::getColumnListNextPage (ColumnList columnList) returns ColumnList|GitClientError {
 
     if (columnList.hasNextPage()) {
         var convertedQuery = stringToJson(columnList.columnListQuery);
@@ -311,23 +311,23 @@ public function GitHubConnector::getColumnListNextPage (ColumnList columnList) r
                 }
             }
 
-            GitConnectorError gitConError => {
+            GitClientError gitConError => {
                 return gitConError;
             }
         }
 
     }
-    GitConnectorError connectorError = {message:["Column list has no next page"]};
+    GitClientError connectorError = {message:["Column list has no next page"]};
 
     return connectorError;
 }
 
 public function GitHubConnector::getIssueList (Repository repository, string state, int recordCount)
-                                                                                returns IssueList|GitConnectorError {
+                                                                                returns IssueList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    GitConnectorError connectorError = {};
+    GitClientError connectorError = {};
 
     if (repository == null) {
         connectorError = {message:["Repository cannot be null"]};
@@ -350,7 +350,7 @@ public function GitHubConnector::getIssueList (Repository repository, string sta
             constructRequest(request, jsonQuery, self.accessToken);
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
@@ -359,7 +359,7 @@ public function GitHubConnector::getIssueList (Repository repository, string sta
     var response = gitHubEndpoint -> post("", request);
 
     //Check for empty payloads and errors
-    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_ISSUES);
+    json|GitClientError validatedResponse = getValidatedResponse(response, GIT_ISSUES);
 
     match validatedResponse {
         json jsonValidatedResponse => {
@@ -369,13 +369,13 @@ public function GitHubConnector::getIssueList (Repository repository, string sta
             return issueList;
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
 }
 
-public function GitHubConnector::getIssueListNextPage (IssueList issueList) returns IssueList|GitConnectorError {
+public function GitHubConnector::getIssueListNextPage (IssueList issueList) returns IssueList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
@@ -390,7 +390,7 @@ public function GitHubConnector::getIssueListNextPage (IssueList issueList) retu
                 constructRequest(request, jsonQuery, self.accessToken);
             }
 
-            GitConnectorError gitConError => {
+            GitClientError gitConError => {
                 return gitConError;
             }
         }
@@ -399,7 +399,7 @@ public function GitHubConnector::getIssueListNextPage (IssueList issueList) retu
         var response = gitHubEndpoint -> post("", request);
 
         //Check for empty payloads and errors
-        json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_ISSUES);
+        json|GitClientError validatedResponse = getValidatedResponse(response, GIT_ISSUES);
         match validatedResponse {
             json jsonValidatedResponse => {
                 var repositoryIssuesJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
@@ -408,23 +408,23 @@ public function GitHubConnector::getIssueListNextPage (IssueList issueList) retu
                 return issuesList;
             }
 
-            GitConnectorError gitConError => {
+            GitClientError gitConError => {
                 return gitConError;
             }
         }
 
     }
-    GitConnectorError connectorError = {message:["Issue list has no next page"]};
+    GitClientError connectorError = {message:["Issue list has no next page"]};
 
     return connectorError;
 
 }
 
-public function GitHubConnector::getOrganization (string name) returns Organization|GitConnectorError {
+public function GitHubConnector::getOrganization (string name) returns Organization|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    GitConnectorError connectorError = {};
+    GitClientError connectorError = {};
 
     if (null == name || "" == name) {
         connectorError = {message:["Organization name should be specified."]};
@@ -442,7 +442,7 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
             constructRequest(request, jsonQuery, self.accessToken);
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
@@ -450,7 +450,7 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
     // Make an HTTP POST request
     var response = gitHubEndpoint -> post("", request);
 
-    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_NAME);
+    json|GitClientError validatedResponse = getValidatedResponse(response, GIT_NAME);
 
     match validatedResponse {
         json jsonValidatedResponse => {
@@ -463,7 +463,7 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
             }
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
@@ -472,10 +472,10 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
 }
 
 public function GitHubConnector::getOrganizationProject (Organization organization, int projectNumber)
-                                                                                returns Project|GitConnectorError {
+                                                                                returns Project|GitClientError {
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    GitConnectorError connectorError = {};
+    GitClientError connectorError = {};
 
     if (organization == null || projectNumber <= 0) {
         connectorError = {message:["Organization cannot be null and project number should be positive integer."]};
@@ -492,7 +492,7 @@ public function GitHubConnector::getOrganizationProject (Organization organizati
             constructRequest(request, jsonQuery, self.accessToken);
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
@@ -500,7 +500,7 @@ public function GitHubConnector::getOrganizationProject (Organization organizati
     // Make an HTTP POST request
     var response = gitHubEndpoint -> post("", request);
 
-    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
+    json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
 
     match validatedResponse {
         json jsonValidatedResponse => {
@@ -510,18 +510,18 @@ public function GitHubConnector::getOrganizationProject (Organization organizati
             return singleProject;
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
 }
 
 public function GitHubConnector::getOrganizationProjectList (Organization organization, string state, int recordCount)
-                                                                            returns ProjectList|GitConnectorError {
+                                                                            returns ProjectList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    GitConnectorError connectorError = {};
+    GitClientError connectorError = {};
 
     if (organization == null || state == null) {
         connectorError = {message:["Organization and state cannot be null."]};
@@ -543,7 +543,7 @@ public function GitHubConnector::getOrganizationProjectList (Organization organi
             constructRequest(request, jsonQuery, self.accessToken);
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
@@ -552,7 +552,7 @@ public function GitHubConnector::getOrganizationProjectList (Organization organi
     var response = gitHubEndpoint -> post("", request);
 
     //Check for empty payloads and errors
-    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
+    json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
 
     match validatedResponse {
         json jsonValidatedResponse => {
@@ -562,18 +562,18 @@ public function GitHubConnector::getOrganizationProjectList (Organization organi
             return projectList;
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
 }
 
 public function GitHubConnector::getOrganizationRepositoryList (Organization organization, int recordCount)
-                                                                        returns RepositoryList|GitConnectorError {
+                                                                        returns RepositoryList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    GitConnectorError connectorError = {};
+    GitClientError connectorError = {};
 
     if (organization == null) {
         connectorError = {message:["Organization cannot be null."]};
@@ -595,7 +595,7 @@ public function GitHubConnector::getOrganizationRepositoryList (Organization org
             constructRequest(request, jsonQuery, self.accessToken);
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
@@ -604,7 +604,7 @@ public function GitHubConnector::getOrganizationRepositoryList (Organization org
     var response = gitHubEndpoint -> post("", request);
 
     //Check for empty payloads and errors
-    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_REPOSITORIES);
+    json|GitClientError validatedResponse = getValidatedResponse(response, GIT_REPOSITORIES);
 
     match validatedResponse {
         json jsonValidatedResponse => {
@@ -614,16 +614,16 @@ public function GitHubConnector::getOrganizationRepositoryList (Organization org
             return repositoryList;
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
 }
 
 public function GitHubConnector::getProjectColumnList (Project project, int recordCount)
-                                                                            returns ColumnList|GitConnectorError {
+                                                                            returns ColumnList|GitClientError {
 
-    GitConnectorError connectorError = {};
+    GitClientError connectorError = {};
 
     if (project == null) {
         connectorError = {message:["Project cannot be null"]};
@@ -655,7 +655,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
 }
 
 public function GitHubConnector::getProjectListNextPage (ProjectList projectList)
-                                                                            returns ProjectList|GitConnectorError {
+                                                                            returns ProjectList|GitClientError {
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     if (projectList.hasNextPage()) {
@@ -676,7 +676,7 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
                 constructRequest(request, jsonQuery, self.accessToken);
             }
 
-            GitConnectorError gitConError => {
+            GitClientError gitConError => {
                 return gitConError;
             }
         }
@@ -685,7 +685,7 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
         var response = gitHubEndpoint -> post("", request);
 
         //Check for empty payloads and errors
-        json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
+        json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
 
         match validatedResponse {
             json jsonValidatedResponse => {
@@ -695,23 +695,23 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
                 return projList;
             }
 
-            GitConnectorError gitConError => {
+            GitClientError gitConError => {
                 return gitConError;
             }
         }
     }
 
-    GitConnectorError connectorError = {message:["Project list has no next page"]};
+    GitClientError connectorError = {message:["Project list has no next page"]};
 
     return connectorError;
 }
 
 public function GitHubConnector::getPullRequestList (Repository repository, string state, int recordCount)
-                                                                        returns PullRequestList|GitConnectorError {
+                                                                        returns PullRequestList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    GitConnectorError connectorError = {};
+    GitClientError connectorError = {};
 
     if (repository == null || state == "" || state == null) {
         connectorError = {message:["Repository and state cannot be null."]};
@@ -734,7 +734,7 @@ public function GitHubConnector::getPullRequestList (Repository repository, stri
             constructRequest(request, jsonQuery, self.accessToken);
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
@@ -743,7 +743,7 @@ public function GitHubConnector::getPullRequestList (Repository repository, stri
     var response = gitHubEndpoint -> post("", request);
 
     //Check for empty payloads and errors
-    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PULL_REQUESTS);
+    json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PULL_REQUESTS);
 
     match validatedResponse {
         json jsonValidatedResponse => {
@@ -753,14 +753,14 @@ public function GitHubConnector::getPullRequestList (Repository repository, stri
             return pullRequestList;
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
 }
 
 public function GitHubConnector::getPullRequestListNextPage (PullRequestList pullRequestList)
-                                                                        returns PullRequestList|GitConnectorError {
+                                                                        returns PullRequestList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
@@ -776,7 +776,7 @@ public function GitHubConnector::getPullRequestListNextPage (PullRequestList pul
                 constructRequest(request, jsonQuery, self.accessToken);
             }
 
-            GitConnectorError gitConError => {
+            GitClientError gitConError => {
                 return gitConError;
             }
         }
@@ -785,7 +785,7 @@ public function GitHubConnector::getPullRequestListNextPage (PullRequestList pul
         var response = gitHubEndpoint -> post("", request);
 
         //Check for empty payloads and errors
-        json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PULL_REQUESTS);
+        json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PULL_REQUESTS);
 
         match validatedResponse {
             json jsonValidatedResponse => {
@@ -795,22 +795,22 @@ public function GitHubConnector::getPullRequestListNextPage (PullRequestList pul
                 return prList;
             }
 
-            GitConnectorError gitConError => {
+            GitClientError gitConError => {
                 return gitConError;
             }
         }
 
     }
-    GitConnectorError connectorError = {message:["Pull request list has no next page"]};
+    GitClientError connectorError = {message:["Pull request list has no next page"]};
 
     return connectorError;
 }
 
-public function GitHubConnector::getRepository (string name) returns Repository|GitConnectorError {
+public function GitHubConnector::getRepository (string name) returns Repository|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    GitConnectorError connectorError = {};
+    GitClientError connectorError = {};
 
     if (name == null || name == "") {
         connectorError = {message:["Repository owner and name should be specified."]};
@@ -831,7 +831,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
             constructRequest(request, jsonQuery, self.accessToken);
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
@@ -839,7 +839,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
     // Make an HTTP POST request 
     var response = gitHubEndpoint -> post("", request);
 
-    json|GitConnectorError validatedResponse  = getValidatedResponse(response, GIT_NAME);
+    json|GitClientError validatedResponse  = getValidatedResponse(response, GIT_NAME);
     
     match validatedResponse {
         json jsonValidatedResponse => {
@@ -852,7 +852,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
             }
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
@@ -861,7 +861,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
 }
 
 public function GitHubConnector::getRepositoryListNextPage (RepositoryList repositoryList)
-                                                                            returns RepositoryList|GitConnectorError {
+                                                                            returns RepositoryList|GitClientError {
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     if (repositoryList.hasNextPage()) {
@@ -876,7 +876,7 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
                 constructRequest(request, jsonQuery, self.accessToken);
             }
 
-            GitConnectorError gitConError => {
+            GitClientError gitConError => {
                 return gitConError;
             }
         }
@@ -885,7 +885,7 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
         var response = gitHubEndpoint -> post("", request);
 
         //Check for empty payloads and errors
-        json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_REPOSITORIES);
+        json|GitClientError validatedResponse = getValidatedResponse(response, GIT_REPOSITORIES);
 
         match validatedResponse {
             json jsonValidatedResponse => {
@@ -895,22 +895,22 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
                 return repoList;
             }
 
-            GitConnectorError gitConError => {
+            GitClientError gitConError => {
                 return gitConError;
             }
         }
     }
-    GitConnectorError connectorError = {message:["Repository list has no next page"]};
+    GitClientError connectorError = {message:["Repository list has no next page"]};
 
     return connectorError;
 }
 
 public function GitHubConnector::getRepositoryProject (Repository repository, int projectNumber)
-                                                                                returns Project|GitConnectorError {
+                                                                                returns Project|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    GitConnectorError connectorError = {};
+    GitClientError connectorError = {};
 
     if (repository == null || projectNumber <= 0) {
         connectorError = {message:["Repository cannot be null and project number should be positive integer."]};
@@ -928,7 +928,7 @@ public function GitHubConnector::getRepositoryProject (Repository repository, in
             constructRequest(request, jsonQuery, self.accessToken);
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
@@ -937,7 +937,7 @@ public function GitHubConnector::getRepositoryProject (Repository repository, in
     var response = gitHubEndpoint -> post("", request);
 
     //Check for empty payloads and errors
-    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
+    json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
 
     match validatedResponse {
         json jsonValidatedResponse => {
@@ -947,18 +947,18 @@ public function GitHubConnector::getRepositoryProject (Repository repository, in
             return singleProject;
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
 }
 
 public function GitHubConnector::getRepositoryProjectList
-                        (Repository repository, string state, int recordCount) returns ProjectList|GitConnectorError {
+                        (Repository repository, string state, int recordCount) returns ProjectList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    GitConnectorError connectorError = {};
+    GitClientError connectorError = {};
 
     if (repository == null || state == null) {
         connectorError = {message:["Repository and state cannot be null"]};
@@ -981,7 +981,7 @@ public function GitHubConnector::getRepositoryProjectList
             constructRequest(request, jsonQuery, self.accessToken);
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
@@ -990,7 +990,7 @@ public function GitHubConnector::getRepositoryProjectList
     var response = gitHubEndpoint -> post("", request);
 
     //Check for empty payloads and errors
-    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
+    json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
 
     match validatedResponse {
         json jsonValidatedResponse => {
@@ -1000,7 +1000,7 @@ public function GitHubConnector::getRepositoryProjectList
             return projectList;
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
