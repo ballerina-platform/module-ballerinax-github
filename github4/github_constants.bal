@@ -47,10 +47,15 @@
 @final string GIT_START_CURSOR = "startCursor";
 
 // Public constants
+documentation { Issue state both open and closed}
 @final public string GIT_STATE_ALL_ISSUE = "[\"OPEN\",\"CLOSED\"]";
+documentation { Pull request state open, closed and merged}
 @final public string GIT_STATE_ALL_PULL_REQUEST = "[\"OPEN\",\"CLOSED\",\"MERGED\"]";
+documentation { Closed state }
 @final public string GIT_STATE_CLOSED = "[\"CLOSED\"]";
+documentation { Closed merged }
 @final public string GIT_STATE_MERGED = "[\"MERGED\"]";
+documentation { Closed open }
 @final public string GIT_STATE_OPEN = "[\"OPEN\"]";
 
 //Integer constants

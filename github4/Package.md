@@ -6,7 +6,7 @@ The Ballerina GitHub connector allow users to access the GitHub API through ball
 
 |Ballerina Version | Connector Version | GitHub API Version |
 |------------------|-------------------| ------------------ |
-|0.970.0-alpha1-SNAPSHOT | 0.9.0 | v4
+|0.970.0-alpha5-SNAPSHOT | 0.9.4 | v4 |
 
 ![Ballerina GitHub Connector Overview](BallerinaGitHubConnector_Overview.jpg)
 
@@ -23,7 +23,7 @@ Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 
 ### Working with GitHub Connector Actions
 
-All the actions return `objects` or `github4:GitConnectorError`. If the action was a success, then the requested object will be returned while the `github4:GitConnectorError` will be **null** and vice-versa.
+All the actions return `objects` or `github4:GitClientError`. If the action was a success, then the requested object will be returned while the `github4:GitClientError` will be **null** and vice-versa.
 
 ##### Example
 * Request 
@@ -42,7 +42,7 @@ All the actions return `objects` or `github4:GitConnectorError`. If the action w
             github4:Repository rep => {
                 repository = rep;
             }
-            github4:GitConnectorError err => {
+            github4:GitClientError err => {
                 io:println(err);
             }
         }

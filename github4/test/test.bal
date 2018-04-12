@@ -22,8 +22,12 @@ import ballerina/http;
 import ballerina/test;
 
 endpoint Client githubClient {
-    accessToken:getAccessToken(),
-    clientEndpointConfiguration: {}
+    clientEndpointConfiguration: {
+        auth:{
+            scheme:"oauth",
+            accessToken:getAccessToken()
+        }
+    }
 };
 
 @test:Config {
@@ -39,7 +43,7 @@ function testGetOrganization () {
             organization = org;
         }
 
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -61,7 +65,7 @@ function testGetOrganizationProject () {
             orgProject = proj;
         }
 
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -85,7 +89,7 @@ function testGetOrganizationProjectList () {
             projectList = prjtList;
         }
 
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -111,7 +115,7 @@ function testGetOrganizationProjectListNextPage () {
             projectList = prjtList;
         }
 
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -122,7 +126,7 @@ function testGetOrganizationProjectListNextPage () {
             projectList = prjtList;
         }
 
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -146,7 +150,7 @@ function testGetProjectColumnList () {
         ColumnList colList => {
             columnList = colList;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -171,7 +175,7 @@ function testGetCardListOfColumn () {
         ColumnList colList => {
             columnList = colList;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -198,7 +202,7 @@ function testGetCardListNextPage () {
         ColumnList colList => {
             columnList = colList;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -209,7 +213,7 @@ function testGetCardListNextPage () {
         CardList cd => {
             cardList = cd;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -232,7 +236,7 @@ function testGetOrganizationRepositoryList () {
         RepositoryList repList => {
             repositoryList = repList;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -256,7 +260,7 @@ function testGetOrganizationRepositoryListNextPage () {
         RepositoryList repList => {
             repositoryList = repList;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -267,7 +271,7 @@ function testGetOrganizationRepositoryListNextPage () {
             repositoryList = repList;
         }
 
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -288,7 +292,7 @@ function testGetRepository () {
         Repository rep => {
             repository = rep;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -309,7 +313,7 @@ function testGetRepositoryProject () {
         Project project => {
             repositoryProject = project;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -332,7 +336,7 @@ function testGetRepositoryProjectList () {
         ProjectList prjtList => {
             repoProjectList = prjtList;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -357,7 +361,7 @@ function testGetRepositoryProjectListNextPage () {
         ProjectList prjtList => {
             repoProjectList = prjtList;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -367,7 +371,7 @@ function testGetRepositoryProjectListNextPage () {
         ProjectList prjList => {
             repoProjectList = prjList;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -390,7 +394,7 @@ function testGetPullRequestList () {
         PullRequestList pList => {
             pullRequestList = pList;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -414,7 +418,7 @@ function testGetPullRequestListNextPage () {
         PullRequestList pList => {
             pullRequestList = pList;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -424,7 +428,7 @@ function testGetPullRequestListNextPage () {
         PullRequestList pList => {
             pullRequestList = pList;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -447,7 +451,7 @@ function testGetIssueList () {
         IssueList isList => {
             issueList = isList;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -471,7 +475,7 @@ function testGetIssueListNextPage () {
         IssueList isList => {
             issueList = isList;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -481,7 +485,7 @@ function testGetIssueListNextPage () {
         IssueList isList => {
             issueList = isList;
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -507,7 +511,7 @@ function testCreateIssue () {
         Issue issue => {
             test:assertEquals(issue.title, "This is a test issue", msg = "Failed createIssue()");
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -539,9 +543,9 @@ function testRepositoryListHasPreviousPage () {
 function testRepositoryListGetAllRepositories () {
     log:printInfo("RepositoryList.getAllRepositories()");
     RepositoryList repositoryList = new;
-    Repository[]? repoArray = repositoryList.getAllRepositories();
-
-    test:assertEquals(typeof repoArray, typeof Repository[], msg = "Failed RepositoryList.getAllRepositories()");
+    var repoArray = repositoryList.getAllRepositories();
+    Repository[] sampleRepoArray;
+    test:assertEquals(repoArray, sampleRepoArray, msg = "Failed RepositoryList.getAllRepositories()");
 }
 
 @test:Config {
@@ -570,9 +574,9 @@ function testProjectListHasPreviousPage () {
 function testProjectListGetAllProjects () {
     log:printInfo("ProjectList.getAllRepositories()");
     ProjectList projectList = new;
-    Project[]? projectArray = projectList.getAllProjects();
-
-    test:assertEquals(typeof projectArray, typeof Project[], msg = "Failed ProjectList.getAllProjects()");
+    var projectArray = projectList.getAllProjects();
+    Project[] sampleProjectArray;
+    test:assertEquals(projectArray, sampleProjectArray, msg = "Failed ProjectList.getAllProjects()");
 }
 
 @test:Config {
@@ -581,9 +585,9 @@ function testProjectListGetAllProjects () {
 function testColumnGetCardList () {
     log:printInfo("Column.getCardList()");
     Column column = new;
-    CardList? cardList = column.getCardList();
-
-    test:assertEquals(typeof cardList, typeof CardList, msg = "Failed Column.getCardList()");
+    var cardList = column.getCardList();
+    CardList sampleCardList = new;
+    test:assertEquals(cardList, sampleCardList, msg = "Failed Column.getCardList()");
 }
 
 @test:Config {
@@ -612,9 +616,9 @@ function testColumnListHasPreviousPage () {
 function testColumnListGetAllColumns () {
     log:printInfo("ColumnList.getAllColumns()");
     ColumnList columnList = new;
-    Column[]? columnArray = columnList.getAllColumns();
-
-    test:assertEquals(typeof columnArray, typeof Column[], msg = "Failed ColumnList.getAllColumns()");
+    var columnArray = columnList.getAllColumns();
+    Column[] sampleColumnArray;
+    test:assertEquals(columnArray, sampleColumnArray, msg = "Failed ColumnList.getAllColumns()");
 }
 
 @test:Config {
@@ -643,9 +647,9 @@ function testCardListHasPreviousPage () {
 function testCardListGetAllCards () {
     log:printInfo("CardList.getAllCards()");
     CardList cardList = new;
-    Card[]? cardArray = cardList.getAllCards();
-
-    test:assertEquals(typeof cardArray, typeof Card[], msg = "Failed CardList.getAllCards()");
+    var cardArray = cardList.getAllCards();
+    Card[] sampleCardArray;
+    test:assertEquals(cardArray, sampleCardArray, msg = "Failed CardList.getAllCards()");
 }
 
 @test:Config {
@@ -674,10 +678,9 @@ function testPullRequestListHasPreviousPage () {
 function testPullRequestListGetAllPullRequests () {
     log:printInfo("PullRequestList.getAllPullRequests()");
     PullRequestList pullRequestList = new;
-    PullRequest[]? pullRequestArray = pullRequestList.getAllPullRequests();
-
-    test:assertEquals(typeof pullRequestArray, typeof PullRequest[],
-                      msg = "Failed PullRequestList.getAllPullRequests()");
+    var pullRequestArray = pullRequestList.getAllPullRequests();
+    PullRequest[] samplePullRequestArray;
+    test:assertEquals(pullRequestArray, samplePullRequestArray, msg = "Failed PullRequestList.getAllPullRequests()");
 }
 
 @test:Config {
@@ -706,9 +709,9 @@ function testIssueListHasPreviousPage () {
 function testIssueListGetAllIssues () {
     log:printInfo("IssueList.getAllIssues()");
     IssueList issueList = new;
-    Issue[]? issueArray = issueList.getAllIssues();
-
-    test:assertEquals(typeof issueArray, typeof Issue[], msg = "Failed IssueList.getAllIssues()");
+    var issueArray = issueList.getAllIssues();
+    Issue[] sampleIssueArray;
+    test:assertEquals(issueArray, sampleIssueArray, msg = "Failed IssueList.getAllIssues()");
 }
 
 @test:Config {
@@ -717,9 +720,9 @@ function testIssueListGetAllIssues () {
 function testLabelListGetAllLabels () {
     log:printInfo("LabelList.getAllLabels()");
     LabelList labelList = new;
-    Label[]? labelArray = labelList.getAllLabels();
-
-    test:assertEquals(typeof labelArray, typeof Label[], msg = "Failed LabelList.getAllLabels()");
+    var labelArray = labelList.getAllLabels();
+    Label[] sampleLabelArray;
+    test:assertEquals(labelArray, sampleLabelArray, msg = "Failed LabelList.getAllLabels()");
 }
 
 @test:Config {
@@ -728,8 +731,7 @@ function testLabelListGetAllLabels () {
 function testProjectOwnerGetOwnerType () {
     log:printInfo("ProjectOwner.getOwnerType()");
     ProjectOwner projectOwner = new;
-
-    test:assertEquals(typeof projectOwner.getOwnerType(), typeof string, msg = "Failed ProjectOwner.getOwnerType()");
+    test:assertEquals(projectOwner.getOwnerType(), "", msg = "Failed ProjectOwner.getOwnerType()");
 }
 
 @test:Config {
@@ -754,11 +756,9 @@ function testConstructRequest () {
     string sampleToken = "12345";
     string expectedToken = "Bearer " + sampleToken;
 
-    constructRequest(request, samplePayload, sampleToken);
+    constructRequest(request, samplePayload);
 
     json payloadInRequest = check request.getJsonPayload();
-    test:assertTrue(request.hasHeader("Authorization"), msg = "No Authorization header available");
-    test:assertEquals(request.getHeader("Authorization"), expectedToken, msg = "Token mismatch");
     test:assertEquals(payloadInRequest, samplePayload, msg = "Payload mismatch");
 }
 
@@ -774,14 +774,14 @@ function testGetValidatedResponseSuccess () {
 
     http:Response|http:HttpConnectorError response = sampleHttpResponse;
 
-    json|GitConnectorError validatedResponse = getValidatedResponse(response, "name");
+    json|GitClientError validatedResponse = getValidatedResponse(response, "name");
 
     match validatedResponse {
         json jsonResponse => {
             string orgName = jsonResponse.data.org.name.toString() ?: "";
             test:assertEquals(orgName, "WSO2", msg = "Returned json data mismatch");
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertFail(msg = err.message[0]);
         }
     }
@@ -800,13 +800,13 @@ function testGetValidatedResponseError () {
 
     http:Response|http:HttpConnectorError response = sampleHttpResponse;
 
-    json|GitConnectorError validatedResponse = getValidatedResponse(response, "name");
+    json|GitClientError validatedResponse = getValidatedResponse(response, "name");
 
     match validatedResponse {
         json jsonResponse => {
             test:assertFail(msg = "Payload error should be handled");
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertEquals(err.message[0], "API error", msg = "Validated response error mismatch");
         }
     }
@@ -825,14 +825,15 @@ function testGetValidatedResponseNoRequestedData () {
 
     http:Response|http:HttpConnectorError response = sampleHttpResponse;
 
-    json|GitConnectorError validatedResponse = getValidatedResponse(response, "name");
+    json|GitClientError validatedResponse = getValidatedResponse(response, "name");
 
     match validatedResponse {
         json jsonResponse => {
             test:assertFail(msg = "Payload error should be handled");
         }
-        GitConnectorError err => {
-            test:assertEquals(err.message[0], "Error while retrieving data.", msg = "Validated response error mismatch");
+        GitClientError err => {
+            test:assertEquals(err.message[0], "Error while retrieving data.",
+                                                                msg = "Validated response error mismatch");
         }
     }
 }
@@ -847,14 +848,15 @@ function testGetValidatedResponseNoPayload () {
 
     http:Response|http:HttpConnectorError response = sampleHttpResponse;
 
-    json|GitConnectorError validatedResponse = getValidatedResponse(response, "name");
+    json|GitClientError validatedResponse = getValidatedResponse(response, "name");
 
     match validatedResponse {
         json jsonResponse => {
             test:assertFail(msg = "Payload error should be handled");
         }
-        GitConnectorError err => {
-            test:assertEquals(err.message[0], "Error while retrieving payload.", msg = "Validated response error mismatch");
+        GitClientError err => {
+            test:assertEquals(err.message[0], "Error while retrieving payload.",
+                                                                msg = "Validated response error mismatch");
         }
     }
 }
@@ -870,13 +872,13 @@ function testGetValidatedResponseHttpError () {
 
     http:Response|http:HttpConnectorError response = sampleHttpError;
 
-    json|GitConnectorError validatedResponse = getValidatedResponse(response, "name");
+    json|GitClientError validatedResponse = getValidatedResponse(response, "name");
 
     match validatedResponse {
         json jsonResponse => {
             test:assertFail(msg = "HttpConnector error should be handled");
         }
-        GitConnectorError err => {
+        GitClientError err => {
             test:assertEquals(err.message[0], "HTTP Connector Error", msg = "Validated response error mismatch");
         }
     }

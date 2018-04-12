@@ -20,25 +20,23 @@ import ballerina/mime;
 import ballerina/http;
 import ballerina/util;
 
-@Description {value:"Construct the request headers"}
-@Param {value:"request: The http request object"}
-@Param {value:"stringQuery: GraphQL API query"}
-@Param {value:"accessToken: GitHub access token"}
-function constructRequest (http:Request request, json stringQuery, string accessToken) {
-    request.removeAllHeaders();
-    request.addHeader("Authorization", "Bearer " + accessToken);
+documentation { Construct the request by adding the payload and authorization tokens
+    P{{request}} - HTTP request object
+    P{{stringQuery}} - GraphQL API query
+}
+function constructRequest (http:Request request, json stringQuery) {
     request.setJsonPayload(stringQuery);
-
 }
 
-@Description {value:"Validate the http response"}
-@Param {value:"http:Response: The http response object"}
-@Param {value:"validateComponent: The component to check in response"}
-@Return {value:"json: The JSON payload in the response"}
-@Return {value:"GitConnectorError: GitConnectorError object"}
+documentation { Validate the HTTP response and return payload or error
+    P{{response}} - HTTP response object or HTTP connector error object
+    P{{validateComponent}} - Component to check in the response
+    R{{}} - JSON payload of the response
+    R{{}} - Connector error
+}
 function getValidatedResponse (http:Response|http:HttpConnectorError response, string validateComponent)
-                                                                                    returns json|GitConnectorError {
-    GitConnectorError connectorError = {};
+                                                                                    returns json|GitClientError {
+    GitClientError connectorError = {};
     json responsePayload;
 
     match response {
@@ -51,7 +49,7 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                         responsePayload = jsonData;
                     }
                     http:PayloadError payloadError => {
-                        connectorError = {message:[payloadError.message]};
+                        connectorError = {message:[GIT_ERROR_WHILE_RETRIEVING_PAYLOAD]};
                         return connectorError;
                     }
                 }
@@ -100,17 +98,19 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
 
 }
 
-@Description {value:"Get all columns of an organization project or repository project"}
-@Param {value:"ownerType: Repository or Organization"}
-@Param {value:"gitQuery: Graphql query"}
-@Return {value:"ColumnList: Column list object"}
-@Return {value:"GitConnectorError: Error"}
-function getProjectColumns (string ownerType, string gitQuery, string accessToken,
-                                    http:Client githubClientEndpoint) returns ColumnList|GitConnectorError {
+documentation { Get all columns of an organization project or repository project
+    P{{ownerType}} - Repository or Organization
+    P{{gitQuery}} - GraphQL API query to get the project board columns
+    P{{githubClient}} - GitHub client object
+    R{{}} - Column list object
+    R{{}} - Connector error
+}
+function getProjectColumns (string ownerType, string gitQuery, http:Client githubClient)
+                                                                            returns ColumnList|GitClientError {
 
-    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClient;
 
-    GitConnectorError connectorError = {};
+    GitClientError connectorError = {};
 
     if (ownerType == null || ownerType == "" || gitQuery == null || gitQuery == "") {
         connectorError = {message:["Owner type and query cannot be null"]};
@@ -122,10 +122,10 @@ function getProjectColumns (string ownerType, string gitQuery, string accessToke
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, accessToken);
+            constructRequest(request, jsonQuery);
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
@@ -134,7 +134,7 @@ function getProjectColumns (string ownerType, string gitQuery, string accessToke
     var response = gitHubEndpoint -> post("", request);
 
     //Check for empty payloads and errors
-    json|GitConnectorError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
+    json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
 
     match validatedResponse {
         json jsonValidateResponse => {
@@ -144,18 +144,19 @@ function getProjectColumns (string ownerType, string gitQuery, string accessToke
             return columnList;
         }
 
-        GitConnectorError gitConError => {
+        GitClientError gitConError => {
             return gitConError;
         }
     }
 }
 
-@Description {value:"Convert string to json"}
-@Param {value:"source: The string to be converted"}
-@Return {value:"json: The converted Json"}
-@Return {value:"GitConnectorError: GitConnectorError object"}
-function stringToJson (string source) returns json|GitConnectorError {
-    GitConnectorError connectorError = {};
+documentation { Convert string representation of json object to json object
+    P{{source}} - String representation of the json object
+    R{{}} - Converted JSON object
+    R{{}} - Connector error
+}
+function stringToJson (string source) returns json|GitClientError {
+    GitClientError connectorError = {};
     var parsedValue = util:parseJson(source);
     match parsedValue {
         json jsonValue => {

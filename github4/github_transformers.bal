@@ -209,7 +209,6 @@ function jsonToRepository (json source_json) returns (Repository) {
     target_repository.isPrivate = booleanIsPrivate;
 
     target_repository.homepageUrl = source_json.homepageUrl.toString() ?: "";
-    target_repository.license = source_json.license.toString() ?: "";
     target_repository.lockReason = source_json.lockReason.toString() ?: "";
     target_repository.mirrorUrl = source_json.mirrorUrl.toString() ?: "";
     target_repository.url = source_json.url.toString() ?: "";
