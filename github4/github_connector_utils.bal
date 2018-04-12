@@ -20,22 +20,23 @@ import ballerina/mime;
 import ballerina/http;
 import ballerina/util;
 
-@Description {value:"Construct the request headers"}
-@Param {value:"request: The http request object"}
-@Param {value:"stringQuery: GraphQL API query"}
-@Param {value:"accessToken: GitHub access token"}
+documentation { Construct the request by adding the payload and authorization tokens
+    P{{request}} - HTTP request object
+    P{{stringQuery}} - GraphQL API query
+    P{{accessToken}} - GitHub API access token
+}
 function constructRequest (http:Request request, json stringQuery, string accessToken) {
     request.removeAllHeaders();
     request.addHeader("Authorization", "Bearer " + accessToken);
     request.setJsonPayload(stringQuery);
-
 }
 
-@Description {value:"Validate the http response"}
-@Param {value:"http:Response: The http response object"}
-@Param {value:"validateComponent: The component to check in response"}
-@Return {value:"json: The JSON payload in the response"}
-@Return {value:"GitConnectorError: GitConnectorError object"}
+documentation { Validate the HTTP response and return payload or error
+    P{{response}} - HTTP response object or HTTP connector error object
+    P{{validateComponent}} - Component to check in the response
+    R{{}} - JSON payload of the response
+    R{{}} - Connector error
+}
 function getValidatedResponse (http:Response|http:HttpConnectorError response, string validateComponent)
                                                                                     returns json|GitConnectorError {
     GitConnectorError connectorError = {};
@@ -100,15 +101,18 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
 
 }
 
-@Description {value:"Get all columns of an organization project or repository project"}
-@Param {value:"ownerType: Repository or Organization"}
-@Param {value:"gitQuery: Graphql query"}
-@Return {value:"ColumnList: Column list object"}
-@Return {value:"GitConnectorError: Error"}
-function getProjectColumns (string ownerType, string gitQuery, string accessToken,
-                                    http:Client githubClientEndpoint) returns ColumnList|GitConnectorError {
+documentation { Get all columns of an organization project or repository project
+    P{{ownerType}} - Repository or Organization
+    P{{gitQuery}} - GraphQL API query to get the project board columns
+    P{{accessToken}} - Access token for github API
+    P{{githubClient}} - GitHub client object
+    R{{}} - Column list object
+    R{{}} - Connector error
+}
+function getProjectColumns (string ownerType, string gitQuery, string accessToken, http:Client githubClient)
+                                                                            returns ColumnList|GitConnectorError {
 
-    endpoint http:Client gitHubEndpoint = githubClientEndpoint;
+    endpoint http:Client gitHubEndpoint = githubClient;
 
     GitConnectorError connectorError = {};
 
@@ -154,6 +158,11 @@ function getProjectColumns (string ownerType, string gitQuery, string accessToke
 @Param {value:"source: The string to be converted"}
 @Return {value:"json: The converted Json"}
 @Return {value:"GitConnectorError: GitConnectorError object"}
+documentation { Convert string representation of json object to json object
+    P{{source}} - String representation of the json object
+    R{{}} - Converted JSON object
+    R{{}} - Connector error
+}
 function stringToJson (string source) returns json|GitConnectorError {
     GitConnectorError connectorError = {};
     var parsedValue = util:parseJson(source);
