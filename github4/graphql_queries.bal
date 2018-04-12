@@ -104,7 +104,7 @@
                 ... on PullRequest { title, url, prState:state}
             }";
 
-@final public string GET_REPOSITORY_PROJECTS =
+@final string GET_REPOSITORY_PROJECTS =
 "query ($owner: String!, $repository: String!, $states:[ProjectState!], $recordCount: Int!){
 	repository(owner:$owner, name:$repository){
     projects(first:$recordCount, states:$states){
@@ -114,7 +114,7 @@
   }
 }";
 
-@final public string GET_REPOSITORY_PROJECTS_NEXT_PAGE =
+@final string GET_REPOSITORY_PROJECTS_NEXT_PAGE =
 "query ($owner: String!, $repository: String!, $states:[ProjectState!], $endCursorProjects: String!, $recordCount: Int!){
 	repository(owner:$owner, name:$repository){
     projects(first:$recordCount, states:$states, after:$endCursorProjects){
@@ -124,7 +124,7 @@
   }
 }";
 
-@final public string GET_ORGANIZATION_PROJECTS =
+@final string GET_ORGANIZATION_PROJECTS =
 "query ($organization: String!, $states:[ProjectState!], $recordCount: Int!){
 	organization(login:$organization) {
     projects(first:$recordCount, states:$states){
@@ -134,7 +134,7 @@
   }
 }";
 
-@final public string GET_ORGANIZATION_PROJECTS_NEXT_PAGE =
+@final string GET_ORGANIZATION_PROJECTS_NEXT_PAGE =
 "query ($organization: String!, $states:[ProjectState!], $endCursorProjects:String!, $recordCount: Int!){
 	organization(login:$organization) {
     projects(first:$recordCount, states:$states, after:$endCursorProjects){
@@ -144,7 +144,7 @@
   }
 }";
 
-@final public string GET_REPOSITORY_PROJECT =
+@final string GET_REPOSITORY_PROJECT =
 "query ($owner: String!, $repository: String!, $number: Int!){
 	repository(owner:$owner, name:$repository) {
     project(number:$number) {
@@ -167,7 +167,7 @@
   }
 }";
 
-@final public string GET_ORGANIZATION_PROJECT =
+@final string GET_ORGANIZATION_PROJECT =
 "query ($organization: String!, $number: Int!){
 	organization(login:$organization) {
     project(number:$number) {
@@ -190,7 +190,7 @@
   }
 }";
 
-@final public string GET_REPOSITORY =
+@final string GET_REPOSITORY =
 "query ($owner: String!, $name: String!){
 	repository(owner:$owner, name:$name){
     id,
@@ -217,7 +217,7 @@
   }
 }";
 
-@final public string GET_PULL_REQUESTS =
+@final string GET_PULL_REQUESTS =
 "query ($owner: String!, $name: String!, $states:[PullRequestState!], $recordCount: Int!){
 	repository(owner:$owner, name:$name){
     pullRequests(first:$recordCount, states:$states) {
@@ -248,7 +248,7 @@
   }
 }";
 
-@final public string GET_PULL_REQUESTS_NEXT_PAGE =
+@final string GET_PULL_REQUESTS_NEXT_PAGE =
 "query ($owner: String!, $name: String!, $states:[PullRequestState!], $endCursorPullRequests: String!,
                                                                                                 $recordCount: Int!){
 	repository(owner:$owner, name:$name){
@@ -280,7 +280,7 @@
   }
 }";
 
-@final public string GET_ORGANIZATION =
+@final string GET_ORGANIZATION =
 "query ($organization: String!) {
   organization(login:$organization) {
     avatarUrl,
@@ -298,7 +298,7 @@
   }
 }";
 
-@final public string GET_REPOSITORY_PROJECT_COLUMNS =
+@final string GET_REPOSITORY_PROJECT_COLUMNS =
 "query ($owner: String!,$name:String!, $number: Int!, $recordCount: Int!){
   repository (owner:$owner, name:$name) {
     project (number : $number){
@@ -327,7 +327,7 @@
   }
 }";
 
-@final public string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE =
+@final string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE =
 "query ($owner: String!,$name:String!, $number: Int!, $endCursorColumns: String!, $recordCount: Int!){
   repository (owner:$owner, name:$name) {
     project (number : $number){
@@ -366,7 +366,7 @@
   }
 }";
 
-@final public string GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE =
+@final string GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE =
 "query ($owner: String!,$name:String!, $number: Int!, $endCursorCards: String!, $recordCount: Int!){
   repository (owner:$owner, name:$name) {
     project (number : $number){
@@ -395,7 +395,7 @@
   }
 }";
 
-@final public string GET_ORGANIZATION_PROJECT_COLUMNS =
+@final string GET_ORGANIZATION_PROJECT_COLUMNS =
 "query ($organization: String!, $number: Int!, $recordCount: Int!){
   organization (login:$organization) {
     project (number : $number) {
@@ -424,7 +424,7 @@
   }
 }";
 
-@final public string GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE =
+@final string GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE =
 "query ($organization: String!, $number: Int!, $endCursorColumns: String!, $recordCount: Int!){
   organization (login:$organization) {
     project (number : $number) {
@@ -453,7 +453,7 @@
   }
 }";
 
-@final public string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE =
+@final string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE =
 "query ($organization: String!, $number: Int!, $endCursorCards: String!, $recordCount: Int!){
   organization (login:$organization) {
     project (number : $number) {
@@ -482,7 +482,7 @@
   }
 }";
 
-@final public string GET_ORGANIZATION_REPOSITORIES =
+@final  string GET_ORGANIZATION_REPOSITORIES =
 "query ($organization: String!, $recordCount: Int!) {
   organization (login:$organization) {
     repositories (first: $recordCount) {
@@ -514,7 +514,7 @@
   }
 }";
 
-@final public string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE =
+@final  string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE =
 "query ($organization: String!, $endCursorRepos: String!, $recordCount: Int!) {
   organization (login:$organization) {
     repositories (first: $recordCount, after: $endCursorRepos) {
@@ -546,7 +546,7 @@
   }
 }";
 
-@final public string GET_REPOSITORY_ISSUES =
+@final  string GET_REPOSITORY_ISSUES =
 "query ($owner:String!, $name:String!, $states:[IssueState!], $recordCount: Int!) {
   repository(owner:$owner, name: $name) {
     issues (first: $recordCount, states:$states) {
@@ -579,7 +579,7 @@
   }
 }";
 
-@final public string GET_REPOSITORY_ISSUES_NEXT_PAGE =
+@final  string GET_REPOSITORY_ISSUES_NEXT_PAGE =
 "query ($owner:String!, $name:String!, $states:[IssueState!], $endCursorIssues: String!, $recordCount: Int!) {
   repository(owner:$owner, name: $name) {
     issues (first: $recordCount, states:$states, after: $endCursorIssues) {
