@@ -204,7 +204,7 @@ public function GitHubConnector::createIssue (Repository repository, Issue issue
     json issueJsonPayload = {"title":issue.title, "body":issue.bodyText, "labels":labelList, "assignees":assigneeList};
 
     http:Request request = new;
-    constructRequest(request, issueJsonPayload, self.accessToken);
+    constructRequest(request, issueJsonPayload);
 
     string repositoryName = repository.name;
     string repositoryOwner = repository.owner.login;
@@ -245,7 +245,7 @@ public function GitHubConnector::getCardListNextPage (CardList cardList) returns
                 if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
                     jsonQuery["query"] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
                     ColumnList|GitClientError columnList = getProjectColumns(GIT_ORGANIZATION,
-                        jsonQuery.toString() ?: "", self.accessToken, self.githubGraphQlClient);
+                                                                jsonQuery.toString() ?: "", self.githubGraphQlClient);
                     match columnList {
                         ColumnList colList => {
                             foreach column in colList.getAllColumns() {
@@ -262,8 +262,8 @@ public function GitHubConnector::getCardListNextPage (CardList cardList) returns
 
                 } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
                     jsonQuery["query"] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
-                    ColumnList|GitClientError columnList = getProjectColumns(GIT_REPOSITORY,
-                        jsonQuery.toString() ?: "", self.accessToken, self.githubGraphQlClient);
+                    ColumnList|GitClientError columnList = getProjectColumns(GIT_REPOSITORY, jsonQuery.toString() ?: ""
+                                                                                            , self.githubGraphQlClient);
                     match columnList {
                         ColumnList colList => {
                             foreach column in colList.getAllColumns() {
@@ -301,13 +301,11 @@ public function GitHubConnector::getColumnListNextPage (ColumnList columnList) r
                 if (columnList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
                     jsonQuery["query"] = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
 
-                    return getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString() ?: "",
-                        self.accessToken, self.githubGraphQlClient);
+                    return getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString() ?: "", self.githubGraphQlClient);
                 } else if (columnList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
                     jsonQuery["query"] = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
 
-                    return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString() ?: "",
-                        self.accessToken, self.githubGraphQlClient);
+                    return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString() ?: "", self.githubGraphQlClient);
                 }
             }
 
@@ -347,7 +345,7 @@ public function GitHubConnector::getIssueList (Repository repository, string sta
     match convertedQuery {
         json jsonQuery => {
             //Set headers and payload to the request
-            constructRequest(request, jsonQuery, self.accessToken);
+            constructRequest(request, jsonQuery);
         }
 
         GitClientError gitConError => {
@@ -387,7 +385,7 @@ public function GitHubConnector::getIssueListNextPage (IssueList issueList) retu
                 jsonQuery.variables.endCursorIssues = issueList.pageInfo.endCursor;
                 jsonQuery["query"] = GET_REPOSITORY_ISSUES_NEXT_PAGE;
                 //Set headers and payload to the request
-                constructRequest(request, jsonQuery, self.accessToken);
+                constructRequest(request, jsonQuery);
             }
 
             GitClientError gitConError => {
@@ -439,7 +437,7 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
     match convertedQuery {
         json jsonQuery => {
             // Set headers and payload to the request
-            constructRequest(request, jsonQuery, self.accessToken);
+            constructRequest(request, jsonQuery);
         }
 
         GitClientError gitConError => {
@@ -489,7 +487,7 @@ public function GitHubConnector::getOrganizationProject (Organization organizati
     match convertedQuery {
         json jsonQuery => {
             //Set headers and payload to the request
-            constructRequest(request, jsonQuery, self.accessToken);
+            constructRequest(request, jsonQuery);
         }
 
         GitClientError gitConError => {
@@ -540,7 +538,7 @@ public function GitHubConnector::getOrganizationProjectList (Organization organi
     match convertedQuery {
         json jsonQuery => {
             //Set headers and payload to the request
-            constructRequest(request, jsonQuery, self.accessToken);
+            constructRequest(request, jsonQuery);
         }
 
         GitClientError gitConError => {
@@ -592,7 +590,7 @@ public function GitHubConnector::getOrganizationRepositoryList (Organization org
     match convertedQuery {
         json jsonQuery => {
             //Set headers and payload to the request
-            constructRequest(request, jsonQuery, self.accessToken);
+            constructRequest(request, jsonQuery);
         }
 
         GitClientError gitConError => {
@@ -640,7 +638,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
         string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS,
             [organization, project.number, recordCount]);
 
-        return getProjectColumns(GIT_ORGANIZATION, stringQuery, self.accessToken, self.githubGraphQlClient);
+        return getProjectColumns(GIT_ORGANIZATION, stringQuery, self.githubGraphQlClient);
 
     } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY) && project.resourcePath != null) {
         string ownerName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_ONE];
@@ -648,7 +646,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
         string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS,
             [ownerName, repositoryName, project.number, recordCount]);
 
-        return getProjectColumns(GIT_REPOSITORY, stringQuery, self.accessToken, self.githubGraphQlClient);
+        return getProjectColumns(GIT_REPOSITORY, stringQuery, self.githubGraphQlClient);
     }
     connectorError.message = ["No records found"];
     return connectorError;
@@ -673,7 +671,7 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
                 }
                 dataQuery = jsonQuery;
                 //Set headers and payload to the request
-                constructRequest(request, jsonQuery, self.accessToken);
+                constructRequest(request, jsonQuery);
             }
 
             GitClientError gitConError => {
@@ -731,7 +729,7 @@ public function GitHubConnector::getPullRequestList (Repository repository, stri
     match convertedQuery {
         json jsonQuery => {
             //Set headers and payload to the request
-            constructRequest(request, jsonQuery, self.accessToken);
+            constructRequest(request, jsonQuery);
         }
 
         GitClientError gitConError => {
@@ -773,7 +771,7 @@ public function GitHubConnector::getPullRequestListNextPage (PullRequestList pul
                 jsonQuery.variables.endCursorPullRequests = pullRequestList.pageInfo.endCursor;
                 jsonQuery["query"] = GET_PULL_REQUESTS_NEXT_PAGE;
                 //Set headers and payload to the request
-                constructRequest(request, jsonQuery, self.accessToken);
+                constructRequest(request, jsonQuery);
             }
 
             GitClientError gitConError => {
@@ -828,7 +826,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
     match convertedQuery {
         json jsonQuery => {
             // Set headers and payload to the request
-            constructRequest(request, jsonQuery, self.accessToken);
+            constructRequest(request, jsonQuery);
         }
 
         GitClientError gitConError => {
@@ -873,7 +871,7 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
                 jsonQuery.variables.endCursorRepos = repositoryList.pageInfo.endCursor;
                 jsonQuery["query"] = GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE;
                 //Set headers and payload to the request
-                constructRequest(request, jsonQuery, self.accessToken);
+                constructRequest(request, jsonQuery);
             }
 
             GitClientError gitConError => {
@@ -925,7 +923,7 @@ public function GitHubConnector::getRepositoryProject (Repository repository, in
     match convertedQuery {
         json jsonQuery => {
             //Set headers and payload to the request
-            constructRequest(request, jsonQuery, self.accessToken);
+            constructRequest(request, jsonQuery);
         }
 
         GitClientError gitConError => {
@@ -978,7 +976,7 @@ public function GitHubConnector::getRepositoryProjectList
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, self.accessToken);
+            constructRequest(request, jsonQuery);
         }
 
         GitClientError gitConError => {

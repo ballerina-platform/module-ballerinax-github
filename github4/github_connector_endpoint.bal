@@ -22,11 +22,10 @@ documentation { GitHub connector configurations can be setup here. In order to u
 the user will need to have a GitHub Personal Access Token. The token can be obtained by visiting
 `https://github.com/<profile> -> Settings -> Developer Settings -> Personal access tokens` and provide the obtained
 token to the GitHubClientConfig
-    F{{accessToken}} - Access token for GitHub API
+
     F{{clientEndpointConfiguration}} - Client endpoint configurations (CircuitBreaker, throttling, proxy, timeout, etc.)
 }
 public type GitHubClientConfig {
-        string accessToken;
         http:ClientEndpointConfig clientEndpointConfiguration = {};
 };
 
@@ -63,9 +62,6 @@ public type Client object {
 };
 
 public function Client::init(GitHubClientConfig githubClientConfig) {
-
-    // Set the access token to the connector from configurations
-    self.githubConnector.accessToken = githubClientConfig.accessToken;
 
     // Set the target url to the GitHub GraphQL API endpoint
     githubClientConfig.clientEndpointConfiguration.targets = [{url:GIT_GRAPHQL_API_URL}];

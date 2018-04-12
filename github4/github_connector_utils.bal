@@ -23,11 +23,8 @@ import ballerina/util;
 documentation { Construct the request by adding the payload and authorization tokens
     P{{request}} - HTTP request object
     P{{stringQuery}} - GraphQL API query
-    P{{accessToken}} - GitHub API access token
 }
-function constructRequest (http:Request request, json stringQuery, string accessToken) {
-    request.removeAllHeaders();
-    request.addHeader("Authorization", "Bearer " + accessToken);
+function constructRequest (http:Request request, json stringQuery) {
     request.setJsonPayload(stringQuery);
 }
 
@@ -104,12 +101,11 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
 documentation { Get all columns of an organization project or repository project
     P{{ownerType}} - Repository or Organization
     P{{gitQuery}} - GraphQL API query to get the project board columns
-    P{{accessToken}} - Access token for github API
     P{{githubClient}} - GitHub client object
     R{{}} - Column list object
     R{{}} - Connector error
 }
-function getProjectColumns (string ownerType, string gitQuery, string accessToken, http:Client githubClient)
+function getProjectColumns (string ownerType, string gitQuery, http:Client githubClient)
                                                                             returns ColumnList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = githubClient;
@@ -126,7 +122,7 @@ function getProjectColumns (string ownerType, string gitQuery, string accessToke
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
-            constructRequest(request, jsonQuery, accessToken);
+            constructRequest(request, jsonQuery);
         }
 
         GitClientError gitConError => {

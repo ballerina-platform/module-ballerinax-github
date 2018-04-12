@@ -22,8 +22,12 @@ import ballerina/http;
 import ballerina/test;
 
 endpoint Client githubClient {
-    accessToken:getAccessToken(),
-    clientEndpointConfiguration: {}
+    clientEndpointConfiguration: {
+        auth:{
+            scheme:"oauth",
+            accessToken:getAccessToken()
+        }
+    }
 };
 
 @test:Config {
@@ -752,11 +756,9 @@ function testConstructRequest () {
     string sampleToken = "12345";
     string expectedToken = "Bearer " + sampleToken;
 
-    constructRequest(request, samplePayload, sampleToken);
+    constructRequest(request, samplePayload);
 
     json payloadInRequest = check request.getJsonPayload();
-    test:assertTrue(request.hasHeader("Authorization"), msg = "No Authorization header available");
-    test:assertEquals(request.getHeader("Authorization"), expectedToken, msg = "Token mismatch");
     test:assertEquals(payloadInRequest, samplePayload, msg = "Payload mismatch");
 }
 
