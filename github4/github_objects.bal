@@ -696,10 +696,12 @@ documentation { GitHub Client Error
     F{{server}} - Server from which the message was received
 }
 public type GitClientError {
+    string message;
+    error? cause;
     int statusCode;
-    string[] message;
     string reasonPhrase;
     string server;
+
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                         End of GitClientError object                                              //

@@ -187,7 +187,7 @@ public function GitHubConnector::createIssue (Repository repository, Issue issue
     GitClientError connectorError = {};
 
     if (repository.name == "" || issue.title == "") {
-        connectorError = {message:["Repository and issue should be specified."]};
+        connectorError = {message:"Repository and issue should be specified."};
         return connectorError;
     }
 
@@ -221,13 +221,13 @@ public function GitHubConnector::createIssue (Repository repository, Issue issue
                 var issueObject = jsonToIssue(jsonPayload);
                 return issueObject;
             } else {
-                connectorError = {message:["Error in creating issue"]};
+                connectorError = {message:"Error in creating issue"};
                 return connectorError;
             }
         }
 
         http:HttpConnectorError httpError => {
-            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
+            connectorError = {message:httpError.message, statusCode:httpError.statusCode};
             return connectorError;
         }
     }
@@ -286,7 +286,7 @@ public function GitHubConnector::getCardListNextPage (CardList cardList) returns
         }
 
     }
-    GitClientError connectorError = {message:["Card list has no next page"]};
+    GitClientError connectorError = {message:"Card list has no next page"};
 
     return connectorError;
 }
@@ -315,7 +315,7 @@ public function GitHubConnector::getColumnListNextPage (ColumnList columnList) r
         }
 
     }
-    GitClientError connectorError = {message:["Column list has no next page"]};
+    GitClientError connectorError = {message:"Column list has no next page"};
 
     return connectorError;
 }
@@ -328,12 +328,12 @@ public function GitHubConnector::getIssueList (Repository repository, string sta
     GitClientError connectorError = {};
 
     if (repository == null) {
-        connectorError = {message:["Repository cannot be null"]};
+        connectorError = {message:"Repository cannot be null"};
         return connectorError;
     }
 
     if (recordCount > GIT_MAX_RECORD_COUNT) {
-        connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
+        connectorError = {message:"Maximum record count limited to " + GIT_MAX_RECORD_COUNT};
         return connectorError;
     }
 
@@ -412,7 +412,7 @@ public function GitHubConnector::getIssueListNextPage (IssueList issueList) retu
         }
 
     }
-    GitClientError connectorError = {message:["Issue list has no next page"]};
+    GitClientError connectorError = {message:"Issue list has no next page"};
 
     return connectorError;
 
@@ -425,7 +425,7 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
     GitClientError connectorError = {};
 
     if (null == name || "" == name) {
-        connectorError = {message:["Organization name should be specified."]};
+        connectorError = {message:"Organization name should be specified."};
         return connectorError;
     }
     Organization singleOrganization = {};
@@ -456,7 +456,7 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
                 var githubRepositoryJson = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION];
                 singleOrganization = check <Organization>githubRepositoryJson;
             } catch (error e) {
-                connectorError = {message:[e.message]};
+                connectorError = {message:e.message};
                 return connectorError;
             }
         }
@@ -476,7 +476,7 @@ public function GitHubConnector::getOrganizationProject (Organization organizati
     GitClientError connectorError = {};
 
     if (organization == null || projectNumber <= 0) {
-        connectorError = {message:["Organization cannot be null and project number should be positive integer."]};
+        connectorError = {message:"Organization cannot be null and project number should be positive integer."};
         return connectorError;
     }
 
@@ -522,12 +522,12 @@ public function GitHubConnector::getOrganizationProjectList (Organization organi
     GitClientError connectorError = {};
 
     if (organization == null || state == null) {
-        connectorError = {message:["Organization and state cannot be null."]};
+        connectorError = {message:"Organization and state cannot be null."};
         return connectorError;
     }
 
     if (recordCount > GIT_MAX_RECORD_COUNT) {
-        connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
+        connectorError = {message:"Maximum record count limited to " + GIT_MAX_RECORD_COUNT};
         return connectorError;
     }
 
@@ -574,12 +574,12 @@ public function GitHubConnector::getOrganizationRepositoryList (Organization org
     GitClientError connectorError = {};
 
     if (organization == null) {
-        connectorError = {message:["Organization cannot be null."]};
+        connectorError = {message:"Organization cannot be null."};
         return connectorError;
     }
 
     if (recordCount > GIT_MAX_RECORD_COUNT) {
-        connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
+        connectorError = {message:"Maximum record count limited to " + GIT_MAX_RECORD_COUNT};
         return connectorError;
     }
 
@@ -624,12 +624,12 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
     GitClientError connectorError = {};
 
     if (project == null) {
-        connectorError = {message:["Project cannot be null"]};
+        connectorError = {message:"Project cannot be null"};
         return connectorError;
     }
 
     if (recordCount > GIT_MAX_RECORD_COUNT) {
-        connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
+        connectorError = {message:"Maximum record count limited to " + GIT_MAX_RECORD_COUNT};
         return connectorError;
     }
     string projectOwnerType = project.owner.getOwnerType();
@@ -648,7 +648,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
 
         return getProjectColumns(GIT_REPOSITORY, stringQuery, self.githubGraphQlClient);
     }
-    connectorError.message = ["No records found"];
+    connectorError.message = "No records found";
     return connectorError;
 }
 
@@ -699,7 +699,7 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
         }
     }
 
-    GitClientError connectorError = {message:["Project list has no next page"]};
+    GitClientError connectorError = {message:"Project list has no next page"};
 
     return connectorError;
 }
@@ -712,12 +712,12 @@ public function GitHubConnector::getPullRequestList (Repository repository, stri
     GitClientError connectorError = {};
 
     if (repository == null || state == "" || state == null) {
-        connectorError = {message:["Repository and state cannot be null."]};
+        connectorError = {message:"Repository and state cannot be null"};
         return connectorError;
     }
 
     if (recordCount > GIT_MAX_RECORD_COUNT) {
-        connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
+        connectorError = {message:"Maximum record count limited to " + GIT_MAX_RECORD_COUNT};
         return connectorError;
     }
 
@@ -799,7 +799,7 @@ public function GitHubConnector::getPullRequestListNextPage (PullRequestList pul
         }
 
     }
-    GitClientError connectorError = {message:["Pull request list has no next page"]};
+    GitClientError connectorError = {message:"Pull request list has no next page"};
 
     return connectorError;
 }
@@ -811,7 +811,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
     GitClientError connectorError = {};
 
     if (name == null || name == "") {
-        connectorError = {message:["Repository owner and name should be specified."]};
+        connectorError = {message:"Repository owner and name should be specified."};
         return connectorError;
     }
     string[] repoIdentifier = name.split(GIT_PATH_SEPARATOR);
@@ -845,7 +845,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
                 var githubRepositoryJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY];
                 singleRepository = jsonToRepository(githubRepositoryJson);
             } catch (error e) {
-                connectorError = {message:[e.message]};
+                connectorError = {message:e.message};
                 return connectorError;
             }
         }
@@ -898,7 +898,7 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
             }
         }
     }
-    GitClientError connectorError = {message:["Repository list has no next page"]};
+    GitClientError connectorError = {message:"Repository list has no next page"};
 
     return connectorError;
 }
@@ -911,7 +911,7 @@ public function GitHubConnector::getRepositoryProject (Repository repository, in
     GitClientError connectorError = {};
 
     if (repository == null || projectNumber <= 0) {
-        connectorError = {message:["Repository cannot be null and project number should be positive integer."]};
+        connectorError = {message:"Repository cannot be null and project number should be positive integer"};
         return connectorError;
     }
 
@@ -959,12 +959,12 @@ public function GitHubConnector::getRepositoryProjectList
     GitClientError connectorError = {};
 
     if (repository == null || state == null) {
-        connectorError = {message:["Repository and state cannot be null"]};
+        connectorError = {message:"Repository and state cannot be null"};
         return connectorError;
     }
 
     if (recordCount > GIT_MAX_RECORD_COUNT) {
-        connectorError = {message:["Maximum record count limited to " + GIT_MAX_RECORD_COUNT]};
+        connectorError = {message:"Maximum record count limited to " + GIT_MAX_RECORD_COUNT};
         return connectorError;
     }
 

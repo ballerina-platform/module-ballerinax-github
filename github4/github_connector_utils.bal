@@ -36,7 +36,7 @@ documentation { Validate the HTTP response and return payload or error
 }
 function getValidatedResponse (http:Response|http:HttpConnectorError response, string validateComponent)
                                                                                     returns json|GitClientError {
-    GitClientError connectorError = {};
+    GitClientError clientError = {};
     json responsePayload;
 
     match response {
@@ -49,22 +49,26 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                         responsePayload = jsonData;
                     }
                     http:PayloadError payloadError => {
-                        connectorError = {message:[GIT_ERROR_WHILE_RETRIEVING_PAYLOAD]};
-                        return connectorError;
+                        clientError = {message:payloadError.message};
+                        return clientError;
                     }
                 }
                 string[] payLoadKeys = responsePayload.getKeys() ?: [];
                 //Check all the keys in the payload to see if an error object is returned.
                 foreach key in payLoadKeys {
                     if (GIT_ERRORS.equalsIgnoreCase(key)) {
-                        string[] errors = [];
+                        string errors;
                         var errorList = check <json[]>responsePayload[GIT_ERRORS];
                         foreach i, singleError in errorList {
-                            errors[i] = singleError[GIT_MESSAGE].toString() ?: "Payload has errors";
+                            string errorMessage = singleError[GIT_MESSAGE].toString() ?: "Payload has errors";
+                            errors += errorMessage;
+                            if (i+1 != lengthof errorList) {
+                                errors += ",";
+                            }
                         }
-                        connectorError = {message:errors, statusCode:gitResponse.statusCode,
+                        clientError = {message:errors, statusCode:gitResponse.statusCode,
                                              reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
-                        return connectorError;
+                        return clientError;
                     }
                 }
 
@@ -72,25 +76,23 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                 string[] keySet = responsePayload[GIT_DATA].getKeys() ?: [];
                 string keyInData = keySet[GIT_INDEX_ZERO];
                 if (null == responsePayload[GIT_DATA][keyInData][validateComponent]) {
-                    string[] errorMessage = [GIT_ERROR_WHILE_RETRIEVING_DATA];
                     responsePayload = null;
-                    connectorError = {message:errorMessage, statusCode:gitResponse.statusCode,
+                    clientError = {message:GIT_ERROR_WHILE_RETRIEVING_DATA, statusCode:gitResponse.statusCode,
                                          reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
-                    return connectorError;
+                    return clientError;
                 }
 
             } catch (error e) {
-                string[] errorMessage = [GIT_ERROR_WHILE_RETRIEVING_PAYLOAD];
                 responsePayload = null;
-                connectorError = {message:errorMessage, statusCode:gitResponse.statusCode,
+                clientError = {message:GIT_ERROR_WHILE_RETRIEVING_PAYLOAD, statusCode:gitResponse.statusCode,
                                      reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
-                return connectorError;
+                return clientError;
             }
         }
 
         http:HttpConnectorError httpError => {
-            connectorError = {message:[httpError.message], statusCode:httpError.statusCode};
-            return connectorError;
+            clientError = {message:httpError.message, statusCode:httpError.statusCode};
+            return clientError;
         }
     }
 
@@ -110,11 +112,11 @@ function getProjectColumns (string ownerType, string gitQuery, http:Client githu
 
     endpoint http:Client gitHubEndpoint = githubClient;
 
-    GitClientError connectorError = {};
+    GitClientError clientError = {};
 
     if (ownerType == null || ownerType == "" || gitQuery == null || gitQuery == "") {
-        connectorError = {message:["Owner type and query cannot be null"]};
-        return connectorError;
+        clientError = {message:"Owner type and query cannot be null"};
+        return clientError;
     }
 
     http:Request request = new;
@@ -156,15 +158,15 @@ documentation { Convert string representation of json object to json object
     R{{}} - Connector error
 }
 function stringToJson (string source) returns json|GitClientError {
-    GitClientError connectorError = {};
+    GitClientError clientError = {};
     var parsedValue = util:parseJson(source);
     match parsedValue {
         json jsonValue => {
             return jsonValue;
         }
         error parsedError => {
-            connectorError = {message:[parsedError.message]};
-            return connectorError;
+            clientError = {message:parsedError.message};
+            return clientError;
         }
     }
 }

@@ -66,8 +66,8 @@ documentation { Closed open }
 
 //Errors
 @final string GIT_ERRORS = "errors";
-@final string GIT_ERROR_WHILE_RETRIEVING_DATA = "Error while retrieving data.";
-@final string GIT_ERROR_WHILE_RETRIEVING_PAYLOAD = "Error while retrieving payload.";
-@final string GIT_ERROR_WHILE_RETRIEVING_RESOURCE_PATH = "Error while retrieving project resource path.";
+@final string GIT_ERROR_WHILE_RETRIEVING_DATA = "Error while retrieving data";
+@final string GIT_ERROR_WHILE_RETRIEVING_PAYLOAD = "Error while retrieving payload";
+@final string GIT_ERROR_WHILE_RETRIEVING_RESOURCE_PATH = "Error while retrieving project resource path";
 
 @final string GIT_PATH_SEPARATOR = "/";
