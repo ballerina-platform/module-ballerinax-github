@@ -19,9 +19,13 @@ In order to run the github4.tests, the user will need to have a GitHub Personal 
 and provide the obtained token to the GitHubConnectorConfiguration as follows
 
 ```ballerina
-endpoint github4:Client githubConnectorEP {
-    accessToken:"<ACCESS_TOKEN>",
-    clientEndpointConfiguration: {}
+endpoint Client githubClient {
+    clientEndpointConfiguration: {
+        auth:{
+            scheme:"oauth",
+            accessToken:getAccessToken()
+        }
+    }
 };
 ```
 
