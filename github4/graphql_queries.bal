@@ -107,7 +107,7 @@
 @final string GET_REPOSITORY_PROJECTS =
 "query ($owner: String!, $repository: String!, $states:[ProjectState!], $recordCount: Int!){
 	repository(owner:$owner, name:$repository){
-    projects(first:$recordCount, states:$states){
+    projects(first:$recordCount, states:$states, orderBy:{field:NAME, direction:ASC}){
       " + PAGE_INFO + ",
       " + PROJECTS_NODES + "
     }
@@ -117,7 +117,7 @@
 @final string GET_REPOSITORY_PROJECTS_NEXT_PAGE =
 "query ($owner: String!, $repository: String!, $states:[ProjectState!], $endCursorProjects: String!, $recordCount: Int!){
 	repository(owner:$owner, name:$repository){
-    projects(first:$recordCount, states:$states, after:$endCursorProjects){
+    projects(first:$recordCount, states:$states, after:$endCursorProjects, orderBy:{field:NAME, direction:ASC}){
       " + PAGE_INFO + ",
       " + PROJECTS_NODES + "
     }
@@ -127,7 +127,7 @@
 @final string GET_ORGANIZATION_PROJECTS =
 "query ($organization: String!, $states:[ProjectState!], $recordCount: Int!){
 	organization(login:$organization) {
-    projects(first:$recordCount, states:$states){
+    projects(first:$recordCount, states:$states, orderBy:{field:NAME, direction:ASC}){
       " + PAGE_INFO + ",
       " + PROJECTS_NODES + "
     }
@@ -137,7 +137,7 @@
 @final string GET_ORGANIZATION_PROJECTS_NEXT_PAGE =
 "query ($organization: String!, $states:[ProjectState!], $endCursorProjects:String!, $recordCount: Int!){
 	organization(login:$organization) {
-    projects(first:$recordCount, states:$states, after:$endCursorProjects){
+    projects(first:$recordCount, states:$states, after:$endCursorProjects, orderBy:{field:NAME, direction:ASC}){
       " + PAGE_INFO + ",
       " + PROJECTS_NODES + "
     }
@@ -220,7 +220,7 @@
 @final string GET_PULL_REQUESTS =
 "query ($owner: String!, $name: String!, $states:[PullRequestState!], $recordCount: Int!){
 	repository(owner:$owner, name:$name){
-    pullRequests(first:$recordCount, states:$states) {
+    pullRequests(first:$recordCount, states:$states, orderBy:{field:CREATED_AT, direction:DESC}) {
       " + PAGE_INFO + ",
       nodes {
         id,
@@ -252,7 +252,8 @@
 "query ($owner: String!, $name: String!, $states:[PullRequestState!], $endCursorPullRequests: String!,
                                                                                                 $recordCount: Int!){
 	repository(owner:$owner, name:$name){
-    pullRequests(first:$recordCount, states:$states, after: $endCursorPullRequests) {
+    pullRequests(first:$recordCount, states:$states, after: $endCursorPullRequests,
+                                                                        orderBy:{field:CREATED_AT, direction:DESC}) {
       " + PAGE_INFO + ",
       nodes {
         id,
@@ -485,7 +486,7 @@
 @final  string GET_ORGANIZATION_REPOSITORIES =
 "query ($organization: String!, $recordCount: Int!) {
   organization (login:$organization) {
-    repositories (first: $recordCount) {
+    repositories (first: $recordCount, orderBy:{field:NAME, direction:ASC}) {
       " + PAGE_INFO + ",
       nodes {
         id,
@@ -517,7 +518,7 @@
 @final  string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE =
 "query ($organization: String!, $endCursorRepos: String!, $recordCount: Int!) {
   organization (login:$organization) {
-    repositories (first: $recordCount, after: $endCursorRepos) {
+    repositories (first: $recordCount, after: $endCursorRepos, orderBy:{field:NAME, direction:ASC}) {
       " + PAGE_INFO + ",
       nodes {
         id,
@@ -549,7 +550,7 @@
 @final  string GET_REPOSITORY_ISSUES =
 "query ($owner:String!, $name:String!, $states:[IssueState!], $recordCount: Int!) {
   repository(owner:$owner, name: $name) {
-    issues (first: $recordCount, states:$states) {
+    issues (first: $recordCount, states:$states, orderBy:{field:CREATED_AT, direction:DESC}) {
       " + PAGE_INFO + ",
       nodes {
         id,
@@ -582,7 +583,7 @@
 @final  string GET_REPOSITORY_ISSUES_NEXT_PAGE =
 "query ($owner:String!, $name:String!, $states:[IssueState!], $endCursorIssues: String!, $recordCount: Int!) {
   repository(owner:$owner, name: $name) {
-    issues (first: $recordCount, states:$states, after: $endCursorIssues) {
+    issues (first: $recordCount, states:$states, after: $endCursorIssues, orderBy:{field:CREATED_AT, direction:DESC}) {
       " + PAGE_INFO + ",
       nodes {
         id,
