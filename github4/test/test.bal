@@ -44,7 +44,7 @@ function testGetOrganization () {
         }
 
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
 
@@ -66,7 +66,7 @@ function testGetOrganizationProject () {
         }
 
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
 
@@ -90,7 +90,7 @@ function testGetOrganizationProjectList () {
         }
 
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     boolean lengthEqualsRecords = lengthof projectList.getAllProjects() == recordCount;
@@ -116,7 +116,7 @@ function testGetOrganizationProjectListNextPage () {
         }
 
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     // Next page
@@ -127,7 +127,7 @@ function testGetOrganizationProjectListNextPage () {
         }
 
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     boolean lengthEqualsRecords = lengthof projectList.getAllProjects() == recordCount;
@@ -151,7 +151,7 @@ function testGetProjectColumnList () {
             columnList = colList;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     boolean lengthEqualsRecords = lengthof columnList.getAllColumns() == recordCount;
@@ -176,7 +176,7 @@ function testGetCardListOfColumn () {
             columnList = colList;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     Column column = columnList.getAllColumns()[0];
@@ -203,7 +203,7 @@ function testGetCardListNextPage () {
             columnList = colList;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     Column column = columnList.getAllColumns()[0];
@@ -214,7 +214,7 @@ function testGetCardListNextPage () {
             cardList = cd;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     boolean lengthEqualsRecords = lengthof cardList.getAllCards() > 0;
@@ -237,7 +237,7 @@ function testGetOrganizationRepositoryList () {
             repositoryList = repList;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     boolean lengthEqualsRecords = lengthof repositoryList.getAllRepositories() == recordCount;
@@ -261,7 +261,7 @@ function testGetOrganizationRepositoryListNextPage () {
             repositoryList = repList;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     // Next page
@@ -272,7 +272,7 @@ function testGetOrganizationRepositoryListNextPage () {
         }
 
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     boolean lengthEqualsRecords = lengthof repositoryList.getAllRepositories() == recordCount;
@@ -293,7 +293,7 @@ function testGetRepository () {
             repository = rep;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
 
@@ -314,7 +314,7 @@ function testGetRepositoryProject () {
             repositoryProject = project;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
 
@@ -337,7 +337,7 @@ function testGetRepositoryProjectList () {
             repoProjectList = prjtList;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     boolean lengthEqualsRecords = lengthof repoProjectList.getAllProjects() == recordCount;
@@ -362,7 +362,7 @@ function testGetRepositoryProjectListNextPage () {
             repoProjectList = prjtList;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     // Next page
@@ -372,7 +372,7 @@ function testGetRepositoryProjectListNextPage () {
             repoProjectList = prjList;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     boolean lengthEqualsRecords = lengthof repoProjectList.getAllProjects() == recordCount;
@@ -395,7 +395,7 @@ function testGetPullRequestList () {
             pullRequestList = pList;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     boolean lengthEqualsRecords = lengthof pullRequestList.getAllPullRequests() == recordCount;
@@ -419,7 +419,7 @@ function testGetPullRequestListNextPage () {
             pullRequestList = pList;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     // Next page
@@ -429,7 +429,7 @@ function testGetPullRequestListNextPage () {
             pullRequestList = pList;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     boolean lengthEqualsRecords = lengthof pullRequestList.getAllPullRequests() == recordCount;
@@ -452,7 +452,7 @@ function testGetIssueList () {
             issueList = isList;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     boolean lengthEqualsRecords = lengthof issueList.getAllIssues() == recordCount;
@@ -476,7 +476,7 @@ function testGetIssueListNextPage () {
             issueList = isList;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     // Next page
@@ -486,7 +486,7 @@ function testGetIssueListNextPage () {
             issueList = isList;
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
     boolean lengthEqualsRecords = lengthof issueList.getAllIssues() == recordCount;
@@ -512,7 +512,7 @@ function testCreateIssue () {
             test:assertEquals(issue.title, "This is a test issue", msg = "Failed createIssue()");
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
 }
@@ -782,7 +782,7 @@ function testGetValidatedResponseSuccess () {
             test:assertEquals(orgName, "WSO2", msg = "Returned json data mismatch");
         }
         GitClientError err => {
-            test:assertFail(msg = err.message[0]);
+            test:assertFail(msg = err.message);
         }
     }
 }
@@ -807,7 +807,7 @@ function testGetValidatedResponseError () {
             test:assertFail(msg = "Payload error should be handled");
         }
         GitClientError err => {
-            test:assertEquals(err.message[0], "API error", msg = "Validated response error mismatch");
+            test:assertEquals(err.message, "API error", msg = "Validated response error mismatch");
         }
     }
 }
@@ -832,7 +832,7 @@ function testGetValidatedResponseNoRequestedData () {
             test:assertFail(msg = "Payload error should be handled");
         }
         GitClientError err => {
-            test:assertEquals(err.message[0], "Error while retrieving data.",
+            test:assertEquals(err.message, "Error while retrieving data",
                                                                 msg = "Validated response error mismatch");
         }
     }
@@ -855,7 +855,7 @@ function testGetValidatedResponseNoPayload () {
             test:assertFail(msg = "Payload error should be handled");
         }
         GitClientError err => {
-            test:assertEquals(err.message[0], "Error while retrieving payload.",
+            test:assertEquals(err.message, "Entity body is not json compatible since the received content-type is : null",
                                                                 msg = "Validated response error mismatch");
         }
     }
@@ -879,7 +879,7 @@ function testGetValidatedResponseHttpError () {
             test:assertFail(msg = "HttpConnector error should be handled");
         }
         GitClientError err => {
-            test:assertEquals(err.message[0], "HTTP Connector Error", msg = "Validated response error mismatch");
+            test:assertEquals(err.message, "HTTP Connector Error", msg = "Validated response error mismatch");
         }
     }
 }
