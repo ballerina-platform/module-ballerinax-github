@@ -1,10 +1,10 @@
-# Ballerina GitHub Connector - Tests
+# Ballerina GitHub Endpoint - Tests
 
 ###### GitHub brings together the world's largest community of developers to discover, share, and build better software. From open source projects to private team repositories, GitHub is an all-in-one platform for collaborative development.
 
-The Ballerina GitHub connector allow users to access the GitHub API through ballerina. This connector uses the GitHub GraphQL API v4.0
+The Ballerina GitHub endpoint allow users to access the GitHub API through ballerina. This endpoint uses the GitHub GraphQL API v4.0
 
-|Ballerina Version | Connector Version | GitHub API Version |
+|Ballerina Version | Endpoint Version | GitHub API Version |
 |------------------|-------------------| ------------------ |
 |0.970.0-beta1-SNAPSHOT | 0.9.5 | v4 |
 
@@ -16,7 +16,7 @@ In order to run the github4.tests, the user will need to have a GitHub Personal 
 
 **https://github.com/{profile} -> Settings -> Developer Settings -> Personal access tokens**
 
-and provide the obtained token to the GitHubConnectorConfiguration as follows
+and provide the obtained token to the client endpoint configuration as follows
 
 ```ballerina
 endpoint Client githubClient {

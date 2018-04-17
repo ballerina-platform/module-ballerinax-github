@@ -1,14 +1,14 @@
-# Ballerina GitHub Connector - GitHub API v4
+# Ballerina GitHub Endpoint - GitHub API v4
 
 ###### GitHub brings together the world's largest community of developers to discover, share, and build better software. From open source projects to private team repositories, GitHub is an all-in-one platform for collaborative development.
 
-The Ballerina GitHub connector allow users to access the GitHub API through ballerina. This connector uses the GitHub GraphQL API v4.0
+The Ballerina GitHub endpoint allow users to access the GitHub API through ballerina. This endpoint uses the GitHub GraphQL API v4.0
 
-|Ballerina Version | Connector Version | GitHub API Version |
+|Ballerina Version | Endpoint Version | GitHub API Version |
 |------------------|-------------------| ------------------ |
 |0.970.0-beta1-SNAPSHOT | 0.9.5 | v4 |
 
-![Ballerina GitHub Connector Overview](resources/BallerinaGitHubConnector_Overview.jpg)
+![Ballerina GitHub Endpoint Overview](./resources/BallerinaGitHubEndpoint_Overview.jpg)
 
 ### Getting started
 
@@ -21,7 +21,7 @@ git clone https://github.com/wso2-ballerina/package-github
 ##### Prerequisites
 Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 
-### Working with GitHub Connector Actions
+### Working with GitHub Endpoint Actions
 
 All the actions return `objects` or `github4:GitClientError`. If the action was a success, then the requested object will be returned while the `github4:GitClientError` will be **null** and vice-versa.
 
