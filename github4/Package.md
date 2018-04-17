@@ -28,10 +28,10 @@ All the actions return `objects` or `github4:GitClientError`. If the action was 
 ##### Example
 * Request 
 ```ballerina
-    import github4;
+    import wso2/github4;
 
     public function main (string[] args) {
-        endpoint Client githubClient {
+        endpoint github4:Client githubClient {
             clientEndpointConfiguration: {
                 auth:{
                     scheme:"oauth",
