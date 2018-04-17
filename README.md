@@ -8,7 +8,7 @@ The Ballerina GitHub connector allow users to access the GitHub API through ball
 |------------------|-------------------| ------------------ |
 |0.970.0-beta1-SNAPSHOT | 0.9.5 | v4 |
 
-![Ballerina GitHub Connector Overview](BallerinaGitHubConnector_Overview.jpg)
+![Ballerina GitHub Connector Overview](docs/resources/BallerinaGitHubConnector_Overview.jpg)
 
 ### Getting started
 
@@ -31,13 +31,17 @@ All the actions return `objects` or `github4:GitClientError`. If the action was 
     import github4;
 
     public function main (string[] args) {
-        endpoint github4:Client githubEP {
-            accessToken:getAccessToken(),
-            clientEndpointConfiguration: {}
+        endpoint Client githubClient {
+            clientEndpointConfiguration: {
+                auth:{
+                    scheme:"oauth",
+                    accessToken:getAccessToken()
+                }
+            }
         };
     
         github4:Repository repository = {};
-        var repo = githubEP -> getRepository("wso2-ballerina/package-github");
+        var repo = githubClient -> getRepository("wso2-ballerina/package-github");
         match repo {
             github4:Repository rep => {
                 repository = rep;
@@ -78,278 +82,5 @@ public type Repository {
     Language primaryLanguage;
 }
 ```
-
-***
-## Connector API
-
-### API Reference
-- [getRepository()](#getrepository)
-    - [getProjectList()](#getprojectlist)
-    - [getProject()](#getproject)
-    - [getIssueList()](#getissuelist)
-    - [getPullRequestList()](#getpullrequestlist)
-
-- [getOrganization()](#getorganization)
-    - [getProjectList()](#getprojectlist-1)
-    - [getProject()](#getproject-1)
-    - [getRepositoryList()](#getrepositorylist)
-    
-### getRepository()
-Return a single repository.
-
-###### Parameters
-Name | Type | Description
------|------|------------
-name | string | Name of the organization and repository. (Eg: "organization/repository")
-
-###### Returns
-* **github:Repositgithub4or **github:GitConngithub4rror**
-
-***
-
-### getOrganization()
-Return a single organization.
-
-###### Parameters
-Name | Type | Description
------|------|------------
-name | string | Name of the organization. (Eg: "organization")
-
-###### Returns
-**github:Organizgithub4* or **github:GitConngithub4rror**
-
-***
-## github:Repositgithub4## getProjectList()
-Return a list of projects in the repository.
-
-###### Parameters
-Name | Type | Description
------|------|------------
-state | string | The state of the project. (Eg: github:GIT_STAgithub4N, github:GIT_STAgithub4SED, github:GIT_STAgithub4 )
-
-###### Returns
-**github:Projectgithub4 or **github:GitConngithub4rror**
-
-***
-### getProject()
-Return a single project of the repository.
-
-###### Parameters
-Name | Type | Description
------|------|------------
-projectNumber | int | The integral number of the project.
-
-###### Returns
-**github:Projectgithub4**github:GitConngithub4rror**
-
-***
-
-### getIssueList()
-Return a list of issues of the repository.
-
-###### Parameters
-Name | Type | Description
------|------|------------
-state | string | The state of the issue. (Eg: github:GIT_STAgithub4N, github:GIT_STAgithub4SED, github:GIT_STAgithub4 )
-
-###### Returns
-**github:IssueLigithub4r **github:GitConngithub4rror**
-
-***
-
-### getPullRequestList()
-Return a list of pull requests of the repository.
-
-###### Parameters
-Name | Type | Description
------|------|------------
-state | string | The state of the pull request. (Eg: github:GIT_STAgithub4N, github:GIT_STAgithub4SED, github:GIT_STAgithub4GED, github:GIT_STAgithub4)
-
-###### Returns
-**github:PullReqgithub4st** or **github:GitConngithub4rror**
-
-***
-
-## github:Organizgithub4
-### getProjectList()
-Return a list of projects on the organization.
-
-###### Parameters
-Name | Type | Description
------|------|------------
-state | string | The state of the project. (Eg: github:GIT_STAgithub4N, github:GIT_STAgithub4SED, github:GIT_STAgithub4 )
-
-###### Returns
-**github:Projectgithub4 or **github:GitConngithub4rror**
-
-***
-
-### getProject()
-Return a single project of the organization.
-
-###### Parameters
-Name | Type | Description
------|------|------------
-projectNumber | int | The integral number of the project.
-
-###### Returns
-**github:Projectgithub4**github:GitConngithub4rror**
-
-***
-
-### getRepositoryList()
-Return the list of repositories of the organization.
-
-###### Parameters
-None
-
-###### Returns
-**github:Repositgithub4t** or **github:GitConngithub4rror**
-
-***
-
-## github:Projectgithub4getColumnList()
-Return a list of columns in the project.
-
-###### Parameters
-None
-
-###### Returns
-**github:ColumnLgithub4
-***
-
-## github:Column
-github4etCardList()
-Return a list of cards in the column.
-
-###### Parameters
-None
-
-###### Returns
-**github:CardLisgithub4**
-## github:Repositgithub4t
-
-### getAllRepositories()
-Return an array of repositories.
-
-###### Parameters
-None
-
-###### Returns
-**github:Repositgithub4*
-
-***
-
-### nextPage()
-Return the next page of the repository list.
-
-###### Parameters
-None
-
-###### Returns
-**github:Repositgithub4t** or **github:GitConngithub4rror**
-
-***
-
-### hasNextPage()
-Check if there is another page for the repository list.
-
-###### Parameters
-None
-
-###### Returns
-**boolean**
-
-***
-
-### hasPreviousPage()
-Check if there is a previous page for the repository list.
-
-###### Parameters
-None
-
-###### Returns
-**boolean**
-
-***
-
-## github:ColumnLgithub4## getAllColumns()
-Return an array of columns.
-
-###### Parameters
-None
-
-###### Returns
-**github:Column[github**
-### nextPage()
-Return the next page of the column list.
-
-###### Parameters
-None
-
-###### Returns
-**github:ColumnLgithub4or **github:GitConngithub4rror**
-
-***
-### hasNextPage()
-Check if there is another page for the column list.
-
-###### Parameters
-None
-
-###### Returns
-**boolean**
-
-***
-
-### hasPreviousPage()
-Check if there is a previous page for the column list.
-
-###### Parameters
-None
-
-###### Returns
-**boolean**
-
-***
-
-## github:CardLisgithub4 getAllCards()
-Return an array of cards.
-
-###### Parameters
-None
-
-###### Returns
-**github:Card[]*github
-
-### nextPage()
-Return the next page of the card list.
-
-###### Parameters
-None
-
-###### Returns
-**github:CardLisgithub4 **github:GitConngithub4rror**
-
-***
-### hasNextPage()
-Check if there is another page for the card list.
-
-###### Parameters
-None
-
-###### Returns
-**boolean**
-
-***
-
-### hasPreviousPage()
-Check if there is a previous page for the card list.
-
-###### Parameters
-None
-
-###### Returns
-**boolean**
 
 ***
