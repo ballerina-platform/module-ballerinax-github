@@ -36,99 +36,120 @@ documentation { Validate the HTTP response and return payload or error
 }
 function getValidatedResponse (http:Response|http:HttpConnectorError response, string validateComponent)
                                                                                     returns json|GitClientError {
-    GitClientError clientError = {};
-    json responsePayload;
 
     match response {
         http:Response gitResponse => {
-            try {
-                var jsonPayload = gitResponse.getJsonPayload();
 
-                match jsonPayload {
-                    json jsonData => {
-                        responsePayload = jsonData;
-                    }
-                    http:PayloadError payloadError => {
-                        clientError = {message:payloadError.message};
-                        return clientError;
-                    }
-                }
-                string[] payLoadKeys = responsePayload.getKeys() ?: [];
-                //Check all the keys in the payload to see if an error object is returned.
-                foreach key in payLoadKeys {
-                    if (GIT_ERRORS.equalsIgnoreCase(key)) {
-                        string errors;
-                        var errorList = check <json[]>responsePayload[GIT_ERRORS];
-                        foreach i, singleError in errorList {
-                            string errorMessage = singleError[GIT_MESSAGE].toString() ?: "Payload has errors";
-                            errors += errorMessage;
-                            if (i+1 != lengthof errorList) {
-                                errors += ",";
+            var responsePayload = gitResponse.getJsonPayload();
+
+            match responsePayload {
+                json jsonPayload => {
+                    string[] payLoadKeys = jsonPayload.getKeys();
+                    //Check all the keys in the payload to see if an error object is returned.
+                    foreach key in payLoadKeys {
+                        if (GIT_ERRORS.equalsIgnoreCase(key)) {
+                            string errors;
+                            var errorList = check <json[]>jsonPayload[GIT_ERRORS];
+                            foreach i, singleError in errorList {
+                                string errorMessage = singleError[GIT_MESSAGE].toString();
+                                errors += errorMessage;
+                                if (i+1 != lengthof errorList) {
+                                    errors += ",";
+                                }
                             }
+                            GitClientError gitClientError = {message:errors};
+                            return gitClientError;
                         }
-                        clientError = {message:errors, statusCode:gitResponse.statusCode,
-                                             reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
-                        return clientError;
+
+                        if (GIT_MESSAGE.equalsIgnoreCase(key)) {
+                            GitClientError gitClientError = {message:jsonPayload[GIT_MESSAGE].toString()};
+                            return gitClientError;
+                        }
                     }
-                }
 
-                //If no error object is returned, then check if the response contains the requested data.
-                string[] keySet = responsePayload[GIT_DATA].getKeys() ?: [];
-                string keyInData = keySet[GIT_INDEX_ZERO];
-                if (null == responsePayload[GIT_DATA][keyInData][validateComponent]) {
-                    responsePayload = null;
-                    clientError = {message:GIT_ERROR_WHILE_RETRIEVING_DATA, statusCode:gitResponse.statusCode,
-                                         reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
-                    return clientError;
+                    //If no error object is returned, then check if the response contains the requested data.
+                    string[] keySet = jsonPayload[GIT_DATA].getKeys();
+                    string keyInData = keySet[GIT_INDEX_ZERO];
+                    if (null == jsonPayload[GIT_DATA][keyInData][validateComponent]) {
+                        GitClientError gitClientError = {message:validateComponent + " is not available in the response"};
+                        return gitClientError;
+                    }
+                    return jsonPayload;
                 }
-
-            } catch (error e) {
-                responsePayload = null;
-                clientError = {message:GIT_ERROR_WHILE_RETRIEVING_PAYLOAD, statusCode:gitResponse.statusCode,
-                                     reasonPhrase:gitResponse.reasonPhrase, server:gitResponse.server};
-                return clientError;
+                http:PayloadError payloadError => {
+                    GitClientError gitClientError = {message:payloadError.message, cause:payloadError.cause};
+                    return gitClientError;
+                }
             }
         }
 
         http:HttpConnectorError httpError => {
-            clientError = {message:httpError.message, statusCode:httpError.statusCode};
+            GitClientError gitClientError = {message:httpError.message, cause:httpError.cause};
+            return gitClientError;
+        }
+    }
+}
+
+documentation { Validate the REST HTTP response and return payload or error
+    P{{response}} - HTTP response object or HTTP connector error object
+    R{{}} - JSON payload of the response
+    R{{}} - Connector error
+}
+function getValidatedRestResponse (http:Response|http:HttpConnectorError response) returns json|GitClientError {
+    match response {
+        http:Response httpResponse => {
+
+            match httpResponse.getJsonPayload() {
+                json jsonPayload => {
+                    if (jsonPayload.message == null) {
+                        return jsonPayload;
+                    } else {
+                        GitClientError gitClientError = {message:jsonPayload.message.toString()};
+                        return gitClientError;
+                    }
+                }
+                http:PayloadError payloadError => {
+                    GitClientError connectorError = {message:payloadError.message, cause:payloadError.cause};
+                    return connectorError;
+                }
+            }
+        }
+
+        http:HttpConnectorError httpError => {
+            GitClientError clientError = {message:httpError.message, cause:httpError.cause};
             return clientError;
         }
     }
-
-    return responsePayload;
-
 }
 
 documentation { Get all columns of an organization project or repository project
     P{{ownerType}} - Repository or Organization
-    P{{gitQuery}} - GraphQL API query to get the project board columns
+    P{{stringQuery}} - GraphQL API query to get the project board columns
     P{{githubClient}} - GitHub client object
     R{{}} - Column list object
     R{{}} - Connector error
 }
-function getProjectColumns (string ownerType, string gitQuery, http:Client githubClient)
+function getProjectColumns (string ownerType, string stringQuery, http:Client githubClient)
                                                                             returns ColumnList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = githubClient;
 
     GitClientError clientError = {};
 
-    if (ownerType == null || ownerType == "" || gitQuery == null || gitQuery == "") {
-        clientError = {message:"Owner type and query cannot be null"};
-        return clientError;
+    if (ownerType == "" || stringQuery == "") {
+        return {message:"Owner type and query cannot be empty"};
     }
 
     http:Request request = new;
-    var convertedQuery = stringToJson(gitQuery);
+    var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
         //Set headers and payload to the request
             constructRequest(request, jsonQuery);
         }
 
-        GitClientError gitConError => {
-            return gitConError;
+        GitClientError gitClientError => {
+            return gitClientError;
         }
     }
 
@@ -141,13 +162,13 @@ function getProjectColumns (string ownerType, string gitQuery, http:Client githu
     match validatedResponse {
         json jsonValidateResponse => {
             var projectColumnsJson = jsonValidateResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
-            var columnList = jsonToColumnList(projectColumnsJson, ownerType, gitQuery);
+            var columnList = jsonToColumnList(projectColumnsJson, ownerType, stringQuery);
 
             return columnList;
         }
 
-        GitClientError gitConError => {
-            return gitConError;
+        GitClientError gitClientError => {
+            return gitClientError;
         }
     }
 }
@@ -158,14 +179,13 @@ documentation { Convert string representation of json object to json object
     R{{}} - Connector error
 }
 function stringToJson (string source) returns json|GitClientError {
-    GitClientError clientError = {};
     var parsedValue = util:parseJson(source);
     match parsedValue {
         json jsonValue => {
             return jsonValue;
         }
         error parsedError => {
-            clientError = {message:parsedError.message};
+            GitClientError clientError = {message:parsedError.message, cause:parsedError.cause};
             return clientError;
         }
     }

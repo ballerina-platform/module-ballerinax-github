@@ -41,6 +41,7 @@
 @final string GIT_PROJECT = "project";
 @final string GIT_PROJECTS = "projects";
 @final string GIT_PULL_REQUESTS = "pullRequests";
+@final string GIT_REPOS = "repos";
 @final string GIT_REPOSITORIES = "repositories";
 @final string GIT_REPOSITORY = "repository";
 @final string GIT_REPOSITORY_OWNER = "repositoryOwner";
@@ -58,18 +59,19 @@ documentation { Closed merged }
 documentation { Closed open }
 @final public string GIT_STATE_OPEN = "[\"OPEN\"]";
 
-//Integer constants
+// Integer constants
 @final int GIT_INDEX_ZERO = 0;
 @final int GIT_INDEX_ONE = 1;
 @final int GIT_INDEX_TWO = 2;
 @final int GIT_MAX_RECORD_COUNT = 100;
 
-//Errors
+// Errors
 @final string GIT_ERRORS = "errors";
 @final string GIT_ERROR_WHILE_RETRIEVING_DATA = "Error while retrieving data";
 @final string GIT_ERROR_WHILE_RETRIEVING_PAYLOAD = "Error while retrieving payload";
 @final string GIT_ERROR_WHILE_RETRIEVING_RESOURCE_PATH = "Error while retrieving project resource path";
 
+// Utility constants
 @final string GIT_PATH_SEPARATOR = "/";
 
 // GraphQL queries
