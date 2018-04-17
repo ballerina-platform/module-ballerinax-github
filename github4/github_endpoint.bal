@@ -18,7 +18,7 @@
 
 import ballerina/http;
 
-documentation { GitHub connector configurations can be setup here. In order to use this connector,
+documentation { GitHub client configurations can be setup here. In order to use this client,
 the user will need to have a GitHub Personal Access Token. The token can be obtained by visiting
 `https://github.com/<profile> -> Settings -> Developer Settings -> Personal access tokens` and provide the obtained
 token to the GitHubClientConfig
@@ -29,8 +29,8 @@ public type GitHubClientConfig {
         http:ClientEndpointConfig clientEndpointConfiguration = {};
 };
 
-documentation { GitHub connector client
-    F{{githubClientConfiguration}} - GitHub connector configurations (Access token, Client endpoint configurations)
+documentation { GitHub client
+    F{{githubClientConfiguration}} - GitHub client configurations (Access token, Client endpoint configurations)
     F{{githubConnector}} - GitHub connector object
 }
 public type Client object {
@@ -39,25 +39,25 @@ public type Client object {
         GitHubConnector githubConnector = new;
     }
 
-    documentation { GitHub connector endpoint initialization function
-        P{{githubClientConfig}} - GitHub connector configuration
+    documentation { GitHub client endpoint initialization function
+        P{{githubClientConfig}} - GitHub client configuration
     }
     public function init (GitHubClientConfig githubClientConfig);
 
-    documentation { Register GitHub connector endpoint
+    documentation { Register GitHub client endpoint
         P{{serviceType}} - Accepts types of data (int, float, string, boolean, etc)
     }
     public function register (typedesc serviceType);
 
-    documentation { Start GitHub connector endpoint}
+    documentation { Start GitHub client endpoint}
     public function start ();
 
-    documentation { Return the GitHub connector client
-        R{{}} - GitHub connector client
+    documentation { Return the GitHub client
+        R{{}} - GitHub client
     }
     public function getClient () returns GitHubConnector;
 
-    documentation { Stop GitHub connector client}
+    documentation { Stop GitHub client}
     public function stop ();
 };
 
