@@ -17,6 +17,7 @@
 //
 
 import ballerina/http;
+import ballerina/io;
 
 documentation {GitHub client connector
     F{{githubGraphQlClient}} - Http client for GitHub GraphQL API
