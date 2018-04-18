@@ -39,7 +39,7 @@ All the actions return `objects` or `github4:GitClientError`. If the action was 
             clientEndpointConfiguration: {
                 auth:{
                     scheme:"oauth",
-                    accessToken:getAccessToken()
+                    accessToken:config:getAsString("GITHUB_TOKEN")
                 }
             }
         };

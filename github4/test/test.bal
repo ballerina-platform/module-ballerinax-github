@@ -16,15 +16,16 @@
 // under the License.
 //
 
-import ballerina/log;
+import ballerina/config;
 import ballerina/http;
+import ballerina/log;
 import ballerina/test;
 
 endpoint Client githubClient {
     clientEndpointConfiguration: {
         auth:{
             scheme:"oauth",
-            accessToken:getAccessToken()
+            accessToken:config:getAsString("GITHUB_TOKEN")
         }
     }
 };

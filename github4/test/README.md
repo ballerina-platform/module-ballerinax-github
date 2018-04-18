@@ -16,14 +16,16 @@ In order to run the tests, the user will need to have a GitHub Personal Access T
 
 **https://github.com/{profile} -> Settings -> Developer Settings -> Personal access tokens**
 
-and provide the obtained token to the client endpoint configuration as follows
+and provide the obtained token to the client endpoint configuration by adding the following field to the `ballerina.conf`
+> GITHUB_TOKEN="ACCESS_TOKEN"
+
 
 ```ballerina
 endpoint Client githubClient {
     clientEndpointConfiguration: {
         auth:{
             scheme:"oauth",
-            accessToken:getAccessToken()
+            accessToken:config:getAsString("GITHUB_TOKEN")
         }
     }
 };
