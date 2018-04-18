@@ -10,16 +10,20 @@ The Ballerina GitHub endpoint allow users to access the GitHub API through balle
 
 ![Ballerina GitHub Endpoint Overview](./docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
 
+##### Prerequisites
+Download the ballerina [distribution](https://ballerinalang.org/downloads/).
+
 ### Getting started
 
 * Clone the repository by running the following command
 ```
 git clone https://github.com/wso2-ballerina/package-github
 ```
-* Import the package to your ballerina project.
 
-##### Prerequisites
-Download the ballerina [distribution](https://ballerinalang.org/downloads/).
+* Initialize the ballerina project.
+```
+ballerina init
+```
 
 ### Working with GitHub Endpoint Actions
 
