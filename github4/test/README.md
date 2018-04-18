@@ -10,6 +10,11 @@ The Ballerina GitHub endpoint allow users to access the GitHub API through balle
 
 ## Running tests
 
+Initialize a ballerina project
+```
+ballerina init
+```
+
 All the tests inside this package will make HTTP calls to the GitHub GraphQL API v4. If the HTTP call fails, then so will the test case.
 
 In order to run the tests, the user will need to have a GitHub Personal Access Token. The token can be obtained by visiting
@@ -30,10 +35,7 @@ endpoint Client githubClient {
     }
 };
 ```
-Initialize a ballerina project
-```
-ballerina init
-```
+
 Run tests :
 ```
 ballerina test github4
