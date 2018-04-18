@@ -55,9 +55,9 @@ documentation { Pull request state open, closed and merged}
 @final public string GIT_STATE_ALL_PULL_REQUEST = "[\"OPEN\",\"CLOSED\",\"MERGED\"]";
 documentation { Closed state }
 @final public string GIT_STATE_CLOSED = "[\"CLOSED\"]";
-documentation { Closed merged }
+documentation { Merged state }
 @final public string GIT_STATE_MERGED = "[\"MERGED\"]";
-documentation { Closed open }
+documentation { Open state }
 @final public string GIT_STATE_OPEN = "[\"OPEN\"]";
 
 // Integer constants
