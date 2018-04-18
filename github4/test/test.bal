@@ -901,13 +901,14 @@ function testGetValidatedRestResponseSuccess () {
 function testGetValidatedRestResponseError () {
     log:printInfo("getValidatedRestResponse() error payload");
 
-    http:Response sampleHttpResponse = new;
+    http:Response sampleHttpResponse = new();
 
     json samplePayload = {"message":"API error"};
     sampleHttpResponse.setJsonPayload(samplePayload);
+    io:print("####");
+    io:println(sampleHttpResponse.getJsonPayload());
 
     http:Response|http:HttpConnectorError response = sampleHttpResponse;
-
     json|GitClientError validatedResponse = getValidatedRestResponse(response);
 
     match validatedResponse {
@@ -972,7 +973,7 @@ function testGetValidatedRestResponseHttpError () {
 }
 function testStringToJsonError () {
     log:printInfo("stringToJson() error");
-    string stringJson = "{\"title\":\"Sample title}";
+    string stringJson = "{\"title\":Sample title}";
 
     var convertedValue = stringToJson(stringJson);
     match convertedValue {
@@ -981,7 +982,7 @@ function testStringToJsonError () {
         }
         GitClientError gitClientError => {
             test:assertEquals(gitClientError.message,
-                "Failed to parse json string: unexpected end of JSON document at line: 1 column: 24",
+                "Failed to parse json string: unrecognized token 'Sample' at line: 1 column: 17",
                 msg = "Error message mismatch");
         }
     }

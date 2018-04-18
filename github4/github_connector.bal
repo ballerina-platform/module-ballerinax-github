@@ -58,13 +58,13 @@ public type GitHubConnector object{
                     returns ColumnList|GitClientError;
 
     documentation { Get a list of issues of a repository
-        P{{repository}} - Repository object
+        P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
         P{{state}} - State of the issue (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)
         P{{recordCount}} - Specify number of records in the list
         R{{}} - Issue list object
         R{{}} - Connector error
     }
-    public function getIssueList (Repository repository, string state, int recordCount)
+    public function getIssueList (Repository|(string, string) repository, string state, int recordCount)
                     returns IssueList|GitClientError;
 
     documentation { Get the next page of the issue list
@@ -84,31 +84,31 @@ public type GitHubConnector object{
                     returns Organization|GitClientError;
 
     documentation { Get a single project of an organization
-        P{{organization}} - Organization object
+        P{{organization}} - Organization object or organization name
         P{{projectNumber}} - The number of the project
         R{{}} - Project object
         R{{}} - Connector error
     }
-    public function getOrganizationProject (Organization organization, int projectNumber)
+    public function getOrganizationProject (Organization|string organization, int projectNumber)
                     returns Project|GitClientError;
 
     documentation { Get all projects of an organization
-        P{{organization}} - Organization object
+        P{{organization}} - Organization object or organization name
         P{{state}} - State of the project (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)
         P{{recordCount}} - Specify number of records in the list
         R{{}} - Project list object
         R{{}} - Connector error
     }
-    public function getOrganizationProjectList (Organization organization, string state, int recordCount)
+    public function getOrganizationProjectList (Organization|string organization, string state, int recordCount)
                     returns ProjectList|GitClientError;
 
     documentation { Get a list of repositories of an organization
-        P{{organization}} - Organization object
+        P{{organization}} - Organization object or organization name
         P{{recordCount}} - Specify number of records in the list
         R{{}} - Repository list object
         R{{}} - Connector error
     }
-    public function getOrganizationRepositoryList (Organization organization, int recordCount)
+    public function getOrganizationRepositoryList (Organization|string organization, int recordCount)
                     returns RepositoryList|GitClientError;
 
     documentation { Get all columns of a project board
@@ -128,13 +128,13 @@ public type GitHubConnector object{
                     returns ProjectList|GitClientError;
 
     documentation { Get all pull requests of a repository
-        P{{repository}} - Repository object
+        P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
         P{{state}} - State of the pull request (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_MERGED, GIT_STATE_ALL)
         P{{recordCount}} - Specify number of records in the list
         R{{}} - Pull request list object
         R{{}} - Connector error
     }
-    public function getPullRequestList (Repository repository, string state, int recordCount)
+    public function getPullRequestList (Repository|(string, string) repository, string state, int recordCount)
                     returns PullRequestList|GitClientError;
 
     documentation { Get the next page of the pull request list
@@ -162,22 +162,22 @@ public type GitHubConnector object{
                     returns RepositoryList|GitClientError;
 
     documentation { Get a single project of a repository
-        P{{repository}} - Repository object
+        P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
         P{{projectNumber}} - Project identification number
         R{{}} - Project object
         R{{}} - Connector error
     }
-    public function getRepositoryProject (Repository repository, int projectNumber)
+    public function getRepositoryProject (Repository|(string, string) repository, int projectNumber)
                     returns Project|GitClientError;
 
     documentation { Get all projects of a repository
-        P{{repository}} - Repository object
+        P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
         P{{state}} - State of the project (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)
         P{{recordCount}} - Specify number of records in the list
         R{{}} - Project list object
         R{{}} - Connector error
     }
-    public function getRepositoryProjectList (Repository repository, string state, int recordCount)
+    public function getRepositoryProjectList (Repository|(string, string) repository, string state, int recordCount)
                     returns ProjectList|GitClientError;
 };
 
@@ -312,14 +312,24 @@ public function GitHubConnector::getColumnListNextPage (ColumnList columnList) r
     return gitClientError;
 }
 
-public function GitHubConnector::getIssueList (Repository repository, string state, int recordCount)
+public function GitHubConnector::getIssueList (Repository|(string, string) repository, string state, int recordCount)
                                                                                 returns IssueList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
+    string repositoryOwner;
+    string repositoryName;
+    match repository {
+        Repository repoObject => {
+            repositoryOwner = repoObject.owner.login;
+            repositoryName = repoObject.name;
+        }
+        (string, string) repoDetails => {
+            (repositoryOwner, repositoryName) = repoDetails;
+        }
+    }
 
-
-    if (repository == null) {
-        GitClientError gitClientError = {message:"Repository cannot be null"};
+    if (repositoryOwner == "" || repositoryName == "") {
+        GitClientError gitClientError = {message:"Repository owner and name should be specified"};
         return gitClientError;
     }
 
@@ -329,7 +339,7 @@ public function GitHubConnector::getIssueList (Repository repository, string sta
     }
 
     string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_ISSUES,
-        [repository.owner.login, repository.name, state, recordCount]);
+        [repositoryOwner, repositoryName, state, recordCount]);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
@@ -459,16 +469,22 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
     return singleOrganization;
 }
 
-public function GitHubConnector::getOrganizationProject (Organization organization, int projectNumber)
+public function GitHubConnector::getOrganizationProject (Organization|string organization, int projectNumber)
                                                                                 returns Project|GitClientError {
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    if (organization == null || projectNumber <= 0) {
-        GitClientError gitClientError = {message:"Organization cannot be null and project number should be positive integer"};
+    string organizationName = organization but {
+                                                Organization orgObject => orgObject.login,
+                                                string orgName => orgName
+                                                };
+
+    if (organizationName == "" || projectNumber <= 0) {
+        GitClientError gitClientError = {message:"Organization should have a name and
+                                                                        project number should be positive integer"};
         return gitClientError;
     }
 
-    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT, [organization.login, projectNumber]);
+    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT, [organizationName, projectNumber]);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
@@ -502,13 +518,18 @@ public function GitHubConnector::getOrganizationProject (Organization organizati
     }
 }
 
-public function GitHubConnector::getOrganizationProjectList (Organization organization, string state, int recordCount)
-                                                                            returns ProjectList|GitClientError {
+public function GitHubConnector::getOrganizationProjectList (Organization|string organization, string state,
+                                                                int recordCount) returns ProjectList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    if (organization.login == "" || state == "") {
-        GitClientError gitClientError = {message:"Organization and state cannot be null."};
+    string organizationName = organization but {
+                                                Organization orgObject => orgObject.login,
+                                                string orgName => orgName
+                                                };
+
+    if (organizationName == "" || state == "") {
+        GitClientError gitClientError = {message:"Organization should have a name and state cannot be null."};
         return gitClientError;
     }
 
@@ -517,7 +538,7 @@ public function GitHubConnector::getOrganizationProjectList (Organization organi
         return gitClientError;
     }
 
-    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECTS, [organization.login, state, recordCount]);
+    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECTS, [organizationName, state, recordCount]);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
@@ -552,13 +573,18 @@ public function GitHubConnector::getOrganizationProjectList (Organization organi
     }
 }
 
-public function GitHubConnector::getOrganizationRepositoryList (Organization organization, int recordCount)
+public function GitHubConnector::getOrganizationRepositoryList (Organization|string organization, int recordCount)
                                                                         returns RepositoryList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    if (organization.login == "") {
-        GitClientError gitClientError = {message:"Organization cannot be null."};
+    string organizationName = organization but {
+                                                Organization orgObject => orgObject.login,
+                                                string orgName => orgName
+                                                };
+
+    if (organizationName == "") {
+        GitClientError gitClientError = {message:"Organization should have a name"};
         return gitClientError;
     }
 
@@ -567,7 +593,7 @@ public function GitHubConnector::getOrganizationRepositoryList (Organization org
         return gitClientError;
     }
 
-    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_REPOSITORIES, [organization.login, recordCount]);
+    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_REPOSITORIES, [organizationName, recordCount]);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
@@ -688,14 +714,26 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
     return gitClientError;
 }
 
-public function GitHubConnector::getPullRequestList (Repository repository, string state, int recordCount)
+public function GitHubConnector::getPullRequestList (Repository|(string, string) repository, string state, int recordCount)
                                                                         returns PullRequestList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    if (repository == null || state == "" || state == null) {
-        GitClientError gitClientError = {message:"Repository and state cannot be null"};
-        return gitClientError;
+    string repositoryOwner;
+    string repositoryName;
+    match repository {
+        Repository repoObject => {
+            repositoryOwner = repoObject.owner.login;
+            repositoryName = repoObject.name;
+        }
+        (string, string) repoDetails => {
+            (repositoryOwner, repositoryName) = repoDetails;
+        }
+    }
+
+    if (repositoryOwner == "" || repositoryName == "") {
+    GitClientError gitClientError = {message:"Repository owner and name should be specified"};
+    return gitClientError;
     }
 
     if (recordCount > GIT_MAX_RECORD_COUNT) {
@@ -704,7 +742,7 @@ public function GitHubConnector::getPullRequestList (Repository repository, stri
     }
 
     string stringQuery = io:sprintf(TEMPLATE_GET_PULL_REQUESTS,
-        [repository.owner.login, repository.name, state, recordCount]);
+        [repositoryOwner, repositoryName, state, recordCount]);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
@@ -883,18 +921,30 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
     return gitClientError;
 }
 
-public function GitHubConnector::getRepositoryProject (Repository repository, int projectNumber)
+public function GitHubConnector::getRepositoryProject (Repository|(string, string) repository, int projectNumber)
                                                                                 returns Project|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    if (repository == null || projectNumber <= 0) {
-        GitClientError gitClientError = {message:"Repository cannot be null and project number should be positive integer"};
-        return gitClientError;
+    string repositoryOwner;
+    string repositoryName;
+    match repository {
+        Repository repoObject => {
+            repositoryOwner = repoObject.owner.login;
+            repositoryName = repoObject.name;
+        }
+        (string, string) repoDetails => {
+            (repositoryOwner, repositoryName) = repoDetails;
+        }
+    }
+
+    if (repositoryOwner == "" || repositoryName == "") {
+    GitClientError gitClientError = {message:"Repository owner and name should be specified"};
+    return gitClientError;
     }
 
     string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT,
-        [repository.owner.login, repository.name, projectNumber]);
+        [repositoryOwner, repositoryName, projectNumber]);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
@@ -929,13 +979,25 @@ public function GitHubConnector::getRepositoryProject (Repository repository, in
     }
 }
 
-public function GitHubConnector::getRepositoryProjectList
-                        (Repository repository, string state, int recordCount) returns ProjectList|GitClientError {
+public function GitHubConnector::getRepositoryProjectList (Repository|(string, string) repository, string state,
+                                                                int recordCount) returns ProjectList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    if (repository.name == "" || state == "") {
-        GitClientError gitClientError = {message:"Repository and state cannot be empty"};
+    string repositoryOwner;
+    string repositoryName;
+    match repository {
+        Repository repoObject => {
+            repositoryOwner = repoObject.owner.login;
+            repositoryName = repoObject.name;
+        }
+        (string, string) repoDetails => {
+            (repositoryOwner, repositoryName) = repoDetails;
+        }
+    }
+
+    if (repositoryOwner == "" || repositoryName == "") {
+        GitClientError gitClientError = {message:"Repository owner and name should be specified"};
         return gitClientError;
     }
 
@@ -945,7 +1007,7 @@ public function GitHubConnector::getRepositoryProjectList
     }
 
     string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECTS,
-                                    [repository.owner.login, repository.name, state, recordCount]);
+                                    [repositoryOwner, repositoryName, state, recordCount]);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
