@@ -16,7 +16,6 @@
 // under the License.
 //
 
-import ballerina/io;
 import ballerina/log;
 import ballerina/http;
 import ballerina/test;
@@ -905,8 +904,6 @@ function testGetValidatedRestResponseError () {
 
     json samplePayload = {"message":"API error"};
     sampleHttpResponse.setJsonPayload(samplePayload);
-    io:print("####");
-    io:println(sampleHttpResponse.getJsonPayload());
 
     http:Response|http:HttpConnectorError response = sampleHttpResponse;
     json|GitClientError validatedResponse = getValidatedRestResponse(response);

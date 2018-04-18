@@ -69,7 +69,7 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
 
                     //If no error object is returned, then check if the response contains the requested data.
                     string[] keySet = jsonPayload[GIT_DATA].getKeys();
-                    string keyInData = keySet[GIT_INDEX_ZERO];
+                    string keyInData = keySet[INDEX_ZERO];
                     if (null == jsonPayload[GIT_DATA][keyInData][validateComponent]) {
                         GitClientError gitClientError = {message:validateComponent + " is not available in the response"};
                         return gitClientError;

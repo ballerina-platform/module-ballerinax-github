@@ -187,7 +187,7 @@ public function GitHubConnector::createIssue (string repositoryOwner, string rep
 
     endpoint http:Client gitHubEndpoint = self.githubRestClient;
 
-    if (repositoryName == "" || repositoryOwner == "" || issueTitle == "") {
+    if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING || issueTitle == EMPTY_STRING) {
         GitClientError connectorError = {message:"Repository name, owner and issue title should be specified"};
         return connectorError;
     }
@@ -328,13 +328,13 @@ public function GitHubConnector::getIssueList (Repository|(string, string) repos
         }
     }
 
-    if (repositoryOwner == "" || repositoryName == "") {
+    if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
         GitClientError gitClientError = {message:"Repository owner and name should be specified"};
         return gitClientError;
     }
 
-    if (recordCount > GIT_MAX_RECORD_COUNT) {
-        GitClientError gitClientError = {message:"Maximum record count limited to " + GIT_MAX_RECORD_COUNT};
+    if (recordCount > MAX_RECORD_COUNT) {
+        GitClientError gitClientError = {message:"Maximum record count limited to " + MAX_RECORD_COUNT};
         return gitClientError;
     }
 
@@ -355,7 +355,7 @@ public function GitHubConnector::getIssueList (Repository|(string, string) repos
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post("", request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_ISSUES);
@@ -395,7 +395,7 @@ public function GitHubConnector::getIssueListNextPage (IssueList issueList) retu
         }
 
         // Make an HTTP POST request
-        var response = gitHubEndpoint -> post("", request);
+        var response = gitHubEndpoint -> post(EMPTY_STRING, request);
 
         //Check for empty payloads and errors
         json|GitClientError validatedResponse = getValidatedResponse(response, GIT_ISSUES);
@@ -424,7 +424,7 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
 
-    if (null == name || "" == name) {
+    if (name == EMPTY_STRING) {
     GitClientError gitClientError = {message:"Organization name should be specified"};
         return gitClientError;
     }
@@ -446,7 +446,7 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post("", request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
 
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_NAME);
 
@@ -478,7 +478,7 @@ public function GitHubConnector::getOrganizationProject (Organization|string org
                                                 string orgName => orgName
                                                 };
 
-    if (organizationName == "" || projectNumber <= 0) {
+    if (organizationName == EMPTY_STRING || projectNumber <= INDEX_ZERO) {
         GitClientError gitClientError = {message:"Organization should have a name and
                                                                         project number should be positive integer"};
         return gitClientError;
@@ -500,7 +500,7 @@ public function GitHubConnector::getOrganizationProject (Organization|string org
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post("", request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
 
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
 
@@ -528,13 +528,14 @@ public function GitHubConnector::getOrganizationProjectList (Organization|string
                                                 string orgName => orgName
                                                 };
 
-    if (organizationName == "" || state == "") {
-        GitClientError gitClientError = {message:"Organization should have a name and state cannot be null."};
+    if (organizationName == EMPTY_STRING || state == EMPTY_STRING) {
+        GitClientError gitClientError = {message:"Organization should have a name and
+                                                                                project state should be specified"};
         return gitClientError;
     }
 
-    if (recordCount > GIT_MAX_RECORD_COUNT) {
-        GitClientError gitClientError = {message:"Maximum record count limited to " + GIT_MAX_RECORD_COUNT};
+    if (recordCount > MAX_RECORD_COUNT) {
+        GitClientError gitClientError = {message:"Maximum record count limited to " + MAX_RECORD_COUNT};
         return gitClientError;
     }
 
@@ -554,7 +555,7 @@ public function GitHubConnector::getOrganizationProjectList (Organization|string
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post("", request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
@@ -583,13 +584,13 @@ public function GitHubConnector::getOrganizationRepositoryList (Organization|str
                                                 string orgName => orgName
                                                 };
 
-    if (organizationName == "") {
+    if (organizationName == EMPTY_STRING) {
         GitClientError gitClientError = {message:"Organization should have a name"};
         return gitClientError;
     }
 
-    if (recordCount > GIT_MAX_RECORD_COUNT) {
-        GitClientError gitClientError = {message:"Maximum record count limited to " + GIT_MAX_RECORD_COUNT};
+    if (recordCount > MAX_RECORD_COUNT) {
+        GitClientError gitClientError = {message:"Maximum record count limited to " + MAX_RECORD_COUNT};
         return gitClientError;
     }
 
@@ -609,7 +610,7 @@ public function GitHubConnector::getOrganizationRepositoryList (Organization|str
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post("", request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_REPOSITORIES);
@@ -633,26 +634,27 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
 
     GitClientError gitClientError = {};
 
-    if (project == null) {
-        gitClientError = {message:"Project cannot be null"};
+    if (project.owner.getOwnerType() == EMPTY_STRING || project.number <= INDEX_ZERO ||
+                                                                                project.resourcePath == EMPTY_STRING) {
+        gitClientError = {message:"Project owner, number and resource path should be specified"};
         return gitClientError;
     }
 
-    if (recordCount > GIT_MAX_RECORD_COUNT) {
-        gitClientError = {message:"Maximum record count limited to " + GIT_MAX_RECORD_COUNT};
+    if (recordCount > MAX_RECORD_COUNT) {
+        gitClientError = {message:"Maximum record count limited to " + MAX_RECORD_COUNT};
         return gitClientError;
     }
     string projectOwnerType = project.owner.getOwnerType();
-    if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION) && project.resourcePath != null) {
-        string organization = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
+    if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION)) {
+        string organization = project.resourcePath.split(GIT_PATH_SEPARATOR)[INDEX_TWO];
         string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS,
             [organization, project.number, recordCount]);
 
         return getProjectColumns(GIT_ORGANIZATION, stringQuery, self.githubGraphQlClient);
 
-    } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY) && project.resourcePath != null) {
-        string ownerName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_ONE];
-        string repositoryName = project.resourcePath.split(GIT_PATH_SEPARATOR)[GIT_INDEX_TWO];
+    } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
+        string ownerName = project.resourcePath.split(GIT_PATH_SEPARATOR)[INDEX_ONE];
+        string repositoryName = project.resourcePath.split(GIT_PATH_SEPARATOR)[INDEX_TWO];
         string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS,
             [ownerName, repositoryName, project.number, recordCount]);
 
@@ -690,7 +692,7 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
         }
 
         // Make an HTTP POST request
-        var response = gitHubEndpoint -> post("", request);
+        var response = gitHubEndpoint -> post(EMPTY_STRING, request);
 
         //Check for empty payloads and errors
         json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
@@ -731,13 +733,13 @@ public function GitHubConnector::getPullRequestList (Repository|(string, string)
         }
     }
 
-    if (repositoryOwner == "" || repositoryName == "") {
+    if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
     GitClientError gitClientError = {message:"Repository owner and name should be specified"};
     return gitClientError;
     }
 
-    if (recordCount > GIT_MAX_RECORD_COUNT) {
-        GitClientError gitClientError = {message:"Maximum record count limited to " + GIT_MAX_RECORD_COUNT};
+    if (recordCount > MAX_RECORD_COUNT) {
+        GitClientError gitClientError = {message:"Maximum record count limited to " + MAX_RECORD_COUNT};
         return gitClientError;
     }
 
@@ -758,7 +760,7 @@ public function GitHubConnector::getPullRequestList (Repository|(string, string)
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post("", request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PULL_REQUESTS);
@@ -800,7 +802,7 @@ public function GitHubConnector::getPullRequestListNextPage (PullRequestList pul
         }
 
         // Make an HTTP POST request
-        var response = gitHubEndpoint -> post("", request);
+        var response = gitHubEndpoint -> post(EMPTY_STRING, request);
 
         //Check for empty payloads and errors
         json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PULL_REQUESTS);
@@ -828,13 +830,13 @@ public function GitHubConnector::getRepository (string name) returns Repository|
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
-    if (name == null || name == "") {
+    if (name == EMPTY_STRING || name == EMPTY_STRING) {
         GitClientError gitClientError = {message:"Repository owner and name should be specified."};
         return gitClientError;
     }
     string[] repoIdentifier = name.split(GIT_PATH_SEPARATOR);
-    string repoOwner = repoIdentifier[GIT_INDEX_ZERO];
-    string repoName = repoIdentifier[GIT_INDEX_ONE];
+    string repoOwner = repoIdentifier[INDEX_ZERO];
+    string repoName = repoIdentifier[INDEX_ONE];
     Repository singleRepository = {};
 
     string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY, [repoOwner, repoName]);
@@ -853,7 +855,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
     }
 
     // Make an HTTP POST request 
-    var response = gitHubEndpoint -> post("", request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
 
     json|GitClientError validatedResponse  = getValidatedResponse(response, GIT_NAME);
     
@@ -898,7 +900,7 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
         }
 
         // Make an HTTP POST request
-        var response = gitHubEndpoint -> post("", request);
+        var response = gitHubEndpoint -> post(EMPTY_STRING, request);
 
         //Check for empty payloads and errors
         json|GitClientError validatedResponse = getValidatedResponse(response, GIT_REPOSITORIES);
@@ -938,7 +940,7 @@ public function GitHubConnector::getRepositoryProject (Repository|(string, strin
         }
     }
 
-    if (repositoryOwner == "" || repositoryName == "") {
+    if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
     GitClientError gitClientError = {message:"Repository owner and name should be specified"};
     return gitClientError;
     }
@@ -960,7 +962,7 @@ public function GitHubConnector::getRepositoryProject (Repository|(string, strin
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post("", request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
@@ -996,13 +998,13 @@ public function GitHubConnector::getRepositoryProjectList (Repository|(string, s
         }
     }
 
-    if (repositoryOwner == "" || repositoryName == "") {
+    if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
         GitClientError gitClientError = {message:"Repository owner and name should be specified"};
         return gitClientError;
     }
 
-    if (recordCount > GIT_MAX_RECORD_COUNT) {
-        GitClientError gitClientError = {message:"Maximum record count limited to " + GIT_MAX_RECORD_COUNT};
+    if (recordCount > MAX_RECORD_COUNT) {
+        GitClientError gitClientError = {message:"Maximum record count limited to " + MAX_RECORD_COUNT};
         return gitClientError;
     }
 
@@ -1023,7 +1025,7 @@ public function GitHubConnector::getRepositoryProjectList (Repository|(string, s
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post("", request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);

@@ -29,6 +29,7 @@
 @final string GIT_END_CURSOR = "endCursor";
 @final string GIT_END_CURSOR_CARD = "endCursorCard";
 @final string GIT_END_CURSOR_COLUMN = "endCursorColumn";
+@final string GIT_ERRORS = "errors";
 @final string GIT_HAS_NEXT_PAGE = "hasNextPage";
 @final string GIT_ISSUES = "issues";
 @final string GIT_MESSAGE = "message";
@@ -60,19 +61,14 @@ documentation { Closed open }
 @final public string GIT_STATE_OPEN = "[\"OPEN\"]";
 
 // Integer constants
-@final int GIT_INDEX_ZERO = 0;
-@final int GIT_INDEX_ONE = 1;
-@final int GIT_INDEX_TWO = 2;
-@final int GIT_MAX_RECORD_COUNT = 100;
-
-// Errors
-@final string GIT_ERRORS = "errors";
-@final string GIT_ERROR_WHILE_RETRIEVING_DATA = "Error while retrieving data";
-@final string GIT_ERROR_WHILE_RETRIEVING_PAYLOAD = "Error while retrieving payload";
-@final string GIT_ERROR_WHILE_RETRIEVING_RESOURCE_PATH = "Error while retrieving project resource path";
+@final int INDEX_ZERO = 0;
+@final int INDEX_ONE = 1;
+@final int INDEX_TWO = 2;
+@final int MAX_RECORD_COUNT = 100;
 
 // Utility constants
 @final string GIT_PATH_SEPARATOR = "/";
+@final string EMPTY_STRING = "";
 
 // GraphQL queries
 
