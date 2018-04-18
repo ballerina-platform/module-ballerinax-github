@@ -82,7 +82,7 @@ function testGetOrganizationProjectList () {
     ProjectList projectList = new;
     Organization projectListOrganization = {login:"wso2"};
     var responseProjectList = githubClient ->
-                              getOrganizationProjectList(projectListOrganization, GIT_STATE_OPEN, recordCount);
+                              getOrganizationProjectList(projectListOrganization, STATE_OPEN, recordCount);
     match responseProjectList {
         ProjectList prjtList => {
             projectList = prjtList;
@@ -108,7 +108,7 @@ function testGetOrganizationProjectListNextPage () {
     ProjectList projectList = new;
     Organization projectListOrganization = {login:"wso2"};
     var responseProjectList = githubClient ->
-                              getOrganizationProjectList(projectListOrganization, GIT_STATE_OPEN, 2);
+                              getOrganizationProjectList(projectListOrganization, STATE_OPEN, 2);
     match responseProjectList {
         ProjectList prjtList => {
             projectList = prjtList;
@@ -330,7 +330,7 @@ function testGetRepositoryProjectList () {
     Repository projectRepositoryList = {name:"testgrid", owner:{login:"wso2"}};
     ProjectList repoProjectList = new;
     var responseRepoProjectList = githubClient ->
-                                  getRepositoryProjectList(projectRepositoryList, GIT_STATE_OPEN, recordCount);
+                                  getRepositoryProjectList(projectRepositoryList, STATE_OPEN, recordCount);
     match responseRepoProjectList {
         ProjectList prjtList => {
             repoProjectList = prjtList;
@@ -355,7 +355,7 @@ function testGetRepositoryProjectListNextPage () {
     Repository projectRepository = {name:"ProLAd-ExpertSystem", owner:{login:"vlgunarathne"}};
     ProjectList repoProjectList = new;
     var responseRepoProjectList = githubClient ->
-                                  getRepositoryProjectList(projectRepository, GIT_STATE_OPEN, 1);
+                                  getRepositoryProjectList(projectRepository, STATE_OPEN, 1);
     match responseRepoProjectList {
         ProjectList prjtList => {
             repoProjectList = prjtList;
@@ -388,7 +388,7 @@ function testGetPullRequestList () {
     int recordCount = 2;
     Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
     PullRequestList pullRequestList = new;
-    var prList = githubClient -> getPullRequestList(pullRequestRepository, GIT_STATE_CLOSED, recordCount);
+    var prList = githubClient -> getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
     match prList {
         PullRequestList pList => {
             pullRequestList = pList;
@@ -412,7 +412,7 @@ function testGetPullRequestListNextPage () {
     int recordCount = 2;
     Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
     PullRequestList pullRequestList = new;
-    var prList = githubClient -> getPullRequestList(pullRequestRepository, GIT_STATE_CLOSED, recordCount);
+    var prList = githubClient -> getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
     match prList {
         PullRequestList pList => {
             pullRequestList = pList;
@@ -445,7 +445,7 @@ function testGetIssueList () {
     int recordCount = 2;
     Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
     IssueList issueList = new;
-    var issues = githubClient -> getIssueList(issueRepository, GIT_STATE_CLOSED, recordCount);
+    var issues = githubClient -> getIssueList(issueRepository, STATE_CLOSED, recordCount);
     match issues {
         IssueList isList => {
             issueList = isList;
@@ -469,7 +469,7 @@ function testGetIssueListNextPage () {
     int recordCount = 2;
     Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
     IssueList issueList = new;
-    var issues = githubClient -> getIssueList(issueRepository, GIT_STATE_CLOSED, recordCount);
+    var issues = githubClient -> getIssueList(issueRepository, STATE_CLOSED, recordCount);
     match issues {
         IssueList isList => {
             issueList = isList;

@@ -59,7 +59,7 @@ public type GitHubConnector object{
 
     documentation { Get a list of issues of a repository
         P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
-        P{{state}} - State of the issue (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)
+        P{{state}} - State of the issue (STATE_OPEN, STATE_CLOSED, STATE_ALL)
         P{{recordCount}} - Specify number of records in the list
         R{{}} - Issue list object
         R{{}} - Connector error
@@ -94,7 +94,7 @@ public type GitHubConnector object{
 
     documentation { Get all projects of an organization
         P{{organization}} - Organization object or organization name
-        P{{state}} - State of the project (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)
+        P{{state}} - State of the project (STATE_OPEN, STATE_CLOSED, STATE_ALL)
         P{{recordCount}} - Specify number of records in the list
         R{{}} - Project list object
         R{{}} - Connector error
@@ -129,7 +129,7 @@ public type GitHubConnector object{
 
     documentation { Get all pull requests of a repository
         P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
-        P{{state}} - State of the pull request (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_MERGED, GIT_STATE_ALL)
+        P{{state}} - State of the pull request (STATE_OPEN, STATE_CLOSED, STATE_MERGED, STATE_ALL)
         P{{recordCount}} - Specify number of records in the list
         R{{}} - Pull request list object
         R{{}} - Connector error
@@ -172,7 +172,7 @@ public type GitHubConnector object{
 
     documentation { Get all projects of a repository
         P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
-        P{{state}} - State of the project (GIT_STATE_OPEN, GIT_STATE_CLOSED, GIT_STATE_ALL)
+        P{{state}} - State of the project (STATE_OPEN, STATE_CLOSED, STATE_ALL)
         P{{recordCount}} - Specify number of records in the list
         R{{}} - Project list object
         R{{}} - Connector error
@@ -209,8 +209,8 @@ public function GitHubConnector::createIssue (string repositoryOwner, string rep
     //Set headers and payload to the request
     constructRequest(request, issueJsonPayload);
 
-    string endpointResource = GIT_PATH_SEPARATOR + GIT_REPOS + GIT_PATH_SEPARATOR + repositoryOwner +
-                                                GIT_PATH_SEPARATOR + repositoryName + GIT_PATH_SEPARATOR + GIT_ISSUES;
+    string endpointResource = PATH_SEPARATOR + GIT_REPOS + PATH_SEPARATOR + repositoryOwner +
+                                                PATH_SEPARATOR + repositoryName + PATH_SEPARATOR + GIT_ISSUES;
     // Make an HTTP POST request
     var response = gitHubEndpoint -> post(endpointResource, request);
 
@@ -646,15 +646,15 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
     }
     string projectOwnerType = project.owner.getOwnerType();
     if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION)) {
-        string organization = project.resourcePath.split(GIT_PATH_SEPARATOR)[INDEX_TWO];
+        string organization = project.resourcePath.split(PATH_SEPARATOR)[INDEX_TWO];
         string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS,
             [organization, project.number, recordCount]);
 
         return getProjectColumns(GIT_ORGANIZATION, stringQuery, self.githubGraphQlClient);
 
     } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
-        string ownerName = project.resourcePath.split(GIT_PATH_SEPARATOR)[INDEX_ONE];
-        string repositoryName = project.resourcePath.split(GIT_PATH_SEPARATOR)[INDEX_TWO];
+        string ownerName = project.resourcePath.split(PATH_SEPARATOR)[INDEX_ONE];
+        string repositoryName = project.resourcePath.split(PATH_SEPARATOR)[INDEX_TWO];
         string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS,
             [ownerName, repositoryName, project.number, recordCount]);
 
@@ -834,7 +834,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
         GitClientError gitClientError = {message:"Repository owner and name should be specified."};
         return gitClientError;
     }
-    string[] repoIdentifier = name.split(GIT_PATH_SEPARATOR);
+    string[] repoIdentifier = name.split(PATH_SEPARATOR);
     string repoOwner = repoIdentifier[INDEX_ZERO];
     string repoName = repoIdentifier[INDEX_ONE];
     Repository singleRepository = {};

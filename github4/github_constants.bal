@@ -49,16 +49,16 @@
 @final string GIT_START_CURSOR = "startCursor";
 
 // Public constants
-documentation { Issue state both open and closed}
-@final public string GIT_STATE_ALL_ISSUE = "[\"OPEN\",\"CLOSED\"]";
 documentation { Pull request state open, closed and merged}
-@final public string GIT_STATE_ALL_PULL_REQUEST = "[\"OPEN\",\"CLOSED\",\"MERGED\"]";
+@final public string PULL_REQUEST_STATE_ALL = "[\"OPEN\",\"CLOSED\",\"MERGED\"]";
 documentation { Closed state }
-@final public string GIT_STATE_CLOSED = "[\"CLOSED\"]";
+@final public string STATE_CLOSED = "[\"CLOSED\"]";
 documentation { Merged state }
-@final public string GIT_STATE_MERGED = "[\"MERGED\"]";
+@final public string STATE_MERGED = "[\"MERGED\"]";
 documentation { Open state }
-@final public string GIT_STATE_OPEN = "[\"OPEN\"]";
+@final public string STATE_OPEN = "[\"OPEN\"]";
+documentation { State open and closed }
+@final public string STATE_ALL = "[\"OPEN\",\"CLOSED\"]";
 
 // Integer constants
 @final int INDEX_ZERO = 0;
@@ -67,7 +67,7 @@ documentation { Open state }
 @final int MAX_RECORD_COUNT = 100;
 
 // Utility constants
-@final string GIT_PATH_SEPARATOR = "/";
+@final string PATH_SEPARATOR = "/";
 @final string EMPTY_STRING = "";
 
 // GraphQL queries
