@@ -46,16 +46,14 @@ public type GitHubConnector object{
         R{{}} - Card list object of next page
         R{{}} - Connector error
     }
-    public function getCardListNextPage (CardList cardList)
-                    returns CardList|GitClientError;
+    public function getCardListNextPage (CardList cardList) returns CardList|GitClientError;
 
     documentation { Get the next page of column list
         P{{columnList}} - Column list object
         R{{}} - Column list object of next page
         R{{}} - Connector error
     }
-    public function getColumnListNextPage (ColumnList columnList)
-                    returns ColumnList|GitClientError;
+    public function getColumnListNextPage (ColumnList columnList) returns ColumnList|GitClientError;
 
     documentation { Get a list of issues of a repository
         P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
@@ -72,16 +70,14 @@ public type GitHubConnector object{
         R{{}} - Issue list object of next page
         R{{}} - Connector error
     }
-    public function getIssueListNextPage (IssueList issueList)
-                    returns IssueList|GitClientError;
+    public function getIssueListNextPage (IssueList issueList) returns IssueList|GitClientError;
 
     documentation { Get an organization
         P{{name}} - Name of the organization
         R{{}} - Organization object
         R{{}} - Connector error
     }
-    public function getOrganization (string name)
-                    returns Organization|GitClientError;
+    public function getOrganization (string name) returns Organization|GitClientError;
 
     documentation { Get a single project of an organization
         P{{organization}} - Organization object or organization name
@@ -117,15 +113,13 @@ public type GitHubConnector object{
         R{{}} - Column list object
         R{{}} - Connector error
     }
-    public function getProjectColumnList (Project project, int recordCount)
-                    returns ColumnList|GitClientError;
+    public function getProjectColumnList (Project project, int recordCount) returns ColumnList|GitClientError;
     documentation { Gets the next page of a project list
         P{{projectList}} - Project list object
         R{{}} - Project list object of next page
         R{{}} - Connector error
     }
-    public function getProjectListNextPage (ProjectList projectList)
-                    returns ProjectList|GitClientError;
+    public function getProjectListNextPage (ProjectList projectList) returns ProjectList|GitClientError;
 
     documentation { Get all pull requests of a repository
         P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
@@ -142,24 +136,21 @@ public type GitHubConnector object{
         R{{}} - Pull request list object of next page
         R{{}} - Connector error
     }
-    public function getPullRequestListNextPage (PullRequestList pullRequestList)
-                    returns PullRequestList|GitClientError;
+    public function getPullRequestListNextPage (PullRequestList pullRequestList) returns PullRequestList|GitClientError;
 
     documentation { Get a repository of an owner
         P{{name}} - Name of the repository and its owner Format: ("owner/repository")
         R{{}} - Repository object
         R{{}} - Connector error
     }
-    public function getRepository (string name)
-                    returns Repository|GitClientError;
+    public function getRepository (string name) returns Repository|GitClientError;
 
     documentation { Get the next page of a repository list
         P{{repositoryList}} - Repository list object
         R{{}} - Repository list object of next page
         R{{}} - Connector error
     }
-    public function getRepositoryListNextPage (RepositoryList repositoryList)
-                    returns RepositoryList|GitClientError;
+    public function getRepositoryListNextPage (RepositoryList repositoryList) returns RepositoryList|GitClientError;
 
     documentation { Get a single project of a repository
         P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
@@ -236,7 +227,7 @@ public function GitHubConnector::getCardListNextPage (CardList cardList) returns
                 jsonQuery.variables.endCursorCards = cardList.pageInfo.endCursor;
 
                 if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
-                    jsonQuery["query"] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
+                    jsonQuery[GIT_QUERY] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
                     ColumnList|GitClientError columnList = getProjectColumns(GIT_ORGANIZATION,
                                                                 jsonQuery.toString(), self.githubGraphQlClient);
                     match columnList {
@@ -254,7 +245,7 @@ public function GitHubConnector::getCardListNextPage (CardList cardList) returns
                     }
 
                 } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
-                    jsonQuery["query"] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
+                    jsonQuery[GIT_QUERY] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
                     ColumnList|GitClientError columnList = getProjectColumns(GIT_REPOSITORY, jsonQuery.toString()
                                                                                             , self.githubGraphQlClient);
                     match columnList {
@@ -291,11 +282,11 @@ public function GitHubConnector::getColumnListNextPage (ColumnList columnList) r
             json jsonQuery => {
                 jsonQuery.variables.endCursorColumns = columnList.pageInfo.endCursor;
                 if (columnList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
-                    jsonQuery["query"] = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
+                    jsonQuery[GIT_QUERY] = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
 
                     return getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString(), self.githubGraphQlClient);
                 } else if (columnList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
-                    jsonQuery["query"] = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
+                    jsonQuery[GIT_QUERY] = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
 
                     return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString(), self.githubGraphQlClient);
                 }
@@ -384,7 +375,7 @@ public function GitHubConnector::getIssueListNextPage (IssueList issueList) retu
         match convertedQuery {
             json jsonQuery => {
                 jsonQuery.variables.endCursorIssues = issueList.pageInfo.endCursor;
-                jsonQuery["query"] = GET_REPOSITORY_ISSUES_NEXT_PAGE;
+                jsonQuery[GIT_QUERY] = GET_REPOSITORY_ISSUES_NEXT_PAGE;
                 //Set headers and payload to the request
                 constructRequest(request, jsonQuery);
             }
@@ -677,9 +668,9 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
             json jsonQuery => {
                 jsonQuery.variables.endCursorProjects = projectList.pageInfo.endCursor;
                 if (projectList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
-                    jsonQuery["query"] = GET_ORGANIZATION_PROJECTS_NEXT_PAGE;
+                    jsonQuery[GIT_QUERY] = GET_ORGANIZATION_PROJECTS_NEXT_PAGE;
                 } else if (projectList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
-                    jsonQuery["query"] = GET_REPOSITORY_PROJECTS_NEXT_PAGE;
+                    jsonQuery[GIT_QUERY] = GET_REPOSITORY_PROJECTS_NEXT_PAGE;
                 }
                 dataQuery = jsonQuery;
                 //Set headers and payload to the request
@@ -791,7 +782,7 @@ public function GitHubConnector::getPullRequestListNextPage (PullRequestList pul
         match convertedQuery {
             json jsonQuery => {
                 jsonQuery.variables.endCursorPullRequests = pullRequestList.pageInfo.endCursor;
-                jsonQuery["query"] = GET_PULL_REQUESTS_NEXT_PAGE;
+                jsonQuery[GIT_QUERY] = GET_PULL_REQUESTS_NEXT_PAGE;
                 //Set headers and payload to the request
                 constructRequest(request, jsonQuery);
             }
@@ -889,7 +880,7 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
         match convertedQuery {
             json jsonQuery => {
                 jsonQuery.variables.endCursorRepos = repositoryList.pageInfo.endCursor;
-                jsonQuery["query"] = GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE;
+                jsonQuery[GIT_QUERY] = GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE;
                 //Set headers and payload to the request
                 constructRequest(request, jsonQuery);
             }

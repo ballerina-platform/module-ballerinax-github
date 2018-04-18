@@ -42,6 +42,7 @@
 @final string GIT_PROJECT = "project";
 @final string GIT_PROJECTS = "projects";
 @final string GIT_PULL_REQUESTS = "pullRequests";
+@final string GIT_QUERY = "query";
 @final string GIT_REPOS = "repos";
 @final string GIT_REPOSITORIES = "repositories";
 @final string GIT_REPOSITORY = "repository";
