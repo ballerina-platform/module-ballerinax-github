@@ -28,7 +28,10 @@ endpoint Client githubClient {
     }
 };
 ```
-
+Initialize a ballerina project
+```
+ballerina init
+```
 Run tests :
 ```
 ballerina test github4
