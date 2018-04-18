@@ -16,16 +16,16 @@
 // under the License.
 //
 
-import ballerina/io;
-import ballerina/log;
+import ballerina/config;
 import ballerina/http;
+import ballerina/log;
 import ballerina/test;
 
 endpoint Client githubClient {
     clientEndpointConfiguration: {
         auth:{
             scheme:"oauth",
-            accessToken:getAccessToken()
+            accessToken:config:getAsString("GITHUB_TOKEN")
         }
     }
 };
@@ -83,7 +83,7 @@ function testGetOrganizationProjectList () {
     ProjectList projectList = new;
     Organization projectListOrganization = {login:"wso2"};
     var responseProjectList = githubClient ->
-                              getOrganizationProjectList(projectListOrganization, GIT_STATE_OPEN, recordCount);
+                              getOrganizationProjectList(projectListOrganization, STATE_OPEN, recordCount);
     match responseProjectList {
         ProjectList prjtList => {
             projectList = prjtList;
@@ -109,7 +109,7 @@ function testGetOrganizationProjectListNextPage () {
     ProjectList projectList = new;
     Organization projectListOrganization = {login:"wso2"};
     var responseProjectList = githubClient ->
-                              getOrganizationProjectList(projectListOrganization, GIT_STATE_OPEN, 2);
+                              getOrganizationProjectList(projectListOrganization, STATE_OPEN, 2);
     match responseProjectList {
         ProjectList prjtList => {
             projectList = prjtList;
@@ -331,7 +331,7 @@ function testGetRepositoryProjectList () {
     Repository projectRepositoryList = {name:"testgrid", owner:{login:"wso2"}};
     ProjectList repoProjectList = new;
     var responseRepoProjectList = githubClient ->
-                                  getRepositoryProjectList(projectRepositoryList, GIT_STATE_OPEN, recordCount);
+                                  getRepositoryProjectList(projectRepositoryList, STATE_OPEN, recordCount);
     match responseRepoProjectList {
         ProjectList prjtList => {
             repoProjectList = prjtList;
@@ -356,7 +356,7 @@ function testGetRepositoryProjectListNextPage () {
     Repository projectRepository = {name:"ProLAd-ExpertSystem", owner:{login:"vlgunarathne"}};
     ProjectList repoProjectList = new;
     var responseRepoProjectList = githubClient ->
-                                  getRepositoryProjectList(projectRepository, GIT_STATE_OPEN, 1);
+                                  getRepositoryProjectList(projectRepository, STATE_OPEN, 1);
     match responseRepoProjectList {
         ProjectList prjtList => {
             repoProjectList = prjtList;
@@ -389,7 +389,7 @@ function testGetPullRequestList () {
     int recordCount = 2;
     Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
     PullRequestList pullRequestList = new;
-    var prList = githubClient -> getPullRequestList(pullRequestRepository, GIT_STATE_CLOSED, recordCount);
+    var prList = githubClient -> getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
     match prList {
         PullRequestList pList => {
             pullRequestList = pList;
@@ -413,7 +413,7 @@ function testGetPullRequestListNextPage () {
     int recordCount = 2;
     Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
     PullRequestList pullRequestList = new;
-    var prList = githubClient -> getPullRequestList(pullRequestRepository, GIT_STATE_CLOSED, recordCount);
+    var prList = githubClient -> getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
     match prList {
         PullRequestList pList => {
             pullRequestList = pList;
@@ -446,7 +446,7 @@ function testGetIssueList () {
     int recordCount = 2;
     Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
     IssueList issueList = new;
-    var issues = githubClient -> getIssueList(issueRepository, GIT_STATE_CLOSED, recordCount);
+    var issues = githubClient -> getIssueList(issueRepository, STATE_CLOSED, recordCount);
     match issues {
         IssueList isList => {
             issueList = isList;
@@ -470,7 +470,7 @@ function testGetIssueListNextPage () {
     int recordCount = 2;
     Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
     IssueList issueList = new;
-    var issues = githubClient -> getIssueList(issueRepository, GIT_STATE_CLOSED, recordCount);
+    var issues = githubClient -> getIssueList(issueRepository, STATE_CLOSED, recordCount);
     match issues {
         IssueList isList => {
             issueList = isList;
@@ -499,13 +499,9 @@ function testGetIssueListNextPage () {
 }
 function testCreateIssue () {
     log:printInfo("githubClient -> createIssue()");
-    Issue newIssue = {title: "This is a test issue", bodyText:"This is the body of the test issue"};
-    newIssue.labels.setLabels(["bug", "issue"]);
-    newIssue.assignees.setAssignees(["vlgunarathne"]);
 
-    Repository issueRepository = {owner:{login:"vlgunarathne"}, name:"ballerina-connector-test"};
-
-    var createdIssue = githubClient -> createIssue (issueRepository, newIssue);
+    var createdIssue = githubClient -> createIssue ("vlgunarathne", "ballerina-connector-test" ,
+                "This is a test issue", "This is the body of the test issue", ["bug", "critical"], ["vlgunarathne"]);
 
     match createdIssue {
         Issue issue => {
@@ -717,17 +713,6 @@ function testIssueListGetAllIssues () {
 @test:Config {
     groups:["object-functions"]
 }
-function testLabelListGetAllLabels () {
-    log:printInfo("LabelList.getAllLabels()");
-    LabelList labelList = new;
-    var labelArray = labelList.getAllLabels();
-    Label[] sampleLabelArray;
-    test:assertEquals(labelArray, sampleLabelArray, msg = "Failed LabelList.getAllLabels()");
-}
-
-@test:Config {
-    groups:["object-functions"]
-}
 function testProjectOwnerGetOwnerType () {
     log:printInfo("ProjectOwner.getOwnerType()");
     ProjectOwner projectOwner = new;
@@ -766,7 +751,7 @@ function testConstructRequest () {
     groups:["utility-functions"]
 }
 function testGetValidatedResponseSuccess () {
-    log:printInfo("getValidatedResponse() successful payload");
+    log:printInfo("getValidatedResponse() successful");
     http:Response sampleHttpResponse = new;
 
     json samplePayload = {"data":{"org":{"name":"WSO2"}}};
@@ -778,7 +763,7 @@ function testGetValidatedResponseSuccess () {
 
     match validatedResponse {
         json jsonResponse => {
-            string orgName = jsonResponse.data.org.name.toString() ?: "";
+            string orgName = jsonResponse.data.org.name.toString();
             test:assertEquals(orgName, "WSO2", msg = "Returned json data mismatch");
         }
         GitClientError err => {
@@ -832,8 +817,8 @@ function testGetValidatedResponseNoRequestedData () {
             test:assertFail(msg = "Payload error should be handled");
         }
         GitClientError err => {
-            test:assertEquals(err.message, "Error while retrieving data",
-                                                                msg = "Validated response error mismatch");
+            test:assertEquals(err.message, "name is not available in the response",
+                                                                        msg = "Validated response error mismatch");
         }
     }
 }
@@ -855,8 +840,9 @@ function testGetValidatedResponseNoPayload () {
             test:assertFail(msg = "Payload error should be handled");
         }
         GitClientError err => {
-            test:assertEquals(err.message, "Entity body is not json compatible since the received content-type is : null",
-                                                                msg = "Validated response error mismatch");
+            test:assertEquals(err.message,
+                "Entity body is not json compatible since the received content-type is : null",
+                msg = "Validated response error mismatch");
         }
     }
 }
@@ -880,6 +866,141 @@ function testGetValidatedResponseHttpError () {
         }
         GitClientError err => {
             test:assertEquals(err.message, "HTTP Connector Error", msg = "Validated response error mismatch");
+        }
+    }
+}
+
+@test:Config {
+    groups:["utility-functions"]
+}
+function testGetValidatedRestResponseSuccess () {
+    log:printInfo("getValidatedRestResponse() successful");
+    http:Response sampleHttpResponse = new;
+
+    json samplePayload = {"title":"Sample title", "number":150};
+    sampleHttpResponse.setJsonPayload(samplePayload);
+
+    http:Response|http:HttpConnectorError response = sampleHttpResponse;
+
+    json|GitClientError validatedResponse = getValidatedRestResponse(response);
+
+    match validatedResponse {
+        json jsonResponse => {
+            string orgName = jsonResponse.title.toString();
+            test:assertEquals(orgName, "Sample title", msg = "Returned json data mismatch");
+        }
+        GitClientError err => {
+            test:assertFail(msg = err.message);
+        }
+    }
+}
+
+@test:Config {
+    groups:["utility-functions"]
+}
+function testGetValidatedRestResponseError () {
+    log:printInfo("getValidatedRestResponse() error payload");
+
+    http:Response sampleHttpResponse = new();
+
+    json samplePayload = {"message":"API error"};
+    sampleHttpResponse.setJsonPayload(samplePayload);
+
+    http:Response|http:HttpConnectorError response = sampleHttpResponse;
+    json|GitClientError validatedResponse = getValidatedRestResponse(response);
+
+    match validatedResponse {
+        json jsonResponse => {
+            test:assertFail(msg = "Payload error should be handled");
+        }
+        GitClientError err => {
+            test:assertEquals(err.message, "API error", msg = "Validated response error mismatch");
+        }
+    }
+}
+
+@test:Config {
+    groups:["utility-functions"]
+}
+function testGetValidatedRestResponseNoPayload () {
+    log:printInfo("getValidatedRestResponse() no payload");
+
+    http:Response sampleHttpResponse = new;
+
+    http:Response|http:HttpConnectorError response = sampleHttpResponse;
+
+    json|GitClientError validatedResponse = getValidatedRestResponse(response);
+
+    match validatedResponse {
+        json jsonResponse => {
+            test:assertFail(msg = "Payload error should be handled");
+        }
+        GitClientError err => {
+            test:assertEquals(err.message,
+                "Entity body is not json compatible since the received content-type is : null",
+                msg = "Validated response error mismatch");
+        }
+    }
+}
+
+@test:Config {
+    groups:["utility-functions"]
+}
+function testGetValidatedRestResponseHttpError () {
+    log:printInfo("getValidatedRestResponse() HttpConnectorError");
+
+    http:HttpConnectorError sampleHttpError = {};
+    sampleHttpError.message = "HTTP Connector Error";
+
+    http:Response|http:HttpConnectorError response = sampleHttpError;
+
+    json|GitClientError validatedResponse = getValidatedRestResponse(response);
+
+    match validatedResponse {
+        json jsonResponse => {
+            test:assertFail(msg = "HttpConnector error should be handled");
+        }
+        GitClientError err => {
+            test:assertEquals(err.message, "HTTP Connector Error", msg = "Validated response error mismatch");
+        }
+    }
+}
+
+@test:Config {
+    groups:["utility-functions"]
+}
+function testStringToJsonError () {
+    log:printInfo("stringToJson() error");
+    string stringJson = "{\"title\":Sample title}";
+
+    var convertedValue = stringToJson(stringJson);
+    match convertedValue {
+        json jsonValue => {
+            test:assertFail(msg = "Invalid string json. Expected failure");
+        }
+        GitClientError gitClientError => {
+            test:assertEquals(gitClientError.message,
+                "Failed to parse json string: unrecognized token 'Sample' at line: 1 column: 17",
+                msg = "Error message mismatch");
+        }
+    }
+}
+
+@test:Config {
+    groups:["utility-functions"]
+}
+function testStringToJsonSuccess () {
+    log:printInfo("stringToJson() success");
+    string stringJson = "{\"title\":\"Sample title\", \"author\":{\"name\":\"Author1\"}}";
+
+    var convertedValue = stringToJson(stringJson);
+    match convertedValue {
+        json jsonValue => {
+            test:assertEquals(jsonValue.title.toString(), "Sample title", msg = "String to Json conversion failed");
+            test:assertEquals(jsonValue.author.name.toString(), "Author1", msg = "String to Json conversion failed");
+        }
+        GitClientError gitClientError => {
+            test:assertFail(msg = "stringToJson() returned error");
         }
     }
 }

@@ -10,20 +10,24 @@ The Ballerina GitHub endpoint allow users to access the GitHub API through balle
 
 ![Ballerina GitHub Endpoint Overview](./resources/BallerinaGitHubEndpoint_Overview.jpg)
 
-### Getting started
-
-* Clone the repository by running the following command
-```
-git clone https://github.com/wso2-ballerina/package-github
-```
-* Import the package to your ballerina project.
+> Visit the [package-github](https://github.com/wso2-ballerina/package-github) repository for the source code.
 
 ##### Prerequisites
 Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 
+### Getting started
+
+* Import the package to your ballerina project.
+```ballerina
+import wso2/github4;
+```
+This will download the github4 artifacts from the central repository to your local repository.
+
+
+
 ### Working with GitHub Endpoint Actions
 
-All the actions return `objects` or `github4:GitClientError`. If the action was a success, then the requested object will be returned while the `github4:GitClientError` will be **null** and vice-versa.
+All the actions return `objects` or `github4:GitClientError`. If the action was a success, then the requested object will be returned while the `github4:GitClientError` will be **empty** and vice-versa.
 
 ##### Example
 * Request 
@@ -35,7 +39,7 @@ All the actions return `objects` or `github4:GitClientError`. If the action was 
             clientEndpointConfiguration: {
                 auth:{
                     scheme:"oauth",
-                    accessToken:getAccessToken()
+                    accessToken:config:getAsString("GITHUB_TOKEN")
                 }
             }
         };

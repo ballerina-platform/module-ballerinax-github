@@ -60,11 +60,11 @@ function jsonToCardList (json source_json, string columnId, string listOwner, st
 //********************************
 function jsonToColumn (json source_json, string listOwner, string stringQuery) returns (Column) {
     Column target_column = new;
-    target_column.id = source_json.id.toString() ?: "";
-    target_column.name = source_json.name.toString() ?: "";
+    target_column.id = source_json.id.toString();
+    target_column.name = source_json.name.toString();
     target_column.columnQuery = stringQuery;
     target_column.listOwner = listOwner;
-    target_column.cards = jsonToCardList(source_json.cards, source_json.id.toString() ?: "", listOwner, stringQuery);
+    target_column.cards = jsonToCardList(source_json.cards, source_json.id.toString(), listOwner, stringQuery);
     return target_column;
 }
 
@@ -126,7 +126,7 @@ function jsonToIssueList (json source_json, string stringQuery) returns (IssueLi
     target_issueList.pageInfo = check <PageInfo>source_json.pageInfo;
     var nodes = check <json[]>source_json.nodes;
     foreach i, node in nodes {
-        var issue = check <Issue> node;
+        var issue = jsonToIssue(node);
         target_issueList.nodes[i] = issue;
     }
 
@@ -134,34 +134,70 @@ function jsonToIssueList (json source_json, string stringQuery) returns (IssueLi
 }
 
 //********************************
+// JSON --> REST Issue
+//********************************
+function restResponseJsonToIssue (json source_json) returns (Issue) {
+    Issue target_issue;
+    target_issue.id = source_json.id.toString();
+    target_issue.title =  source_json.title.toString();
+    target_issue.bodyText = source_json.body.toString();
+    target_issue.closedAt = source_json.closed_at.toString();
+    target_issue.createdAt = source_json.created_at.toString();
+    target_issue.author.login = source_json.user.login.toString();
+    target_issue.author.url = source_json.user.url.toString();
+    target_issue.author.avatarUrl = source_json.user.avatar_url.toString();
+    string stringNumber = source_json.number.toString();
+    int intNumber = check <int>stringNumber;
+    target_issue.number = intNumber;
+
+    json[] labelList = check <json[]> source_json.labels;
+    foreach i, label in labelList {
+       Label singleLabel;
+       singleLabel.id = label.id.toString();
+       singleLabel.name = label.name.toString();
+       singleLabel.color = label.color.toString();
+       target_issue.labels[i] = singleLabel;
+    }
+
+    json[] assigneeList = check <json[]> source_json.assignees;
+    foreach i, assignee in assigneeList {
+        Assignee singleAssignee;
+        singleAssignee.id = assignee.id.toString();
+        singleAssignee.login = assignee.login.toString();
+        singleAssignee.url = assignee.url.toString();
+        target_issue.assignees[i] = singleAssignee;
+    }
+
+    return target_issue;
+}
+
+//********************************
 // JSON --> Issue
 //********************************
 function jsonToIssue (json source_json) returns (Issue) {
     Issue target_issue;
-    target_issue.id = source_json.id.toString() ?: "";
-    target_issue.title =  source_json.title.toString() ?: "";
-    target_issue.bodyText = source_json.body.toString() ?: "";
-    target_issue.closedAt = source_json.closed_at.toString() ?: "";
-    target_issue.createdAt = source_json.created_at.toString() ?: "";
-    target_issue.author.login = source_json.user.login.toString() ?: "";
-    target_issue.author.url = source_json.user.url.toString() ?: "";
-    target_issue.author.avatarUrl = source_json.user.avatar_url.toString() ?: "";
-    string stringNumber = source_json.number.toString() ?: "";
+    target_issue.id = source_json.id.toString();
+    target_issue.title =  source_json.title.toString();
+    target_issue.bodyText = source_json.bodyText.toString();
+    target_issue.closed = source_json.closed.toString();
+    target_issue.closedAt = source_json.closedAt.toString();
+    target_issue.createdAt = source_json.createdAt.toString();
+    target_issue.author = check <Creator> source_json.author;
+    string stringNumber = source_json.number.toString();
     int intNumber = check <int>stringNumber;
     target_issue.number = intNumber;
-    json[] labelList = check <json[]> source_json.labels;
-    string[] stringLabelList;
+    json[] labelList = check <json[]> source_json.labels.nodes;
     foreach i, label in labelList {
-       stringLabelList[i] = label.name.toString() ?: "";
+        target_issue.labels[i] = check <Label>label;
     }
-    target_issue.labels.setLabels(stringLabelList);
+    target_issue.state = source_json.state.toString();
+    target_issue.updatedAt = source_json.updatedAt.toString();
+    target_issue.url = source_json.url.toString();
 
-    json[] assigneeList = check <json[]> source_json.assignees;
-    string[] stringAssigneeList;
+    json[] assigneeList = check <json[]> source_json.assignees.nodes;
     foreach i, assignee in assigneeList {
-        stringAssigneeList[i] = assignee.login.toString() ?: "";
+        target_issue.assignees[i] = check <Assignee>assignee;
     }
-    target_issue.assignees.setAssignees(stringAssigneeList);
 
     return target_issue;
 }
@@ -171,48 +207,48 @@ function jsonToIssue (json source_json) returns (Issue) {
 //********************************
 function jsonToRepository (json source_json) returns (Repository) {
     Repository target_repository;
-    target_repository.id = source_json.id.toString() ?: "";
-    target_repository.name = source_json.name.toString() ?: "";
-    target_repository.createdAt = source_json.createdAt.toString() ?: "";
-    target_repository.updatedAt = source_json.updatedAt.toString() ?: "";
-    target_repository.description = source_json.description.toString() ?: "";
-    string stringForkCount = source_json.forkCount.toString() ?: "0";
+    target_repository.id = source_json.id.toString();
+    target_repository.name = source_json.name.toString();
+    target_repository.createdAt = source_json.createdAt.toString();
+    target_repository.updatedAt = source_json.updatedAt.toString();
+    target_repository.description = source_json.description.toString();
+    string stringForkCount = source_json.forkCount.toString();
     int intForkCount = check <int>stringForkCount;
     target_repository.forkCount = intForkCount;
 
-    string stringHasWikiEnabled = source_json.hasWikiEnabled.toString() ?: "";
+    string stringHasWikiEnabled = source_json.hasWikiEnabled.toString();
     boolean booleanHasWikiEnabled = <boolean>stringHasWikiEnabled;
     target_repository.hasWikiEnabled = booleanHasWikiEnabled;
 
-    string stringHasIssuesEnabled = source_json.hasIssuesEnabled.toString() ?: "";
+    string stringHasIssuesEnabled = source_json.hasIssuesEnabled.toString();
     boolean booleanHasIssuesEnabled = <boolean>stringHasIssuesEnabled;
     target_repository.hasIssuesEnabled = booleanHasIssuesEnabled;
 
-    string stringIsArchived = source_json.isArchived.toString() ?: "";
+    string stringIsArchived = source_json.isArchived.toString();
     boolean booleanIsArchived = <boolean>stringIsArchived;
     target_repository.isArchived = booleanIsArchived;
 
-    string stringIsFork = source_json.isFork.toString() ?: "";
+    string stringIsFork = source_json.isFork.toString();
     boolean booleanIsFork = <boolean>stringIsFork;
     target_repository.isFork = booleanIsFork;
 
-    string stringIsLocked = source_json.isLocked.toString() ?: "";
+    string stringIsLocked = source_json.isLocked.toString();
     boolean booleanIsLocked = <boolean>stringIsLocked;
     target_repository.isLocked = booleanIsLocked;
 
-    string stringIsMirror = source_json.isMirror.toString() ?: "";
+    string stringIsMirror = source_json.isMirror.toString();
     boolean booleanIsMirror = <boolean>stringIsMirror;
     target_repository.isMirror = booleanIsMirror;
 
-    string stringIsPrivate = source_json.isPrivate.toString() ?: "";
+    string stringIsPrivate = source_json.isPrivate.toString();
     boolean booleanIsPrivate = <boolean>stringIsPrivate;
     target_repository.isPrivate = booleanIsPrivate;
 
-    target_repository.homepageUrl = source_json.homepageUrl.toString() ?: "";
-    target_repository.lockReason = source_json.lockReason.toString() ?: "";
-    target_repository.mirrorUrl = source_json.mirrorUrl.toString() ?: "";
-    target_repository.url = source_json.url.toString() ?: "";
-    target_repository.sshUrl = source_json.sshUrl.toString() ?: "";
+    target_repository.homepageUrl = source_json.homepageUrl.toString();
+    target_repository.lockReason = source_json.lockReason.toString();
+    target_repository.mirrorUrl = source_json.mirrorUrl.toString();
+    target_repository.url = source_json.url.toString();
+    target_repository.sshUrl = source_json.sshUrl.toString();
     target_repository.owner = source_json.owner == null ? {} : check <RepositoryOwner>source_json.owner;
     target_repository.primaryLanguage = source_json.primaryLanguage == null ? {} : check <Language>source_json.primaryLanguage;
 

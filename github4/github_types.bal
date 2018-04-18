@@ -16,7 +16,6 @@
 // under the License.
 //
 
-import ballerina/io;
 import ballerina/http;
 
 
@@ -511,13 +510,13 @@ public type Issue {
     string closedAt;
     string createdAt;
     Creator author;
-    LabelList labels;
+    Label[] labels;
     int number;
     string state;
     string title;
     string updatedAt;
     string url;
-    AssigneeList assignees;
+    Assignee[] assignees;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              End of Issue object                                                  //
@@ -690,18 +689,12 @@ public type Language {
 //                                            GitClientError object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 documentation { GitHub Client Error
-    F{{statusCode}} - HTTP status code
     F{{message}} - Error message
-    F{{reasonPhrase}} - Reason for error
-    F{{server}} - Server from which the message was received
+    F{{cause}} - Error object
 }
 public type GitClientError {
     string message;
     error? cause;
-    int statusCode;
-    string reasonPhrase;
-    string server;
-
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                         End of GitClientError object                                              //
@@ -743,80 +736,6 @@ public type Label {
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of Label object                                                   //
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                               LabelList object                                                    //
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a list of github labels }
-public type LabelList object{
-    private{
-        Label[] nodes;
-    }
-
-    documentation { Get all labels from label list
-        R{{}} - Array of label objects
-    }
-    public function getAllLabels () returns (Label[]);
-
-    documentation { Set labels to the label list
-        P{{labels}} - String array of labels
-    }
-    public function setLabels (string[] labels);
-};
-//*********************************************************************************************************************
-// LabelList bound functions
-//*********************************************************************************************************************
-public function LabelList::getAllLabels () returns (Label[]) {
-    return self.nodes;
-}
-
-public function LabelList::setLabels (string[] labels) {
-    Label[] labelList;
-    foreach i, label in labels {
-        labelList[i] = {name:label};
-    }
-    self.nodes = labelList;
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                              End of LabelList object                                              //
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                               AssigneeList object                                                 //
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a list of assignees to an issue }
-public type AssigneeList object {
-    private {
-        Assignee[] nodes;
-    }
-
-    documentation { Get all assignees of the assignee list
-        R{{}} - Array of assignee objects
-    }
-    public function getAllAssignees () returns (Assignee[]);
-
-    documentation {
-        P{{assignees}} - String array of github usernames
-    }
-    public function setAssignees (string[] assignees);
-};
-//*********************************************************************************************************************
-// AssigneeList bound functions
-//*********************************************************************************************************************
-public function AssigneeList::getAllAssignees () returns (Assignee[]) {
-    return self.nodes;
-}
-
-public function AssigneeList::setAssignees (string[] assignees) {
-    Assignee[] assigneeList;
-    foreach i, assignee in assignees {
-        assigneeList[i] = {login:assignee};
-    }
-    self.nodes = assigneeList;
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                            End of AssigneeList object                                             //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

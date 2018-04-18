@@ -44,21 +44,11 @@ public type Client object {
     }
     public function init (GitHubClientConfig githubClientConfig);
 
-    documentation { Register GitHub client endpoint
-        P{{serviceType}} - Accepts types of data (int, float, string, boolean, etc)
-    }
-    public function register (typedesc serviceType);
-
-    documentation { Start GitHub client endpoint}
-    public function start ();
-
     documentation { Return the GitHub client
         R{{}} - GitHub client
     }
     public function getClient () returns GitHubConnector;
 
-    documentation { Stop GitHub client}
-    public function stop ();
 };
 
 public function Client::init(GitHubClientConfig githubClientConfig) {
@@ -76,12 +66,6 @@ public function Client::init(GitHubClientConfig githubClientConfig) {
     self.githubConnector.githubRestClient.init(githubClientConfig.clientEndpointConfiguration);
 }
 
-public function Client::register (typedesc serviceType) {}
-
-public function Client::start () {}
-
 public function Client::getClient () returns GitHubConnector {
     return self.githubConnector;
 }
-
-public function Client::stop () {}

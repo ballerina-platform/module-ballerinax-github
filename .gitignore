@@ -36,4 +36,5 @@ target
 # Ignore ballerina files
 accessToken.bal
 temp.bal
+*.conf
 #Ignore doc files

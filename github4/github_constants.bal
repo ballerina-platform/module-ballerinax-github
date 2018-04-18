@@ -29,6 +29,7 @@
 @final string GIT_END_CURSOR = "endCursor";
 @final string GIT_END_CURSOR_CARD = "endCursorCard";
 @final string GIT_END_CURSOR_COLUMN = "endCursorColumn";
+@final string GIT_ERRORS = "errors";
 @final string GIT_HAS_NEXT_PAGE = "hasNextPage";
 @final string GIT_ISSUES = "issues";
 @final string GIT_MESSAGE = "message";
@@ -41,36 +42,34 @@
 @final string GIT_PROJECT = "project";
 @final string GIT_PROJECTS = "projects";
 @final string GIT_PULL_REQUESTS = "pullRequests";
+@final string GIT_QUERY = "query";
+@final string GIT_REPOS = "repos";
 @final string GIT_REPOSITORIES = "repositories";
 @final string GIT_REPOSITORY = "repository";
 @final string GIT_REPOSITORY_OWNER = "repositoryOwner";
 @final string GIT_START_CURSOR = "startCursor";
 
 // Public constants
-documentation { Issue state both open and closed}
-@final public string GIT_STATE_ALL_ISSUE = "[\"OPEN\",\"CLOSED\"]";
 documentation { Pull request state open, closed and merged}
-@final public string GIT_STATE_ALL_PULL_REQUEST = "[\"OPEN\",\"CLOSED\",\"MERGED\"]";
+@final public string PULL_REQUEST_STATE_ALL = "[\"OPEN\",\"CLOSED\",\"MERGED\"]";
 documentation { Closed state }
-@final public string GIT_STATE_CLOSED = "[\"CLOSED\"]";
-documentation { Closed merged }
-@final public string GIT_STATE_MERGED = "[\"MERGED\"]";
-documentation { Closed open }
-@final public string GIT_STATE_OPEN = "[\"OPEN\"]";
+@final public string STATE_CLOSED = "[\"CLOSED\"]";
+documentation { Merged state }
+@final public string STATE_MERGED = "[\"MERGED\"]";
+documentation { Open state }
+@final public string STATE_OPEN = "[\"OPEN\"]";
+documentation { State open and closed }
+@final public string STATE_ALL = "[\"OPEN\",\"CLOSED\"]";
 
-//Integer constants
-@final int GIT_INDEX_ZERO = 0;
-@final int GIT_INDEX_ONE = 1;
-@final int GIT_INDEX_TWO = 2;
-@final int GIT_MAX_RECORD_COUNT = 100;
+// Integer constants
+@final int INDEX_ZERO = 0;
+@final int INDEX_ONE = 1;
+@final int INDEX_TWO = 2;
+@final int MAX_RECORD_COUNT = 100;
 
-//Errors
-@final string GIT_ERRORS = "errors";
-@final string GIT_ERROR_WHILE_RETRIEVING_DATA = "Error while retrieving data";
-@final string GIT_ERROR_WHILE_RETRIEVING_PAYLOAD = "Error while retrieving payload";
-@final string GIT_ERROR_WHILE_RETRIEVING_RESOURCE_PATH = "Error while retrieving project resource path";
-
-@final string GIT_PATH_SEPARATOR = "/";
+// Utility constants
+@final string PATH_SEPARATOR = "/";
+@final string EMPTY_STRING = "";
 
 // GraphQL queries
 

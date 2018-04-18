@@ -8,27 +8,32 @@ The Ballerina GitHub endpoint allow users to access the GitHub API through balle
 |------------------|-------------------| ------------------ |
 |0.970.0-beta1-SNAPSHOT | 0.9.5 | v4 |
 
-## Running github4.tests
+## Running tests
 
-All the github4.tests inside this package will make HTTP calls to the GitHub GraphQL API v4. If the HTTP call fails, then so will the test case.
+All the tests inside this package will make HTTP calls to the GitHub GraphQL API v4. If the HTTP call fails, then so will the test case.
 
-In order to run the github4.tests, the user will need to have a GitHub Personal Access Token. The token can be obtained by visiting
+In order to run the tests, the user will need to have a GitHub Personal Access Token. The token can be obtained by visiting
 
 **https://github.com/{profile} -> Settings -> Developer Settings -> Personal access tokens**
 
-and provide the obtained token to the client endpoint configuration as follows
+and provide the obtained token to the client endpoint configuration by adding the following field to the `ballerina.conf`
+> GITHUB_TOKEN="ACCESS_TOKEN"
+
 
 ```ballerina
 endpoint Client githubClient {
     clientEndpointConfiguration: {
         auth:{
             scheme:"oauth",
-            accessToken:getAccessToken()
+            accessToken:config:getAsString("GITHUB_TOKEN")
         }
     }
 };
 ```
-
+Initialize a ballerina project
+```
+ballerina init
+```
 Run tests :
 ```
 ballerina test github4
