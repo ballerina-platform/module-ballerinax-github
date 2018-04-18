@@ -23,7 +23,7 @@ Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 
 ### Working with GitHub Endpoint Actions
 
-All the actions return `objects` or `github4:GitClientError`. If the action was a success, then the requested object will be returned while the `github:GitClientError` will be **null** and vice-versa.
+All the actions return `objects` or `github4:GitClientError`. If the action was a success, then the requested object will be returned while the `github:GitClientError` will be **empty** and vice-versa.
 
 ##### Example
 * Request 
