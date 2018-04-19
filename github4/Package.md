@@ -6,7 +6,7 @@ The Ballerina GitHub endpoint allow users to access the GitHub API through balle
 
 |Ballerina Version | Endpoint Version | GitHub API Version |
 |------------------|-------------------| ------------------ |
-|0.970.0-beta1-SNAPSHOT | 0.9.5 | v4 |
+|0.970.0-beta1-SNAPSHOT | 0.9.6 | v4 |
 
 ![Ballerina GitHub Endpoint Overview](./resources/BallerinaGitHubEndpoint_Overview.jpg)
 
