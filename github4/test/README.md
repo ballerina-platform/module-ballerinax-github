@@ -38,5 +38,5 @@ endpoint Client githubClient {
 
 Run tests :
 ```
-ballerina test github4
+ballerina test github4 --config ballerina.conf
 ```
