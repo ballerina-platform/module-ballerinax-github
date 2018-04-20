@@ -30,6 +30,7 @@ public type GitHubClientConfig {
 };
 
 documentation { GitHub client
+    E{{}}
     F{{githubClientConfiguration}} - GitHub client configurations (Access token, Client endpoint configurations)
     F{{githubConnector}} - GitHub connector object
 }
@@ -47,25 +48,25 @@ public type Client object {
     documentation { Return the GitHub client
         R{{}} - GitHub client
     }
-    public function getClient () returns GitHubConnector;
+    public function getCallerActions () returns GitHubConnector;
 
 };
 
 public function Client::init(GitHubClientConfig githubClientConfig) {
 
     // Set the target url to the GitHub GraphQL API endpoint
-    githubClientConfig.clientEndpointConfiguration.targets = [{url:GIT_GRAPHQL_API_URL}];
+    githubClientConfig.clientEndpointConfiguration.url = GIT_GRAPHQL_API_URL;
 
     // Initialize the client endpoint with the configurations
     self.githubConnector.githubGraphQlClient.init(githubClientConfig.clientEndpointConfiguration);
 
     // Set the target url to the GitHub REST API endpoint
-    githubClientConfig.clientEndpointConfiguration.targets = [{url:GIT_REST_API_URL}];
+    githubClientConfig.clientEndpointConfiguration.url = GIT_REST_API_URL;
 
     // Initialize the client endpoint with the configurations
     self.githubConnector.githubRestClient.init(githubClientConfig.clientEndpointConfiguration);
 }
 
-public function Client::getClient () returns GitHubConnector {
+public function Client::getCallerActions () returns GitHubConnector {
     return self.githubConnector;
 }

@@ -1,33 +1,38 @@
-# Ballerina GitHub Endpoint - GitHub API v4
+# GitHub Connector
 
-###### GitHub brings together the world's largest community of developers to discover, share, and build better software. From open source projects to private team repositories, GitHub is an all-in-one platform for collaborative development.
 
-The Ballerina GitHub endpoint allow users to access the GitHub API through ballerina. This endpoint uses the GitHub GraphQL API v4.0
+GitHub connector provides a Ballerina API to access the [GitHub GraphQL API v4.0](https://developer.github.com/v4/). The connector has built-in support to handle [OAuth2.0](https://tools.ietf.org/html/rfc6749), provides auto completion and type conversions.
 
-|Ballerina Version | Endpoint Version | GitHub API Version |
-|------------------|-------------------| ------------------ |
-|0.970.0-beta1-SNAPSHOT | 0.9.6 | v4 |
+### Compatibility
 
-![Ballerina GitHub Endpoint Overview](./resources/BallerinaGitHubEndpoint_Overview.jpg)
+|Ballerina Language Version | GitHub API Version |
+|------------------| ------------------ |
+|0.970.0-beta2-SNAPSHOT | v4 |
 
-> Visit the [package-github](https://github.com/wso2-ballerina/package-github) repository for the source code.
-
-##### Prerequisites
-Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 
 ### Getting started
+1) Refer [Getting Started](https://ballerina.io/learn/getting-started/) to download Ballerina and install tools.
 
-* Import the package to your ballerina project.
-```ballerina
-import wso2/github4;
-```
-This will download the github4 artifacts from the central repository to your local repository.
+2) To use the GitHub connector, you will need provide the following.
+    -   GitHub OAuth access token
+    
+    Visit [here](https://developer.github.com/v4/guides/forming-calls/#authenticating-with-graphql) for more information on obtaining OAuth2 credentials.
+    
+3) Create a new Ballerina project by executing the following command
+    ```bash
+       <PROJECT_ROOT_DIRECTORY>$ ballerina init
+    ```
+4) Import the package to your ballerina project.
+    ```ballerina
+    import wso2/github4;
+    ```
+    This will download the github4 artifacts from the central repository to your local repository.
 
 
 
 ### Working with GitHub Endpoint Actions
 
-All the actions return `objects` or `github4:GitClientError`. If the action was a success, then the requested object will be returned while the `github4:GitClientError` will be **empty** and vice-versa.
+All the actions return **objects** or **github4:GitClientError**. If the action was a success, then the requested object will be returned while the **github4:GitClientError** will be **empty** and vice-versa.
 
 ##### Example
 * Request 
@@ -59,32 +64,4 @@ All the actions return `objects` or `github4:GitClientError`. If the action was 
     }
     
 ```
-
-* Response object
-```ballerina
-public type Repository {
-    string id;
-    string name;
-    string createdAt;
-    string updatedAt;
-    string description;
-    int forkCount;
-    boolean hasIssuesEnabled;
-    boolean hasWikiEnabled;
-    string homepageUrl;
-    boolean isArchived;
-    boolean isFork;
-    boolean isLocked;
-    boolean isMirror;
-    boolean isPrivate;
-    string license;
-    string lockReason;
-    string mirrorUrl;
-    string url;
-    string sshUrl;
-    RepositoryOwner owner;
-    Language primaryLanguage;
-}
-```
-
 ***

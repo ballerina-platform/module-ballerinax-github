@@ -331,7 +331,7 @@ public function GitHubConnector::getIssueList (Repository|(string, string) repos
     }
 
     string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_ISSUES,
-        [repositoryOwner, repositoryName, state, recordCount]);
+        repositoryOwner, repositoryName, state, recordCount);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
@@ -422,7 +422,7 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
     }
     Organization singleOrganization = {};
 
-    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION, [name]);
+    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION, name);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
@@ -476,7 +476,7 @@ public function GitHubConnector::getOrganizationProject (Organization|string org
         return gitClientError;
     }
 
-    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT, [organizationName, projectNumber]);
+    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT, organizationName, projectNumber);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
@@ -531,7 +531,7 @@ public function GitHubConnector::getOrganizationProjectList (Organization|string
         return gitClientError;
     }
 
-    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECTS, [organizationName, state, recordCount]);
+    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECTS, organizationName, state, recordCount);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
@@ -586,7 +586,7 @@ public function GitHubConnector::getOrganizationRepositoryList (Organization|str
         return gitClientError;
     }
 
-    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_REPOSITORIES, [organizationName, recordCount]);
+    string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_REPOSITORIES, organizationName, recordCount);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
@@ -640,7 +640,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
     if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION)) {
         string organization = project.resourcePath.split(PATH_SEPARATOR)[INDEX_TWO];
         string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS,
-            [organization, project.number, recordCount]);
+            organization, project.number, recordCount);
 
         return getProjectColumns(GIT_ORGANIZATION, stringQuery, self.githubGraphQlClient);
 
@@ -648,7 +648,7 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
         string ownerName = project.resourcePath.split(PATH_SEPARATOR)[INDEX_ONE];
         string repositoryName = project.resourcePath.split(PATH_SEPARATOR)[INDEX_TWO];
         string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS,
-            [ownerName, repositoryName, project.number, recordCount]);
+            ownerName, repositoryName, project.number, recordCount);
 
         return getProjectColumns(GIT_REPOSITORY, stringQuery, self.githubGraphQlClient);
     }
@@ -735,8 +735,7 @@ public function GitHubConnector::getPullRequestList (Repository|(string, string)
         return gitClientError;
     }
 
-    string stringQuery = io:sprintf(TEMPLATE_GET_PULL_REQUESTS,
-        [repositoryOwner, repositoryName, state, recordCount]);
+    string stringQuery = io:sprintf(TEMPLATE_GET_PULL_REQUESTS, repositoryOwner, repositoryName, state, recordCount);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
@@ -831,7 +830,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
     string repoName = repoIdentifier[INDEX_ONE];
     Repository singleRepository = {};
 
-    string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY, [repoOwner, repoName]);
+    string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY, repoOwner, repoName);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
@@ -937,8 +936,7 @@ public function GitHubConnector::getRepositoryProject (Repository|(string, strin
     return gitClientError;
     }
 
-    string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT,
-        [repositoryOwner, repositoryName, projectNumber]);
+    string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT, repositoryOwner, repositoryName, projectNumber);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
@@ -1001,7 +999,7 @@ public function GitHubConnector::getRepositoryProjectList (Repository|(string, s
     }
 
     string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECTS,
-                                    [repositoryOwner, repositoryName, state, recordCount]);
+                                    repositoryOwner, repositoryName, state, recordCount);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
