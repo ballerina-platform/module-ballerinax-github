@@ -6,3 +6,4 @@ keywords = ["ballerina", "github", "endpoint", "API"]
 description = "The Ballerina GitHub endpoint allow users to access the GitHub API through ballerina. This endpoint uses the GitHub GraphQL API v4.0"
 homepage = "https://ballerinalang.org/"
 repository = "https://github.com/wso2-ballerina/package-github"
+license = "Apache-2.0"
