@@ -30,6 +30,7 @@ public type GitHubClientConfig {
 };
 
 documentation { GitHub client
+    E{{}}
     F{{githubClientConfiguration}} - GitHub client configurations (Access token, Client endpoint configurations)
     F{{githubConnector}} - GitHub connector object
 }
