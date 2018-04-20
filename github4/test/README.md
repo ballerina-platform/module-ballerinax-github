@@ -4,9 +4,9 @@
 
 The Ballerina GitHub endpoint allow users to access the GitHub API through ballerina. This endpoint uses the GitHub GraphQL API v4.0
 
-|Ballerina Version | Endpoint Version | GitHub API Version |
-|------------------|-------------------| ------------------ |
-|0.970.0-beta1-SNAPSHOT | 0.9.5 | v4 |
+|Ballerina Version | GitHub API Version |
+|------------------| ------------------ |
+|0.970.0-beta2-SNAPSHOT | v4 |
 
 ## Running tests
 

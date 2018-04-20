@@ -4,18 +4,25 @@
 
 The Ballerina GitHub endpoint allow users to access the GitHub API through ballerina. This endpoint uses the GitHub GraphQL API v4.0
 
-|Ballerina Version | Endpoint Version | GitHub API Version |
-|------------------|-------------------| ------------------ |
-|0.970.0-beta1-SNAPSHOT | 0.9.5 | v4 |
+### Compatibility
+
+|Ballerina Language Version | GitHub API Version |
+|------------------| ------------------ |
+|0.970.0-beta2-SNAPSHOT | v4 |
 
 ![Ballerina GitHub Endpoint Overview](./resources/BallerinaGitHubEndpoint_Overview.jpg)
 
 > Visit the [package-github](https://github.com/wso2-ballerina/package-github) repository for the source code.
 
 ##### Prerequisites
-Download the ballerina [distribution](https://ballerinalang.org/downloads/).
+Refer [Getting Started](https://ballerina.io/learn/getting-started/) to download Ballerina and install tools.
 
 ### Getting started
+
+* Create a new Ballerina project
+```bash
+ballerina init
+```
 
 * Import the package to your ballerina project.
 ```ballerina
@@ -27,7 +34,7 @@ This will download the github4 artifacts from the central repository to your loc
 
 ### Working with GitHub Endpoint Actions
 
-All the actions return `objects` or `github4:GitClientError`. If the action was a success, then the requested object will be returned while the `github4:GitClientError` will be **empty** and vice-versa.
+All the actions return **objects** or **github4:GitClientError**. If the action was a success, then the requested object will be returned while the **github4:GitClientError** will be **empty** and vice-versa.
 
 ##### Example
 * Request 
@@ -59,32 +66,4 @@ All the actions return `objects` or `github4:GitClientError`. If the action was 
     }
     
 ```
-
-* Response object
-```ballerina
-public type Repository {
-    string id;
-    string name;
-    string createdAt;
-    string updatedAt;
-    string description;
-    int forkCount;
-    boolean hasIssuesEnabled;
-    boolean hasWikiEnabled;
-    string homepageUrl;
-    boolean isArchived;
-    boolean isFork;
-    boolean isLocked;
-    boolean isMirror;
-    boolean isPrivate;
-    string license;
-    string lockReason;
-    string mirrorUrl;
-    string url;
-    string sshUrl;
-    RepositoryOwner owner;
-    Language primaryLanguage;
-}
-```
-
 ***
