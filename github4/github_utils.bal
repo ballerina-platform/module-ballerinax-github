@@ -16,8 +16,9 @@
 // under the License.
 //
 
-import ballerina/mime;
 import ballerina/http;
+import ballerina/internal;
+import ballerina/mime;
 import ballerina/util;
 
 documentation { Construct the request by adding the payload and authorization tokens
@@ -179,7 +180,7 @@ documentation { Convert string representation of json object to json object
     R{{}} - Connector error
 }
 function stringToJson (string source) returns json|GitClientError {
-    var parsedValue = util:parseJson(source);
+    var parsedValue = internal:parseJson(source);
     match parsedValue {
         json jsonValue => {
             return jsonValue;
