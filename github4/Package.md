@@ -1,8 +1,7 @@
-# Ballerina GitHub Endpoint - GitHub API v4
+# GitHub Connector
 
-###### GitHub brings together the world's largest community of developers to discover, share, and build better software. From open source projects to private team repositories, GitHub is an all-in-one platform for collaborative development.
 
-The Ballerina GitHub endpoint allow users to access the GitHub API through ballerina. This endpoint uses the GitHub GraphQL API v4.0
+GitHub connector provides a Ballerina API to access the [GitHub GraphQL API v4.0](https://developer.github.com/v4/). The connector has built-in support to handle [OAuth2.0](https://tools.ietf.org/html/rfc6749), provides auto completion and type conversions.
 
 ### Compatibility
 
@@ -12,23 +11,25 @@ The Ballerina GitHub endpoint allow users to access the GitHub API through balle
 
 ![Ballerina GitHub Endpoint Overview](./resources/BallerinaGitHubEndpoint_Overview.jpg)
 
-> Visit the [package-github](https://github.com/wso2-ballerina/package-github) repository for the source code.
 
-##### Prerequisites
-Refer [Getting Started](https://ballerina.io/learn/getting-started/) to download Ballerina and install tools.
 
 ### Getting started
+1) Refer [Getting Started](https://ballerina.io/learn/getting-started/) to download Ballerina and install tools.
 
-* Create a new Ballerina project
-```bash
-ballerina init
-```
-
-* Import the package to your ballerina project.
-```ballerina
-import wso2/github4;
-```
-This will download the github4 artifacts from the central repository to your local repository.
+2) To use the GitHub connector, you will need provide the following.
+    -   GitHub OAuth access token
+    
+    Visit [here](https://developer.github.com/v4/guides/forming-calls/#authenticating-with-graphql) for more information on obtaining OAuth2 credentials.
+    
+3) Create a new Ballerina project by executing the following command
+    ```bash
+       <PROJECT_ROOT_DIRECTORY>$ ballerina init
+    ```
+4) Import the package to your ballerina project.
+    ```ballerina
+    import wso2/github4;
+    ```
+    This will download the github4 artifacts from the central repository to your local repository.
 
 
 
