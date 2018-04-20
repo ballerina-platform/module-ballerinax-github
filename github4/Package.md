@@ -9,9 +9,6 @@ GitHub connector provides a Ballerina API to access the [GitHub GraphQL API v4.0
 |------------------| ------------------ |
 |0.970.0-beta2-SNAPSHOT | v4 |
 
-![Ballerina GitHub Endpoint Overview](./resources/BallerinaGitHubEndpoint_Overview.jpg)
-
-
 
 ### Getting started
 1) Refer [Getting Started](https://ballerina.io/learn/getting-started/) to download Ballerina and install tools.
