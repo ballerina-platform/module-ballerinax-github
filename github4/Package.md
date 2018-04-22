@@ -7,7 +7,7 @@ GitHub connector provides a Ballerina API to access the [GitHub GraphQL API v4.0
 
 |Ballerina Language Version | GitHub API Version |
 |------------------| ------------------ |
-|0.970.0-beta2-SNAPSHOT | v4 |
+|0.970.0-beta10-SNAPSHOT | v4 |
 
 
 ### Getting started
