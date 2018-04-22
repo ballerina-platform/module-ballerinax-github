@@ -204,7 +204,7 @@ public function GitHubConnector::createIssue (string repositoryOwner, string rep
     string endpointResource = PATH_SEPARATOR + GIT_REPOS + PATH_SEPARATOR + repositoryOwner +
                                                 PATH_SEPARATOR + repositoryName + PATH_SEPARATOR + GIT_ISSUES;
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post(endpointResource, request);
+    var response = gitHubEndpoint -> post(endpointResource, request = request);
 
     //Check for empty payloads and errors
     var validatedResponse = getValidatedRestResponse(response);
@@ -347,7 +347,7 @@ public function GitHubConnector::getIssueList (Repository|(string, string) repos
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request = request);
 
     //Check for empty payloads and errors
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_ISSUES);
@@ -387,7 +387,7 @@ public function GitHubConnector::getIssueListNextPage (IssueList issueList) retu
         }
 
         // Make an HTTP POST request
-        var response = gitHubEndpoint -> post(EMPTY_STRING, request);
+        var response = gitHubEndpoint -> post(EMPTY_STRING, request = request);
 
         //Check for empty payloads and errors
         json|GitClientError validatedResponse = getValidatedResponse(response, GIT_ISSUES);
@@ -438,7 +438,7 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request = request);
 
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_NAME);
 
@@ -492,7 +492,7 @@ public function GitHubConnector::getOrganizationProject (Organization|string org
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request = request);
 
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
 
@@ -547,7 +547,7 @@ public function GitHubConnector::getOrganizationProjectList (Organization|string
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request = request);
 
     //Check for empty payloads and errors
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
@@ -602,7 +602,7 @@ public function GitHubConnector::getOrganizationRepositoryList (Organization|str
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request = request);
 
     //Check for empty payloads and errors
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_REPOSITORIES);
@@ -684,7 +684,7 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
         }
 
         // Make an HTTP POST request
-        var response = gitHubEndpoint -> post(EMPTY_STRING, request);
+        var response = gitHubEndpoint -> post(EMPTY_STRING, request = request);
 
         //Check for empty payloads and errors
         json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
@@ -751,7 +751,7 @@ public function GitHubConnector::getPullRequestList (Repository|(string, string)
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request = request);
 
     //Check for empty payloads and errors
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PULL_REQUESTS);
@@ -793,7 +793,7 @@ public function GitHubConnector::getPullRequestListNextPage (PullRequestList pul
         }
 
         // Make an HTTP POST request
-        var response = gitHubEndpoint -> post(EMPTY_STRING, request);
+        var response = gitHubEndpoint -> post(EMPTY_STRING, request = request);
 
         //Check for empty payloads and errors
         json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PULL_REQUESTS);
@@ -846,7 +846,7 @@ public function GitHubConnector::getRepository (string name) returns Repository|
     }
 
     // Make an HTTP POST request 
-    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request = request);
 
     json|GitClientError validatedResponse  = getValidatedResponse(response, GIT_NAME);
     
@@ -891,7 +891,7 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
         }
 
         // Make an HTTP POST request
-        var response = gitHubEndpoint -> post(EMPTY_STRING, request);
+        var response = gitHubEndpoint -> post(EMPTY_STRING, request = request);
 
         //Check for empty payloads and errors
         json|GitClientError validatedResponse = getValidatedResponse(response, GIT_REPOSITORIES);
@@ -952,7 +952,7 @@ public function GitHubConnector::getRepositoryProject (Repository|(string, strin
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request = request);
 
     //Check for empty payloads and errors
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
@@ -1015,7 +1015,7 @@ public function GitHubConnector::getRepositoryProjectList (Repository|(string, s
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post(EMPTY_STRING, request);
+    var response = gitHubEndpoint -> post(EMPTY_STRING, request = request);
 
     //Check for empty payloads and errors
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECTS);

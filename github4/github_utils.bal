@@ -155,7 +155,7 @@ function getProjectColumns (string ownerType, string stringQuery, http:Client gi
     }
 
     // Make an HTTP POST request
-    var response = gitHubEndpoint -> post("", request);
+    var response = gitHubEndpoint -> post("", request = request);
 
     //Check for empty payloads and errors
     json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
