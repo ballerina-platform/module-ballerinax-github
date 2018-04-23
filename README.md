@@ -2,7 +2,10 @@
 
 ###### GitHub brings together the world's largest community of developers to discover, share, and build better software. From open source projects to private team repositories, GitHub is an all-in-one platform for collaborative development.
 
-The Ballerina GitHub endpoint allow users to access the GitHub API through ballerina. This endpoint uses the GitHub GraphQL API v4.0
+GitHub connector provides a Ballerina API to access the GitHub GraphQL API. 
+The connector has built-in support to handle OAuth2.0, provides auto completion and type conversions. The following 
+sections explains how to use Ballerina GitHub4 connector. You can refer the [GitHub GraphQL API v4.0]
+(https://developer.github.com/v4/) to learn more about the API. 
 
 |Ballerina Version | GitHub API Version |
 |------------------| ------------------ |
