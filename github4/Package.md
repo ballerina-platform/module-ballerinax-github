@@ -1,6 +1,6 @@
 # GitHub Connector
 
-Allows Connecting Github GraphQL API. 
+Allows Connecting to Github GraphQL API. 
 
 GitHub connector provides a Ballerina API to access the GitHub GraphQL API. 
 The connector has built-in support to handle OAuth2.0, provides auto completion and type conversions. The following 
@@ -27,19 +27,7 @@ sections explains how to use Ballerina GitHub4 connector. You can refer the [Git
        <PROJECT_ROOT_DIRECTORY>$ ballerina init
     ```
 4) Import the package to your ballerina project.
-    ```ballerina
-    import wso2/github4;
-    ```
-    This will download the github4 artifacts from the central repository to your local repository.
-
-
-
-### Working with GitHub Endpoint Actions
-
-All the actions return **objects** or **github4:GitClientError**. If the action was a success, then the requested object will be returned while the **github4:GitClientError** will be **empty** and vice-versa.
-
-##### Example
-* Request 
+    
 ```ballerina
     import wso2/github4;
 
