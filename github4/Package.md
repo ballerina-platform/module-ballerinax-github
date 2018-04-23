@@ -1,6 +1,6 @@
 # GitHub Connector
 
-Allows Connecting to Github GraphQL API. 
+Allows connecting to GitHub GraphQL API. 
 
 GitHub connector provides a Ballerina API to access the GitHub GraphQL API. 
 The connector has built-in support to handle OAuth2.0, provides auto completion and type conversions. The following 
