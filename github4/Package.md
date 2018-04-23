@@ -1,7 +1,7 @@
 # GitHub Connector
 
 
-GitHub connector provides a Ballerina API to access the [GitHub GraphQL API v4.0](https://developer.github.com/v4/). The connector has built-in support to handle [OAuth2.0](https://tools.ietf.org/html/rfc6749), provides auto completion and type conversions.
+GitHub connector provides a Ballerina API to access the [GitHub GraphQL API v4.0](https://developer.github.com/v4/). The connector has built-in support to handle OAuth2.0, provides auto completion and type conversions.
 
 ### Compatibility
 
