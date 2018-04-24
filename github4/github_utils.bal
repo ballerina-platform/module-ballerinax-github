@@ -19,7 +19,6 @@
 import ballerina/http;
 import ballerina/internal;
 import ballerina/mime;
-import ballerina/util;
 
 documentation { Construct the request by adding the payload and authorization tokens
     P{{request}} - HTTP request object
