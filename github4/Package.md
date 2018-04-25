@@ -28,7 +28,7 @@ The `wso2/github4` package has support for creating and listing issues.
 First, import the `wso2/github4` package into the Ballerina project.
 
 ```ballerina
-    import wso2/github4;
+import wso2/github4;
 ```
 
 **Obtaining the Access Token to Run the Sample**
@@ -38,56 +38,56 @@ First, import the `wso2/github4` package into the Ballerina project.
 
 You can now enter the access token in the HTTP client config.
 ```ballerina
-    endpoint github4:Client githubEP {
-        clientEndpointConfiguration: {
-            auth:{
-                scheme:"oauth",
-                accessToken:config:getAsString("GITHUB_TOKEN")
-            }
+endpoint github4:Client githubEP {
+    clientEndpointConfiguration: {
+        auth:{
+            scheme:"oauth",
+            accessToken:config:getAsString("GITHUB_TOKEN")
         }
-    };
+    }
+};
 ```
 
 The `getRepository` function gets a GitHub repository by passing the name of the repository and its owner in the format of "owner/repository".
 ```ballerina
-    var repo = githubEP -> getRepository("wso2-ballerina/package-github");
+var repo = githubEP -> getRepository("wso2-ballerina/package-github");
 ```
 
 The response from `getRepository` is either a `Repository` object (if the request was successful) or a `GitClientError` (if the request was unsuccessful). The `match` operation can be used to handle the response if an error occurs.
 ```ballerina
-    match repo {
-        github4:Repository repository => io:println(repository);
-        github4:GitClientError err => io:println(err);
-    }
+match repo {
+    github4:Repository repository => io:println(repository);
+    github4:GitClientError err => io:println(err);
+}
 ```
 
 The `getIssueList` function gets a list of issues for a given repository by providing the `Repository` object, state of the issue, and the number of records to read.
 
 ```ballerina
-    github4:Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
-    var issues = githubEP -> getIssueList(issueRepository, STATE_CLOSED, recordCount);
+github4:Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
+var issues = githubEP -> getIssueList(issueRepository, STATE_CLOSED, recordCount);
 ```
 
 The response from `getIssueList` is either an `IssueList` object (if the request was successful) or a `GitClientError` (if the request was unsuccessful).
 
 ```ballerina
-    match issues {
-        github4:IssueList issueList => io:println(issueList);
-        github4:GitClientError err => io:println(err);
-    }
+match issues {
+    github4:IssueList issueList => io:println(issueList);
+    github4:GitClientError err => io:println(err);
+}
 ```
 
 The `createIssue` function creates a new issue in a given repository.
 
 ```ballerina
-    var createdIssue = githubEP -> createIssue (repositoryOwner, repositoryName, issueTitle, issueContent, labelList, assigneeList);
+var createdIssue = githubEP -> createIssue (repositoryOwner, repositoryName, issueTitle, issueContent, labelList, assigneeList);
 ```
 
 It returns the created `Issue` object if successful or `GitClientError` if unsuccessful.
 
 ```ballerina
-    match createdIssue {
-        github4:Issue issue => io:println(issue);
-        github4:	GitClientError err => io:println(err);
-    }
+match createdIssue {
+    github4:Issue issue => io:println(issue);
+    github4:	GitClientError err => io:println(err);
+}
 ```
