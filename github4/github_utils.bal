@@ -34,8 +34,7 @@ documentation { Validate the HTTP response and return payload or error
     R{{}} - JSON payload of the response
     R{{}} - Connector error
 }
-function getValidatedResponse (http:Response|http:HttpConnectorError response, string validateComponent)
-                                                                                    returns json|GitClientError {
+function getValidatedResponse (http:Response|error response, string validateComponent) returns json|GitClientError {
 
     match response {
         http:Response gitResponse => {
@@ -76,15 +75,15 @@ function getValidatedResponse (http:Response|http:HttpConnectorError response, s
                     }
                     return jsonPayload;
                 }
-                http:PayloadError payloadError => {
-                    GitClientError gitClientError = {message:payloadError.message, cause:payloadError.cause};
+                error err => {
+                    GitClientError gitClientError = {message:err.message, cause:err.cause};
                     return gitClientError;
                 }
             }
         }
 
-        http:HttpConnectorError httpError => {
-            GitClientError gitClientError = {message:httpError.message, cause:httpError.cause};
+        error err => {
+            GitClientError gitClientError = {message:err.message, cause:err.cause};
             return gitClientError;
         }
     }
@@ -95,7 +94,7 @@ documentation { Validate the REST HTTP response and return payload or error
     R{{}} - JSON payload of the response
     R{{}} - Connector error
 }
-function getValidatedRestResponse (http:Response|http:HttpConnectorError response) returns json|GitClientError {
+function getValidatedRestResponse (http:Response|error response) returns json|GitClientError {
     match response {
         http:Response httpResponse => {
 
@@ -108,15 +107,15 @@ function getValidatedRestResponse (http:Response|http:HttpConnectorError respons
                         return gitClientError;
                     }
                 }
-                http:PayloadError payloadError => {
-                    GitClientError connectorError = {message:payloadError.message, cause:payloadError.cause};
+                error err => {
+                    GitClientError connectorError = {message:err.message, cause:err.cause};
                     return connectorError;
                 }
             }
         }
 
-        http:HttpConnectorError httpError => {
-            GitClientError clientError = {message:httpError.message, cause:httpError.cause};
+        error err => {
+            GitClientError clientError = {message:err.message, cause:err.cause};
             return clientError;
         }
     }

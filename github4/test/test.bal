@@ -757,7 +757,7 @@ function testGetValidatedResponseSuccess () {
     json samplePayload = {"data":{"org":{"name":"WSO2"}}};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
-    http:Response|http:HttpConnectorError response = sampleHttpResponse;
+    http:Response|error response = sampleHttpResponse;
 
     json|GitClientError validatedResponse = getValidatedResponse(response, "name");
 
@@ -783,7 +783,7 @@ function testGetValidatedResponseError () {
     json samplePayload = {"data":{"org":{"name":""}}, "errors":[{"message":"API error"}]};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
-    http:Response|http:HttpConnectorError response = sampleHttpResponse;
+    http:Response|error response = sampleHttpResponse;
 
     json|GitClientError validatedResponse = getValidatedResponse(response, "name");
 
@@ -808,7 +808,7 @@ function testGetValidatedResponseNoRequestedData () {
     json samplePayload = {"data":{"org":{}}};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
-    http:Response|http:HttpConnectorError response = sampleHttpResponse;
+    http:Response|error response = sampleHttpResponse;
 
     json|GitClientError validatedResponse = getValidatedResponse(response, "name");
 
@@ -831,7 +831,7 @@ function testGetValidatedResponseNoPayload () {
 
     http:Response sampleHttpResponse = new;
 
-    http:Response|http:HttpConnectorError response = sampleHttpResponse;
+    http:Response|error response = sampleHttpResponse;
 
     json|GitClientError validatedResponse = getValidatedResponse(response, "name");
 
@@ -853,10 +853,10 @@ function testGetValidatedResponseNoPayload () {
 function testGetValidatedResponseHttpError () {
     log:printInfo("getValidatedResponse() HttpConnectorError");
 
-    http:HttpConnectorError sampleHttpError = {};
+    error sampleHttpError = {};
     sampleHttpError.message = "HTTP Connector Error";
 
-    http:Response|http:HttpConnectorError response = sampleHttpError;
+    http:Response|error response = sampleHttpError;
 
     json|GitClientError validatedResponse = getValidatedResponse(response, "name");
 
@@ -880,7 +880,7 @@ function testGetValidatedRestResponseSuccess () {
     json samplePayload = {"title":"Sample title", "number":150};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
-    http:Response|http:HttpConnectorError response = sampleHttpResponse;
+    http:Response|error response = sampleHttpResponse;
 
     json|GitClientError validatedResponse = getValidatedRestResponse(response);
 
@@ -906,7 +906,7 @@ function testGetValidatedRestResponseError () {
     json samplePayload = {"message":"API error"};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
-    http:Response|http:HttpConnectorError response = sampleHttpResponse;
+    http:Response|error response = sampleHttpResponse;
     json|GitClientError validatedResponse = getValidatedRestResponse(response);
 
     match validatedResponse {
@@ -927,7 +927,7 @@ function testGetValidatedRestResponseNoPayload () {
 
     http:Response sampleHttpResponse = new;
 
-    http:Response|http:HttpConnectorError response = sampleHttpResponse;
+    http:Response|error response = sampleHttpResponse;
 
     json|GitClientError validatedResponse = getValidatedRestResponse(response);
 
@@ -949,10 +949,10 @@ function testGetValidatedRestResponseNoPayload () {
 function testGetValidatedRestResponseHttpError () {
     log:printInfo("getValidatedRestResponse() HttpConnectorError");
 
-    http:HttpConnectorError sampleHttpError = {};
+    error sampleHttpError = {};
     sampleHttpError.message = "HTTP Connector Error";
 
-    http:Response|http:HttpConnectorError response = sampleHttpError;
+    http:Response|error response = sampleHttpError;
 
     json|GitClientError validatedResponse = getValidatedRestResponse(response);
 
