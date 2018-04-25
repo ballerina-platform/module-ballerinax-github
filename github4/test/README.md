@@ -27,7 +27,7 @@ and provide the obtained token to the client endpoint configuration by adding th
 
 ```ballerina
 endpoint Client githubClient {
-    clientEndpointConfiguration: {
+    clientConfig: {
         auth:{
             scheme:"oauth",
             accessToken:config:getAsString("GITHUB_TOKEN")

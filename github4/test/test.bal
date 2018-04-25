@@ -22,7 +22,7 @@ import ballerina/log;
 import ballerina/test;
 
 endpoint Client githubClient {
-    clientEndpointConfiguration: {
+    clientConfig: {
         auth:{
             scheme:"oauth",
             accessToken:config:getAsString("GITHUB_TOKEN")
