@@ -33,7 +33,7 @@ import wso2/github4;
 
 **Obtaining the Access Token to Run the Sample**
 
-1. Visit your GitHub profile [https://github.com/{profile}] and go to **Settings -> Developer settings -> Personal access tokens**.
+1. In your [GitHub profile settings](https://github.com/settings/profile), go to **Developer settings -> Personal access tokens**.
 2. Generate a new token to access the GitHub API.
 
 You can now enter the access token in the HTTP client config.
