@@ -23,10 +23,10 @@ the user will need to have a GitHub Personal Access Token. The token can be obta
 `https://github.com/<profile> -> Settings -> Developer Settings -> Personal access tokens` and provide the obtained
 token to the GitHubClientConfig
 
-    F{{clientEndpointConfiguration}} - Client endpoint configurations (CircuitBreaker, throttling, proxy, timeout, etc.)
+    F{{clientConfig}} - Client endpoint configurations (CircuitBreaker, throttling, proxy, timeout, etc.)
 }
 public type GitHubClientConfig {
-        http:ClientEndpointConfig clientEndpointConfiguration = {};
+    http:ClientEndpointConfig clientConfig= {};
 };
 
 documentation { GitHub client
@@ -55,16 +55,16 @@ public type Client object {
 public function Client::init(GitHubClientConfig githubClientConfig) {
 
     // Set the target url to the GitHub GraphQL API endpoint
-    githubClientConfig.clientEndpointConfiguration.url = GIT_GRAPHQL_API_URL;
+    githubClientConfig.clientConfig.url = GIT_GRAPHQL_API_URL;
 
     // Initialize the client endpoint with the configurations
-    self.githubConnector.githubGraphQlClient.init(githubClientConfig.clientEndpointConfiguration);
+    self.githubConnector.githubGraphQlClient.init(githubClientConfig.clientConfig);
 
     // Set the target url to the GitHub REST API endpoint
-    githubClientConfig.clientEndpointConfiguration.url = GIT_REST_API_URL;
+    githubClientConfig.clientConfig.url = GIT_REST_API_URL;
 
     // Initialize the client endpoint with the configurations
-    self.githubConnector.githubRestClient.init(githubClientConfig.clientEndpointConfiguration);
+    self.githubConnector.githubRestClient.init(githubClientConfig.clientConfig);
 }
 
 public function Client::getCallerActions () returns GitHubConnector {
