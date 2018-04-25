@@ -39,7 +39,7 @@ import wso2/github4;
 You can now enter the access token in the HTTP client config.
 ```ballerina
 endpoint github4:Client githubEP {
-    clientEndpointConfiguration: {
+    clientConfig: {
         auth:{
             scheme:"oauth",
             accessToken:config:getAsString("GITHUB_TOKEN")
