@@ -1,12 +1,12 @@
-# GitHub Connector
-
 Connects to the GitHub GraphQL API from Ballerina.
+
+# Package Overview
 
 This package provides a Ballerina API to access the GitHub GraphQL API. It has built-in support for operations related to projects, pull requests, and issues. It handles OAuth2.0 and provides auto completion and type conversions. The following sections explain how to use the Ballerina GitHub4 connector. Visit [GitHub GraphQL API v4.0](https://developer.github.com/v4/) to learn more about the API.
 
 **Project Operations**
 
-The wso2/github4 package covers most of the project-related operations including columns and cards. It returns the information in structs that can be easily accessed.
+The `wso2/github4` package covers most of the project-related operations including columns and cards. It returns the information in structs that can be easily accessed.
 
 **Pull Request Operations**
 
@@ -14,18 +14,18 @@ This package can retrieve pull requests from GitHub GraphQL. It returns comprehe
 
 **Issues Operations**
 
-The current version of the wso2/github4 package has support for creating and listing issues.
+The `wso2/github4` package has support for creating and listing issues.
 
 
 ## Compatibility
 |                                 |       Version                  |
-| ------------------------------- | -------------------------------|
-|  Ballerina Language Version     |   0.970.0-beta12               |
+|  :---------------------------:  |  :---------------------------: |
+|  Ballerina Language Version     |   0.970.0-beta15               |
 |  GitHub API Version             |   V4                           |
 
 ## Sample
 
-The GitHub connector can be used to get a repository, get an issue list, and create an issue. First, import the `wso2/github4` package into the Ballerina project.
+First, import the `wso2/github4` package into the Ballerina project.
 
 ```ballerina
     import wso2/github4;
@@ -33,7 +33,7 @@ The GitHub connector can be used to get a repository, get an issue list, and cre
 
 **Obtaining the Access Token to Run the Sample**
 
-1. Visit your GitHub profile [https://github.com/{profile}] and go to Settings -> Developer settings -> Personal access tokens.
+1. Visit your GitHub profile [https://github.com/{profile}] and go to **Settings -> Developer settings -> Personal access tokens**.
 2. Generate a new token to access the GitHub API.
 
 You can now enter the access token in the HTTP client config.
@@ -77,7 +77,7 @@ The response from `getIssueList` is either an `IssueList` object (if the request
     }
 ```
 
-The `createIssue` function creates a new issue in a given repository via the GitHub API.
+The `createIssue` function creates a new issue in a given repository.
 
 ```ballerina
     var createdIssue = githubEP -> createIssue (repositoryOwner, repositoryName, issueTitle, issueContent, labelList, assigneeList);
