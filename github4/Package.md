@@ -2,7 +2,7 @@ Connects to the GitHub GraphQL API from Ballerina.
 
 # Package Overview
 
-The Github connector has built-in support for operations projects, pull requests, and issues through GitHub GraphQL API. It handles OAuth2.0. And also it allows to access the organization and repository details. Visit [GitHub GraphQL API v4.0](https://developer.github.com/v4/) to learn more about the API.
+The Github connector has built-in support for working with projects, pull requests, and issues through the GitHub GraphQL API. It also allows you to access the organization and repository details. It handles OAuth2.0 authentication.
 
 **Project Operations**
 
@@ -20,7 +20,7 @@ The `wso2/github4` package has support for creating and listing issues.
 ## Compatibility
 |                                 |       Version                  |
 |  :---------------------------:  |  :---------------------------: |
-|  Ballerina Language             |   0.970.0-rc1                  |
+|  Ballerina Language             |   0.970.0                      |
 |  GitHub API                     |   V4                           |
 
 ## Sample
