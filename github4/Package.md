@@ -2,7 +2,7 @@ Connects to the GitHub GraphQL API from Ballerina.
 
 # Package Overview
 
-This connector has built-in support for operations related to projects, pull requests, and issues. It handles OAuth2.0. Visit [GitHub GraphQL API v4.0](https://developer.github.com/v4/) to learn more about the API.
+The Github connector has built-in support for operations projects, pull requests, and issues through GitHub GraphQL API. It handles OAuth2.0. And also it allows to access the organization and repository details. Visit [GitHub GraphQL API v4.0](https://developer.github.com/v4/) to learn more about the API.
 
 **Project Operations**
 
