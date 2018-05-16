@@ -93,3 +93,8 @@ public type WatchEvent {
     Repository repository,
     User sender,
 };
+
+public type IssueCommentEvent {
+    //partial - mock
+    string action,
+};

@@ -86,64 +86,40 @@ public function WebhookListener::stop () {
 
 @final string GITHUB_TOPIC_HEADER = "X-GitHub-Event";
 
-@final map<map<string>> GITHUB_TOPIC_RESOURCE_MAP = {
-    "action" : {
-        "issue_comment::created" : "onIssueCommentCreated",
-        "issue_comment::edited" : "onIssueCommentEdited",
-        "issue_comment::deleted" : "onIssueCommentDeleted",
-        "issues::assigned" : "onIssuesAssigned",
-        "issues::unassigned" : "onIssuesUnassigned",
-        "issues::labeled" : "onIssuesLabeled",
-        "issues::unlabeled" : "onIssuesUnlabeled",
-        "issues::opened" : "onIssuesOpened",
-        "issues::edited" : "onIssuesEdited",
-        "issues::milestoned" : "onIssuesMilestoned",
-        "issues::demilestoned" : "onIssuesDemilestoned",
-        "issues::closed" : "onIssuesClosed",
-        "issues::reopened" : "onIssuesReopened",
-        "installation::created" : "onInstallationCreated",
-        "installation::deleted" : "onInstallationDeleted",
-        "installation_repositories::added" : "onInstallationRepositoriesAdded",
-        "installation_repositories::removed" : "onInstallationRepositoriesRemoved",
-        "label::created" : "onLabelCreated",
-        "label::edited" : "onLabelEdited",
-        "label::deleted" : "onLabelDeleted",
-        "marketplace_purchase::purchased" : "onMarketplacePurchasePurchased",
-        "marketplace_purchase::cancelled" : "onMarketplacePurchaseCancelled",
-        "marketplace_purchase::changed" : "onMarketplacePurchaseChanged"
+@final map<map<map<(string, typedesc)>|(string, typedesc)>> GITHUB_TOPIC_RESOURCE_MAP = {
+    "issue_comment" : {
+        "action" : {
+            "created" : ("onIssueCommentCreated", IssueCommentEvent),
+            "edited" : ("onIssueCommentEdited", IssueCommentEvent),
+            "deleted" : ("onIssueCommentDeleted", IssueCommentEvent)
+        }
     },
-    "ref_type" : {
-        "create::repository" : "onCreateRepository",
-        "create::branch" : "onCreateBranch",
-        "create::tag" : "onCreateTag",
-        "delete::branch" : "onDeleteBranch",
-        "delete::tag" : "onDeleteTag"
+    "create" : {
+        "ref_type" : {
+            "repository" : ("onCreateRepository", websub:Notification),
+            "branch" : ("onCreateBranch", websub:Notification),
+            "tag" : ("onCreateTag", websub:Notification)
+        }
+    },
+    "delete" : {
+        "ref_type" : {
+            "branch" : ("onDeleteBranch", websub:Notification),
+            "tag" : ("onDeleteTag", websub:Notification)
+        }
     },
     "TOPIC_ID_HEADER" : {
-        "commit_comment" : "onCommitComment",
-        "deployment" : "onDeployment",
-        "deployment_status" : "onDeploymentStatus",
-        "fork" : "onFork",
-        "gollum" : "onGollum",
-        "member" : "onMember",
-        "membership" : "onMembership",
-        "milestone" : "onMilestone",
-        "organization" : "onOrganization",
-        "org_block" : "onOrgBlock",
-        "page_build" : "onPageBuild",
-        "project_card" : "onProject_card",
-        "project_column" : "onProjectColumn",
-        "project" : "onProject",
-        "public" : "onPublic",
-        "pull_request" : "onPullRequest",
-        "pull_request_review" : "onPullRequestReview",
-        "pull_request_review_comment" : "onPullRequestReviewComment",
-        "push" : "onPush",
-        "release" : "onRelease",
-        "repository" : "onRepository",
-        "status" : "onStatus",
-        "team" : "onTeam",
-        "team_add" : "onTeamAdd",
-        "watch" : "onWatch::wso2.github:WatchEvent"
+        "watch" : ("onWatch", WatchEvent),
+        "commit_comment" : ("onCommitComment", websub:Notification)
+    },
+    "TOPIC_ID_PAYLOAD_KEY" : {
+        "event_type" : {
+            "PAYMENT.AUTHORIZATION.CREATED" : ("onPaymentAuthorizatonCreated", websub:Notification),
+            "BILLING.PLAN.CREATED" : ("onBillingPlanCreated", websub:Notification)
+        },
+        "action" : {
+            "created" : ("onIssueCommentCreated", IssueCommentEvent),
+            "edited" : ("onIssueCommentEdited", IssueCommentEvent),
+            "deleted" : ("onIssueCommentDeleted", IssueCommentEvent)
+        }
     }
 };
