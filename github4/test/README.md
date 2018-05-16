@@ -21,9 +21,14 @@ In order to run the tests, the user will need to have a GitHub Personal Access T
 
 **https://github.com/{profile} -> Settings -> Developer Settings -> Personal access tokens**
 
-and provide the obtained token to the client endpoint configuration by adding the following field to the `ballerina.conf`
-> GITHUB_TOKEN="ACCESS_TOKEN"
+and provide the obtained token to the client endpoint configuration by adding the following fields to the `ballerina
+.conf`
 
+```.conf
+GITHUB_TOKEN="ACCESS_TOKEN"
+ORGANIZATION_NAME = ""
+RESOURCE_PATH = ""
+```
 
 ```ballerina
 endpoint Client githubClient {
