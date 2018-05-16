@@ -21,6 +21,9 @@ import ballerina/http;
 import ballerina/log;
 import ballerina/test;
 
+string organizationName = config:getAsString("ORGANIZATION_NAME");
+string resourcePath = config:getAsString("RESOURCE_PATH");
+
 endpoint Client githubClient {
     clientConfig: {
         auth:{
@@ -58,7 +61,7 @@ function testGetOrganizationProject () {
     // Get an organization project
     log:printInfo("githubClient -> getOrganizationProject()");
     Project orgProject = {};
-    Organization projectOrganization = {login:"wso2"};
+    Organization projectOrganization = {login:organizationName};
     var projectData = githubClient -> getOrganizationProject(projectOrganization, 1);
     match projectData {
         Project proj => {
@@ -81,7 +84,7 @@ function testGetOrganizationProjectList () {
     log:printInfo("githubClient -> getOrganizationProjectList()");
     int recordCount = 2;
     ProjectList projectList = new;
-    Organization projectListOrganization = {login:"wso2"};
+    Organization projectListOrganization = {login:organizationName};
     var responseProjectList = githubClient ->
                               getOrganizationProjectList(projectListOrganization, STATE_OPEN, recordCount);
     match responseProjectList {
@@ -107,7 +110,7 @@ function testGetOrganizationProjectListNextPage () {
     log:printInfo("githubClient -> getOrganizationProjectListNextPage()");
     int recordCount = 2;
     ProjectList projectList = new;
-    Organization projectListOrganization = {login:"wso2"};
+    Organization projectListOrganization = {login:organizationName};
     var responseProjectList = githubClient ->
                               getOrganizationProjectList(projectListOrganization, STATE_OPEN, 2);
     match responseProjectList {
@@ -142,7 +145,7 @@ function testGetProjectColumnList () {
     //Get project column list
     log:printInfo("githubClient -> getProjectColumnList()");
     int recordCount = 2;
-    Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1"};
+    Project columnListProject = {number:1, resourcePath:resourcePath};
     columnListProject.owner.setOwnerType("Organization");
     ColumnList columnList = new;
     var columns = githubClient -> getProjectColumnList(columnListProject, recordCount);
@@ -167,7 +170,7 @@ function testGetCardListOfColumn () {
     //Get column card list
     log:printInfo("column.getCardList()");
     int recordCount = 2;
-    Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1"};
+    Project columnListProject = {number:1, resourcePath:resourcePath};
     columnListProject.owner.setOwnerType("Organization");
     ColumnList columnList = new;
     var columns = githubClient -> getProjectColumnList(columnListProject, recordCount);
@@ -194,7 +197,7 @@ function testGetCardListNextPage () {
     //Get card list next page
     log:printInfo("githubClient -> getCardListNextPage()");
     int recordCount = 2;
-    Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1"};
+    Project columnListProject = {number:1, resourcePath:resourcePath};
     columnListProject.owner.setOwnerType("Organization");
     ColumnList columnList = new;
     var columns = githubClient -> getProjectColumnList(columnListProject, recordCount);
