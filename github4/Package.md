@@ -61,11 +61,15 @@ match repo {
 }
 ```
 
-The `getIssueList` function gets a list of issues for a given repository by providing the `Repository` object, state of the issue, and the number of records to read.
+The `getIssueList` function gets a list of issues for a given repository by providing the `Repository` object or repository and owner name, state of the issue, and the number of records to read.
 
 ```ballerina
 github4:Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
-var issues = githubEP -> getIssueList(issueRepository, STATE_CLOSED, recordCount);
+var issues = githubEP -> getIssueList(issueRepository, github4:STATE_CLOSED, recordCount);
+```
+or
+```ballerina
+var issues = githubEP -> getIssueList(("wso2" , "carbon-apimgt"), github4:STATE_CLOSED, recordCount);
 ```
 
 The response from `getIssueList` is either an `IssueList` object (if the request was successful) or a `GitClientError` (if the request was unsuccessful).
