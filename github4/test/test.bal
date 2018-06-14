@@ -27,7 +27,7 @@ string resourcePath = config:getAsString("RESOURCE_PATH");
 endpoint Client githubClient {
     clientConfig: {
         auth:{
-            scheme:"oauth",
+            scheme:http:OAUTH2,
             accessToken:config:getAsString("GITHUB_TOKEN")
         }
     }
