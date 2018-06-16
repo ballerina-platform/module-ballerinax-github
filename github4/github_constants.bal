@@ -540,11 +540,11 @@ documentation { State open and closed }
   }
 }";
 
-@final  string GET_ORGANIZATION_REPOSITORIES =
-            "query ($organization: String!, $recordCount: Int!) {
-              organization (login:$organization) {
-                repositories (first: $recordCount, orderBy:{field:NAME, direction:ASC}) {
-                  " + PAGE_INFO + ",
+@final string GET_ORGANIZATION_REPOSITORIES =
+           "query ($organization: String!, $recordCount: Int!) {
+             organization (login:$organization) {
+               repositories (first: $recordCount, orderBy:{field:NAME, direction:ASC}) {
+                 " + PAGE_INFO + ",
       nodes {
         id,
         name,
@@ -572,11 +572,11 @@ documentation { State open and closed }
   }
 }";
 
-@final  string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE =
-            "query ($organization: String!, $endCursorRepos: String!, $recordCount: Int!) {
-              organization (login:$organization) {
-                repositories (first: $recordCount, after: $endCursorRepos, orderBy:{field:NAME, direction:ASC}) {
-                  " + PAGE_INFO + ",
+@final string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE =
+           "query ($organization: String!, $endCursorRepos: String!, $recordCount: Int!) {
+             organization (login:$organization) {
+               repositories (first: $recordCount, after: $endCursorRepos, orderBy:{field:NAME, direction:ASC}) {
+                 " + PAGE_INFO + ",
       nodes {
         id,
         name,
@@ -604,11 +604,11 @@ documentation { State open and closed }
   }
 }";
 
-@final  string GET_REPOSITORY_ISSUES =
-            "query ($owner:String!, $name:String!, $states:[IssueState!], $recordCount: Int!) {
-              repository(owner:$owner, name: $name) {
-                issues (first: $recordCount, states:$states, orderBy:{field:CREATED_AT, direction:DESC}) {
-                  " + PAGE_INFO + ",
+@final string GET_REPOSITORY_ISSUES =
+           "query ($owner:String!, $name:String!, $states:[IssueState!], $recordCount: Int!) {
+             repository(owner:$owner, name: $name) {
+               issues (first: $recordCount, states:$states, orderBy:{field:CREATED_AT, direction:DESC}) {
+                 " + PAGE_INFO + ",
       nodes {
         id,
         " + AUTHOR + ",
@@ -637,11 +637,11 @@ documentation { State open and closed }
   }
 }";
 
-@final  string GET_REPOSITORY_ISSUES_NEXT_PAGE =
-            "query ($owner:String!, $name:String!, $states:[IssueState!], $endCursorIssues: String!, $recordCount: Int!) {
-              repository(owner:$owner, name: $name) {
-                issues (first: $recordCount, states:$states, after: $endCursorIssues, orderBy:{field:CREATED_AT, direction:DESC}) {
-                  " + PAGE_INFO + ",
+@final string GET_REPOSITORY_ISSUES_NEXT_PAGE =
+           "query ($owner:String!, $name:String!, $states:[IssueState!], $endCursorIssues: String!, $recordCount: Int!) {
+             repository(owner:$owner, name: $name) {
+               issues (first: $recordCount, states:$states, after: $endCursorIssues, orderBy:{field:CREATED_AT, direction:DESC}) {
+                 " + PAGE_INFO + ",
       nodes {
         id,
         " + AUTHOR + ",

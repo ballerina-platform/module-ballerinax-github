@@ -26,7 +26,7 @@ token to the GitHubClientConfig
     F{{clientConfig}} - Client endpoint configurations (CircuitBreaker, throttling, proxy, timeout, etc.)
 }
 public type GitHubClientConfig {
-    http:ClientEndpointConfig clientConfig= {};
+    http:ClientEndpointConfig clientConfig = {};
 };
 
 documentation { GitHub client
@@ -43,12 +43,12 @@ public type Client object {
     documentation { GitHub client endpoint initialization function
         P{{githubClientConfig}} - GitHub client configuration
     }
-    public function init (GitHubClientConfig githubClientConfig);
+    public function init(GitHubClientConfig githubClientConfig);
 
     documentation { Return the GitHub client
         R{{}} - GitHub client
     }
-    public function getCallerActions () returns GitHubConnector;
+    public function getCallerActions() returns GitHubConnector;
 
 };
 
@@ -67,6 +67,6 @@ public function Client::init(GitHubClientConfig githubClientConfig) {
     self.githubConnector.githubRestClient.init(githubClientConfig.clientConfig);
 }
 
-public function Client::getCallerActions () returns GitHubConnector {
+public function Client::getCallerActions() returns GitHubConnector {
     return self.githubConnector;
 }

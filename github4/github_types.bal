@@ -120,30 +120,30 @@ public type RepositoryList object {
     documentation { Check if repository list next page is available
         R{{}} - Return true or false
     }
-    public function hasNextPage () returns (boolean);
+    public function hasNextPage() returns (boolean);
 
     documentation { Check if repository list previous page is available
         R{{}} - Return true or false
     }
-    public function hasPreviousPage () returns (boolean);
+    public function hasPreviousPage() returns (boolean);
 
     documentation { Get all the repositories in the repository list
         R{{}} - Array of Repository objects
     }
-    public function getAllRepositories () returns (Repository[]);
+    public function getAllRepositories() returns (Repository[]);
 };
 //*********************************************************************************************************************
 // RepositoryList bound functions
 //*********************************************************************************************************************
-public function RepositoryList::hasNextPage () returns (boolean) {
+public function RepositoryList::hasNextPage() returns (boolean) {
     return self.pageInfo.hasNextPage;
 }
 
-public function RepositoryList::hasPreviousPage () returns (boolean) {
+public function RepositoryList::hasPreviousPage() returns (boolean) {
     return self.pageInfo.hasPreviousPage;
 }
 
-public function RepositoryList::getAllRepositories () returns (Repository[]) {
+public function RepositoryList::getAllRepositories() returns (Repository[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -193,7 +193,7 @@ public type Project {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                 ProjectList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-@Description {value:"Represents a list of projects"}
+@Description { value: "Represents a list of projects" }
 
 public type ProjectList object {
     private {
@@ -206,30 +206,30 @@ public type ProjectList object {
     documentation { Check if project list next page is available
         R{{}} - Return true or false
     }
-    public function hasNextPage () returns (boolean);
+    public function hasNextPage() returns (boolean);
 
     documentation { Check if project list previous page is available
         R{{}} - Return true or false
     }
-    public function hasPreviousPage () returns (boolean);
+    public function hasPreviousPage() returns (boolean);
 
     documentation { Get all the projects in the project list
         R{{}} - Array of Project objects
     }
-    public function getAllProjects () returns (Project[]);
+    public function getAllProjects() returns (Project[]);
 };
 //*********************************************************************************************************************
 // ProjectList bound functions
 //*********************************************************************************************************************
-public function ProjectList::hasNextPage () returns (boolean) {
+public function ProjectList::hasNextPage() returns (boolean) {
     return self.pageInfo.hasNextPage;
 }
 
-public function ProjectList::hasPreviousPage () returns (boolean) {
+public function ProjectList::hasPreviousPage() returns (boolean) {
     return self.pageInfo.hasPreviousPage;
 }
 
-public function ProjectList::getAllProjects () returns (Project[]) {
+public function ProjectList::getAllProjects() returns (Project[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -258,12 +258,12 @@ public type Column object {
     documentation { Get a list of cards of a column
         R{{}} - Card list object
     }
-    public function getCardList () returns (CardList);
+    public function getCardList() returns (CardList);
 };
 //*********************************************************************************************************************
 // Column bound functions
 //*********************************************************************************************************************
-public function Column::getCardList () returns (CardList) {
+public function Column::getCardList() returns (CardList) {
     return self.cards;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -285,30 +285,30 @@ public type ColumnList object {
     documentation { Check if column list next page is available
         R{{}} - Return true or false
     }
-    public function hasNextPage () returns (boolean);
+    public function hasNextPage() returns (boolean);
 
     documentation { Check if column list previosu page is available
         R{{}} - Return true or false
     }
-    public function hasPreviousPage () returns (boolean);
+    public function hasPreviousPage() returns (boolean);
 
     documentation { Get all the columns in the column list
         R{{}} - Array of column objects
     }
-    public function getAllColumns () returns (Column[]);
+    public function getAllColumns() returns (Column[]);
 };
 //*********************************************************************************************************************
 // ColumnList bound functions
 //*********************************************************************************************************************
-public function ColumnList::hasNextPage () returns (boolean) {
+public function ColumnList::hasNextPage() returns (boolean) {
     return self.pageInfo.hasNextPage;
 }
 
-public function ColumnList::hasPreviousPage () returns (boolean) {
+public function ColumnList::hasPreviousPage() returns (boolean) {
     return self.pageInfo.hasPreviousPage;
 }
 
-public function ColumnList::getAllColumns () returns (Column[]) {
+public function ColumnList::getAllColumns() returns (Column[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -360,30 +360,30 @@ public type CardList object {
     documentation { Check if the card list next page is available
         R{{}} - Return true or false
     }
-    public function hasNextPage () returns (boolean);
+    public function hasNextPage() returns (boolean);
 
     documentation { Check if the card list previous page is available
         R{{}} - Return true or false
     }
-    public function hasPreviousPage () returns (boolean);
+    public function hasPreviousPage() returns (boolean);
 
     documentation { Get all the cards in the card list
         R{{}} - Array of card objects
     }
-    public function getAllCards () returns (Card[]);
+    public function getAllCards() returns (Card[]);
 };
 //*********************************************************************************************************************
 // CardList bound functions
 //*********************************************************************************************************************
-public function CardList::hasNextPage () returns (boolean) {
+public function CardList::hasNextPage() returns (boolean) {
     return self.pageInfo.hasNextPage;
 }
 
-public function CardList::hasPreviousPage () returns (boolean) {
+public function CardList::hasPreviousPage() returns (boolean) {
     return self.pageInfo.hasPreviousPage;
 }
 
-public function CardList::getAllCards () returns (Card[]) {
+public function CardList::getAllCards() returns (Card[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -455,30 +455,30 @@ public type PullRequestList object {
     documentation { Check if pull request list next page is available
         R{{}} - Return true or false
     }
-    public function hasNextPage () returns (boolean);
+    public function hasNextPage() returns (boolean);
 
     documentation { Check if pull request list previous page is avaiable
         R{{}} - Return true or false
     }
-    public function hasPreviousPage () returns (boolean);
+    public function hasPreviousPage() returns (boolean);
 
     documentation { Get all the pull requests in the pull request list
         R{{}} - Array of pull request objects
     }
-    public function getAllPullRequests () returns (PullRequest[]);
+    public function getAllPullRequests() returns (PullRequest[]);
 };
 //*********************************************************************************************************************
 // PullRequestList bound functions
 //*********************************************************************************************************************
-public function PullRequestList::hasNextPage () returns (boolean) {
+public function PullRequestList::hasNextPage() returns (boolean) {
     return self.pageInfo.hasNextPage;
 }
 
-public function PullRequestList::hasPreviousPage () returns (boolean) {
+public function PullRequestList::hasPreviousPage() returns (boolean) {
     return self.pageInfo.hasPreviousPage;
 }
 
-public function PullRequestList::getAllPullRequests () returns (PullRequest[]) {
+public function PullRequestList::getAllPullRequests() returns (PullRequest[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -536,30 +536,30 @@ public type IssueList object {
     documentation { Check if issue list next page is available
         R{{}} - Return true or false
     }
-    public function hasNextPage () returns (boolean);
+    public function hasNextPage() returns (boolean);
 
     documentation { Check if issue list previous page is avaiable
         R{{}} - Return true or false
     }
-    public function hasPreviousPage () returns (boolean);
+    public function hasPreviousPage() returns (boolean);
 
     documentation { Get all the issues in the issue list
         R{{}} - Array of issue objects
     }
-    public function getAllIssues () returns (Issue[]);
+    public function getAllIssues() returns (Issue[]);
 };
 //*********************************************************************************************************************
 // IssueList bound functions
 //*********************************************************************************************************************
-public function IssueList::hasNextPage () returns (boolean) {
+public function IssueList::hasNextPage() returns (boolean) {
     return self.pageInfo.hasNextPage;
 }
 
-public function IssueList::hasPreviousPage () returns (boolean) {
+public function IssueList::hasPreviousPage() returns (boolean) {
     return self.pageInfo.hasPreviousPage;
 }
 
-public function IssueList::getAllIssues () returns (Issue[]) {
+public function IssueList::getAllIssues() returns (Issue[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -609,21 +609,21 @@ public type ProjectOwner object {
     documentation { Get the type of the project owner
         R{{}} - Type of the owner (Repository or Organization)
     }
-    public function getOwnerType () returns (string);
+    public function getOwnerType() returns (string);
 
     documentation { Set the type of the project owner
         P{{ownerType}} - Type of the owner (Repository or Organization)
     }
-    public function setOwnerType (string ownerType);
+    public function setOwnerType(string ownerType);
 };
 //*********************************************************************************************************************
 // ProjectOwner bound functions
 //*********************************************************************************************************************
-public function ProjectOwner::getOwnerType () returns (string) {
+public function ProjectOwner::getOwnerType() returns (string) {
     return self.__typename;
 }
 
-public function ProjectOwner::setOwnerType (string ownerType) {
+public function ProjectOwner::setOwnerType(string ownerType) {
     self.__typename = ownerType;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
