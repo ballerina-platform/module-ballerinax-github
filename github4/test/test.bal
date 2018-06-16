@@ -21,8 +21,8 @@ import ballerina/http;
 import ballerina/log;
 import ballerina/test;
 
-string organizationName = config:getAsString("ORGANIZATION_NAME");
-string resourcePath = config:getAsString("RESOURCE_PATH");
+string test_organizationName = config:getAsString("ORGANIZATION_NAME");
+string test_resourcePath = config:getAsString("RESOURCE_PATH");
 
 endpoint Client githubClient {
     clientConfig: {
@@ -61,7 +61,7 @@ function testGetOrganizationProject () {
     // Get an organization project
     log:printInfo("githubClient -> getOrganizationProject()");
     Project orgProject = {};
-    Organization projectOrganization = {login:organizationName};
+    Organization projectOrganization = {login:test_organizationName};
     var projectData = githubClient -> getOrganizationProject(projectOrganization, 1);
     match projectData {
         Project proj => {
@@ -84,7 +84,7 @@ function testGetOrganizationProjectList () {
     log:printInfo("githubClient -> getOrganizationProjectList()");
     int recordCount = 2;
     ProjectList projectList = new;
-    Organization projectListOrganization = {login:organizationName};
+    Organization projectListOrganization = {login:test_organizationName};
     var responseProjectList = githubClient ->
                               getOrganizationProjectList(projectListOrganization, STATE_OPEN, recordCount);
     match responseProjectList {
@@ -110,7 +110,7 @@ function testGetOrganizationProjectListNextPage () {
     log:printInfo("githubClient -> getOrganizationProjectListNextPage()");
     int recordCount = 2;
     ProjectList projectList = new;
-    Organization projectListOrganization = {login:organizationName};
+    Organization projectListOrganization = {login:test_organizationName};
     var responseProjectList = githubClient ->
                               getOrganizationProjectList(projectListOrganization, STATE_OPEN, 2);
     match responseProjectList {
@@ -145,7 +145,7 @@ function testGetProjectColumnList () {
     //Get project column list
     log:printInfo("githubClient -> getProjectColumnList()");
     int recordCount = 2;
-    Project columnListProject = {number:1, resourcePath:resourcePath};
+    Project columnListProject = {number:1, resourcePath:test_resourcePath};
     columnListProject.owner.setOwnerType("Organization");
     ColumnList columnList = new;
     var columns = githubClient -> getProjectColumnList(columnListProject, recordCount);
@@ -170,7 +170,7 @@ function testGetCardListOfColumn () {
     //Get column card list
     log:printInfo("column.getCardList()");
     int recordCount = 2;
-    Project columnListProject = {number:1, resourcePath:resourcePath};
+    Project columnListProject = {number:1, resourcePath:test_resourcePath};
     columnListProject.owner.setOwnerType("Organization");
     ColumnList columnList = new;
     var columns = githubClient -> getProjectColumnList(columnListProject, recordCount);
@@ -197,7 +197,7 @@ function testGetCardListNextPage () {
     //Get card list next page
     log:printInfo("githubClient -> getCardListNextPage()");
     int recordCount = 2;
-    Project columnListProject = {number:1, resourcePath:resourcePath};
+    Project columnListProject = {number:1, resourcePath:test_resourcePath};
     columnListProject.owner.setOwnerType("Organization");
     ColumnList columnList = new;
     var columns = githubClient -> getProjectColumnList(columnListProject, recordCount);
