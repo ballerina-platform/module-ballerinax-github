@@ -23,7 +23,7 @@ documentation {GitHub client connector
     F{{githubGraphQlClient}} - Http client for GitHub GraphQL API
     F{{githubRestClient}} - Http client for GitHub REST API
 }
-public type GitHubConnector object{
+public type GitHubConnector object {
     public {
         http:Client githubGraphQlClient = new;
         http:Client githubRestClient = new;
@@ -39,22 +39,22 @@ public type GitHubConnector object{
         R{{}} - Created issue object
         R{{}} - Connector error
     }
-    public function createIssue (string repositoryOwner, string repositoryName, string issueTitle, string issueContent,
-                                                string[] labelList, string[] assigneeList) returns Issue|GitClientError;
+    public function createIssue(string repositoryOwner, string repositoryName, string issueTitle, string issueContent,
+                                string[] labelList, string[] assigneeList) returns Issue|GitClientError;
 
     documentation { Get the next page of the card list
         P{{cardList}} - Card list object
         R{{}} - Card list object of next page
         R{{}} - Connector error
     }
-    public function getCardListNextPage (CardList cardList) returns CardList|GitClientError;
+    public function getCardListNextPage(CardList cardList) returns CardList|GitClientError;
 
     documentation { Get the next page of column list
         P{{columnList}} - Column list object
         R{{}} - Column list object of next page
         R{{}} - Connector error
     }
-    public function getColumnListNextPage (ColumnList columnList) returns ColumnList|GitClientError;
+    public function getColumnListNextPage(ColumnList columnList) returns ColumnList|GitClientError;
 
     documentation { Get a list of issues of a repository
         P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
@@ -63,22 +63,22 @@ public type GitHubConnector object{
         R{{}} - Issue list object
         R{{}} - Connector error
     }
-    public function getIssueList (Repository|(string, string) repository, string state, int recordCount)
-                    returns IssueList|GitClientError;
+    public function getIssueList(Repository|(string, string) repository, string state, int recordCount)
+                        returns IssueList|GitClientError;
 
     documentation { Get the next page of the issue list
         P{{issueList}} - Issue list object
         R{{}} - Issue list object of next page
         R{{}} - Connector error
     }
-    public function getIssueListNextPage (IssueList issueList) returns IssueList|GitClientError;
+    public function getIssueListNextPage(IssueList issueList) returns IssueList|GitClientError;
 
     documentation { Get an organization
         P{{name}} - Name of the organization
         R{{}} - Organization object
         R{{}} - Connector error
     }
-    public function getOrganization (string name) returns Organization|GitClientError;
+    public function getOrganization(string name) returns Organization|GitClientError;
 
     documentation { Get a single project of an organization
         P{{organization}} - Organization object or organization name
@@ -86,8 +86,8 @@ public type GitHubConnector object{
         R{{}} - Project object
         R{{}} - Connector error
     }
-    public function getOrganizationProject (Organization|string organization, int projectNumber)
-                    returns Project|GitClientError;
+    public function getOrganizationProject(Organization|string organization, int projectNumber)
+                        returns Project|GitClientError;
 
     documentation { Get all projects of an organization
         P{{organization}} - Organization object or organization name
@@ -96,8 +96,8 @@ public type GitHubConnector object{
         R{{}} - Project list object
         R{{}} - Connector error
     }
-    public function getOrganizationProjectList (Organization|string organization, string state, int recordCount)
-                    returns ProjectList|GitClientError;
+    public function getOrganizationProjectList(Organization|string organization, string state, int recordCount)
+                        returns ProjectList|GitClientError;
 
     documentation { Get a list of repositories of an organization
         P{{organization}} - Organization object or organization name
@@ -105,8 +105,8 @@ public type GitHubConnector object{
         R{{}} - Repository list object
         R{{}} - Connector error
     }
-    public function getOrganizationRepositoryList (Organization|string organization, int recordCount)
-                    returns RepositoryList|GitClientError;
+    public function getOrganizationRepositoryList(Organization|string organization, int recordCount)
+                        returns RepositoryList|GitClientError;
 
     documentation { Get all columns of a project board
         P{{project}} - Project object
@@ -114,13 +114,13 @@ public type GitHubConnector object{
         R{{}} - Column list object
         R{{}} - Connector error
     }
-    public function getProjectColumnList (Project project, int recordCount) returns ColumnList|GitClientError;
+    public function getProjectColumnList(Project project, int recordCount) returns ColumnList|GitClientError;
     documentation { Gets the next page of a project list
         P{{projectList}} - Project list object
         R{{}} - Project list object of next page
         R{{}} - Connector error
     }
-    public function getProjectListNextPage (ProjectList projectList) returns ProjectList|GitClientError;
+    public function getProjectListNextPage(ProjectList projectList) returns ProjectList|GitClientError;
 
     documentation { Get all pull requests of a repository
         P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
@@ -129,29 +129,29 @@ public type GitHubConnector object{
         R{{}} - Pull request list object
         R{{}} - Connector error
     }
-    public function getPullRequestList (Repository|(string, string) repository, string state, int recordCount)
-                    returns PullRequestList|GitClientError;
+    public function getPullRequestList(Repository|(string, string) repository, string state, int recordCount)
+                        returns PullRequestList|GitClientError;
 
     documentation { Get the next page of the pull request list
         P{{pullRequestList}} - Pull request list object
         R{{}} - Pull request list object of next page
         R{{}} - Connector error
     }
-    public function getPullRequestListNextPage (PullRequestList pullRequestList) returns PullRequestList|GitClientError;
+    public function getPullRequestListNextPage(PullRequestList pullRequestList) returns PullRequestList|GitClientError;
 
     documentation { Get a repository of an owner
         P{{name}} - Name of the repository and its owner Format: ("owner/repository")
         R{{}} - Repository object
         R{{}} - Connector error
     }
-    public function getRepository (string name) returns Repository|GitClientError;
+    public function getRepository(string name) returns Repository|GitClientError;
 
     documentation { Get the next page of a repository list
         P{{repositoryList}} - Repository list object
         R{{}} - Repository list object of next page
         R{{}} - Connector error
     }
-    public function getRepositoryListNextPage (RepositoryList repositoryList) returns RepositoryList|GitClientError;
+    public function getRepositoryListNextPage(RepositoryList repositoryList) returns RepositoryList|GitClientError;
 
     documentation { Get a single project of a repository
         P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
@@ -159,8 +159,8 @@ public type GitHubConnector object{
         R{{}} - Project object
         R{{}} - Connector error
     }
-    public function getRepositoryProject (Repository|(string, string) repository, int projectNumber)
-                    returns Project|GitClientError;
+    public function getRepositoryProject(Repository|(string, string) repository, int projectNumber)
+                        returns Project|GitClientError;
 
     documentation { Get all projects of a repository
         P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
@@ -169,18 +169,19 @@ public type GitHubConnector object{
         R{{}} - Project list object
         R{{}} - Connector error
     }
-    public function getRepositoryProjectList (Repository|(string, string) repository, string state, int recordCount)
-                    returns ProjectList|GitClientError;
+    public function getRepositoryProjectList(Repository|(string, string) repository, string state, int recordCount)
+                        returns ProjectList|GitClientError;
 };
 
 
-public function GitHubConnector::createIssue (string repositoryOwner, string repositoryName, string issueTitle,
-                        string issueContent, string[] labelList, string[] assigneeList) returns Issue|GitClientError {
+public function GitHubConnector::createIssue(string repositoryOwner, string repositoryName, string issueTitle,
+                                             string issueContent, string[] labelList, string[] assigneeList) returns Issue
+            |GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubRestClient;
 
     if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING || issueTitle == EMPTY_STRING) {
-        GitClientError connectorError = {message:"Repository name, owner and issue title should be specified"};
+        GitClientError connectorError = { message: "Repository name, owner and issue title should be specified" };
         return connectorError;
     }
 
@@ -194,15 +195,15 @@ public function GitHubConnector::createIssue (string repositoryOwner, string rep
         jsonAssigneeList[i] = assignee;
     }
 
-    json issueJsonPayload = {"title":issueTitle, "body":issueContent, "labels":jsonLabelList,
-                                                                                        "assignees":jsonAssigneeList};
+    json issueJsonPayload = { "title": issueTitle, "body": issueContent, "labels": jsonLabelList,
+        "assignees": jsonAssigneeList };
 
     http:Request request = new;
     //Set headers and payload to the request
     constructRequest(request, issueJsonPayload);
 
     string endpointResource = PATH_SEPARATOR + GIT_REPOS + PATH_SEPARATOR + repositoryOwner +
-                                                PATH_SEPARATOR + repositoryName + PATH_SEPARATOR + GIT_ISSUES;
+        PATH_SEPARATOR + repositoryName + PATH_SEPARATOR + GIT_ISSUES;
     // Make an HTTP POST request
     var response = gitHubEndpoint->post(endpointResource, request);
 
@@ -218,7 +219,7 @@ public function GitHubConnector::createIssue (string repositoryOwner, string rep
     }
 }
 
-public function GitHubConnector::getCardListNextPage (CardList cardList) returns CardList|GitClientError {
+public function GitHubConnector::getCardListNextPage(CardList cardList) returns CardList|GitClientError {
 
     if (cardList.hasNextPage()) {
         var cardListColumnId = cardList.columnId;
@@ -230,7 +231,7 @@ public function GitHubConnector::getCardListNextPage (CardList cardList) returns
                 if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
                     jsonQuery[GIT_QUERY] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
                     ColumnList|GitClientError columnList = getProjectColumns(GIT_ORGANIZATION,
-                                                                jsonQuery.toString(), self.githubGraphQlClient);
+                        jsonQuery.toString(), self.githubGraphQlClient);
                     match columnList {
                         ColumnList colList => {
                             foreach column in colList.getAllColumns() {
@@ -248,7 +249,7 @@ public function GitHubConnector::getCardListNextPage (CardList cardList) returns
                 } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
                     jsonQuery[GIT_QUERY] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
                     ColumnList|GitClientError columnList = getProjectColumns(GIT_REPOSITORY, jsonQuery.toString()
-                                                                                            , self.githubGraphQlClient);
+                        , self.githubGraphQlClient);
                     match columnList {
                         ColumnList colList => {
                             foreach column in colList.getAllColumns() {
@@ -272,10 +273,10 @@ public function GitHubConnector::getCardListNextPage (CardList cardList) returns
 
     }
 
-    return {message:"Card list has no next page"};
+    return { message: "Card list has no next page" };
 }
 
-public function GitHubConnector::getColumnListNextPage (ColumnList columnList) returns ColumnList|GitClientError {
+public function GitHubConnector::getColumnListNextPage(ColumnList columnList) returns ColumnList|GitClientError {
 
     if (columnList.hasNextPage()) {
         var convertedQuery = stringToJson(columnList.columnListQuery);
@@ -299,13 +300,13 @@ public function GitHubConnector::getColumnListNextPage (ColumnList columnList) r
         }
 
     }
-    GitClientError gitClientError = {message:"Column list has no next page"};
+    GitClientError gitClientError = { message: "Column list has no next page" };
 
     return gitClientError;
 }
 
-public function GitHubConnector::getIssueList (Repository|(string, string) repository, string state, int recordCount)
-                                                                                returns IssueList|GitClientError {
+public function GitHubConnector::getIssueList(Repository|(string, string) repository, string state, int recordCount)
+                                     returns IssueList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
     string repositoryOwner;
@@ -321,12 +322,12 @@ public function GitHubConnector::getIssueList (Repository|(string, string) repos
     }
 
     if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
-        GitClientError gitClientError = {message:"Repository owner and name should be specified"};
+        GitClientError gitClientError = { message: "Repository owner and name should be specified" };
         return gitClientError;
     }
 
     if (recordCount > MAX_RECORD_COUNT) {
-        GitClientError gitClientError = {message:"Maximum record count limited to " + MAX_RECORD_COUNT};
+        GitClientError gitClientError = { message: "Maximum record count limited to " + MAX_RECORD_COUNT };
         return gitClientError;
     }
 
@@ -366,7 +367,7 @@ public function GitHubConnector::getIssueList (Repository|(string, string) repos
     }
 }
 
-public function GitHubConnector::getIssueListNextPage (IssueList issueList) returns IssueList|GitClientError {
+public function GitHubConnector::getIssueListNextPage(IssueList issueList) returns IssueList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
@@ -405,19 +406,19 @@ public function GitHubConnector::getIssueListNextPage (IssueList issueList) retu
         }
 
     }
-    GitClientError gitClientError = {message:"Issue list has no next page"};
+    GitClientError gitClientError = { message: "Issue list has no next page" };
 
     return gitClientError;
 
 }
 
-public function GitHubConnector::getOrganization (string name) returns Organization|GitClientError {
+public function GitHubConnector::getOrganization(string name) returns Organization|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
 
     if (name == EMPTY_STRING) {
-    GitClientError gitClientError = {message:"Organization name should be specified"};
+        GitClientError gitClientError = { message: "Organization name should be specified" };
         return gitClientError;
     }
     Organization singleOrganization = {};
@@ -448,7 +449,7 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
                 var githubRepositoryJson = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION];
                 singleOrganization = check <Organization>githubRepositoryJson;
             } catch (error e) {
-                GitClientError gitClientError = {message:e.message, cause:e.cause};
+                GitClientError gitClientError = { message: e.message, cause: e.cause };
                 return gitClientError;
             }
         }
@@ -461,18 +462,18 @@ public function GitHubConnector::getOrganization (string name) returns Organizat
     return singleOrganization;
 }
 
-public function GitHubConnector::getOrganizationProject (Organization|string organization, int projectNumber)
-                                                                                returns Project|GitClientError {
+public function GitHubConnector::getOrganizationProject(Organization|string organization, int projectNumber)
+                                     returns Project|GitClientError {
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     string organizationName = organization but {
-                                                Organization orgObject => orgObject.login,
-                                                string orgName => orgName
-                                                };
+        Organization orgObject => orgObject.login,
+        string orgName => orgName
+    };
 
     if (organizationName == EMPTY_STRING || projectNumber <= INDEX_ZERO) {
-        GitClientError gitClientError = {message:"Organization should have a name and
-                                                                        project number should be positive integer"};
+        GitClientError gitClientError = { message: "Organization should have a name and
+                                                                        project number should be positive integer" };
         return gitClientError;
     }
 
@@ -510,24 +511,24 @@ public function GitHubConnector::getOrganizationProject (Organization|string org
     }
 }
 
-public function GitHubConnector::getOrganizationProjectList (Organization|string organization, string state,
-                                                                int recordCount) returns ProjectList|GitClientError {
+public function GitHubConnector::getOrganizationProjectList(Organization|string organization, string state,
+                                                            int recordCount) returns ProjectList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     string organizationName = organization but {
-                                                Organization orgObject => orgObject.login,
-                                                string orgName => orgName
-                                                };
+        Organization orgObject => orgObject.login,
+        string orgName => orgName
+    };
 
     if (organizationName == EMPTY_STRING || state == EMPTY_STRING) {
-        GitClientError gitClientError = {message:"Organization should have a name and
-                                                                                project state should be specified"};
+        GitClientError gitClientError = { message: "Organization should have a name and
+                                                                                project state should be specified" };
         return gitClientError;
     }
 
     if (recordCount > MAX_RECORD_COUNT) {
-        GitClientError gitClientError = {message:"Maximum record count limited to " + MAX_RECORD_COUNT};
+        GitClientError gitClientError = { message: "Maximum record count limited to " + MAX_RECORD_COUNT };
         return gitClientError;
     }
 
@@ -566,23 +567,23 @@ public function GitHubConnector::getOrganizationProjectList (Organization|string
     }
 }
 
-public function GitHubConnector::getOrganizationRepositoryList (Organization|string organization, int recordCount)
-                                                                        returns RepositoryList|GitClientError {
+public function GitHubConnector::getOrganizationRepositoryList(Organization|string organization, int recordCount)
+                                     returns RepositoryList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     string organizationName = organization but {
-                                                Organization orgObject => orgObject.login,
-                                                string orgName => orgName
-                                                };
+        Organization orgObject => orgObject.login,
+        string orgName => orgName
+    };
 
     if (organizationName == EMPTY_STRING) {
-        GitClientError gitClientError = {message:"Organization should have a name"};
+        GitClientError gitClientError = { message: "Organization should have a name" };
         return gitClientError;
     }
 
     if (recordCount > MAX_RECORD_COUNT) {
-        GitClientError gitClientError = {message:"Maximum record count limited to " + MAX_RECORD_COUNT};
+        GitClientError gitClientError = { message: "Maximum record count limited to " + MAX_RECORD_COUNT };
         return gitClientError;
     }
 
@@ -621,19 +622,19 @@ public function GitHubConnector::getOrganizationRepositoryList (Organization|str
     }
 }
 
-public function GitHubConnector::getProjectColumnList (Project project, int recordCount)
-                                                                            returns ColumnList|GitClientError {
+public function GitHubConnector::getProjectColumnList(Project project, int recordCount)
+                                     returns ColumnList|GitClientError {
 
     GitClientError gitClientError = {};
 
     if (project.owner.getOwnerType() == EMPTY_STRING || project.number <= INDEX_ZERO ||
-                                                                                project.resourcePath == EMPTY_STRING) {
-        gitClientError = {message:"Project owner, number and resource path should be specified"};
+            project.resourcePath == EMPTY_STRING) {
+        gitClientError = { message: "Project owner, number and resource path should be specified" };
         return gitClientError;
     }
 
     if (recordCount > MAX_RECORD_COUNT) {
-        gitClientError = {message:"Maximum record count limited to " + MAX_RECORD_COUNT};
+        gitClientError = { message: "Maximum record count limited to " + MAX_RECORD_COUNT };
         return gitClientError;
     }
     string projectOwnerType = project.owner.getOwnerType();
@@ -656,8 +657,8 @@ public function GitHubConnector::getProjectColumnList (Project project, int reco
     return gitClientError;
 }
 
-public function GitHubConnector::getProjectListNextPage (ProjectList projectList)
-                                                                            returns ProjectList|GitClientError {
+public function GitHubConnector::getProjectListNextPage(ProjectList projectList)
+                                     returns ProjectList|GitClientError {
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     if (projectList.hasNextPage()) {
@@ -692,7 +693,7 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
         match validatedResponse {
             json jsonValidatedResponse => {
                 var projectsJson = jsonValidatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
-                var projList =  jsonToProjectList(projectsJson, projectList.listOwner, dataQuery.toString());
+                var projList = jsonToProjectList(projectsJson, projectList.listOwner, dataQuery.toString());
 
                 return projList;
             }
@@ -703,13 +704,14 @@ public function GitHubConnector::getProjectListNextPage (ProjectList projectList
         }
     }
 
-    GitClientError gitClientError = {message:"Project list has no next page"};
+    GitClientError gitClientError = { message: "Project list has no next page" };
 
     return gitClientError;
 }
 
-public function GitHubConnector::getPullRequestList (Repository|(string, string) repository, string state, int recordCount)
-                                                                        returns PullRequestList|GitClientError {
+public function GitHubConnector::getPullRequestList(Repository|(string, string) repository, string state, int
+    recordCount)
+                                     returns PullRequestList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
@@ -726,12 +728,12 @@ public function GitHubConnector::getPullRequestList (Repository|(string, string)
     }
 
     if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
-    GitClientError gitClientError = {message:"Repository owner and name should be specified"};
-    return gitClientError;
+        GitClientError gitClientError = { message: "Repository owner and name should be specified" };
+        return gitClientError;
     }
 
     if (recordCount > MAX_RECORD_COUNT) {
-        GitClientError gitClientError = {message:"Maximum record count limited to " + MAX_RECORD_COUNT};
+        GitClientError gitClientError = { message: "Maximum record count limited to " + MAX_RECORD_COUNT };
         return gitClientError;
     }
 
@@ -770,8 +772,8 @@ public function GitHubConnector::getPullRequestList (Repository|(string, string)
     }
 }
 
-public function GitHubConnector::getPullRequestListNextPage (PullRequestList pullRequestList)
-                                                                        returns PullRequestList|GitClientError {
+public function GitHubConnector::getPullRequestListNextPage(PullRequestList pullRequestList)
+                                     returns PullRequestList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
@@ -812,17 +814,17 @@ public function GitHubConnector::getPullRequestListNextPage (PullRequestList pul
         }
 
     }
-    GitClientError gitClientError = {message:"Pull request list has no next page"};
+    GitClientError gitClientError = { message: "Pull request list has no next page" };
 
     return gitClientError;
 }
 
-public function GitHubConnector::getRepository (string name) returns Repository|GitClientError {
+public function GitHubConnector::getRepository(string name) returns Repository|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     if (name == EMPTY_STRING || name == EMPTY_STRING) {
-        GitClientError gitClientError = {message:"Repository owner and name should be specified."};
+        GitClientError gitClientError = { message: "Repository owner and name should be specified." };
         return gitClientError;
     }
     string[] repoIdentifier = name.split(PATH_SEPARATOR);
@@ -848,15 +850,14 @@ public function GitHubConnector::getRepository (string name) returns Repository|
     // Make an HTTP POST request 
     var response = gitHubEndpoint->post(EMPTY_STRING, request);
 
-    json|GitClientError validatedResponse  = getValidatedResponse(response, GIT_NAME);
-    
+    json|GitClientError validatedResponse = getValidatedResponse(response, GIT_NAME);
     match validatedResponse {
         json jsonValidatedResponse => {
             try {
                 var githubRepositoryJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY];
                 singleRepository = jsonToRepository(githubRepositoryJson);
             } catch (error e) {
-                GitClientError gitClientError = {message:e.message, cause:e.cause};
+                GitClientError gitClientError = { message: e.message, cause: e.cause };
                 return gitClientError;
             }
         }
@@ -865,12 +866,12 @@ public function GitHubConnector::getRepository (string name) returns Repository|
             return gitClientError;
         }
     }
-    
+
     return singleRepository;
 }
 
-public function GitHubConnector::getRepositoryListNextPage (RepositoryList repositoryList)
-                                                                            returns RepositoryList|GitClientError {
+public function GitHubConnector::getRepositoryListNextPage(RepositoryList repositoryList)
+                                     returns RepositoryList|GitClientError {
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
     if (repositoryList.hasNextPage()) {
@@ -899,7 +900,7 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
         match validatedResponse {
             json jsonValidatedResponse => {
                 var repositoriesJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
-                var repoList =  jsonToRepositoryList(repositoriesJson, repositoryList.repositoryListQuery);
+                var repoList = jsonToRepositoryList(repositoriesJson, repositoryList.repositoryListQuery);
 
                 return repoList;
             }
@@ -909,13 +910,13 @@ public function GitHubConnector::getRepositoryListNextPage (RepositoryList repos
             }
         }
     }
-    GitClientError gitClientError = {message:"Repository list has no next page"};
+    GitClientError gitClientError = { message: "Repository list has no next page" };
 
     return gitClientError;
 }
 
-public function GitHubConnector::getRepositoryProject (Repository|(string, string) repository, int projectNumber)
-                                                                                returns Project|GitClientError {
+public function GitHubConnector::getRepositoryProject(Repository|(string, string) repository, int projectNumber)
+                                     returns Project|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
@@ -932,8 +933,8 @@ public function GitHubConnector::getRepositoryProject (Repository|(string, strin
     }
 
     if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
-    GitClientError gitClientError = {message:"Repository owner and name should be specified"};
-    return gitClientError;
+        GitClientError gitClientError = { message: "Repository owner and name should be specified" };
+        return gitClientError;
     }
 
     string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT, repositoryOwner, repositoryName, projectNumber);
@@ -971,8 +972,8 @@ public function GitHubConnector::getRepositoryProject (Repository|(string, strin
     }
 }
 
-public function GitHubConnector::getRepositoryProjectList (Repository|(string, string) repository, string state,
-                                                                int recordCount) returns ProjectList|GitClientError {
+public function GitHubConnector::getRepositoryProjectList(Repository|(string, string) repository, string state,
+                                                          int recordCount) returns ProjectList|GitClientError {
 
     endpoint http:Client gitHubEndpoint = self.githubGraphQlClient;
 
@@ -989,23 +990,23 @@ public function GitHubConnector::getRepositoryProjectList (Repository|(string, s
     }
 
     if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
-        GitClientError gitClientError = {message:"Repository owner and name should be specified"};
+        GitClientError gitClientError = { message: "Repository owner and name should be specified" };
         return gitClientError;
     }
 
     if (recordCount > MAX_RECORD_COUNT) {
-        GitClientError gitClientError = {message:"Maximum record count limited to " + MAX_RECORD_COUNT};
+        GitClientError gitClientError = { message: "Maximum record count limited to " + MAX_RECORD_COUNT };
         return gitClientError;
     }
 
     string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECTS,
-                                    repositoryOwner, repositoryName, state, recordCount);
+        repositoryOwner, repositoryName, state, recordCount);
 
     http:Request request = new;
     var convertedQuery = stringToJson(stringQuery);
     match convertedQuery {
         json jsonQuery => {
-        //Set headers and payload to the request
+            //Set headers and payload to the request
             constructRequest(request, jsonQuery);
         }
 

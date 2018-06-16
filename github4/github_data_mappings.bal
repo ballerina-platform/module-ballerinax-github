@@ -23,14 +23,14 @@
 //********************************
 // JSON --> ProjectList
 //********************************
-function jsonToProjectList (json source_json, string listOwner, string stringQuery) returns (ProjectList) {
+function jsonToProjectList(json source_json, string listOwner, string stringQuery) returns (ProjectList) {
     ProjectList target_projectList = new;
     target_projectList.listOwner = listOwner;
     target_projectList.projectListQuery = stringQuery;
     target_projectList.pageInfo = check <PageInfo>source_json.pageInfo;
-    json[] nodes = check <json[]> source_json.nodes;
+    json[] nodes = check <json[]>source_json.nodes;
     foreach i, node in nodes {
-        var project = check <Project> node;
+        var project = check <Project>node;
         target_projectList.nodes[i] = project;
     }
 
@@ -40,15 +40,15 @@ function jsonToProjectList (json source_json, string listOwner, string stringQue
 //********************************
 // JSON --> CardList
 //********************************
-function jsonToCardList (json source_json, string columnId, string listOwner, string stringQuery) returns (CardList) {
+function jsonToCardList(json source_json, string columnId, string listOwner, string stringQuery) returns (CardList) {
     CardList target_cardList = new;
     target_cardList.columnId = columnId;
     target_cardList.cardListQuery = stringQuery;
     target_cardList.listOwner = listOwner;
     target_cardList.pageInfo = check <PageInfo>source_json.pageInfo;
-    json[] nodes = check <json[]> source_json.nodes;
+    json[] nodes = check <json[]>source_json.nodes;
     foreach i, node in nodes {
-        var card = check <Card> node;
+        var card = check <Card>node;
         target_cardList.nodes[i] = card;
     }
 
@@ -58,7 +58,7 @@ function jsonToCardList (json source_json, string columnId, string listOwner, st
 //********************************
 // JSON --> Column
 //********************************
-function jsonToColumn (json source_json, string listOwner, string stringQuery) returns (Column) {
+function jsonToColumn(json source_json, string listOwner, string stringQuery) returns (Column) {
     Column target_column = new;
     target_column.id = source_json.id.toString();
     target_column.name = source_json.name.toString();
@@ -71,7 +71,7 @@ function jsonToColumn (json source_json, string listOwner, string stringQuery) r
 //********************************
 // JSON --> ColumnList
 //********************************
-function jsonToColumnList (json source_json, string listOwner, string stringQuery) returns (ColumnList) {
+function jsonToColumnList(json source_json, string listOwner, string stringQuery) returns (ColumnList) {
     ColumnList target_columnList = new;
     target_columnList.listOwner = listOwner;
     target_columnList.columnListQuery = stringQuery;
@@ -88,11 +88,11 @@ function jsonToColumnList (json source_json, string listOwner, string stringQuer
 //********************************
 // JSON --> RepositoryList
 //********************************
-function jsonToRepositoryList (json source_json, string stringQuery) returns (RepositoryList) {
+function jsonToRepositoryList(json source_json, string stringQuery) returns (RepositoryList) {
     RepositoryList target_repositoryList = new;
     target_repositoryList.repositoryListQuery = stringQuery;
     target_repositoryList.pageInfo = check <PageInfo>source_json.pageInfo;
-    var nodes = check <json[]> source_json.nodes;
+    var nodes = check <json[]>source_json.nodes;
     foreach i, node in nodes {
         var repository = jsonToRepository(node);
         target_repositoryList.nodes[i] = repository;
@@ -104,11 +104,11 @@ function jsonToRepositoryList (json source_json, string stringQuery) returns (Re
 //********************************
 // JSON --> PullRequestList
 //********************************
-function jsonToPullRequestList (json source_json, string stringQuery) returns (PullRequestList) {
+function jsonToPullRequestList(json source_json, string stringQuery) returns (PullRequestList) {
     PullRequestList target_pullRequestList = new;
     target_pullRequestList.pullRequestListQuery = stringQuery;
     target_pullRequestList.pageInfo = check <PageInfo>source_json.pageInfo;
-    var nodes = check <json[]> source_json.nodes;
+    var nodes = check <json[]>source_json.nodes;
     foreach i, node in nodes {
         var pullRequest = check <PullRequest>node;
         target_pullRequestList.nodes[i] = pullRequest;
@@ -120,7 +120,7 @@ function jsonToPullRequestList (json source_json, string stringQuery) returns (P
 //********************************
 // JSON --> IssueList
 //********************************
-function jsonToIssueList (json source_json, string stringQuery) returns (IssueList) {
+function jsonToIssueList(json source_json, string stringQuery) returns (IssueList) {
     IssueList target_issueList = new;
     target_issueList.issueListQuery = stringQuery;
     target_issueList.pageInfo = check <PageInfo>source_json.pageInfo;
@@ -136,10 +136,10 @@ function jsonToIssueList (json source_json, string stringQuery) returns (IssueLi
 //********************************
 // JSON --> REST Issue
 //********************************
-function restResponseJsonToIssue (json source_json) returns (Issue) {
+function restResponseJsonToIssue(json source_json) returns (Issue) {
     Issue target_issue;
     target_issue.id = source_json.id.toString();
-    target_issue.title =  source_json.title.toString();
+    target_issue.title = source_json.title.toString();
     target_issue.bodyText = source_json.body.toString();
     target_issue.closedAt = source_json.closed_at.toString();
     target_issue.createdAt = source_json.created_at.toString();
@@ -150,16 +150,16 @@ function restResponseJsonToIssue (json source_json) returns (Issue) {
     int intNumber = check <int>stringNumber;
     target_issue.number = intNumber;
 
-    json[] labelList = check <json[]> source_json.labels;
+    json[] labelList = check <json[]>source_json.labels;
     foreach i, label in labelList {
-       Label singleLabel;
-       singleLabel.id = label.id.toString();
-       singleLabel.name = label.name.toString();
-       singleLabel.color = label.color.toString();
-       target_issue.labels[i] = singleLabel;
+        Label singleLabel;
+        singleLabel.id = label.id.toString();
+        singleLabel.name = label.name.toString();
+        singleLabel.color = label.color.toString();
+        target_issue.labels[i] = singleLabel;
     }
 
-    json[] assigneeList = check <json[]> source_json.assignees;
+    json[] assigneeList = check <json[]>source_json.assignees;
     foreach i, assignee in assigneeList {
         Assignee singleAssignee;
         singleAssignee.id = assignee.id.toString();
@@ -174,19 +174,19 @@ function restResponseJsonToIssue (json source_json) returns (Issue) {
 //********************************
 // JSON --> Issue
 //********************************
-function jsonToIssue (json source_json) returns (Issue) {
+function jsonToIssue(json source_json) returns (Issue) {
     Issue target_issue;
     target_issue.id = source_json.id.toString();
-    target_issue.title =  source_json.title.toString();
+    target_issue.title = source_json.title.toString();
     target_issue.bodyText = source_json.bodyText.toString();
     target_issue.closed = source_json.closed.toString();
     target_issue.closedAt = source_json.closedAt.toString();
     target_issue.createdAt = source_json.createdAt.toString();
-    target_issue.author = check <Creator> source_json.author;
+    target_issue.author = check <Creator>source_json.author;
     string stringNumber = source_json.number.toString();
     int intNumber = check <int>stringNumber;
     target_issue.number = intNumber;
-    json[] labelList = check <json[]> source_json.labels.nodes;
+    json[] labelList = check <json[]>source_json.labels.nodes;
     foreach i, label in labelList {
         target_issue.labels[i] = check <Label>label;
     }
@@ -194,7 +194,7 @@ function jsonToIssue (json source_json) returns (Issue) {
     target_issue.updatedAt = source_json.updatedAt.toString();
     target_issue.url = source_json.url.toString();
 
-    json[] assigneeList = check <json[]> source_json.assignees.nodes;
+    json[] assigneeList = check <json[]>source_json.assignees.nodes;
     foreach i, assignee in assigneeList {
         target_issue.assignees[i] = check <Assignee>assignee;
     }
@@ -205,7 +205,7 @@ function jsonToIssue (json source_json) returns (Issue) {
 //********************************
 // JSON --> Repository
 //********************************
-function jsonToRepository (json source_json) returns (Repository) {
+function jsonToRepository(json source_json) returns (Repository) {
     Repository target_repository;
     target_repository.id = source_json.id.toString();
     target_repository.name = source_json.name.toString();
@@ -250,7 +250,8 @@ function jsonToRepository (json source_json) returns (Repository) {
     target_repository.url = source_json.url.toString();
     target_repository.sshUrl = source_json.sshUrl.toString();
     target_repository.owner = source_json.owner == null ? {} : check <RepositoryOwner>source_json.owner;
-    target_repository.primaryLanguage = source_json.primaryLanguage == null ? {} : check <Language>source_json.primaryLanguage;
+    target_repository.primaryLanguage = source_json.primaryLanguage == null ? {} : check <Language>source_json.
+    primaryLanguage;
 
     return target_repository;
 }
