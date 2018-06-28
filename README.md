@@ -9,7 +9,7 @@ sections explains how to use Ballerina GitHub4 connector. You can refer the [Git
 
 |Ballerina Version | GitHub API Version |
 |------------------| ------------------ |
-|0.975.0          | v4                 |
+|0.975.0           | v4                 |
 
 ![Ballerina GitHub Endpoint Overview](./docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
 
@@ -19,12 +19,12 @@ Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 ### Getting started
 
 * Clone the repository by running the following command
-```
+```shell
 git clone https://github.com/wso2-ballerina/package-github
 ```
 
 * Initialize the ballerina project.
-```
+```shell
 ballerina init
 ```
 
@@ -33,34 +33,34 @@ ballerina init
 All the actions return `objects` or `github4:GitClientError`. If the action was a success, then the requested object will be returned while the `github:GitClientError` will be **empty** and vice-versa.
 
 ##### Example
-* Request 
-```ballerina
-    import wso2/github4;
+* Request
 
-    public function main (string[] args) {
-        endpoint github4:Client githubClient {
-            clientConfig: {
-                auth:{
-                    scheme:"oauth",
-                    accessToken:config:getAsString("GITHUB_TOKEN")
-                }
-            }
-        };
-    
-        github4:Repository repository = {};
-        var repo = githubClient -> getRepository("wso2-ballerina/package-github");
-        match repo {
-            github4:Repository rep => {
-                repository = rep;
-            }
-            github4:GitClientError err => {
-                io:println(err);
+```ballerina
+import wso2/github4;
+
+function main(string... args) {
+    endpoint github4:Client githubClient {
+        clientConfig: {
+            auth:{
+                scheme:http:OAUTH2,
+                accessToken:config:getAsString("GITHUB_TOKEN")
             }
         }
-    
-        io:println(repository);
+    };
+
+    github4:Repository repository = {};
+    var repo = githubClient->getRepository("wso2-ballerina/package-github");
+    match repo {
+        github4:Repository rep => {
+            repository = rep;
+        }
+        github4:GitClientError err => {
+            io:println(err);
+        }
     }
-    
+
+    io:println(repository);
+}
 ```
 
 * Response object
