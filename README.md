@@ -36,6 +36,9 @@ All the actions return `objects` or `github4:GitClientError`. If the action was 
 * Request
 
 ```ballerina
+import ballerina/config;
+import ballerina/http;
+import ballerina/io;
 import wso2/github4;
 
 function main(string... args) {
