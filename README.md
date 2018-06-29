@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/wso2-ballerina/package-github.svg?branch=master)](https://travis-ci.org/wso2-ballerina/package-github)
+
 # Ballerina GitHub Endpoint
 
 ###### GitHub brings together the world's largest community of developers to discover, share, and build better software. From open source projects to private team repositories, GitHub is an all-in-one platform for collaborative development.
