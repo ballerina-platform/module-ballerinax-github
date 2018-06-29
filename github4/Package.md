@@ -41,7 +41,7 @@ You can now enter the access token in the HTTP client config.
 endpoint github4:Client githubEP {
     clientConfig: {
         auth:{
-            scheme:"oauth",
+            scheme:http:OAUTH2,
             accessToken:config:getAsString("GITHUB_TOKEN")
         }
     }
@@ -50,7 +50,7 @@ endpoint github4:Client githubEP {
 
 The `getRepository` function gets a GitHub repository by passing the name of the repository and its owner in the format of "owner/repository".
 ```ballerina
-var repo = githubEP -> getRepository("wso2-ballerina/package-github");
+var repo = githubEP->getRepository("wso2-ballerina/package-github");
 ```
 
 The response from `getRepository` is either a `Repository` object (if the request was successful) or a `GitClientError` (if the request was unsuccessful). The `match` operation can be used to handle the response if an error occurs.
@@ -65,11 +65,11 @@ The `getIssueList` function gets a list of issues for a given repository by prov
 
 ```ballerina
 github4:Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
-var issues = githubEP -> getIssueList(issueRepository, github4:STATE_CLOSED, recordCount);
+var issues = githubEP->getIssueList(issueRepository, github4:STATE_CLOSED, recordCount);
 ```
 or
 ```ballerina
-var issues = githubEP -> getIssueList(("wso2" , "carbon-apimgt"), github4:STATE_CLOSED, recordCount);
+var issues = githubEP->getIssueList(("wso2", "carbon-apimgt"), github4:STATE_CLOSED, recordCount);
 ```
 
 The response from `getIssueList` is either an `IssueList` object (if the request was successful) or a `GitClientError` (if the request was unsuccessful).
@@ -84,7 +84,7 @@ match issues {
 The `createIssue` function creates a new issue in a given repository.
 
 ```ballerina
-var createdIssue = githubEP -> createIssue (repositoryOwner, repositoryName, issueTitle, issueContent, labelList, assigneeList);
+var createdIssue = githubEP->createIssue (repositoryOwner, repositoryName, issueTitle, issueContent, labelList, assigneeList);
 ```
 
 It returns the created `Issue` object if successful or `GitClientError` if unsuccessful.
@@ -92,6 +92,6 @@ It returns the created `Issue` object if successful or `GitClientError` if unsuc
 ```ballerina
 match createdIssue {
     github4:Issue issue => io:println(issue);
-    github4:	GitClientError err => io:println(err);
+    github4:GitClientError err => io:println(err);
 }
 ```
