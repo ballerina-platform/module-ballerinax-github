@@ -18,7 +18,7 @@ script:
 
 - wget https://product-dist.ballerina.io/nightly/$BALLERINA_VERSION/$DISTRIBUTION_NAME.zip
 
-- unzip -q $DOWNLOAD_DIRECTORY/$DISTRIBUTION_NAME.zip
+- unzip -q $DISTRIBUTION_NAME.zip
 
 - export PATH=$PATH:$(pwd)/$DISTRIBUTION_NAME/bin
 
