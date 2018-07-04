@@ -15,20 +15,15 @@
 script:
 - BALLERINA_VERSION=0.976.1-SNAPSHOT
 - DISTRIBUTION_NAME=ballerina-platform-$BALLERINA_VERSION
-- DOWNLOAD_DIRECTORY=ballerina
 
-- wget -N https://product-dist.ballerina.io/nightly/$BALLERINA_VERSION/$DISTRIBUTION_NAME.zip -P $DOWNLOAD_DIRECTORY
+- wget https://product-dist.ballerina.io/nightly/$BALLERINA_VERSION/$DISTRIBUTION_NAME.zip
 
-- unzip -q $DOWNLOAD_DIRECTORY/$DISTRIBUTION_NAME.zip -d $DOWNLOAD_DIRECTORY
+- unzip -q $DOWNLOAD_DIRECTORY/$DISTRIBUTION_NAME.zip
 
-- export PATH=$PATH:$(pwd)/$DOWNLOAD_DIRECTORY/$DISTRIBUTION_NAME/bin
+- export PATH=$PATH:$(pwd)/$DISTRIBUTION_NAME/bin
 
 - ballerina version
 
 - ballerina init
 
-- ballerina test
-
-cache:
-  directories:
-  - $DOWNLOAD_DIRECTORY
+- ballerina build --skiptests
