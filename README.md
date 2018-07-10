@@ -9,9 +9,9 @@ The connector has built-in support to handle OAuth2.0, provides auto completion 
 sections explains how to use Ballerina GitHub4 connector. You can refer the [GitHub GraphQL API v4.0]
 (https://developer.github.com/v4/) to learn more about the API. 
 
-|Ballerina Version | GitHub API Version |
-|------------------| ------------------ |
-|0.975.0           | v4                 |
+| Ballerina Version | GitHub API Version |
+|-------------------|--------------------|
+| 0.980.0           | v4                 |
 
 ![Ballerina GitHub Endpoint Overview](./docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
 
