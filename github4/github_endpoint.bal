@@ -25,7 +25,7 @@ token to the GitHubClientConfig
 
     F{{clientConfig}} - Client endpoint configurations (CircuitBreaker, throttling, proxy, timeout, etc.)
 }
-public type GitHubClientConfig {
+public type GitHubClientConfig record {
     http:ClientEndpointConfig clientConfig = {};
 };
 
@@ -35,10 +35,8 @@ documentation { GitHub client
     F{{githubConnector}} - GitHub connector object
 }
 public type Client object {
-    public {
-        GitHubClientConfig githubClientConfiguration = {};
-        GitHubConnector githubConnector = new;
-    }
+    public GitHubClientConfig githubClientConfiguration = {};
+    public GitHubConnector githubConnector = new;
 
     documentation { GitHub client endpoint initialization function
         P{{githubClientConfig}} - GitHub client configuration
@@ -52,7 +50,7 @@ public type Client object {
 
 };
 
-public function Client::init(GitHubClientConfig githubClientConfig) {
+function Client::init(GitHubClientConfig githubClientConfig) {
 
     // Set the target url to the GitHub GraphQL API endpoint
     githubClientConfig.clientConfig.url = GIT_GRAPHQL_API_URL;
@@ -67,6 +65,6 @@ public function Client::init(GitHubClientConfig githubClientConfig) {
     self.githubConnector.githubRestClient.init(githubClientConfig.clientConfig);
 }
 
-public function Client::getCallerActions() returns GitHubConnector {
+function Client::getCallerActions() returns GitHubConnector {
     return self.githubConnector;
 }
