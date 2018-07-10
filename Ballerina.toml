@@ -1,8 +1,7 @@
 [project]
 org-name = "wso2"
-version = "0.9.10"
+version = "0.9.11"
 authors = ["WSO2"]
 keywords = ["github", "endpoint", "API"]
-description = "The Ballerina GitHub endpoint allow users to access the GitHub API through ballerina. This endpoint uses the GitHub GraphQL API v4.0"
 repository = "https://github.com/wso2-ballerina/package-github"
 license = "Apache-2.0"
