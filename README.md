@@ -70,7 +70,7 @@ function main(string... args) {
 
 * Response object
 ```ballerina
-public type Repository {
+public type Repository record {
     string id;
     string name;
     string createdAt;
@@ -85,7 +85,6 @@ public type Repository {
     boolean isLocked;
     boolean isMirror;
     boolean isPrivate;
-    string license;
     string lockReason;
     string mirrorUrl;
     string url;
