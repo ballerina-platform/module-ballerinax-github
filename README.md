@@ -85,7 +85,6 @@ public type Repository {
     boolean isLocked;
     boolean isMirror;
     boolean isPrivate;
-    string license;
     string lockReason;
     string mirrorUrl;
     string url;
