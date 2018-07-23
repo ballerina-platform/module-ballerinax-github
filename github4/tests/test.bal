@@ -23,6 +23,8 @@ import ballerina/test;
 
 string testOrganizationName = config:getAsString("ORGANIZATION_NAME");
 string testResourcePath = config:getAsString("RESOURCE_PATH");
+string repositoryOwner = config:getAsString("REPOSITORY_OWNER");
+string issueAssignee = config:getAsString("ISSUE_ASSIGNEE");
 
 endpoint Client githubClient {
     clientConfig: {
@@ -503,8 +505,8 @@ function testGetIssueListNextPage() {
 function testCreateIssue() {
     log:printInfo("githubClient -> createIssue()");
 
-    var createdIssue = githubClient->createIssue ("vlgunarathne", "ballerina-connector-test",
-        "This is a test issue", "This is the body of the test issue", ["bug", "critical"], ["vlgunarathne"]);
+    var createdIssue = githubClient->createIssue (repositoryOwner, "ballerina-connector-test",
+        "This is a test issue", "This is the body of the test issue", ["bug", "critical"], [issueAssignee]);
 
     match createdIssue {
         Issue issue => {

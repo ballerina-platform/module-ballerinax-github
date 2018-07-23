@@ -252,7 +252,9 @@ function jsonToRepository(json source_json) returns (Repository) {
     target_repository.owner = source_json.owner == null ? {} : check <RepositoryOwner>source_json.owner;
     target_repository.primaryLanguage = source_json.primaryLanguage == null ? {} : check <Language>source_json.
     primaryLanguage;
-
+    string stringStargazerCount = source_json.stargazers.totalCount.toString();
+    int intStargazerCount = check <int>stringStargazerCount;
+    target_repository.stargazerCount = intStargazerCount;
     return target_repository;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
