@@ -270,7 +270,7 @@ documentation { State open and closed }
                sshUrl,
                " + REPOSITORY_OWNER + ",
                " + PRIMARY_LANGUAGE + ",
-               stargazers{
+               stargazers {
                     totalCount
                }
   }
