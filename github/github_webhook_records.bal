@@ -1,4 +1,4 @@
-public type User {
+public type User record {
     string login,
     int id,
     string avatar_url,
@@ -14,16 +14,16 @@ public type User {
     string repos_url,
     string events_url,
     string received_events_url,
-    string user_type, //"type" in payload
+    string ^"type", //"type" in payload
     boolean site_admin,
 };
 
-public type Repository {
+public type Repository record {
     int id,
     string name,
     string full_name,
     User owner,
-    boolean is_private, //"private" in payload
+    boolean ^"private", //"private" in payload
     string html_url,
     string description,
     boolean is_fork,
@@ -88,13 +88,13 @@ public type Repository {
     string default_branch,
 };
 
-public type WatchEvent {
+public type WatchEvent record {
     string action,
     Repository repository,
     User sender,
 };
 
-public type IssueCommentEvent {
+public type IssueCommentEvent record {
     //partial - mock
     string action,
 };

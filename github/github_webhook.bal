@@ -21,13 +21,9 @@ public type WebhookService object {
 @Field {value:"serviceEndpoint: The underlying HTTP service endpoint"}
 public type WebhookListener object {
 
-    public {
-        WebhookListenerConfiguration config;
-    }
+    public WebhookListenerConfiguration webhookListenerConfig;
 
-    private {
-        websub:Listener websubListener;
-    }
+    private websub:Listener websubListener;
 
     public new() {
         websubListener = new;
@@ -53,13 +49,13 @@ public type WebhookListener object {
 
 };
 
-public type WebhookListenerConfiguration {
+public type WebhookListenerConfiguration record {
     string host,
     int port,
 };
 
-public function WebhookListener::init(WebhookListenerConfiguration config) {
-    self.config = config;
+function WebhookListener::init(WebhookListenerConfiguration config) {
+    self.webhookListenerConfig = config;
     websub:SubscriberServiceEndpointConfiguration sseConfig = { host:config.host, port:config.port };
     sseConfig.topicIdentifier = websub:TOPIC_ID_HEADER_AND_PAYLOAD;
     sseConfig.topicHeader = GITHUB_TOPIC_HEADER;
@@ -68,19 +64,19 @@ public function WebhookListener::init(WebhookListenerConfiguration config) {
     self.websubListener.init(sseConfig);
 }
 
-public function WebhookListener::register(typedesc serviceType) {
+function WebhookListener::register(typedesc serviceType) {
     self.websubListener.register(serviceType);
 }
 
-public function WebhookListener::start() {
+function WebhookListener::start() {
     self.websubListener.start();
 }
 
-public function WebhookListener::getCallerActions() returns (http:Connection) {
+function WebhookListener::getCallerActions() returns (http:Connection) {
     return self.websubListener.getCallerActions();
 }
 
-public function WebhookListener::stop () {
+function WebhookListener::stop () {
     self.websubListener.stop();
 }
 
@@ -115,11 +111,12 @@ public function WebhookListener::stop () {
         "event_type" : {
             "PAYMENT.AUTHORIZATION.CREATED" : ("onPaymentAuthorizatonCreated", websub:Notification),
             "BILLING.PLAN.CREATED" : ("onBillingPlanCreated", websub:Notification)
-        },
-        "action" : {
-            "created" : ("onIssueCommentCreated", IssueCommentEvent),
-            "edited" : ("onIssueCommentEdited", IssueCommentEvent),
-            "deleted" : ("onIssueCommentDeleted", IssueCommentEvent)
         }
+        //,
+        //"action" : {
+        //    "created" : ("onIssueCommentCreated", IssueCommentEvent),
+        //    "edited" : ("onIssueCommentEdited", IssueCommentEvent),
+        //    "deleted" : ("onIssueCommentDeleted", IssueCommentEvent)
+        //}
     }
 };
