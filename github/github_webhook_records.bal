@@ -70,17 +70,17 @@ public type Repository record {
     string ssh_url,
     string clone_url,
     string svn_url,
-    string homepage,
+    string? homepage,
     int size,
     int stargazers_count,
     int watchers_count,
-    string language,
+    string? language,
     boolean has_issues,
     boolean has_downloads,
     boolean has_wiki,
     boolean has_pages,
     int forks_count,
-    string mirror_url,
+    string? mirror_url,
     int open_issues_count,
     int forks,
     int open_issues,
@@ -97,4 +97,16 @@ public type WatchEvent record {
 public type IssueCommentEvent record {
     //partial - mock
     string action,
+};
+
+public type IssueEvent record {
+//partial - mock
+    string action,
+    Issue issue,
+};
+
+public type Issue record {
+//partial - mock
+    string url,
+    string repository_url,
 };

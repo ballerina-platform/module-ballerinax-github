@@ -56,11 +56,15 @@ public type WebhookListenerConfiguration record {
 
 function WebhookListener::init(WebhookListenerConfiguration config) {
     self.webhookListenerConfig = config;
-    websub:SubscriberServiceEndpointConfiguration sseConfig = { host:config.host, port:config.port };
-    sseConfig.topicIdentifier = websub:TOPIC_ID_HEADER_AND_PAYLOAD;
-    sseConfig.topicHeader = GITHUB_TOPIC_HEADER;
-    sseConfig.topicPayloadKeys = ["action"];
-    sseConfig.topicResourceMap = GITHUB_TOPIC_RESOURCE_MAP;
+    websub:ExtensionConfig extensionConfig = {
+        topicIdentifier: websub:TOPIC_ID_HEADER_AND_PAYLOAD,
+        topicHeader: GITHUB_TOPIC_HEADER,
+        headerResourceMap: GITHUB_TOPIC_HEADER_RESOURCE_MAP,
+        payloadKeyResourceMap: GITHUB_TOPIC_PAYLOAD_KEY_RESOURCE_MAP,
+        headerAndPayloadKeyResourceMap: GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP
+    };
+    websub:SubscriberServiceEndpointConfiguration sseConfig = { host: config.host, port: config.port,
+                                                                extensionConfig: extensionConfig };
     self.websubListener.init(sseConfig);
 }
 
@@ -82,41 +86,24 @@ function WebhookListener::stop () {
 
 @final string GITHUB_TOPIC_HEADER = "X-GitHub-Event";
 
-@final map<map<map<(string, typedesc)>|(string, typedesc)>> GITHUB_TOPIC_RESOURCE_MAP = {
+@final map<(string, typedesc)> GITHUB_TOPIC_HEADER_RESOURCE_MAP = {
+    "watch" : ("onWatch", WatchEvent)
+};
+
+@final map<map<(string, typedesc)>> GITHUB_TOPIC_PAYLOAD_KEY_RESOURCE_MAP = {
+    "action" : {
+        "opened" : ("onIssueOpened", IssueEvent),
+        "edited" : ("onIssueEdited", IssueEvent),
+        "closed" : ("onIssueClosed", IssueEvent)
+    }
+};
+
+@final map<map<map<(string, typedesc)>>> GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP = {
     "issue_comment" : {
         "action" : {
             "created" : ("onIssueCommentCreated", IssueCommentEvent),
             "edited" : ("onIssueCommentEdited", IssueCommentEvent),
             "deleted" : ("onIssueCommentDeleted", IssueCommentEvent)
         }
-    },
-    "create" : {
-        "ref_type" : {
-            "repository" : ("onCreateRepository", websub:Notification),
-            "branch" : ("onCreateBranch", websub:Notification),
-            "tag" : ("onCreateTag", websub:Notification)
-        }
-    },
-    "delete" : {
-        "ref_type" : {
-            "branch" : ("onDeleteBranch", websub:Notification),
-            "tag" : ("onDeleteTag", websub:Notification)
-        }
-    },
-    "TOPIC_ID_HEADER" : {
-        "watch" : ("onWatch", WatchEvent),
-        "commit_comment" : ("onCommitComment", websub:Notification)
-    },
-    "TOPIC_ID_PAYLOAD_KEY" : {
-        "event_type" : {
-            "PAYMENT.AUTHORIZATION.CREATED" : ("onPaymentAuthorizatonCreated", websub:Notification),
-            "BILLING.PLAN.CREATED" : ("onBillingPlanCreated", websub:Notification)
-        }
-        //,
-        //"action" : {
-        //    "created" : ("onIssueCommentCreated", IssueCommentEvent),
-        //    "edited" : ("onIssueCommentEdited", IssueCommentEvent),
-        //    "deleted" : ("onIssueCommentDeleted", IssueCommentEvent)
-        //}
     }
 };
