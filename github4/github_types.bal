@@ -101,6 +101,7 @@ public type Repository record {
     string sshUrl;
     RepositoryOwner owner;
     Language primaryLanguage;
+    int stargazerCount;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of Repository object                                                //

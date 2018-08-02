@@ -269,7 +269,10 @@ documentation { State open and closed }
                url,
                sshUrl,
                " + REPOSITORY_OWNER + ",
-    " + PRIMARY_LANGUAGE + "
+               " + PRIMARY_LANGUAGE + ",
+               stargazers {
+                    totalCount
+               }
   }
 }";
 
