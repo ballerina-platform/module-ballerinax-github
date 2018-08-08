@@ -41,14 +41,14 @@ public type Organization record {
     string login;
     string name;
     string email;
-    string description;
-    string location;
-    string resourcePath;
-    string projectsResourcePath;
-    string projectsUrl;
-    string url;
-    string websiteUrl;
-    string avatarUrl;
+    string? description;
+    string? location;
+    string? resourcePath;
+    string? projectsResourcePath;
+    string? projectsUrl;
+    string? url;
+    string? websiteUrl;
+    string? avatarUrl;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,9 +84,9 @@ public type Repository record {
     string id;
     string name;
     string createdAt;
-    string updatedAt;
-    string description;
-    int forkCount;
+    string? updatedAt;
+    string? description;
+    int? forkCount;
     boolean hasIssuesEnabled;
     boolean hasWikiEnabled;
     boolean isArchived;
@@ -94,14 +94,14 @@ public type Repository record {
     boolean isLocked;
     boolean isMirror;
     boolean isPrivate;
-    string homepageUrl;
-    string lockReason;
-    string mirrorUrl;
-    string url;
-    string sshUrl;
+    string? homepageUrl;
+    string? lockReason;
+    string? mirrorUrl;
+    string? url;
+    string? sshUrl;
     RepositoryOwner owner;
     Language primaryLanguage;
-    int stargazerCount;
+    int? stargazerCount;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of Repository object                                                //
@@ -174,10 +174,10 @@ public type Project record {
     string body;
     int number;
     string createdAt;
-    string closed;
-    string closedAt;
-    string updatedAt;
-    string resourcePath;
+    string? closed;
+    string? closedAt;
+    string? updatedAt;
+    string? resourcePath;
     string state;
     string url;
     boolean viewerCanUpdate;
@@ -243,7 +243,6 @@ documentation { Represents a github Column
 public type Column object {
     public string id;
     public string name;
-
     string columnQuery;
     string listOwner;
     CardList cards;
@@ -322,10 +321,10 @@ documentation { Represents a github card
 }
 public type Card record {
     string id;
-    string note;
+    string? note;
     string state;
     string createdAt;
-    string updatedAt;
+    string? updatedAt;
     string url;
     Creator creator;
     json column;
@@ -408,23 +407,23 @@ public type PullRequest record {
     string id;
     string title;
     string createdAt;
-    string updatedAt;
+    string? updatedAt;
     boolean closed;
-    string closedAt;
-    string mergedAt;
+    string? closedAt;
+    string? mergedAt;
     string state;
     int number;
     string url;
-    string body;
+    string? body;
     string changedFiles;
     int additions;
     int deletions;
-    string resourcePath;
-    string revertResourcePath;
-    string revertUrl;
+    string? resourcePath;
+    string? revertResourcePath;
+    string? revertUrl;
     Creator author;
-    string headRefName;
-    string baseRefName;
+    string? headRefName;
+    string? baseRefName;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of PullRequest object                                               //
@@ -492,16 +491,16 @@ documentation { Represents a github issue
 }
 public type Issue record {
     string id;
-    string bodyText;
-    string closed;
-    string closedAt;
+    string? bodyText;
+    string? closed;
+    string? closedAt;
     string createdAt;
     Creator author;
     Label[] labels;
     int number;
     string state;
     string title;
-    string updatedAt;
+    string? updatedAt;
     string url;
     Assignee[] assignees;
 };
@@ -562,9 +561,9 @@ documentation { Represents a github Creator
 }
 public type Creator record {
     string login;
-    string resourcePath;
-    string url;
-    string avatarUrl;
+    string? resourcePath;
+    string? url;
+    string? avatarUrl;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of Creator object                                                  //
@@ -624,8 +623,8 @@ public type RepositoryOwner record {
     string id;
     string login;
     string url;
-    string avatarUrl;
-    string resourcePath;
+    string? avatarUrl;
+    string? resourcePath;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          End RepositoryOwner object                                               //
@@ -640,9 +639,9 @@ documentation { Represents a content in a github card
     F{{issueState}} - State of the issue (OPEN, CLOSED)
 }
 public type Content record {
-    string title;
-    string url;
-    string issueState;
+    string? title;
+    string? url;
+    string? issueState;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of Content object                                                   //
@@ -658,8 +657,8 @@ documentation { Represents a github language
 }
 public type Language record {
     string id;
-    string name;
-    string color;
+    string? name;
+    string? color;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of Language object                                                //
@@ -692,8 +691,8 @@ documentation { Represents a github page information
 type PageInfo record {
     boolean hasNextPage;
     boolean hasPreviousPage;
-    string startCursor;
-    string endCursor;
+    string? startCursor;
+    string? endCursor;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of PageInfo object                                                 //
@@ -711,8 +710,8 @@ documentation { Represents a github label
 public type Label record {
     string id;
     string name;
-    string description;
-    string color;
+    string? description;
+    string? color;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of Label object                                                   //
@@ -732,8 +731,8 @@ public type Assignee record {
     string id;
     string login;
     string email;
-    string bio;
-    string url;
+    string? bio;
+    string? url;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of Assignee object                                                 //
