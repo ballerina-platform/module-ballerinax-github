@@ -634,16 +634,17 @@ function GitHubConnector::getProjectColumnList(Project project, int recordCount)
         return gitClientError;
     }
     string projectOwnerType = project.owner.getOwnerType();
+    string resourcePath = project.resourcePath but { () => EMPTY_STRING };
     if (projectOwnerType.equalsIgnoreCase(GIT_ORGANIZATION)) {
-        string organization = project.resourcePath.split(PATH_SEPARATOR)[INDEX_TWO];
+        string organization = resourcePath.split(PATH_SEPARATOR)[INDEX_TWO];
         string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS,
             organization, project.number, recordCount);
 
         return getProjectColumns(GIT_ORGANIZATION, stringQuery, self.githubGraphQlClient);
 
     } else if (projectOwnerType.equalsIgnoreCase(GIT_REPOSITORY)) {
-        string ownerName = project.resourcePath.split(PATH_SEPARATOR)[INDEX_ONE];
-        string repositoryName = project.resourcePath.split(PATH_SEPARATOR)[INDEX_TWO];
+        string ownerName = resourcePath.split(PATH_SEPARATOR)[INDEX_ONE];
+        string repositoryName = resourcePath.split(PATH_SEPARATOR)[INDEX_TWO];
         string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS,
             ownerName, repositoryName, project.number, recordCount);
 
