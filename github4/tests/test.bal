@@ -21,23 +21,28 @@ import ballerina/http;
 import ballerina/log;
 import ballerina/test;
 
+string testOrganizationName = config:getAsString("ORGANIZATION_NAME");
+string testResourcePath = config:getAsString("RESOURCE_PATH");
+string testRepositoryOwner = config:getAsString("REPOSITORY_OWNER");
+string testIssueAssignee = config:getAsString("ISSUE_ASSIGNEE");
+
 endpoint Client githubClient {
     clientConfig: {
-        auth:{
-            scheme:"oauth",
-            accessToken:config:getAsString("GITHUB_TOKEN")
+        auth: {
+            scheme: http:OAUTH2,
+            accessToken: config:getAsString("GITHUB_TOKEN")
         }
     }
 };
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
-function testGetOrganization () {
+function testGetOrganization() {
     //Get a single organization
     log:printInfo("githubClient -> getOrganization()");
     Organization organization = {};
-    var organizationData = githubClient -> getOrganization("wso2");
+    var organizationData = githubClient->getOrganization("wso2");
     match organizationData {
         Organization org => {
             organization = org;
@@ -52,14 +57,14 @@ function testGetOrganization () {
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
-function testGetOrganizationProject () {
+function testGetOrganizationProject() {
     // Get an organization project
     log:printInfo("githubClient -> getOrganizationProject()");
     Project orgProject = {};
-    Organization projectOrganization = {login:"wso2"};
-    var projectData = githubClient -> getOrganizationProject(projectOrganization, 1);
+    Organization projectOrganization = { login: testOrganizationName };
+    var projectData = githubClient->getOrganizationProject(projectOrganization, 1);
     match projectData {
         Project proj => {
             orgProject = proj;
@@ -74,16 +79,16 @@ function testGetOrganizationProject () {
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
-function testGetOrganizationProjectList () {
+function testGetOrganizationProjectList() {
     //Get a list of projects of an organization
     log:printInfo("githubClient -> getOrganizationProjectList()");
     int recordCount = 2;
     ProjectList projectList = new;
-    Organization projectListOrganization = {login:"wso2"};
-    var responseProjectList = githubClient ->
-                              getOrganizationProjectList(projectListOrganization, STATE_OPEN, recordCount);
+    Organization projectListOrganization = { login: testOrganizationName };
+    var responseProjectList = githubClient->
+    getOrganizationProjectList(projectListOrganization, STATE_OPEN, recordCount);
     match responseProjectList {
         ProjectList prjtList => {
             projectList = prjtList;
@@ -99,17 +104,17 @@ function testGetOrganizationProjectList () {
 }
 
 @test:Config {
-    dependsOn:["testGetOrganizationProjectList"],
-    groups:["network-calls"]
+    dependsOn: ["testGetOrganizationProjectList"],
+    groups: ["network-calls"]
 }
-function testGetOrganizationProjectListNextPage () {
+function testGetOrganizationProjectListNextPage() {
     //Get a list of projects of an organization
     log:printInfo("githubClient -> getOrganizationProjectListNextPage()");
     int recordCount = 2;
     ProjectList projectList = new;
-    Organization projectListOrganization = {login:"wso2"};
-    var responseProjectList = githubClient ->
-                              getOrganizationProjectList(projectListOrganization, STATE_OPEN, 2);
+    Organization projectListOrganization = { login: testOrganizationName };
+    var responseProjectList = githubClient->
+    getOrganizationProjectList(projectListOrganization, STATE_OPEN, 2);
     match responseProjectList {
         ProjectList prjtList => {
             projectList = prjtList;
@@ -120,7 +125,7 @@ function testGetOrganizationProjectListNextPage () {
         }
     }
     // Next page
-    responseProjectList = githubClient -> getProjectListNextPage(projectList);
+    responseProjectList = githubClient->getProjectListNextPage(projectList);
     match responseProjectList {
         ProjectList prjtList => {
             projectList = prjtList;
@@ -136,16 +141,16 @@ function testGetOrganizationProjectListNextPage () {
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
-function testGetProjectColumnList () {
+function testGetProjectColumnList() {
     //Get project column list
     log:printInfo("githubClient -> getProjectColumnList()");
     int recordCount = 2;
-    Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1"};
+    Project columnListProject = { number: 1, resourcePath: testResourcePath };
     columnListProject.owner.setOwnerType("Organization");
     ColumnList columnList = new;
-    var columns = githubClient -> getProjectColumnList(columnListProject, recordCount);
+    var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
     match columns {
         ColumnList colList => {
             columnList = colList;
@@ -160,17 +165,17 @@ function testGetProjectColumnList () {
 }
 
 @test:Config {
-    dependsOn:["testGetProjectColumnList"],
-    groups:["network-calls"]
+    dependsOn: ["testGetProjectColumnList"],
+    groups: ["network-calls"]
 }
-function testGetCardListOfColumn () {
+function testGetCardListOfColumn() {
     //Get column card list
     log:printInfo("column.getCardList()");
     int recordCount = 2;
-    Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1"};
+    Project columnListProject = { number: 1, resourcePath: testResourcePath };
     columnListProject.owner.setOwnerType("Organization");
     ColumnList columnList = new;
-    var columns = githubClient -> getProjectColumnList(columnListProject, recordCount);
+    var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
     match columns {
         ColumnList colList => {
             columnList = colList;
@@ -187,17 +192,17 @@ function testGetCardListOfColumn () {
 }
 
 @test:Config {
-    dependsOn:["testGetCardListOfColumn"],
-    groups:["network-calls"]
+    dependsOn: ["testGetCardListOfColumn"],
+    groups: ["network-calls"]
 }
-function testGetCardListNextPage () {
+function testGetCardListNextPage() {
     //Get card list next page
     log:printInfo("githubClient -> getCardListNextPage()");
     int recordCount = 2;
-    Project columnListProject = {number:1, resourcePath:"/orgs/wso2/projects/1"};
+    Project columnListProject = { number: 1, resourcePath: testResourcePath };
     columnListProject.owner.setOwnerType("Organization");
     ColumnList columnList = new;
-    var columns = githubClient -> getProjectColumnList(columnListProject, recordCount);
+    var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
     match columns {
         ColumnList colList => {
             columnList = colList;
@@ -208,7 +213,7 @@ function testGetCardListNextPage () {
     }
     Column column = columnList.getAllColumns()[0];
     CardList cardList = column.getCardList();
-    var cardListNextPage = githubClient -> getCardListNextPage(cardList);
+    var cardListNextPage = githubClient->getCardListNextPage(cardList);
     match cardListNextPage {
         CardList cd => {
             cardList = cd;
@@ -223,15 +228,15 @@ function testGetCardListNextPage () {
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
-function testGetOrganizationRepositoryList () {
+function testGetOrganizationRepositoryList() {
     //Get a all the repositories of Organization
     log:printInfo("githubClient -> getOrganizationRepositoryList()");
     int recordCount = 2;
-    Organization repositoryListOrganization = {login:"wso2"};
+    Organization repositoryListOrganization = { login: "wso2" };
     RepositoryList repositoryList = new;
-    var repoList = githubClient -> getOrganizationRepositoryList(repositoryListOrganization, recordCount);
+    var repoList = githubClient->getOrganizationRepositoryList(repositoryListOrganization, recordCount);
     match repoList {
         RepositoryList repList => {
             repositoryList = repList;
@@ -246,16 +251,16 @@ function testGetOrganizationRepositoryList () {
 }
 
 @test:Config {
-    dependsOn:["testGetOrganizationRepositoryList"],
-    groups:["network-calls"]
+    dependsOn: ["testGetOrganizationRepositoryList"],
+    groups: ["network-calls"]
 }
-function testGetOrganizationRepositoryListNextPage () {
+function testGetOrganizationRepositoryListNextPage() {
     //Get a all the repositories of Organization
     log:printInfo("githubClient -> getRepositoryListNextPage()");
     int recordCount = 2;
-    Organization repositoryListOrganization = {login:"wso2"};
+    Organization repositoryListOrganization = { login: "wso2" };
     RepositoryList repositoryList = new;
-    var repoList = githubClient -> getOrganizationRepositoryList(repositoryListOrganization, recordCount);
+    var repoList = githubClient->getOrganizationRepositoryList(repositoryListOrganization, recordCount);
     match repoList {
         RepositoryList repList => {
             repositoryList = repList;
@@ -265,7 +270,7 @@ function testGetOrganizationRepositoryListNextPage () {
         }
     }
     // Next page
-    repoList = githubClient -> getRepositoryListNextPage(repositoryList);
+    repoList = githubClient->getRepositoryListNextPage(repositoryList);
     match repoList {
         RepositoryList repList => {
             repositoryList = repList;
@@ -281,13 +286,13 @@ function testGetOrganizationRepositoryListNextPage () {
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
-function testGetRepository () {
+function testGetRepository() {
     //Get a single repository
     log:printInfo("githubClient -> getRepository()");
     Repository repository = {};
-    var repo = githubClient -> getRepository("wso2/product-apim");
+    var repo = githubClient->getRepository("wso2/product-apim");
     match repo {
         Repository rep => {
             repository = rep;
@@ -301,14 +306,14 @@ function testGetRepository () {
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
-function testGetRepositoryProject () {
+function testGetRepositoryProject() {
     //Get a Repository Project
     log:printInfo("githubClient -> getRepositoryProject()");
-    Repository projectRepository = {owner:{login:"wso2"}, name:"testgrid"};
+    Repository projectRepository = { owner: { login: "wso2" }, name: "testgrid" };
     Project repositoryProject = {};
-    var singleRepoProject = githubClient -> getRepositoryProject(projectRepository, 1);
+    var singleRepoProject = githubClient->getRepositoryProject(projectRepository, 1);
     match singleRepoProject {
         Project project => {
             repositoryProject = project;
@@ -322,16 +327,16 @@ function testGetRepositoryProject () {
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
-function testGetRepositoryProjectList () {
+function testGetRepositoryProjectList() {
     //Get a list of projects of a repository
     log:printInfo("githubClient -> getRepositoryProjectList()");
     int recordCount = 1;
-    Repository projectRepositoryList = {name:"testgrid", owner:{login:"wso2"}};
+    Repository projectRepositoryList = { name: "testgrid", owner: { login: "wso2" } };
     ProjectList repoProjectList = new;
-    var responseRepoProjectList = githubClient ->
-                                  getRepositoryProjectList(projectRepositoryList, STATE_OPEN, recordCount);
+    var responseRepoProjectList = githubClient->
+    getRepositoryProjectList(projectRepositoryList, STATE_OPEN, recordCount);
     match responseRepoProjectList {
         ProjectList prjtList => {
             repoProjectList = prjtList;
@@ -346,17 +351,17 @@ function testGetRepositoryProjectList () {
 }
 
 @test:Config {
-    dependsOn:["testGetRepositoryProjectList"],
-    groups:["network-calls"]
+    dependsOn: ["testGetRepositoryProjectList"],
+    groups: ["network-calls"]
 }
-function testGetRepositoryProjectListNextPage () {
+function testGetRepositoryProjectListNextPage() {
     //Get a list of projects of a repository
     log:printInfo("githubClient -> getProjectListNextPage()");
     int recordCount = 1;
-    Repository projectRepository = {name:"ProLAd-ExpertSystem", owner:{login:"vlgunarathne"}};
+    Repository projectRepository = { name: "ProLAd-ExpertSystem", owner: { login: "vlgunarathne" } };
     ProjectList repoProjectList = new;
-    var responseRepoProjectList = githubClient ->
-                                  getRepositoryProjectList(projectRepository, STATE_OPEN, 1);
+    var responseRepoProjectList = githubClient->
+    getRepositoryProjectList(projectRepository, STATE_OPEN, 1);
     match responseRepoProjectList {
         ProjectList prjtList => {
             repoProjectList = prjtList;
@@ -366,7 +371,7 @@ function testGetRepositoryProjectListNextPage () {
         }
     }
     // Next page
-    responseRepoProjectList = githubClient -> getProjectListNextPage(repoProjectList);
+    responseRepoProjectList = githubClient->getProjectListNextPage(repoProjectList);
     match responseRepoProjectList {
         ProjectList prjList => {
             repoProjectList = prjList;
@@ -381,15 +386,15 @@ function testGetRepositoryProjectListNextPage () {
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
-function testGetPullRequestList () {
+function testGetPullRequestList() {
     //Get a list of pull requests in a repository
     log:printInfo("githubClient -> getPullRequestList()");
     int recordCount = 2;
-    Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
+    Repository pullRequestRepository = { owner: { login: "wso2" }, name: "product-is" };
     PullRequestList pullRequestList = new;
-    var prList = githubClient -> getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
+    var prList = githubClient->getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
     match prList {
         PullRequestList pList => {
             pullRequestList = pList;
@@ -404,16 +409,16 @@ function testGetPullRequestList () {
 }
 
 @test:Config {
-    dependsOn:["testGetPullRequestList"],
-    groups:["network-calls"]
+    dependsOn: ["testGetPullRequestList"],
+    groups: ["network-calls"]
 }
-function testGetPullRequestListNextPage () {
+function testGetPullRequestListNextPage() {
     //Get a list of pull requests in a repository
     log:printInfo("githubClient -> getPullRequestListNextPage()");
     int recordCount = 2;
-    Repository pullRequestRepository = {owner:{login:"wso2"}, name:"product-is"};
+    Repository pullRequestRepository = { owner: { login: "wso2" }, name: "product-is" };
     PullRequestList pullRequestList = new;
-    var prList = githubClient -> getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
+    var prList = githubClient->getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
     match prList {
         PullRequestList pList => {
             pullRequestList = pList;
@@ -423,7 +428,7 @@ function testGetPullRequestListNextPage () {
         }
     }
     // Next page
-    prList = githubClient -> getPullRequestListNextPage(pullRequestList);
+    prList = githubClient->getPullRequestListNextPage(pullRequestList);
     match prList {
         PullRequestList pList => {
             pullRequestList = pList;
@@ -438,15 +443,15 @@ function testGetPullRequestListNextPage () {
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
-function testGetIssueList () {
+function testGetIssueList() {
     //Get a list of issues of a repository
     log:printInfo("githubClient -> getIssueList()");
     int recordCount = 2;
-    Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
+    Repository issueRepository = { owner: { login: "wso2" }, name: "carbon-apimgt" };
     IssueList issueList = new;
-    var issues = githubClient -> getIssueList(issueRepository, STATE_CLOSED, recordCount);
+    var issues = githubClient->getIssueList(issueRepository, STATE_CLOSED, recordCount);
     match issues {
         IssueList isList => {
             issueList = isList;
@@ -461,16 +466,16 @@ function testGetIssueList () {
 }
 
 @test:Config {
-    dependsOn:["testGetIssueList"],
-    groups:["network-calls"]
+    dependsOn: ["testGetIssueList"],
+    groups: ["network-calls"]
 }
-function testGetIssueListNextPage () {
+function testGetIssueListNextPage() {
     //Get a list of issues of a repository
     log:printInfo("githubClient -> getIssueListNextPage()");
     int recordCount = 2;
-    Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
+    Repository issueRepository = { owner: { login: "wso2" }, name: "carbon-apimgt" };
     IssueList issueList = new;
-    var issues = githubClient -> getIssueList(issueRepository, STATE_CLOSED, recordCount);
+    var issues = githubClient->getIssueList(issueRepository, STATE_CLOSED, recordCount);
     match issues {
         IssueList isList => {
             issueList = isList;
@@ -480,7 +485,7 @@ function testGetIssueListNextPage () {
         }
     }
     // Next page
-    issues = githubClient -> getIssueListNextPage(issueList);
+    issues = githubClient->getIssueListNextPage(issueList);
     match issues {
         IssueList isList => {
             issueList = isList;
@@ -495,13 +500,13 @@ function testGetIssueListNextPage () {
 }
 
 @test:Config {
-    groups:["network-calls"]
+    groups: ["network-calls"]
 }
-function testCreateIssue () {
+function testCreateIssue() {
     log:printInfo("githubClient -> createIssue()");
 
-    var createdIssue = githubClient -> createIssue ("vlgunarathne", "ballerina-connector-test" ,
-                "This is a test issue", "This is the body of the test issue", ["bug", "critical"], ["vlgunarathne"]);
+    var createdIssue = githubClient->createIssue (testRepositoryOwner, "ballerina-connector-test",
+        "This is a test issue", "This is the body of the test issue", ["bug", "critical"], [testIssueAssignee]);
 
     match createdIssue {
         Issue issue => {
@@ -514,9 +519,9 @@ function testCreateIssue () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testRepositoryListHasNextPage () {
+function testRepositoryListHasNextPage() {
     log:printInfo("RepositoryList.hasNextPage()");
     RepositoryList repositoryList = new;
 
@@ -524,9 +529,9 @@ function testRepositoryListHasNextPage () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testRepositoryListHasPreviousPage () {
+function testRepositoryListHasPreviousPage() {
     log:printInfo("RepositoryList.hasPreviousPage()");
     RepositoryList repositoryList = new;
 
@@ -534,9 +539,9 @@ function testRepositoryListHasPreviousPage () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testRepositoryListGetAllRepositories () {
+function testRepositoryListGetAllRepositories() {
     log:printInfo("RepositoryList.getAllRepositories()");
     RepositoryList repositoryList = new;
     var repoArray = repositoryList.getAllRepositories();
@@ -545,9 +550,9 @@ function testRepositoryListGetAllRepositories () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testProjectListHasNextPage () {
+function testProjectListHasNextPage() {
     log:printInfo("ProjectList.hasNextPage()");
     ProjectList projectList = new;
 
@@ -555,9 +560,9 @@ function testProjectListHasNextPage () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testProjectListHasPreviousPage () {
+function testProjectListHasPreviousPage() {
     log:printInfo("ProjectList.hasPreviousPage()");
     ProjectList projectList = new;
 
@@ -565,9 +570,9 @@ function testProjectListHasPreviousPage () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testProjectListGetAllProjects () {
+function testProjectListGetAllProjects() {
     log:printInfo("ProjectList.getAllRepositories()");
     ProjectList projectList = new;
     var projectArray = projectList.getAllProjects();
@@ -576,9 +581,9 @@ function testProjectListGetAllProjects () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testColumnGetCardList () {
+function testColumnGetCardList() {
     log:printInfo("Column.getCardList()");
     Column column = new;
     var cardList = column.getCardList();
@@ -587,9 +592,9 @@ function testColumnGetCardList () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testColumnListHasNextPage () {
+function testColumnListHasNextPage() {
     log:printInfo("ColumnList.hasNextPage()");
     ColumnList columnList = new;
 
@@ -597,9 +602,9 @@ function testColumnListHasNextPage () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testColumnListHasPreviousPage () {
+function testColumnListHasPreviousPage() {
     log:printInfo("ColumnList.hasPreviousPage()");
     ColumnList columnList = new;
 
@@ -607,9 +612,9 @@ function testColumnListHasPreviousPage () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testColumnListGetAllColumns () {
+function testColumnListGetAllColumns() {
     log:printInfo("ColumnList.getAllColumns()");
     ColumnList columnList = new;
     var columnArray = columnList.getAllColumns();
@@ -618,9 +623,9 @@ function testColumnListGetAllColumns () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testCardListHasNextPage () {
+function testCardListHasNextPage() {
     log:printInfo("CardList.hasNextPage()");
     CardList cardList = new;
 
@@ -628,9 +633,9 @@ function testCardListHasNextPage () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testCardListHasPreviousPage () {
+function testCardListHasPreviousPage() {
     log:printInfo("CardList.hasPreviousPage()");
     CardList cardList = new;
 
@@ -638,9 +643,9 @@ function testCardListHasPreviousPage () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testCardListGetAllCards () {
+function testCardListGetAllCards() {
     log:printInfo("CardList.getAllCards()");
     CardList cardList = new;
     var cardArray = cardList.getAllCards();
@@ -649,9 +654,9 @@ function testCardListGetAllCards () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testPullRequestListHasNextPage () {
+function testPullRequestListHasNextPage() {
     log:printInfo("PullRequestList.hasNextPage()");
     PullRequestList pullRequestList = new;
 
@@ -659,9 +664,9 @@ function testPullRequestListHasNextPage () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testPullRequestListHasPreviousPage () {
+function testPullRequestListHasPreviousPage() {
     log:printInfo("PullRequestList.hasPreviousPage()");
     PullRequestList pullRequestList = new;
 
@@ -669,9 +674,9 @@ function testPullRequestListHasPreviousPage () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testPullRequestListGetAllPullRequests () {
+function testPullRequestListGetAllPullRequests() {
     log:printInfo("PullRequestList.getAllPullRequests()");
     PullRequestList pullRequestList = new;
     var pullRequestArray = pullRequestList.getAllPullRequests();
@@ -680,9 +685,9 @@ function testPullRequestListGetAllPullRequests () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testIssueListHasNextPage () {
+function testIssueListHasNextPage() {
     log:printInfo("IssueList.hasNextPage()");
     IssueList issueList = new;
 
@@ -690,9 +695,9 @@ function testIssueListHasNextPage () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testIssueListHasPreviousPage () {
+function testIssueListHasPreviousPage() {
     log:printInfo("IssueList.hasPreviousPage()");
     IssueList issueList = new;
 
@@ -700,9 +705,9 @@ function testIssueListHasPreviousPage () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testIssueListGetAllIssues () {
+function testIssueListGetAllIssues() {
     log:printInfo("IssueList.getAllIssues()");
     IssueList issueList = new;
     var issueArray = issueList.getAllIssues();
@@ -711,18 +716,18 @@ function testIssueListGetAllIssues () {
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testProjectOwnerGetOwnerType () {
+function testProjectOwnerGetOwnerType() {
     log:printInfo("ProjectOwner.getOwnerType()");
     ProjectOwner projectOwner = new;
     test:assertEquals(projectOwner.getOwnerType(), "", msg = "Failed ProjectOwner.getOwnerType()");
 }
 
 @test:Config {
-    groups:["object-functions"]
+    groups: ["object-functions"]
 }
-function testProjectOwnerSetOwnerType () {
+function testProjectOwnerSetOwnerType() {
     log:printInfo("ProjectOwner.setOwnerType()");
     ProjectOwner projectOwner = new;
     projectOwner.setOwnerType("Organization");
@@ -732,12 +737,12 @@ function testProjectOwnerSetOwnerType () {
 }
 
 @test:Config {
-    groups:["utility-functions"]
+    groups: ["utility-functions"]
 }
-function testConstructRequest () {
+function testConstructRequest() {
     log:printInfo("constructRequest()");
     http:Request request = new;
-    json samplePayload = {"query":"query body"};
+    json samplePayload = { "query": "query body" };
     string sampleToken = "12345";
     string expectedToken = "Bearer " + sampleToken;
 
@@ -748,13 +753,13 @@ function testConstructRequest () {
 }
 
 @test:Config {
-    groups:["utility-functions"]
+    groups: ["utility-functions"]
 }
-function testGetValidatedResponseSuccess () {
+function testGetValidatedResponseSuccess() {
     log:printInfo("getValidatedResponse() successful");
     http:Response sampleHttpResponse = new;
 
-    json samplePayload = {"data":{"org":{"name":"WSO2"}}};
+    json samplePayload = { "data": { "org": { "name": "WSO2" } } };
     sampleHttpResponse.setJsonPayload(samplePayload);
 
     http:Response|error response = sampleHttpResponse;
@@ -773,14 +778,14 @@ function testGetValidatedResponseSuccess () {
 }
 
 @test:Config {
-    groups:["utility-functions"]
+    groups: ["utility-functions"]
 }
-function testGetValidatedResponseError () {
+function testGetValidatedResponseError() {
     log:printInfo("getValidatedResponse() error payload");
 
     http:Response sampleHttpResponse = new;
 
-    json samplePayload = {"data":{"org":{"name":""}}, "errors":[{"message":"API error"}]};
+    json samplePayload = { "data": { "org": { "name": "" } }, "errors": [{ "message": "API error" }] };
     sampleHttpResponse.setJsonPayload(samplePayload);
 
     http:Response|error response = sampleHttpResponse;
@@ -798,14 +803,14 @@ function testGetValidatedResponseError () {
 }
 
 @test:Config {
-    groups:["utility-functions"]
+    groups: ["utility-functions"]
 }
-function testGetValidatedResponseNoRequestedData () {
+function testGetValidatedResponseNoRequestedData() {
     log:printInfo("getValidatedResponse() no requested data");
 
     http:Response sampleHttpResponse = new;
 
-    json samplePayload = {"data":{"org":{}}};
+    json samplePayload = { "data": { "org": {} } };
     sampleHttpResponse.setJsonPayload(samplePayload);
 
     http:Response|error response = sampleHttpResponse;
@@ -818,15 +823,15 @@ function testGetValidatedResponseNoRequestedData () {
         }
         GitClientError err => {
             test:assertEquals(err.message, "name is not available in the response",
-                                                                        msg = "Validated response error mismatch");
+                msg = "Validated response error mismatch");
         }
     }
 }
 
 @test:Config {
-    groups:["utility-functions"]
+    groups: ["utility-functions"]
 }
-function testGetValidatedResponseNoPayload () {
+function testGetValidatedResponseNoPayload() {
     log:printInfo("getValidatedResponse() no payload");
 
     http:Response sampleHttpResponse = new;
@@ -848,9 +853,9 @@ function testGetValidatedResponseNoPayload () {
 }
 
 @test:Config {
-    groups:["utility-functions"]
+    groups: ["utility-functions"]
 }
-function testGetValidatedResponseHttpError () {
+function testGetValidatedResponseHttpError() {
     log:printInfo("getValidatedResponse() HttpConnectorError");
 
     error sampleHttpError = {};
@@ -871,13 +876,13 @@ function testGetValidatedResponseHttpError () {
 }
 
 @test:Config {
-    groups:["utility-functions"]
+    groups: ["utility-functions"]
 }
-function testGetValidatedRestResponseSuccess () {
+function testGetValidatedRestResponseSuccess() {
     log:printInfo("getValidatedRestResponse() successful");
     http:Response sampleHttpResponse = new;
 
-    json samplePayload = {"title":"Sample title", "number":150};
+    json samplePayload = { "title": "Sample title", "number": 150 };
     sampleHttpResponse.setJsonPayload(samplePayload);
 
     http:Response|error response = sampleHttpResponse;
@@ -896,14 +901,14 @@ function testGetValidatedRestResponseSuccess () {
 }
 
 @test:Config {
-    groups:["utility-functions"]
+    groups: ["utility-functions"]
 }
-function testGetValidatedRestResponseError () {
+function testGetValidatedRestResponseError() {
     log:printInfo("getValidatedRestResponse() error payload");
 
     http:Response sampleHttpResponse = new();
 
-    json samplePayload = {"message":"API error"};
+    json samplePayload = { "message": "API error" };
     sampleHttpResponse.setJsonPayload(samplePayload);
 
     http:Response|error response = sampleHttpResponse;
@@ -920,9 +925,9 @@ function testGetValidatedRestResponseError () {
 }
 
 @test:Config {
-    groups:["utility-functions"]
+    groups: ["utility-functions"]
 }
-function testGetValidatedRestResponseNoPayload () {
+function testGetValidatedRestResponseNoPayload() {
     log:printInfo("getValidatedRestResponse() no payload");
 
     http:Response sampleHttpResponse = new;
@@ -944,9 +949,9 @@ function testGetValidatedRestResponseNoPayload () {
 }
 
 @test:Config {
-    groups:["utility-functions"]
+    groups: ["utility-functions"]
 }
-function testGetValidatedRestResponseHttpError () {
+function testGetValidatedRestResponseHttpError() {
     log:printInfo("getValidatedRestResponse() HttpConnectorError");
 
     error sampleHttpError = {};
@@ -967,9 +972,9 @@ function testGetValidatedRestResponseHttpError () {
 }
 
 @test:Config {
-    groups:["utility-functions"]
+    groups: ["utility-functions"]
 }
-function testStringToJsonError () {
+function testStringToJsonError() {
     log:printInfo("stringToJson() error");
     string stringJson = "{\"title\":Sample title}";
 
@@ -987,9 +992,9 @@ function testStringToJsonError () {
 }
 
 @test:Config {
-    groups:["utility-functions"]
+    groups: ["utility-functions"]
 }
-function testStringToJsonSuccess () {
+function testStringToJsonSuccess() {
     log:printInfo("stringToJson() success");
     string stringJson = "{\"title\":\"Sample title\", \"author\":{\"name\":\"Author1\"}}";
 

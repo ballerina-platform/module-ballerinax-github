@@ -36,19 +36,19 @@ documentation { Represents a github organization
     F{{websiteUrl}} - Organization public profile URL
     F{{avatarUrl}} - Organization public avatar URL
 }
-public type Organization {
+public type Organization record {
     string id;
     string login;
     string name;
     string email;
-    string description;
-    string location;
-    string resourcePath;
-    string projectsResourcePath;
-    string projectsUrl;
-    string url;
-    string websiteUrl;
-    string avatarUrl;
+    string? description;
+    string? location;
+    string? resourcePath;
+    string? projectsResourcePath;
+    string? projectsUrl;
+    string? url;
+    string? websiteUrl;
+    string? avatarUrl;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,13 +80,13 @@ documentation { Represents a github repository
     F{{owner}} - Owner of the repository
     F{{primaryLanguage}} - Primary language of the repository code
 }
-public type Repository {
+public type Repository record {
     string id;
     string name;
     string createdAt;
-    string updatedAt;
-    string description;
-    int forkCount;
+    string? updatedAt;
+    string? description;
+    int? forkCount;
     boolean hasIssuesEnabled;
     boolean hasWikiEnabled;
     boolean isArchived;
@@ -94,13 +94,14 @@ public type Repository {
     boolean isLocked;
     boolean isMirror;
     boolean isPrivate;
-    string homepageUrl;
-    string lockReason;
-    string mirrorUrl;
-    string url;
-    string sshUrl;
+    string? homepageUrl;
+    string? lockReason;
+    string? mirrorUrl;
+    string? url;
+    string? sshUrl;
     RepositoryOwner owner;
     Language primaryLanguage;
+    int? stargazerCount;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of Repository object                                                //
@@ -111,39 +112,37 @@ public type Repository {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 documentation { Represents a list of repositories }
 public type RepositoryList object {
-    private {
-        string repositoryListQuery;
-        PageInfo pageInfo;
-        Repository[] nodes;
-    }
+    string repositoryListQuery;
+    PageInfo pageInfo;
+    Repository[] nodes;
 
     documentation { Check if repository list next page is available
         R{{}} - Return true or false
     }
-    public function hasNextPage () returns (boolean);
+    public function hasNextPage() returns (boolean);
 
     documentation { Check if repository list previous page is available
         R{{}} - Return true or false
     }
-    public function hasPreviousPage () returns (boolean);
+    public function hasPreviousPage() returns (boolean);
 
     documentation { Get all the repositories in the repository list
         R{{}} - Array of Repository objects
     }
-    public function getAllRepositories () returns (Repository[]);
+    public function getAllRepositories() returns (Repository[]);
 };
 //*********************************************************************************************************************
 // RepositoryList bound functions
 //*********************************************************************************************************************
-public function RepositoryList::hasNextPage () returns (boolean) {
+function RepositoryList::hasNextPage() returns (boolean) {
     return self.pageInfo.hasNextPage;
 }
 
-public function RepositoryList::hasPreviousPage () returns (boolean) {
+function RepositoryList::hasPreviousPage() returns (boolean) {
     return self.pageInfo.hasPreviousPage;
 }
 
-public function RepositoryList::getAllRepositories () returns (Repository[]) {
+function RepositoryList::getAllRepositories() returns (Repository[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -169,16 +168,16 @@ documentation { Represents a github project
     F{{creator}} - User who originally created the project
     F{{owner}} - Project owner (Repository or Organization)
 }
-public type Project {
+public type Project record {
     string id;
     string name;
     string body;
     int number;
     string createdAt;
-    string closed;
-    string closedAt;
-    string updatedAt;
-    string resourcePath;
+    string? closed;
+    string? closedAt;
+    string? updatedAt;
+    string? resourcePath;
     string state;
     string url;
     boolean viewerCanUpdate;
@@ -193,43 +192,41 @@ public type Project {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                 ProjectList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-@Description {value:"Represents a list of projects"}
 
+documentation { Represents a list of projects }
 public type ProjectList object {
-    private {
-        string listOwner;
-        string projectListQuery;
-        PageInfo pageInfo;
-        Project[] nodes;
-    }
+    string listOwner;
+    string projectListQuery;
+    PageInfo pageInfo;
+    Project[] nodes;
 
     documentation { Check if project list next page is available
         R{{}} - Return true or false
     }
-    public function hasNextPage () returns (boolean);
+    public function hasNextPage() returns (boolean);
 
     documentation { Check if project list previous page is available
         R{{}} - Return true or false
     }
-    public function hasPreviousPage () returns (boolean);
+    public function hasPreviousPage() returns (boolean);
 
     documentation { Get all the projects in the project list
         R{{}} - Array of Project objects
     }
-    public function getAllProjects () returns (Project[]);
+    public function getAllProjects() returns (Project[]);
 };
 //*********************************************************************************************************************
 // ProjectList bound functions
 //*********************************************************************************************************************
-public function ProjectList::hasNextPage () returns (boolean) {
+function ProjectList::hasNextPage() returns (boolean) {
     return self.pageInfo.hasNextPage;
 }
 
-public function ProjectList::hasPreviousPage () returns (boolean) {
+function ProjectList::hasPreviousPage() returns (boolean) {
     return self.pageInfo.hasPreviousPage;
 }
 
-public function ProjectList::getAllProjects () returns (Project[]) {
+function ProjectList::getAllProjects() returns (Project[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -244,26 +241,21 @@ documentation { Represents a github Column
     F{{name}} - Column name
 }
 public type Column object {
-    public {
-        string id;
-        string name;
-    }
-
-    private {
-        string columnQuery;
-        string listOwner;
-        CardList cards;
-    }
+    public string id;
+    public string name;
+    string columnQuery;
+    string listOwner;
+    CardList cards;
 
     documentation { Get a list of cards of a column
         R{{}} - Card list object
     }
-    public function getCardList () returns (CardList);
+    public function getCardList() returns (CardList);
 };
 //*********************************************************************************************************************
 // Column bound functions
 //*********************************************************************************************************************
-public function Column::getCardList () returns (CardList) {
+function Column::getCardList() returns (CardList) {
     return self.cards;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -275,40 +267,38 @@ public function Column::getCardList () returns (CardList) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 documentation {Represents a list of columns of a project}
 public type ColumnList object {
-    private {
-        string listOwner;
-        string columnListQuery;
-        PageInfo pageInfo;
-        Column[] nodes;
-    }
+    string listOwner;
+    string columnListQuery;
+    PageInfo pageInfo;
+    Column[] nodes;
 
     documentation { Check if column list next page is available
         R{{}} - Return true or false
     }
-    public function hasNextPage () returns (boolean);
+    public function hasNextPage() returns (boolean);
 
     documentation { Check if column list previosu page is available
         R{{}} - Return true or false
     }
-    public function hasPreviousPage () returns (boolean);
+    public function hasPreviousPage() returns (boolean);
 
     documentation { Get all the columns in the column list
         R{{}} - Array of column objects
     }
-    public function getAllColumns () returns (Column[]);
+    public function getAllColumns() returns (Column[]);
 };
 //*********************************************************************************************************************
 // ColumnList bound functions
 //*********************************************************************************************************************
-public function ColumnList::hasNextPage () returns (boolean) {
+function ColumnList::hasNextPage() returns (boolean) {
     return self.pageInfo.hasNextPage;
 }
 
-public function ColumnList::hasPreviousPage () returns (boolean) {
+function ColumnList::hasPreviousPage() returns (boolean) {
     return self.pageInfo.hasPreviousPage;
 }
 
-public function ColumnList::getAllColumns () returns (Column[]) {
+function ColumnList::getAllColumns() returns (Column[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -329,12 +319,12 @@ documentation { Represents a github card
     F{{column}} - Project column this card is associated under
     F{{content}} - Card content
 }
-public type Card {
+public type Card record {
     string id;
-    string note;
+    string? note;
     string state;
     string createdAt;
-    string updatedAt;
+    string? updatedAt;
     string url;
     Creator creator;
     json column;
@@ -349,41 +339,39 @@ public type Card {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 documentation { Represents a list of cards of a column }
 public type CardList object {
-    private {
-        string columnId;
-        string cardListQuery;
-        string listOwner;
-        PageInfo pageInfo;
-        Card[] nodes;
-    }
+    string columnId;
+    string cardListQuery;
+    string listOwner;
+    PageInfo pageInfo;
+    Card[] nodes;
 
     documentation { Check if the card list next page is available
         R{{}} - Return true or false
     }
-    public function hasNextPage () returns (boolean);
+    public function hasNextPage() returns (boolean);
 
     documentation { Check if the card list previous page is available
         R{{}} - Return true or false
     }
-    public function hasPreviousPage () returns (boolean);
+    public function hasPreviousPage() returns (boolean);
 
     documentation { Get all the cards in the card list
         R{{}} - Array of card objects
     }
-    public function getAllCards () returns (Card[]);
+    public function getAllCards() returns (Card[]);
 };
 //*********************************************************************************************************************
 // CardList bound functions
 //*********************************************************************************************************************
-public function CardList::hasNextPage () returns (boolean) {
+function CardList::hasNextPage() returns (boolean) {
     return self.pageInfo.hasNextPage;
 }
 
-public function CardList::hasPreviousPage () returns (boolean) {
+function CardList::hasPreviousPage() returns (boolean) {
     return self.pageInfo.hasPreviousPage;
 }
 
-public function CardList::getAllCards () returns (Card[]) {
+function CardList::getAllCards() returns (Card[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -415,27 +403,27 @@ documentation { Represents a github pull request
     F{{headRefName}} - Name of the head Ref associated with the pull request
     F{{baseRefName}} - Name of the base Ref associated with the pull request
 }
-public type PullRequest {
+public type PullRequest record {
     string id;
     string title;
     string createdAt;
-    string updatedAt;
+    string? updatedAt;
     boolean closed;
-    string closedAt;
-    string mergedAt;
+    string? closedAt;
+    string? mergedAt;
     string state;
     int number;
     string url;
-    string body;
+    string? body;
     string changedFiles;
     int additions;
     int deletions;
-    string resourcePath;
-    string revertResourcePath;
-    string revertUrl;
+    string? resourcePath;
+    string? revertResourcePath;
+    string? revertUrl;
     Creator author;
-    string headRefName;
-    string baseRefName;
+    string? headRefName;
+    string? baseRefName;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of PullRequest object                                               //
@@ -446,39 +434,37 @@ public type PullRequest {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 documentation { Represents a list of github pull requests }
 public type PullRequestList object {
-    private {
-        string pullRequestListQuery;
-        PageInfo pageInfo;
-        PullRequest[] nodes;
-    }
+    string pullRequestListQuery;
+    PageInfo pageInfo;
+    PullRequest[] nodes;
 
     documentation { Check if pull request list next page is available
         R{{}} - Return true or false
     }
-    public function hasNextPage () returns (boolean);
+    public function hasNextPage() returns (boolean);
 
     documentation { Check if pull request list previous page is avaiable
         R{{}} - Return true or false
     }
-    public function hasPreviousPage () returns (boolean);
+    public function hasPreviousPage() returns (boolean);
 
     documentation { Get all the pull requests in the pull request list
         R{{}} - Array of pull request objects
     }
-    public function getAllPullRequests () returns (PullRequest[]);
+    public function getAllPullRequests() returns (PullRequest[]);
 };
 //*********************************************************************************************************************
 // PullRequestList bound functions
 //*********************************************************************************************************************
-public function PullRequestList::hasNextPage () returns (boolean) {
+function PullRequestList::hasNextPage() returns (boolean) {
     return self.pageInfo.hasNextPage;
 }
 
-public function PullRequestList::hasPreviousPage () returns (boolean) {
+function PullRequestList::hasPreviousPage() returns (boolean) {
     return self.pageInfo.hasPreviousPage;
 }
 
-public function PullRequestList::getAllPullRequests () returns (PullRequest[]) {
+function PullRequestList::getAllPullRequests() returns (PullRequest[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -503,18 +489,18 @@ documentation { Represents a github issue
     F{{url}} - HTTP URL of the issue
     F{{assignees}} - List of users assigned to the issue
 }
-public type Issue {
+public type Issue record {
     string id;
-    string bodyText;
-    string closed;
-    string closedAt;
+    string? bodyText;
+    string? closed;
+    string? closedAt;
     string createdAt;
     Creator author;
     Label[] labels;
     int number;
     string state;
     string title;
-    string updatedAt;
+    string? updatedAt;
     string url;
     Assignee[] assignees;
 };
@@ -527,39 +513,37 @@ public type Issue {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 documentation { Represents a list of github issues }
 public type IssueList object {
-    private {
-        string issueListQuery;
-        PageInfo pageInfo;
-        Issue[] nodes;
-    }
+    string issueListQuery;
+    PageInfo pageInfo;
+    Issue[] nodes;
 
     documentation { Check if issue list next page is available
         R{{}} - Return true or false
     }
-    public function hasNextPage () returns (boolean);
+    public function hasNextPage() returns (boolean);
 
     documentation { Check if issue list previous page is avaiable
         R{{}} - Return true or false
     }
-    public function hasPreviousPage () returns (boolean);
+    public function hasPreviousPage() returns (boolean);
 
     documentation { Get all the issues in the issue list
         R{{}} - Array of issue objects
     }
-    public function getAllIssues () returns (Issue[]);
+    public function getAllIssues() returns (Issue[]);
 };
 //*********************************************************************************************************************
 // IssueList bound functions
 //*********************************************************************************************************************
-public function IssueList::hasNextPage () returns (boolean) {
+function IssueList::hasNextPage() returns (boolean) {
     return self.pageInfo.hasNextPage;
 }
 
-public function IssueList::hasPreviousPage () returns (boolean) {
+function IssueList::hasPreviousPage() returns (boolean) {
     return self.pageInfo.hasPreviousPage;
 }
 
-public function IssueList::getAllIssues () returns (Issue[]) {
+function IssueList::getAllIssues() returns (Issue[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -575,11 +559,11 @@ documentation { Represents a github Creator
     F{{url}} - HTTP URL of the creator
     F{{avatarUrl}} - HTTP URL of the public avatar of the creator
 }
-public type Creator {
+public type Creator record {
     string login;
-    string resourcePath;
-    string url;
-    string avatarUrl;
+    string? resourcePath;
+    string? url;
+    string? avatarUrl;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of Creator object                                                  //
@@ -595,35 +579,30 @@ documentation { Represents a github project owner
     F{{viewerCanCreateProjects}} - Identifies whether the current viewer can create new projects on the owner
 }
 public type ProjectOwner object {
-    public {
-        string id;
-        string projectsResourcePath;
-        string projectsUrl;
-        string viewerCanCreateProjects;
-    }
-
-    private {
-        string __typename;
-    }
+    public string id;
+    public string projectsResourcePath;
+    public string projectsUrl;
+    public string viewerCanCreateProjects;
+    private string __typename;
 
     documentation { Get the type of the project owner
         R{{}} - Type of the owner (Repository or Organization)
     }
-    public function getOwnerType () returns (string);
+    public function getOwnerType() returns (string);
 
     documentation { Set the type of the project owner
         P{{ownerType}} - Type of the owner (Repository or Organization)
     }
-    public function setOwnerType (string ownerType);
+    public function setOwnerType(string ownerType);
 };
 //*********************************************************************************************************************
 // ProjectOwner bound functions
 //*********************************************************************************************************************
-public function ProjectOwner::getOwnerType () returns (string) {
+function ProjectOwner::getOwnerType() returns (string) {
     return self.__typename;
 }
 
-public function ProjectOwner::setOwnerType (string ownerType) {
+function ProjectOwner::setOwnerType(string ownerType) {
     self.__typename = ownerType;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -640,12 +619,12 @@ documentation { Represents a github repository owner
     F{{avatarUrl}} - HTTP URL of the public avatar of the repository owner
     F{{resourcePath}} - HTTP path of the repository owner recource
 }
-public type RepositoryOwner {
+public type RepositoryOwner record {
     string id;
     string login;
     string url;
-    string avatarUrl;
-    string resourcePath;
+    string? avatarUrl;
+    string? resourcePath;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          End RepositoryOwner object                                               //
@@ -659,10 +638,10 @@ documentation { Represents a content in a github card
     F{{url}} - HTTP URL for the content of the card
     F{{issueState}} - State of the issue (OPEN, CLOSED)
 }
-public type Content {
-    string title;
-    string url;
-    string issueState;
+public type Content record {
+    string? title;
+    string? url;
+    string? issueState;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of Content object                                                   //
@@ -676,10 +655,10 @@ documentation { Represents a github language
     F{{name}} - Name of the language
     F{{color}} - Color defined for the language
 }
-public type Language {
+public type Language record {
     string id;
-    string name;
-    string color;
+    string? name;
+    string? color;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of Language object                                                //
@@ -692,7 +671,7 @@ documentation { GitHub Client Error
     F{{message}} - Error message
     F{{cause}} - Error object
 }
-public type GitClientError {
+public type GitClientError record {
     string message;
     error? cause;
 };
@@ -709,11 +688,11 @@ documentation { Represents a github page information
     F{{startCursor}} - Start cursor pointing to the begining of the current result set
     F{{endCursor}} - End cursor pointing to the end of the current result set
 }
-type PageInfo {
+type PageInfo record {
     boolean hasNextPage;
     boolean hasPreviousPage;
-    string startCursor;
-    string endCursor;
+    string? startCursor;
+    string? endCursor;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of PageInfo object                                                 //
@@ -728,11 +707,11 @@ documentation { Represents a github label
     F{{description}} - Description of the label
     F{{color}} - Color of the label
 }
-public type Label {
+public type Label record {
     string id;
     string name;
-    string description;
-    string color;
+    string? description;
+    string? color;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of Label object                                                   //
@@ -748,12 +727,12 @@ documentation { Represents a list of assignees to an issue
     F{{bio}} - Bio description of the user
     F{{url}} - HTTP URL of the user profile
 }
-public type Assignee {
+public type Assignee record {
     string id;
     string login;
     string email;
-    string bio;
-    string url;
+    string? bio;
+    string? url;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of Assignee object                                                 //

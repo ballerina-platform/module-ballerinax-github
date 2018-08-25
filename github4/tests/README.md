@@ -4,9 +4,9 @@
 
 The Ballerina GitHub endpoint allow users to access the GitHub API through ballerina. This endpoint uses the GitHub GraphQL API v4.0
 
-|Ballerina Version | GitHub API Version |
-|------------------| ------------------ |
-|0.970.0           | v4                 |
+| Ballerina Version | GitHub API Version |
+|-------------------|--------------------|
+| 0.981.0           | v4                 |
 
 ## Running tests
 
@@ -21,15 +21,20 @@ In order to run the tests, the user will need to have a GitHub Personal Access T
 
 **https://github.com/{profile} -> Settings -> Developer Settings -> Personal access tokens**
 
-and provide the obtained token to the client endpoint configuration by adding the following field to the `ballerina.conf`
-> GITHUB_TOKEN="ACCESS_TOKEN"
+and provide the obtained token to the client endpoint configuration by adding the following fields to the `ballerina
+.conf`
 
+```.conf
+GITHUB_TOKEN="ACCESS_TOKEN"
+ORGANIZATION_NAME = ""
+RESOURCE_PATH = ""
+```
 
 ```ballerina
 endpoint Client githubClient {
     clientConfig: {
         auth:{
-            scheme:"oauth",
+            scheme:http:OAUTH2,
             accessToken:config:getAsString("GITHUB_TOKEN")
         }
     }
