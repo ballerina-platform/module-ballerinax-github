@@ -1,3 +1,19 @@
+// Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+//
+// WSO2 Inc. licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except
+// in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 public type User record {
     string login,
     int id,
@@ -20,13 +36,14 @@ public type User record {
 
 public type Repository record {
     int id,
+    string node_id,
     string name,
     string full_name,
     User owner,
     boolean ^"private", //"private" in payload
     string html_url,
-    string description,
-    boolean is_fork,
+    string? description,
+    boolean ^"fork",
     string url,
     string forks_url,
     string keys_url,
@@ -82,10 +99,675 @@ public type Repository record {
     int forks_count,
     string? mirror_url,
     int open_issues_count,
+    string? license,
     int forks,
     int open_issues,
     int watchers,
     string default_branch,
+};
+
+public type CommitComment record {
+    string url,
+    string html_url,
+    int id,
+    string node_id,
+    User user,
+    int? position,
+    int? line,
+    string? path,
+    string commit_id,
+    string created_at,
+    string updated_at,
+    string author_association,
+    string body,
+};
+
+public type Page record {
+    string page_name,
+    string title,
+    string? summary,
+    string action,
+    string sha,
+    string html_url,
+};
+
+public type Installation record {
+    int id,
+    User account,
+    string repository_selection,
+    string access_tokens_url,
+    string repositories_url,
+    string html_url,
+    int app_id,
+    int target_id,
+    string target_type,
+    map<string> permissions,
+    string[] events,
+    string created_at,
+    string updated_at,
+    string single_file_name,
+    Repository[] repositories,
+    User sender,
+};
+
+public type Issue record {
+    string url,
+    string repository_url,
+    string labels_url,
+    string comments_url,
+    string events_url,
+    string html_url,
+    int id,
+    string node_id,
+    int number,
+    string title,
+    User user,
+    Label[] labels,
+    string state,
+    boolean locked,
+    User? assignee,
+    User[] assignees,
+    Milestone? milestone,
+    int comments,
+    string created_at,
+    string updated_at,
+    string? closed_at,
+    string author_association,
+    string body,
+};
+
+public type IssueComment record {
+    string url,
+    string html_url,
+    string issue_url,
+    int id,
+    string node_id,
+    User user,
+    string created_at,
+    string updated_at,
+    string author_association,
+    string body,
+};
+
+public type Label record {
+    int id,
+    string node_id,
+    string url,
+    string name,
+    string color,
+    boolean default,
+};
+
+public type Milestone record {
+    string url,
+    string html_url,
+    string labels_url,
+    int id,
+    string node_id,
+    int number,
+    string title,
+    string description,
+    User creator,
+    int open_issues,
+    int closed_issues,
+    string state,
+    string created_at,
+    string updated_at,
+    string due_on,
+    string? closed_at,
+};
+
+public type Changes record {
+    Name? name,
+    Title? title,
+    Body? body,
+    Color? color,
+    Permission? permission,
+    Description? description,
+    DueOn? due_on,
+    Note? note,
+};
+
+public type Title record {
+    string ^"from",
+};
+
+public type Body record {
+    string ^"from",
+};
+
+public type Name record {
+    string ^"from",
+};
+
+public type Color record {
+    string ^"from",
+};
+
+public type Permission record {
+    string ^"from",
+};
+
+public type Description record {
+    string ^"from",
+};
+
+public type DueOn record {
+    string ^"from",
+};
+
+public type Note record {
+    string ^"from",
+};
+
+public type Team record {
+    string name,
+    int id,
+    string node_id,
+    string slug,
+    string? description,
+    string privacy,
+    string url,
+    string members_url,
+    string repositories_url,
+    string permission,
+};
+
+public type Organization record {
+    string login,
+    int id,
+    string node_id,
+    string url,
+    string repos_url,
+    string events_url,
+    string hooks_url,
+    string issues_url,
+    string members_url,
+    string public_members_url,
+    string avatar_url,
+    string? description,
+};
+
+public type Invitation record {
+    int id,
+    string login,
+    string email,
+    string role,
+    string created_at,
+    User inviter,
+    int team_count,
+    string invitation_team_url,
+};
+
+public type Membership record {
+    string url,
+    string state,
+    string role,
+    string organization_url,
+    User user,
+};
+
+public type ProjectCard record {
+    string url,
+    string column_url,
+    int column_id,
+    int id,
+    string node_id,
+    string? note,
+    User creator,
+    string created_at,
+    string updated_at,
+};
+
+public type ProjectColumn record {
+    string url,
+    string project_url,
+    string cards_url,
+    int id,
+    string node_id,
+    string name,
+    string created_at,
+    string updated_at,
+};
+
+public type Project record {
+    string owner_url,
+    string url,
+    string html_url,
+    string columns_url,
+    int id,
+    string node_id,
+    string name,
+    string? body,
+    int number,
+    string state,
+    User creator,
+    string created_at,
+    string updated_at,
+};
+
+public type Branch record {
+    string label,
+    string ref,
+    string sha,
+    User user,
+    Repository repo,
+};
+
+public type Links record {
+    SelfLink? selfLink, // issue here, needs to be self
+    HtmlLink? html,
+    IssueLink? issue,
+    CommentsLink? comments,
+    ReviewCommentsLink? review_comments,
+    ReviewCommentLink? review_comment,
+    CommitsLink? commits,
+    StatusesLink? statuses,
+    PullRequestLink? pull_request,
+};
+
+public type SelfLink record {
+    string href,
+};
+
+public type HtmlLink record {
+    string href,
+};
+
+public type IssueLink record {
+    string href,
+};
+
+public type CommentsLink record {
+    string href,
+};
+
+public type ReviewCommentsLink record {
+    string href,
+};
+
+public type ReviewCommentLink record {
+    string href,
+};
+
+public type CommitsLink record {
+    string href,
+};
+
+public type StatusesLink record {
+    string href,
+};
+
+public type PullRequestLink record {
+    string href,
+};
+
+public type PullRequest record {
+    string url,
+    int id,
+    string node_id,
+    string html_url,
+    string diff_url,
+    string patch_url,
+    string? issue_url,
+    int number,
+    string state,
+    boolean locked,
+    string title,
+    User user,
+    string? body,
+    string created_at,
+    string updated_at,
+    string? closed_at,
+    string? merged_at,
+    string? merge_commit_sha,
+    User? assignee,
+    User[] assignees,
+    User[] requested_reviewers,
+    Team[] requested_teams,
+    Label[] labels,
+    Milestone? milestone,
+    string commits_url,
+    string review_comments_url,
+    string review_comment_url,
+    string comments_url,
+    string statuses_url,
+    Branch head,
+    Branch base,
+    Links _links,
+    string author_association,
+    boolean merged,
+    boolean mergeable,
+    boolean rebaseable,
+    string mergeable_state,
+    User? merged_by,
+    int comments,
+    int review_comments,
+    boolean maintainer_can_modify,
+    int commits,
+    int additions,
+    int deletions,
+    int changed_files,
+};
+
+public type Review record {
+    int id,
+    string node_id,
+    User user,
+    string? body,
+    string commit_id,
+    string submitted_at,
+    string state,
+    string html_url,
+    string pull_request_url,
+    string author_association,
+    Links _links,
+
+};
+
+public type PullRequestReviewComment record {
+    string url,
+    int pull_request_review_id,
+    int id,
+    string node_id,
+    string diff_hunk,
+    string path,
+    int position,
+    int original_position,
+    string commit_id,
+    string original_commit_id,
+    User user,
+    string body,
+    string created_at,
+    string updated_at,
+    string html_url,
+    string pull_request_url,
+    string author_association,
+    Links _links,
+};
+
+public type Commit record {
+    string sha,
+    string message,
+    CommitAuthor author,
+    string url,
+    boolean distinct,
+};
+
+public type CommitAuthor record {
+    string name,
+    string email,
+};
+
+public type Release record {
+    string url,
+    string assets_url,
+    string upload_url,
+    string html_url,
+    int id,
+    string node_id,
+    string tag_name,
+    string target_commitish,
+    string? name,
+    boolean draft,
+    User author,
+    boolean prerelease,
+    string created_at,
+    string published_at,
+    Asset[] assets,
+    string tarball_url,
+    string zipball_url,
+    string? body,
+};
+
+public type Asset record {
+    string url,
+    string browser_download_url,
+    int id,
+    string node_id,
+    string name,
+    string? label,
+    string state,
+    string content_type,
+    int size,
+    int download_count,
+    string created_at,
+    string updated_at,
+    User uploader,
+};
+
+public type Alert record {
+    int id,
+    string affected_range,
+    string affected_package_name,
+    string external_reference,
+    string external_identifier,
+    string fixed_in,
+    User dismisser,
+    string dismiss_reason,
+    string dismissed_at,
+};
+
+public type Hook record {
+    string ^"type",
+    int id,
+    string name,
+    boolean active,
+    string[] events,
+    HookConfig config,
+    string updated_at,
+    string created_at,
+    string url,
+    string test_url,
+    string ping_url,
+    HookLastResponse last_response,
+};
+
+public type HookConfig record {
+    string content_type,
+    string secret,
+    string url,
+    string insecure_ssl,
+};
+
+public type HookLastResponse record {
+    string? code,
+    string status,
+    string? message,
+};
+
+public type CommitCommentEvent record {
+    string action,
+    CommitComment comment,
+    Repository repository,
+    User sender,
+};
+
+public type CreateEvent record {
+    string? ref,
+    string ref_type,
+    string master_branch,
+    string? description,
+    string pusher_type,
+    Repository repository,
+    User sender,
+};
+
+public type DeleteEvent record {
+    string ref,
+    string ref_type,
+    string pusher_type,
+    Repository repository,
+    User sender,
+};
+
+public type ForkEvent record {
+    Repository forkee,
+    Repository repository,
+    User sender,
+};
+
+public type GitHubAppAuthorizationEvent record {
+    string action,
+    User sender,
+};
+
+public type GollumEvent record {
+    Page[] pages,
+    Repository repository,
+    User sender,
+};
+
+public type InstallationEvent record {
+    string action,
+    Installation installation,
+};
+
+public type IssueCommentEvent record {
+    string action,
+    Issue issue,
+    IssueComment comment,
+    Repository repository,
+    User sender,
+};
+
+public type IssuesEvent record {
+    string action,
+    Issue issue,
+    Changes? changes,
+    Repository repository,
+    User sender,
+};
+
+public type LabelEvent record {
+    string action,
+    Label label,
+    Changes? changes,
+    Repository repository,
+    User sender,
+};
+
+public type MemberEvent record {
+    string action,
+    User member,
+    Changes? changes,
+    Repository repository,
+    User sender,
+};
+
+public type MembershipEvent record {
+    string action,
+    string ^"scope",
+    User member,
+    User sender,
+    Team team,
+    Organization organization,
+};
+
+public type MilestoneEvent record {
+    string action,
+    Milestone milestone,
+    Changes? changes,
+    Repository repository,
+    User sender,
+};
+
+public type OrganizationEvent record {
+    string action,
+    Membership membership,
+    Organization organization,
+    User sender,
+};
+
+public type ProjectCardEvent record {
+    string action,
+    Changes? changes,
+    int? after_id,
+    ProjectCard project_card,
+    Repository repository,
+    User sender,
+};
+
+public type ProjectColumnEvent record {
+    string action,
+    Changes? changes,
+    int? after_id,
+    ProjectColumn project_column,
+    Repository repository,
+    User sender,
+};
+
+public type ProjectEvent record {
+    string action,
+    Changes? changes,
+    Project project,
+    Repository repository,
+    User sender,
+};
+
+public type PullRequestEvent record {
+    string action,
+    int number,
+    Changes? changes,
+    PullRequest pull_request,
+    Repository repository,
+    User sender,
+};
+
+public type PullRequestReviewEvent record {
+    string action,
+    Review review,
+    PullRequest pull_request,
+    Repository repository,
+    User sender,
+};
+
+public type PullRequestReviewCommentEvent record {
+    string action,
+    Changes? changes,
+    PullRequest pull_request,
+    PullRequestReviewComment comment,
+    Repository repository,
+    User sender,
+};
+
+public type PushEvent record {
+    string ref,
+    string before,
+    string after,
+    boolean created,
+    boolean deleted,
+    boolean forced,
+    string? base_ref,
+    string compare,
+    Commit[] commits,
+    Commit? head_commit,
+    Repository repository,
+    CommitAuthor pusher,
+    User sender,
+};
+
+public type ReleaseEvent record {
+    string action,
+    Release release,
+    Repository repository,
+    User sender,
+};
+
+public type RepositoryEvent record {
+    string action,
+    Repository repository,
+    User sender,
+};
+
+public type RepositoryVulnerabilityAlertEvent record {
+    string action,
+    Alert alert,
+};
+
+public type TeamAddEvent record {
+    Team team,
+    Repository repository,
 };
 
 public type WatchEvent record {
@@ -94,19 +776,10 @@ public type WatchEvent record {
     User sender,
 };
 
-public type IssueCommentEvent record {
-    //partial - mock
-    string action,
-};
-
-public type IssueEvent record {
-//partial - mock
-    string action,
-    Issue issue,
-};
-
-public type Issue record {
-//partial - mock
-    string url,
-    string repository_url,
+public type PingEvent record {
+    string zen,
+    int hook_id,
+    Hook hook,
+    Repository repository,
+    User sender,
 };
