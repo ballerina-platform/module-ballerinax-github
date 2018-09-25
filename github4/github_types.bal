@@ -109,7 +109,7 @@ public type Repository record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              RepositoryList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-# Represents a list of repositories
+# Represents a list of repositories.
 public type RepositoryList object {
     string repositoryListQuery;
     PageInfo pageInfo;
@@ -188,7 +188,7 @@ public type Project record {
 //                                                 ProjectList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-# Represents a list of projects
+# Represents a list of projects.
 public type ProjectList object {
     string listOwner;
     string projectListQuery;
@@ -255,7 +255,7 @@ function Column::getCardList() returns (CardList) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              ColumnList object                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#Represents a list of columns of a project
+#Represents a list of columns of a project.
 public type ColumnList object {
     string listOwner;
     string columnListQuery;
@@ -298,7 +298,7 @@ function ColumnList::getAllColumns() returns (Column[]) {
 # Represents a github card.
 # + id - Card identifcation number
 # + note - Note in the card
-# + state - State of the card (CONTENT_ONLY, NOTE_ONLY, REDACTED)
+# + state - State of the card (`CONTENT_ONLY`, `NOTE_ONLY`, `REDACTED`)
 # + createdAt - Date and time when the object was created
 # + updatedAt - Date and time when the object was last updated
 # + url - HTTP URL for this card
@@ -323,7 +323,7 @@ public type Card record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              CardList object                                                      //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-# Represents a list of cards of a column
+# Represents a list of cards of a column.
 public type CardList object {
     string columnId;
     string cardListQuery;
@@ -372,7 +372,7 @@ function CardList::getAllCards() returns (Card[]) {
 # + closed - Identifies whether the pull request is closed or not
 # + closedAt - Date and time when the object was closed
 # + mergedAt - Date and time that the pull request was merged
-# + state - State of the pull request (CLOSED, MERGED, OPEN)
+# + state - State of the pull request (`CLOSED`, `MERGED`, `OPEN`)
 # + number - Pull request number
 # + url - HTTP URL for this pull request
 # + body - Body of the Pull Request in Markdown format
@@ -384,7 +384,7 @@ function CardList::getAllCards() returns (Card[]) {
 # + revertUrl - HTTP URL for reverting the pull request
 # + author - User who created the pull rquest
 # + headRefName - Name of the head Ref associated with the pull request
-# + baseRefName - Name of the base Ref associated with the pull request\
+# + baseRefName - Name of the base Ref associated with the pull request
 public type PullRequest record {
     string id;
     string title;
@@ -414,7 +414,7 @@ public type PullRequest record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             PullRequestList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-# Represents a list of github pull requests
+# Represents a list of github pull requests.
 public type PullRequestList object {
     string pullRequestListQuery;
     PageInfo pageInfo;
@@ -462,7 +462,7 @@ function PullRequestList::getAllPullRequests() returns (PullRequest[]) {
 # + author - User who created the issue
 # + labels - List of labels associated with the issue
 # + number - Issue number
-# + state - State of the issue (CLOSED, OPEN)
+# + state - State of the issue (`CLOSED`, `OPEN`)
 # + title - Issue title
 # + updatedAt - Date and time when the object was updated
 # + url - HTTP URL of the issue
@@ -489,7 +489,7 @@ public type Issue record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                IssueList object                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-# Represents a list of github issues
+# Represents a list of github issues.
 public type IssueList object {
     string issueListQuery;
     PageInfo pageInfo;

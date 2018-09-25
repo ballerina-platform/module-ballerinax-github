@@ -28,9 +28,9 @@ function constructRequest(http:Request request, json stringQuery) {
 }
 
 # Validate the HTTP response and return payload or error.
-# + response - HTTP response object or HTTP connector error object
+# + response - HTTP response object or HTTP Connector error object
 # + validateComponent - Component to check in the response
-# + return - JSON payload of the response or Connector error
+# + return - `json` payload of the response or Connector error
 function getValidatedResponse(http:Response|error response, string validateComponent) returns json|GitClientError {
 
     match response {
@@ -88,8 +88,8 @@ function getValidatedResponse(http:Response|error response, string validateCompo
 }
 
 # Validate the REST HTTP response and return payload or error.
-# + response - HTTP response object or HTTP connector error object
-# + return - JSON payload of the response or Connector error
+# + response - HTTP response object or HTTP Connector error object
+# + return - `json` payload of the response or Connector error
 function getValidatedRestResponse(http:Response|error response) returns json|GitClientError {
     match response {
         http:Response httpResponse => {
@@ -166,9 +166,9 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
     }
 }
 
-# Convert string representation of json object to json object.
-# + source - String representation of the json object
-# + return - Converted JSON object or Connector error
+# Convert string representation of JSON object to JSON object.
+# + source - String representation of the JSON object
+# + return - Converted `json` object or Connector error
 function stringToJson(string source) returns json|GitClientError {
     var parsedValue = internal:parseJson(source);
     match parsedValue {

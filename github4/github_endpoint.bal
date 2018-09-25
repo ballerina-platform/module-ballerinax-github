@@ -28,18 +28,18 @@ public type GitHubClientConfig record {
 };
 
 # GitHub client.
-# + githubClientConfiguration - GitHub client configurations (Access token, Client endpoint configurations)
-# + githubConnector - GitHub connector object
+# + githubClientConfiguration - GitHub Client configurations (Access token, Client endpoint configurations)
+# + githubConnector - GitHub Connector object
 public type Client object {
     public GitHubClientConfig githubClientConfiguration = {};
     public GitHubConnector githubConnector = new;
 
-    # GitHub client endpoint initialization function.
-    # + githubClientConfig - GitHub client configuration
+    # GitHub Client endpoint initialization function.
+    # + githubClientConfig - GitHub Client Configuration
     public function init(GitHubClientConfig githubClientConfig);
 
-    # Return the GitHub client.
-    # + return - GitHub client
+    # Return the GitHub Client.
+    # + return - GitHub Client
     public function getCallerActions() returns GitHubConnector;
 
 };

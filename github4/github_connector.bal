@@ -19,9 +19,9 @@
 import ballerina/http;
 import ballerina/io;
 
-# GitHub client connector.
-# + githubGraphQlClient - Http client for GitHub GraphQL API
-# + githubRestClient - Http client for GitHub REST API
+# GitHub Client Connector.
+# + githubGraphQlClient - HTTP client for GitHub GraphQL API
+# + githubRestClient - HTTP client for GitHub REST API
 public type GitHubConnector object {
     public http:Client githubGraphQlClient = new;
     public http:Client githubRestClient = new;
@@ -48,8 +48,8 @@ public type GitHubConnector object {
     public function getColumnListNextPage(ColumnList columnList) returns ColumnList|GitClientError;
 
     # Get a list of issues of a repository.
-    # + repository - Repository object or tuple `("repository owner", "repository name")`
-    # + state - State of the issue (STATE_OPEN, STATE_CLOSED, STATE_ALL)
+    # + repository - Repository object or tuple (`repository owner`, `repository name`)
+    # + state - State of the issue (`STATE_OPEN`, `STATE_CLOSED`, `STATE_ALL`)
     # + recordCount - Specify number of records in the list
     # + return - Issue list object or Connector error
     public function getIssueList(Repository|(string, string) repository, string state, int recordCount)
@@ -74,7 +74,7 @@ public type GitHubConnector object {
 
     # Get all projects of an organization.
     # + organization - Organization object or organization name
-    # + state - State of the project (STATE_OPEN, STATE_CLOSED, STATE_ALL)
+    # + state - State of the project (`STATE_OPEN`, `STATE_CLOSED`, `STATE_ALL`)
     # + recordCount - Specify number of records in the list
     # + return - Project list object or Connector error
     public function getOrganizationProjectList(Organization|string organization, string state, int recordCount)
@@ -127,7 +127,7 @@ public type GitHubConnector object {
     # + return - Project object or Connector error
     public function getRepositoryProject(Repository|(string, string) repository, int projectNumber)
                         returns Project|GitClientError;
-                        
+
     # Get all projects of a repository.
     # + repository - Repository object or tuple `("repository owner", "repository name")`
     # + state - State of the project (STATE_OPEN, STATE_CLOSED, STATE_ALL)
