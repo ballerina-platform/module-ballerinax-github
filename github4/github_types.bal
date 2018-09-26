@@ -22,20 +22,20 @@ import ballerina/http;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              Organization object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a github organization
-    F{{id}} - Organization identification number
-    F{{login}} - Organization login name
-    F{{name}} - Organizaition public profile name
-    F{{email}} - Organization public email
-    F{{description}} - Organization public profile description
-    F{{location}} - Organization public profile location
-    F{{resourcePath}} - HTTP path for the resource
-    F{{projectsResourcePath}} - HTTP path for the organization projects
-    F{{projectsUrl}} - HTTP URL listing organization projects
-    F{{url}} - HTTP URL for the organization
-    F{{websiteUrl}} - Organization public profile URL
-    F{{avatarUrl}} - Organization public avatar URL
-}
+
+# Represents a github organization.
+# + id - Organization identification number
+# + login - Organization login name
+# + name - Organizaition public profile name
+# + email - Organization public email
+# + description - Organization public profile description
+# + location - Organization public profile location
+# + resourcePath - HTTP path for the resource
+# + projectsResourcePath - HTTP path for the organization projects
+# + projectsUrl - HTTP URL listing organization projects
+# + url - HTTP URL for the organization
+# + websiteUrl - Organization public profile URL
+# + avatarUrl - Organization public avatar URL
 public type Organization record {
     string id;
     string login;
@@ -58,28 +58,27 @@ public type Organization record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              Repository object                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a github repository
-    F{{id}} - Repository identification number
-    F{{name}} - Repository name
-    F{{createdAt}} - Date and time the repository was created
-    F{{updatedAt}} - Date and time the repository was updated
-    F{{description}} - Description of the repository
-    F{{forkCount}} - Number of forks there are of this repository in the entire network
-    F{{hasIssuesEnabled}} - Indicates if the repository has issues feature enabled
-    F{{hasWikiEnabled}} - Indicates if the repository has wiki feature enabled
-    F{{isArchived}} - Indicates if the repository is unmaintained
-    F{{isFork}} - Identifies if the repository is a fork
-    F{{isLocked}} - Indicates if the repository has been locked or not
-    F{{isMirror}} - Identifies if the repository is a mirror
-    F{{isPrivate}} - Identifies if the repository is private
-    F{{homepageUrl}} - Repository URL
-    F{{lockReason}} - Reason the repository has been locked
-    F{{mirrorUrl}} - Repository original mirror URL
-    F{{url}} - HTTP URL for this repository
-    F{{sshUrl}} - SSH URL to clone this repository
-    F{{owner}} - Owner of the repository
-    F{{primaryLanguage}} - Primary language of the repository code
-}
+# Represents a github repository.
+# + id - Repository identification number
+# + name - Repository name
+# + createdAt - Date and time the repository was created
+# + updatedAt - Date and time the repository was updated
+# + description - Description of the repository
+# + forkCount - Number of forks there are of this repository in the entire network
+# + hasIssuesEnabled - Indicates if the repository has issues feature enabled
+# + hasWikiEnabled - Indicates if the repository has wiki feature enabled
+# + isArchived - Indicates if the repository is unmaintained
+# + isFork - Identifies if the repository is a fork
+# + isLocked - Indicates if the repository has been locked or not
+# + isMirror - Identifies if the repository is a mirror
+# + isPrivate - Identifies if the repository is private
+# + homepageUrl - Repository URL
+# + lockReason - Reason the repository has been locked
+# + mirrorUrl - Repository original mirror URL
+# + url - HTTP URL for this repository
+# + sshUrl - SSH URL to clone this repository
+# + owner - Owner of the repository
+# + primaryLanguage - Primary language of the repository code
 public type Repository record {
     string id;
     string name;
@@ -110,25 +109,22 @@ public type Repository record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              RepositoryList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a list of repositories }
+# Represents a list of repositories.
 public type RepositoryList object {
     string repositoryListQuery;
     PageInfo pageInfo;
     Repository[] nodes;
 
-    documentation { Check if repository list next page is available
-        R{{}} - Return true or false
-    }
+    # Check if repository list next page is available.
+    # + return - Return true or false
     public function hasNextPage() returns (boolean);
 
-    documentation { Check if repository list previous page is available
-        R{{}} - Return true or false
-    }
+    # Check if repository list previous page is available.
+    # + return - Return true or false
     public function hasPreviousPage() returns (boolean);
 
-    documentation { Get all the repositories in the repository list
-        R{{}} - Array of Repository objects
-    }
+    # Get all the repositories in the repository list.
+    # + return - Array of Repository objects
     public function getAllRepositories() returns (Repository[]);
 };
 //*********************************************************************************************************************
@@ -152,22 +148,21 @@ function RepositoryList::getAllRepositories() returns (Repository[]) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              Project object                                                       //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a github project
-    F{{id}} - Project identification number
-    F{{name}} - Project name
-    F{{body}} - Project description body
-    F{{number}} - Project number
-    F{{createdAt}} - Date and time when the object was created
-    F{{closed}} - Identifies whether the project is closed or not
-    F{{closedAt}} - Date and time when the object was closed
-    F{{updatedAt}} - Date and time when the object was last updated
-    F{{resourcePath}} - HTTP path for this project
-    F{{state}} - Identifies whether the project is open or closed
-    F{{url}} - HTTP URL for this project
-    F{{viewerCanUpdate}} - Identifies whether current viewer can update this object
-    F{{creator}} - User who originally created the project
-    F{{owner}} - Project owner (Repository or Organization)
-}
+# Represents a github project.
+# + id - Project identification number
+# + name - Project name
+# + body - Project description body
+# + number - Project number
+# + createdAt - Date and time when the object was created
+# + closed - Identifies whether the project is closed or not
+# + closedAt - Date and time when the object was closed
+# + updatedAt - Date and time when the object was last updated
+# + resourcePath - HTTP path for this project
+# + state - Identifies whether the project is open or closed
+# + url - HTTP URL for this project
+# + viewerCanUpdate - Identifies whether current viewer can update this object
+# + creator - User who originally created the project
+# + owner - Project owner (Repository or Organization)
 public type Project record {
     string id;
     string name;
@@ -193,26 +188,23 @@ public type Project record {
 //                                                 ProjectList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-documentation { Represents a list of projects }
+# Represents a list of projects.
 public type ProjectList object {
     string listOwner;
     string projectListQuery;
     PageInfo pageInfo;
     Project[] nodes;
 
-    documentation { Check if project list next page is available
-        R{{}} - Return true or false
-    }
+    # Check if project list next page is available.
+    # + return - Return true or false
     public function hasNextPage() returns (boolean);
 
-    documentation { Check if project list previous page is available
-        R{{}} - Return true or false
-    }
+    # Check if project list previous page is available.
+    # + return - Return true or false
     public function hasPreviousPage() returns (boolean);
 
-    documentation { Get all the projects in the project list
-        R{{}} - Array of Project objects
-    }
+    # Get all the projects in the project list.
+    # + return - Array of Project objects
     public function getAllProjects() returns (Project[]);
 };
 //*********************************************************************************************************************
@@ -236,10 +228,9 @@ function ProjectList::getAllProjects() returns (Project[]) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              Column object                                                        //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a github Column
-    F{{id}} - Column identification number
-    F{{name}} - Column name
-}
+# Represents a github Column.
+# + id - Column identification number
+# + name - Column name
 public type Column object {
     public string id;
     public string name;
@@ -247,9 +238,8 @@ public type Column object {
     string listOwner;
     CardList cards;
 
-    documentation { Get a list of cards of a column
-        R{{}} - Card list object
-    }
+    # Get a list of cards of a column.
+    # + return - Card list object
     public function getCardList() returns (CardList);
 };
 //*********************************************************************************************************************
@@ -265,26 +255,23 @@ function Column::getCardList() returns (CardList) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              ColumnList object                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation {Represents a list of columns of a project}
+#Represents a list of columns of a project.
 public type ColumnList object {
     string listOwner;
     string columnListQuery;
     PageInfo pageInfo;
     Column[] nodes;
 
-    documentation { Check if column list next page is available
-        R{{}} - Return true or false
-    }
+    # Check if column list next page is available.
+    # + return - Return true or false
     public function hasNextPage() returns (boolean);
 
-    documentation { Check if column list previosu page is available
-        R{{}} - Return true or false
-    }
+    # Check if column list previosu page is available.
+    # + return - Return true or false
     public function hasPreviousPage() returns (boolean);
 
-    documentation { Get all the columns in the column list
-        R{{}} - Array of column objects
-    }
+    # Get all the columns in the column list.
+    # + return - Array of column objects
     public function getAllColumns() returns (Column[]);
 };
 //*********************************************************************************************************************
@@ -308,17 +295,16 @@ function ColumnList::getAllColumns() returns (Column[]) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                   Card object                                                     //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a github card
-    F{{id}} - Card identifcation number
-    F{{note}} - Note in the card
-    F{{state}} - State of the card (CONTENT_ONLY, NOTE_ONLY, REDACTED)
-    F{{createdAt}} - Date and time when the object was created
-    F{{updatedAt}} - Date and time when the object was last updated
-    F{{url}} - HTTP URL for this card
-    F{{creator}} - User who created this card
-    F{{column}} - Project column this card is associated under
-    F{{content}} - Card content
-}
+# Represents a github card.
+# + id - Card identifcation number
+# + note - Note in the card
+# + state - State of the card (`CONTENT_ONLY`, `NOTE_ONLY`, `REDACTED`)
+# + createdAt - Date and time when the object was created
+# + updatedAt - Date and time when the object was last updated
+# + url - HTTP URL for this card
+# + creator - User who created this card
+# + column - Project column this card is associated under
+# + content - Card content
 public type Card record {
     string id;
     string? note;
@@ -337,7 +323,7 @@ public type Card record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              CardList object                                                      //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a list of cards of a column }
+# Represents a list of cards of a column.
 public type CardList object {
     string columnId;
     string cardListQuery;
@@ -345,19 +331,16 @@ public type CardList object {
     PageInfo pageInfo;
     Card[] nodes;
 
-    documentation { Check if the card list next page is available
-        R{{}} - Return true or false
-    }
+    # Check if the card list next page is available.
+    # + return - Return true or false
     public function hasNextPage() returns (boolean);
 
-    documentation { Check if the card list previous page is available
-        R{{}} - Return true or false
-    }
+    # Check if the card list previous page is available.
+    # + return - Return true or false
     public function hasPreviousPage() returns (boolean);
 
-    documentation { Get all the cards in the card list
-        R{{}} - Array of card objects
-    }
+    # Get all the cards in the card list.
+    # + return - Array of card objects
     public function getAllCards() returns (Card[]);
 };
 //*********************************************************************************************************************
@@ -381,28 +364,27 @@ function CardList::getAllCards() returns (Card[]) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              PullRequest object                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a github pull request
-    F{{id}} - Pull request identification number
-    F{{title}} - Pull request title
-    F{{createdAt}} - Date and time when the object was created
-    F{{updatedAt}} - Date and time when the object was last updated
-    F{{closed}} - Identifies whether the pull request is closed or not
-    F{{closedAt}} - Date and time when the object was closed
-    F{{mergedAt}} - Date and time that the pull request was merged
-    F{{state}} - State of the pull request (CLOSED, MERGED, OPEN)
-    F{{number}} - Pull request number
-    F{{url}} - HTTP URL for this pull request
-    F{{body}} - Body of the Pull Request in Markdown format
-    F{{changedFiles}} - Number of changed files in this pull request
-    F{{additions}} - Number of additions in the pull request
-    F{{deletions}} - Number of deletions in the pull request
-    F{{resourcePath}} - HTTP path for the pull request
-    F{{revertResourcePath}} - HTTP path for reverting the pull request
-    F{{revertUrl}} - HTTP URL for reverting the pull request
-    F{{author}} - User who created the pull rquest
-    F{{headRefName}} - Name of the head Ref associated with the pull request
-    F{{baseRefName}} - Name of the base Ref associated with the pull request
-}
+# Represents a github pull request.
+# + id - Pull request identification number
+# + title - Pull request title
+# + createdAt - Date and time when the object was created
+# + updatedAt - Date and time when the object was last updated
+# + closed - Identifies whether the pull request is closed or not
+# + closedAt - Date and time when the object was closed
+# + mergedAt - Date and time that the pull request was merged
+# + state - State of the pull request (`CLOSED`, `MERGED`, `OPEN`)
+# + number - Pull request number
+# + url - HTTP URL for this pull request
+# + body - Body of the Pull Request in Markdown format
+# + changedFiles - Number of changed files in this pull request
+# + additions - Number of additions in the pull request
+# + deletions - Number of deletions in the pull request
+# + resourcePath - HTTP path for the pull request
+# + revertResourcePath - HTTP path for reverting the pull request
+# + revertUrl - HTTP URL for reverting the pull request
+# + author - User who created the pull rquest
+# + headRefName - Name of the head Ref associated with the pull request
+# + baseRefName - Name of the base Ref associated with the pull request
 public type PullRequest record {
     string id;
     string title;
@@ -432,25 +414,22 @@ public type PullRequest record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             PullRequestList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a list of github pull requests }
+# Represents a list of github pull requests.
 public type PullRequestList object {
     string pullRequestListQuery;
     PageInfo pageInfo;
     PullRequest[] nodes;
 
-    documentation { Check if pull request list next page is available
-        R{{}} - Return true or false
-    }
+    # Check if pull request list next page is available.
+    # + return - Return true or false
     public function hasNextPage() returns (boolean);
 
-    documentation { Check if pull request list previous page is avaiable
-        R{{}} - Return true or false
-    }
+    # Check if pull request list previous page is avaiable.
+    # + return - Return true or false
     public function hasPreviousPage() returns (boolean);
 
-    documentation { Get all the pull requests in the pull request list
-        R{{}} - Array of pull request objects
-    }
+    # Get all the pull requests in the pull request list.
+    # + return - Array of pull request objects
     public function getAllPullRequests() returns (PullRequest[]);
 };
 //*********************************************************************************************************************
@@ -474,21 +453,20 @@ function PullRequestList::getAllPullRequests() returns (PullRequest[]) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                Issue object                                                       //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a github issue
-    F{{id}} - Issue identificaion number
-    F{{bodyText}} - Body of the issue in text format
-    F{{closed}} - Identifies whether the issue is closed or not
-    F{{closedAt}} - Date and time when the object was closed
-    F{{createdAt}} - Date and time when the object was created
-    F{{author}} - User who created the issue
-    F{{labels}} - List of labels associated with the issue
-    F{{number}} - Issue number
-    F{{state}} - State of the issue (CLOSED, OPEN)
-    F{{title}} - Issue title
-    F{{updatedAt}} - Date and time when the object was updated
-    F{{url}} - HTTP URL of the issue
-    F{{assignees}} - List of users assigned to the issue
-}
+# Represents a github issue.
+# + id - Issue identificaion number
+# + bodyText - Body of the issue in text format
+# + closed - Identifies whether the issue is closed or not
+# + closedAt - Date and time when the object was closed
+# + createdAt - Date and time when the object was created
+# + author - User who created the issue
+# + labels - List of labels associated with the issue
+# + number - Issue number
+# + state - State of the issue (`CLOSED`, `OPEN`)
+# + title - Issue title
+# + updatedAt - Date and time when the object was updated
+# + url - HTTP URL of the issue
+# + assignees - List of users assigned to the issue
 public type Issue record {
     string id;
     string? bodyText;
@@ -511,25 +489,22 @@ public type Issue record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                IssueList object                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a list of github issues }
+# Represents a list of github issues.
 public type IssueList object {
     string issueListQuery;
     PageInfo pageInfo;
     Issue[] nodes;
 
-    documentation { Check if issue list next page is available
-        R{{}} - Return true or false
-    }
+    # Check if issue list next page is available.
+    # + return - Return true or false
     public function hasNextPage() returns (boolean);
 
-    documentation { Check if issue list previous page is avaiable
-        R{{}} - Return true or false
-    }
+    # Check if issue list previous page is avaiable.
+    # + return - Return true or false
     public function hasPreviousPage() returns (boolean);
 
-    documentation { Get all the issues in the issue list
-        R{{}} - Array of issue objects
-    }
+    # Get all the issues in the issue list.
+    # + return - Array of issue objects
     public function getAllIssues() returns (Issue[]);
 };
 //*********************************************************************************************************************
@@ -553,12 +528,11 @@ function IssueList::getAllIssues() returns (Issue[]) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                               Creator object                                                      //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a github Creator
-    F{{login}} - Username of the creator
-    F{{resourcePath}} - HTTP path of the creator
-    F{{url}} - HTTP URL of the creator
-    F{{avatarUrl}} - HTTP URL of the public avatar of the creator
-}
+# Represents a github Creator.
+# + login - Username of the creator
+# + resourcePath - HTTP path of the creator
+# + url - HTTP URL of the creator
+# + avatarUrl - HTTP URL of the public avatar of the creator
 public type Creator record {
     string login;
     string? resourcePath;
@@ -572,12 +546,11 @@ public type Creator record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              ProjectOwner object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a github project owner
-    F{{id}} - Project owner identification number
-    F{{projectsResourcePath}} - HTTP path listing owner projects
-    F{{projectsUrl}} - HTTP URL listing owner projects
-    F{{viewerCanCreateProjects}} - Identifies whether the current viewer can create new projects on the owner
-}
+# Represents a github project owner.
+# + id - Project owner identification number
+# + projectsResourcePath - HTTP path listing owner projects
+# + projectsUrl - HTTP URL listing owner projects
+# + viewerCanCreateProjects - Identifies whether the current viewer can create new projects on the owner
 public type ProjectOwner object {
     public string id;
     public string projectsResourcePath;
@@ -585,14 +558,12 @@ public type ProjectOwner object {
     public string viewerCanCreateProjects;
     private string __typename;
 
-    documentation { Get the type of the project owner
-        R{{}} - Type of the owner (Repository or Organization)
-    }
+    # Get the type of the project owner.
+    # + return - Type of the owner (Repository or Organization)
     public function getOwnerType() returns (string);
 
-    documentation { Set the type of the project owner
-        P{{ownerType}} - Type of the owner (Repository or Organization)
-    }
+    # Set the type of the project owner.
+    # + ownerType - Type of the owner (Repository or Organization)
     public function setOwnerType(string ownerType);
 };
 //*********************************************************************************************************************
@@ -612,13 +583,12 @@ function ProjectOwner::setOwnerType(string ownerType) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            RepositoryOwner object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a github repository owner
-    F{{id}} - Repository owner identification number
-    F{{login}} - Username of the repository owner
-    F{{url}} - HTTP URL of the owner
-    F{{avatarUrl}} - HTTP URL of the public avatar of the repository owner
-    F{{resourcePath}} - HTTP path of the repository owner recource
-}
+# Represents a github repository owner.
+# + id - Repository owner identification number
+# + login - Username of the repository owner
+# + url - HTTP URL of the owner
+# + avatarUrl - HTTP URL of the public avatar of the repository owner
+# + resourcePath - HTTP path of the repository owner recource
 public type RepositoryOwner record {
     string id;
     string login;
@@ -633,11 +603,10 @@ public type RepositoryOwner record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                               Content object                                                      //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a content in a github card
-    F{{title}} - Title of the card
-    F{{url}} - HTTP URL for the content of the card
-    F{{issueState}} - State of the issue (OPEN, CLOSED)
-}
+# Represents a content in a github card.
+# + title - Title of the card
+# + url - HTTP URL for the content of the card
+# + issueState - State of the issue (OPEN, CLOSED)
 public type Content record {
     string? title;
     string? url;
@@ -650,11 +619,10 @@ public type Content record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                Language object                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a github language
-    F{{id}} - Language identification number
-    F{{name}} - Name of the language
-    F{{color}} - Color defined for the language
-}
+# Represents a github language.
+# + id - Language identification number
+# + name - Name of the language
+# + color - Color defined for the language
 public type Language record {
     string id;
     string? name;
@@ -667,10 +635,9 @@ public type Language record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            GitClientError object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { GitHub Client Error
-    F{{message}} - Error message
-    F{{cause}} - Error object
-}
+# GitHub Client Error.
+# + message - Error message
+# + cause - Error object
 public type GitClientError record {
     string message;
     error? cause;
@@ -682,12 +649,11 @@ public type GitClientError record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                PageInfo object                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a github page information
-    F{{hasNextPage}} - Identifies whether there is a next page of results
-    F{{hasPreviousPage}} - Identifies whether there is a previous page of results
-    F{{startCursor}} - Start cursor pointing to the begining of the current result set
-    F{{endCursor}} - End cursor pointing to the end of the current result set
-}
+# Represents a github page information.
+# + hasNextPage - Identifies whether there is a next page of results
+# + hasPreviousPage - Identifies whether there is a previous page of results
+# + startCursor - Start cursor pointing to the begining of the current result set
+# + endCursor - End cursor pointing to the end of the current result set
 type PageInfo record {
     boolean hasNextPage;
     boolean hasPreviousPage;
@@ -701,12 +667,11 @@ type PageInfo record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                 Label object                                                      //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a github label
-    F{{id}} - Label identification number
-    F{{name}} - Label name
-    F{{description}} - Description of the label
-    F{{color}} - Color of the label
-}
+# Represents a github label.
+# + id - Label identification number
+# + name - Label name
+# + description - Description of the label
+# + color - Color of the label
 public type Label record {
     string id;
     string name;
@@ -720,13 +685,12 @@ public type Label record {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                               Assignee object                                                     //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-documentation { Represents a list of assignees to an issue
-    F{{id}} - Assignee identification number
-    F{{login}} - Username of the user
-    F{{email}} - Email of the user
-    F{{bio}} - Bio description of the user
-    F{{url}} - HTTP URL of the user profile
-}
+# Represents a list of assignees to an issue.
+# + id - Assignee identification number
+# + login - Username of the user
+# + email - Email of the user
+# + bio - Bio description of the user
+# + url - HTTP URL of the user profile
 public type Assignee record {
     string id;
     string login;

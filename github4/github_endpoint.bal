@@ -18,34 +18,28 @@
 
 import ballerina/http;
 
-documentation { GitHub client configurations can be setup here. In order to use this client,
-the user will need to have a GitHub Personal Access Token. The token can be obtained by visiting
-`https://github.com/<profile> -> Settings -> Developer Settings -> Personal access tokens` and provide the obtained
-token to the GitHubClientConfig
-
-    F{{clientConfig}} - Client endpoint configurations (CircuitBreaker, throttling, proxy, timeout, etc.)
-}
+# GitHub client configurations can be setup here. In order to use this client,
+# the user will need to have a GitHub Personal Access Token. The token can be obtained by visiting
+# `https://github.com/<profile> -> Settings -> Developer Settings -> Personal access tokens` and provide the obtained
+# token to the GitHubClientConfig.
+# + clientConfig - Client endpoint configurations (CircuitBreaker, throttling, proxy, timeout, etc.)
 public type GitHubClientConfig record {
     http:ClientEndpointConfig clientConfig = {};
 };
 
-documentation { GitHub client
-    E{{}}
-    F{{githubClientConfiguration}} - GitHub client configurations (Access token, Client endpoint configurations)
-    F{{githubConnector}} - GitHub connector object
-}
+# GitHub client.
+# + githubClientConfiguration - GitHub Client configurations (Access token, Client endpoint configurations)
+# + githubConnector - GitHub Connector object
 public type Client object {
     public GitHubClientConfig githubClientConfiguration = {};
     public GitHubConnector githubConnector = new;
 
-    documentation { GitHub client endpoint initialization function
-        P{{githubClientConfig}} - GitHub client configuration
-    }
+    # GitHub Client endpoint initialization function.
+    # + githubClientConfig - GitHub Client Configuration
     public function init(GitHubClientConfig githubClientConfig);
 
-    documentation { Return the GitHub client
-        R{{}} - GitHub client
-    }
+    # Return the GitHub Client.
+    # + return - GitHub Client
     public function getCallerActions() returns GitHubConnector;
 
 };

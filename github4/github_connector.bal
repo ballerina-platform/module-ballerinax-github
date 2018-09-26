@@ -19,154 +19,120 @@
 import ballerina/http;
 import ballerina/io;
 
-documentation {GitHub client connector
-    F{{githubGraphQlClient}} - Http client for GitHub GraphQL API
-    F{{githubRestClient}} - Http client for GitHub REST API
-}
+# GitHub Client Connector.
+# + githubGraphQlClient - HTTP client for GitHub GraphQL API
+# + githubRestClient - HTTP client for GitHub REST API
 public type GitHubConnector object {
     public http:Client githubGraphQlClient = new;
     public http:Client githubRestClient = new;
 
-    documentation { Creates a new issue in a repository.
-        P{{repositoryOwner}} - Repository owner name
-        P{{repositoryName}} - Repository name
-        P{{issueTitle}} - Title of the issue
-        P{{issueContent}} - Details of the issue
-        P{{labelList}} - List of labels for the issue
-        P{{assigneeList}} - Users to be assigned to the issue
-        R{{}} - Created issue object
-        R{{}} - Connector error
-    }
+    # Creates a new issue in a repository.
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
+    # + issueTitle - Title of the issue
+    # + issueContent - Details of the issue
+    # + labelList - List of labels for the issue
+    # + assigneeList - Users to be assigned to the issue
+    # + return - Created issue object or Connector error
     public function createIssue(string repositoryOwner, string repositoryName, string issueTitle, string issueContent,
                                 string[] labelList, string[] assigneeList) returns Issue|GitClientError;
 
-    documentation { Get the next page of the card list
-        P{{cardList}} - Card list object
-        R{{}} - Card list object of next page
-        R{{}} - Connector error
-    }
+    # Get the next page of the card list.
+    # + cardList - Card list object
+    # + return - Card list object of next page or Connector error
     public function getCardListNextPage(CardList cardList) returns CardList|GitClientError;
 
-    documentation { Get the next page of column list
-        P{{columnList}} - Column list object
-        R{{}} - Column list object of next page
-        R{{}} - Connector error
-    }
+    # Get the next page of column list.
+    # + columnList - Column list object
+    # + return - Column list object of next page or Connector error
     public function getColumnListNextPage(ColumnList columnList) returns ColumnList|GitClientError;
 
-    documentation { Get a list of issues of a repository
-        P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
-        P{{state}} - State of the issue (STATE_OPEN, STATE_CLOSED, STATE_ALL)
-        P{{recordCount}} - Specify number of records in the list
-        R{{}} - Issue list object
-        R{{}} - Connector error
-    }
+    # Get a list of issues of a repository.
+    # + repository - Repository object or tuple (`repository owner`, `repository name`)
+    # + state - State of the issue (`STATE_OPEN`, `STATE_CLOSED`, `STATE_ALL`)
+    # + recordCount - Specify number of records in the list
+    # + return - Issue list object or Connector error
     public function getIssueList(Repository|(string, string) repository, string state, int recordCount)
                         returns IssueList|GitClientError;
 
-    documentation { Get the next page of the issue list
-        P{{issueList}} - Issue list object
-        R{{}} - Issue list object of next page
-        R{{}} - Connector error
-    }
+    # Get the next page of the issue list.
+    # + issueList - Issue list object
+    # + return - Issue list object of next page or Connector error
     public function getIssueListNextPage(IssueList issueList) returns IssueList|GitClientError;
 
-    documentation { Get an organization
-        P{{name}} - Name of the organization
-        R{{}} - Organization object
-        R{{}} - Connector error
-    }
+    # Get an organization.
+    # + name - Name of the organization
+    # + return - Organization object or Connector error
     public function getOrganization(string name) returns Organization|GitClientError;
 
-    documentation { Get a single project of an organization
-        P{{organization}} - Organization object or organization name
-        P{{projectNumber}} - The number of the project
-        R{{}} - Project object
-        R{{}} - Connector error
-    }
+    # Get a single project of an organization.
+    # + organization - Organization object or organization name
+    # + projectNumber - The number of the project
+    # + return - Project object or Connector error
     public function getOrganizationProject(Organization|string organization, int projectNumber)
                         returns Project|GitClientError;
 
-    documentation { Get all projects of an organization
-        P{{organization}} - Organization object or organization name
-        P{{state}} - State of the project (STATE_OPEN, STATE_CLOSED, STATE_ALL)
-        P{{recordCount}} - Specify number of records in the list
-        R{{}} - Project list object
-        R{{}} - Connector error
-    }
+    # Get all projects of an organization.
+    # + organization - Organization object or organization name
+    # + state - State of the project (`STATE_OPEN`, `STATE_CLOSED`, `STATE_ALL`)
+    # + recordCount - Specify number of records in the list
+    # + return - Project list object or Connector error
     public function getOrganizationProjectList(Organization|string organization, string state, int recordCount)
                         returns ProjectList|GitClientError;
 
-    documentation { Get a list of repositories of an organization
-        P{{organization}} - Organization object or organization name
-        P{{recordCount}} - Specify number of records in the list
-        R{{}} - Repository list object
-        R{{}} - Connector error
-    }
+    # Get a list of repositories of an organization.
+    # + organization - Organization object or organization name
+    # + recordCount - Specify number of records in the list
+    # + return - Repository list object or Connector error
     public function getOrganizationRepositoryList(Organization|string organization, int recordCount)
                         returns RepositoryList|GitClientError;
 
-    documentation { Get all columns of a project board
-        P{{project}} - Project object
-        P{{recordCount}} - Specify number of records in the list
-        R{{}} - Column list object
-        R{{}} - Connector error
-    }
+    # Get all columns of a project board.
+    # + project - Project object
+    # + recordCount - Specify number of records in the list
+    # + return - Column list object or Connector error
     public function getProjectColumnList(Project project, int recordCount) returns ColumnList|GitClientError;
-    documentation { Gets the next page of a project list
-        P{{projectList}} - Project list object
-        R{{}} - Project list object of next page
-        R{{}} - Connector error
-    }
+
+    # Gets the next page of a project list.
+    # + projectList - Project list object
+    # + return - Project list object of next page or Connector error
     public function getProjectListNextPage(ProjectList projectList) returns ProjectList|GitClientError;
 
-    documentation { Get all pull requests of a repository
-        P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
-        P{{state}} - State of the pull request (STATE_OPEN, STATE_CLOSED, STATE_MERGED, STATE_ALL)
-        P{{recordCount}} - Specify number of records in the list
-        R{{}} - Pull request list object
-        R{{}} - Connector error
-    }
+    # Get all pull requests of a repository.
+    # + repository - Repository object or tuple `("repository owner", "repository name")`
+    # + state - State of the pull request (STATE_OPEN, STATE_CLOSED, STATE_MERGED, STATE_ALL)
+    # + recordCount - Specify number of records in the list
+    # + return - Pull request list object or Connector error
     public function getPullRequestList(Repository|(string, string) repository, string state, int recordCount)
                         returns PullRequestList|GitClientError;
 
-    documentation { Get the next page of the pull request list
-        P{{pullRequestList}} - Pull request list object
-        R{{}} - Pull request list object of next page
-        R{{}} - Connector error
-    }
+    # Get the next page of the pull request list.
+    # + pullRequestList - Pull request list object
+    # + return - Pull request list object of next page or Connector error
     public function getPullRequestListNextPage(PullRequestList pullRequestList) returns PullRequestList|GitClientError;
 
-    documentation { Get a repository of an owner
-        P{{name}} - Name of the repository and its owner Format: ("owner/repository")
-        R{{}} - Repository object
-        R{{}} - Connector error
-    }
+    # Get a repository of an owner.
+    # + name - Name of the repository and its owner Format: ("owner/repository")
+    # + return - Repository object or Connector error
     public function getRepository(string name) returns Repository|GitClientError;
 
-    documentation { Get the next page of a repository list
-        P{{repositoryList}} - Repository list object
-        R{{}} - Repository list object of next page
-        R{{}} - Connector error
-    }
+    # Get the next page of a repository list.
+    # + repositoryList - Repository list object
+    # + return - Repository list object of next page or Connector error
     public function getRepositoryListNextPage(RepositoryList repositoryList) returns RepositoryList|GitClientError;
 
-    documentation { Get a single project of a repository
-        P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
-        P{{projectNumber}} - Project identification number
-        R{{}} - Project object
-        R{{}} - Connector error
-    }
+    # Get a single project of a repository.
+    # + repository - Repository object or tuple `("repository owner", "repository name")`
+    # + projectNumber - Project identification number
+    # + return - Project object or Connector error
     public function getRepositoryProject(Repository|(string, string) repository, int projectNumber)
                         returns Project|GitClientError;
 
-    documentation { Get all projects of a repository
-        P{{repository}} - Repository object or tuple `("repository owner", "repository name")`
-        P{{state}} - State of the project (STATE_OPEN, STATE_CLOSED, STATE_ALL)
-        P{{recordCount}} - Specify number of records in the list
-        R{{}} - Project list object
-        R{{}} - Connector error
-    }
+    # Get all projects of a repository.
+    # + repository - Repository object or tuple `("repository owner", "repository name")`
+    # + state - State of the project (STATE_OPEN, STATE_CLOSED, STATE_ALL)
+    # + recordCount - Specify number of records in the list
+    # + return - Project list object or Connector error
     public function getRepositoryProjectList(Repository|(string, string) repository, string state, int recordCount)
                         returns ProjectList|GitClientError;
 };

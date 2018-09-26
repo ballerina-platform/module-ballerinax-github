@@ -20,20 +20,17 @@ import ballerina/http;
 import ballerina/internal;
 import ballerina/mime;
 
-documentation { Construct the request by adding the payload and authorization tokens
-    P{{request}} - HTTP request object
-    P{{stringQuery}} - GraphQL API query
-}
+# Construct the request by adding the payload and authorization tokens.
+# + request - HTTP request object
+# + stringQuery - GraphQL API query
 function constructRequest(http:Request request, json stringQuery) {
     request.setJsonPayload(stringQuery);
 }
 
-documentation { Validate the HTTP response and return payload or error
-    P{{response}} - HTTP response object or HTTP connector error object
-    P{{validateComponent}} - Component to check in the response
-    R{{}} - JSON payload of the response
-    R{{}} - Connector error
-}
+# Validate the HTTP response and return payload or error.
+# + response - HTTP response object or HTTP Connector error object
+# + validateComponent - Component to check in the response
+# + return - `json` payload of the response or Connector error
 function getValidatedResponse(http:Response|error response, string validateComponent) returns json|GitClientError {
 
     match response {
@@ -90,11 +87,9 @@ function getValidatedResponse(http:Response|error response, string validateCompo
     }
 }
 
-documentation { Validate the REST HTTP response and return payload or error
-    P{{response}} - HTTP response object or HTTP connector error object
-    R{{}} - JSON payload of the response
-    R{{}} - Connector error
-}
+# Validate the REST HTTP response and return payload or error.
+# + response - HTTP response object or HTTP Connector error object
+# + return - `json` payload of the response or Connector error
 function getValidatedRestResponse(http:Response|error response) returns json|GitClientError {
     match response {
         http:Response httpResponse => {
@@ -122,13 +117,11 @@ function getValidatedRestResponse(http:Response|error response) returns json|Git
     }
 }
 
-documentation { Get all columns of an organization project or repository project
-    P{{ownerType}} - Repository or Organization
-    P{{stringQuery}} - GraphQL API query to get the project board columns
-    P{{githubClient}} - GitHub client object
-    R{{}} - Column list object
-    R{{}} - Connector error
-}
+# Get all columns of an organization project or repository project.
+# + ownerType - Repository or Organization
+# + stringQuery - GraphQL API query to get the project board columns
+# + githubClient - GitHub client object
+# + return - Column list object or Connector error
 function getProjectColumns(string ownerType, string stringQuery, http:Client githubClient)
              returns ColumnList|GitClientError {
 
@@ -173,11 +166,9 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
     }
 }
 
-documentation { Convert string representation of json object to json object
-    P{{source}} - String representation of the json object
-    R{{}} - Converted JSON object
-    R{{}} - Connector error
-}
+# Convert string representation of JSON object to JSON object.
+# + source - String representation of the JSON object
+# + return - Converted `json` object or Connector error
 function stringToJson(string source) returns json|GitClientError {
     var parsedValue = internal:parseJson(source);
     match parsedValue {
