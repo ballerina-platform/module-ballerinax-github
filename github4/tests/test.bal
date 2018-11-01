@@ -111,13 +111,13 @@ function testGetOrganizationProjectListNextPage() {
     //Get a list of projects of an organization
     log:printInfo("githubClient -> getOrganizationProjectListNextPage()");
     int recordCount = 2;
-    ProjectList projectList = new;
+     ProjectList  projectList = new;
     Organization projectListOrganization = { login: testOrganizationName };
     var responseProjectList = githubClient->
     getOrganizationProjectList(projectListOrganization, STATE_OPEN, 2);
     match responseProjectList {
-        ProjectList prjtList => {
-            projectList = prjtList;
+         ProjectList prjtList => {
+             projectList = untaint prjtList;
         }
 
         GitClientError err => {
@@ -125,7 +125,7 @@ function testGetOrganizationProjectListNextPage() {
         }
     }
     // Next page
-    responseProjectList = githubClient->getProjectListNextPage(projectList);
+    responseProjectList = githubClient->getProjectListNextPage( projectList);
     match responseProjectList {
         ProjectList prjtList => {
             projectList = prjtList;
@@ -364,7 +364,7 @@ function testGetRepositoryProjectListNextPage() {
     getRepositoryProjectList(projectRepository, STATE_OPEN, 1);
     match responseRepoProjectList {
         ProjectList prjtList => {
-            repoProjectList = prjtList;
+            repoProjectList = untaint prjtList;
         }
         GitClientError err => {
             test:assertFail(msg = err.message);
@@ -421,7 +421,7 @@ function testGetPullRequestListNextPage() {
     var prList = githubClient->getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
     match prList {
         PullRequestList pList => {
-            pullRequestList = pList;
+            pullRequestList = untaint pList;
         }
         GitClientError err => {
             test:assertFail(msg = err.message);

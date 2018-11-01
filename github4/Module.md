@@ -1,31 +1,31 @@
 Connects to the GitHub GraphQL API from Ballerina.
 
-# Package Overview
+# Module Overview
 
 The Github connector has built-in support for working with projects, pull requests, and issues through the GitHub GraphQL API. It also allows you to access the organization and repository details. It handles OAuth2.0 authentication.
 
 **Project Operations**
 
-The `wso2/github4` package covers most of the project-related operations including columns and cards. It returns the information in structs that can be easily accessed.
+The `wso2/github4` module covers most of the project-related operations including columns and cards. It returns the information in structs that can be easily accessed.
 
 **Pull Request Operations**
 
-This package can retrieve pull requests from GitHub GraphQL. It returns comprehensive data structures for various data segments returned by the GraphQL API.
+This module can retrieve pull requests from GitHub GraphQL. It returns comprehensive data structures for various data segments returned by the GraphQL API.
 
 **Issues Operations**
 
-The `wso2/github4` package has support for creating and listing issues.
+The `wso2/github4` module has support for creating and listing issues.
 
 
 ## Compatibility
 |                             |       Version               |
 |:---------------------------:|:---------------------------:|
-| Ballerina Language          | 0.982.0                     |
+| Ballerina Language          | 0.983.0                     |
 | GitHub API                  | V4                          |
 
 ## Sample
 
-First, import the `wso2/github4` package into the Ballerina project.
+First, import the `wso2/github4` module into the Ballerina project.
 
 ```ballerina
 import wso2/github4;
@@ -50,7 +50,7 @@ endpoint github4:Client githubEP {
 
 The `getRepository` function gets a GitHub repository by passing the name of the repository and its owner in the format of "owner/repository".
 ```ballerina
-var repo = githubEP->getRepository("wso2-ballerina/package-github");
+var repo = githubEP->getRepository("wso2-ballerina/module-github");
 ```
 
 The response from `getRepository` is either a `Repository` object (if the request was successful) or a `GitClientError` (if the request was unsuccessful). The `match` operation can be used to handle the response if an error occurs.
