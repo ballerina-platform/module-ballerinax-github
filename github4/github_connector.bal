@@ -163,7 +163,7 @@ function GitHubConnector::createIssue(string repositoryOwner, string repositoryN
 
     http:Request request = new;
     //Set headers and payload to the request
-    constructRequest(request, issueJsonPayload);
+    constructRequest(request, untaint issueJsonPayload);
 
     string endpointResource = PATH_SEPARATOR + GIT_REPOS + PATH_SEPARATOR + repositoryOwner +
         PATH_SEPARATOR + repositoryName + PATH_SEPARATOR + GIT_ISSUES;

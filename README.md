@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/wso2-ballerina/package-github.svg?branch=master)](https://travis-ci.org/wso2-ballerina/package-github)
+[![Build Status](https://travis-ci.org/wso2-ballerina/module-github.svg?branch=master)](https://travis-ci.org/wso2-ballerina/module-github)
 
 # Ballerina GitHub Endpoint
 
@@ -11,7 +11,7 @@ sections explains how to use Ballerina GitHub4 connector. You can refer the [Git
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
-| 0.982.0           | v4                 |
+| 0.983.0           | v4                 |
 
 ![Ballerina GitHub Endpoint Overview](./docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
 
@@ -22,7 +22,7 @@ Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 
 * Clone the repository by running the following command
 ```shell
-git clone https://github.com/wso2-ballerina/package-github
+git clone https://github.com/wso2-ballerina/module-github
 ```
 
 * Initialize the ballerina project.
@@ -54,7 +54,7 @@ function main(string... args) {
     };
 
     github4:Repository repository = {};
-    var repo = githubClient->getRepository("wso2-ballerina/package-github");
+    var repo = githubClient->getRepository("wso2-ballerina/module-github");
     match repo {
         github4:Repository rep => {
             repository = rep;
