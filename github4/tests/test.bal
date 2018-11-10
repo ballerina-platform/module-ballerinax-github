@@ -48,7 +48,7 @@ function testGetOrganization() {
             organization = org;
         }
 
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -70,7 +70,7 @@ function testGetOrganizationProject() {
             orgProject = proj;
         }
 
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -94,7 +94,7 @@ function testGetOrganizationProjectList() {
             projectList = prjtList;
         }
 
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -120,7 +120,7 @@ function testGetOrganizationProjectListNextPage() {
              projectList = untaint prjtList;
         }
 
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -131,7 +131,7 @@ function testGetOrganizationProjectListNextPage() {
             projectList = prjtList;
         }
 
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -155,7 +155,7 @@ function testGetProjectColumnList() {
         ColumnList colList => {
             columnList = colList;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -180,7 +180,7 @@ function testGetCardListOfColumn() {
         ColumnList colList => {
             columnList = colList;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -207,7 +207,7 @@ function testGetCardListNextPage() {
         ColumnList colList => {
             columnList = colList;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -218,7 +218,7 @@ function testGetCardListNextPage() {
         CardList cd => {
             cardList = cd;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -241,7 +241,7 @@ function testGetOrganizationRepositoryList() {
         RepositoryList repList => {
             repositoryList = repList;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -265,7 +265,7 @@ function testGetOrganizationRepositoryListNextPage() {
         RepositoryList repList => {
             repositoryList = repList;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -276,7 +276,7 @@ function testGetOrganizationRepositoryListNextPage() {
             repositoryList = repList;
         }
 
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -297,7 +297,7 @@ function testGetRepository() {
         Repository rep => {
             repository = rep;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -318,7 +318,7 @@ function testGetRepositoryProject() {
         Project project => {
             repositoryProject = project;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -341,7 +341,7 @@ function testGetRepositoryProjectList() {
         ProjectList prjtList => {
             repoProjectList = prjtList;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -366,7 +366,7 @@ function testGetRepositoryProjectListNextPage() {
         ProjectList prjtList => {
             repoProjectList = untaint prjtList;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -376,7 +376,7 @@ function testGetRepositoryProjectListNextPage() {
         ProjectList prjList => {
             repoProjectList = prjList;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -399,7 +399,7 @@ function testGetPullRequestList() {
         PullRequestList pList => {
             pullRequestList = pList;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -423,7 +423,7 @@ function testGetPullRequestListNextPage() {
         PullRequestList pList => {
             pullRequestList = untaint pList;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -433,7 +433,7 @@ function testGetPullRequestListNextPage() {
         PullRequestList pList => {
             pullRequestList = pList;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -456,7 +456,7 @@ function testGetIssueList() {
         IssueList isList => {
             issueList = isList;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -480,7 +480,7 @@ function testGetIssueListNextPage() {
         IssueList isList => {
             issueList = isList;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -490,7 +490,7 @@ function testGetIssueListNextPage() {
         IssueList isList => {
             issueList = isList;
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -512,7 +512,7 @@ function testCreateIssue() {
         Issue issue => {
             test:assertEquals(issue.title, "This is a test issue", msg = "Failed createIssue()");
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -764,14 +764,14 @@ function testGetValidatedResponseSuccess() {
 
     http:Response|error response = sampleHttpResponse;
 
-    json|GitClientError validatedResponse = getValidatedResponse(response, "name");
+    json|error validatedResponse = getValidatedResponse(response, "name");
 
     match validatedResponse {
         json jsonResponse => {
             string orgName = jsonResponse.data.org.name.toString();
             test:assertEquals(orgName, "WSO2", msg = "Returned json data mismatch");
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -790,13 +790,13 @@ function testGetValidatedResponseError() {
 
     http:Response|error response = sampleHttpResponse;
 
-    json|GitClientError validatedResponse = getValidatedResponse(response, "name");
+    json|error validatedResponse = getValidatedResponse(response, "name");
 
     match validatedResponse {
         json jsonResponse => {
             test:assertFail(msg = "Payload error should be handled");
         }
-        GitClientError err => {
+        error err => {
             test:assertEquals(err.message, "API error", msg = "Validated response error mismatch");
         }
     }
@@ -815,13 +815,13 @@ function testGetValidatedResponseNoRequestedData() {
 
     http:Response|error response = sampleHttpResponse;
 
-    json|GitClientError validatedResponse = getValidatedResponse(response, "name");
+    json|error validatedResponse = getValidatedResponse(response, "name");
 
     match validatedResponse {
         json jsonResponse => {
             test:assertFail(msg = "Payload error should be handled");
         }
-        GitClientError err => {
+        error err => {
             test:assertEquals(err.message, "name is not available in the response",
                 msg = "Validated response error mismatch");
         }
@@ -838,13 +838,13 @@ function testGetValidatedResponseNoPayload() {
 
     http:Response|error response = sampleHttpResponse;
 
-    json|GitClientError validatedResponse = getValidatedResponse(response, "name");
+    json|error validatedResponse = getValidatedResponse(response, "name");
 
     match validatedResponse {
         json jsonResponse => {
             test:assertFail(msg = "Payload error should be handled");
         }
-        GitClientError err => {
+        error err => {
             test:assertEquals(err.message,
                 "Entity body is not json compatible since the received content-type is : null",
                 msg = "Validated response error mismatch");
@@ -863,13 +863,13 @@ function testGetValidatedResponseHttpError() {
 
     http:Response|error response = sampleHttpError;
 
-    json|GitClientError validatedResponse = getValidatedResponse(response, "name");
+    json|error validatedResponse = getValidatedResponse(response, "name");
 
     match validatedResponse {
         json jsonResponse => {
             test:assertFail(msg = "HttpConnector error should be handled");
         }
-        GitClientError err => {
+        error err => {
             test:assertEquals(err.message, "HTTP Connector Error", msg = "Validated response error mismatch");
         }
     }
@@ -887,14 +887,14 @@ function testGetValidatedRestResponseSuccess() {
 
     http:Response|error response = sampleHttpResponse;
 
-    json|GitClientError validatedResponse = getValidatedRestResponse(response);
+    json|error validatedResponse = getValidatedRestResponse(response);
 
     match validatedResponse {
         json jsonResponse => {
             string orgName = jsonResponse.title.toString();
             test:assertEquals(orgName, "Sample title", msg = "Returned json data mismatch");
         }
-        GitClientError err => {
+        error err => {
             test:assertFail(msg = err.message);
         }
     }
@@ -912,13 +912,13 @@ function testGetValidatedRestResponseError() {
     sampleHttpResponse.setJsonPayload(samplePayload);
 
     http:Response|error response = sampleHttpResponse;
-    json|GitClientError validatedResponse = getValidatedRestResponse(response);
+    json|error validatedResponse = getValidatedRestResponse(response);
 
     match validatedResponse {
         json jsonResponse => {
             test:assertFail(msg = "Payload error should be handled");
         }
-        GitClientError err => {
+        error err => {
             test:assertEquals(err.message, "API error", msg = "Validated response error mismatch");
         }
     }
@@ -934,13 +934,13 @@ function testGetValidatedRestResponseNoPayload() {
 
     http:Response|error response = sampleHttpResponse;
 
-    json|GitClientError validatedResponse = getValidatedRestResponse(response);
+    json|error validatedResponse = getValidatedRestResponse(response);
 
     match validatedResponse {
         json jsonResponse => {
             test:assertFail(msg = "Payload error should be handled");
         }
-        GitClientError err => {
+        error err => {
             test:assertEquals(err.message,
                 "Entity body is not json compatible since the received content-type is : null",
                 msg = "Validated response error mismatch");
@@ -959,13 +959,13 @@ function testGetValidatedRestResponseHttpError() {
 
     http:Response|error response = sampleHttpError;
 
-    json|GitClientError validatedResponse = getValidatedRestResponse(response);
+    json|error validatedResponse = getValidatedRestResponse(response);
 
     match validatedResponse {
         json jsonResponse => {
             test:assertFail(msg = "HttpConnector error should be handled");
         }
-        GitClientError err => {
+        error err => {
             test:assertEquals(err.message, "HTTP Connector Error", msg = "Validated response error mismatch");
         }
     }
@@ -983,8 +983,8 @@ function testStringToJsonError() {
         json jsonValue => {
             test:assertFail(msg = "Invalid string json. Expected failure");
         }
-        GitClientError gitClientError => {
-            test:assertEquals(gitClientError.message,
+        error err => {
+            test:assertEquals(err.message,
                 "Failed to parse json string: unrecognized token 'Sample' at line: 1 column: 17",
                 msg = "Error message mismatch");
         }
@@ -1004,7 +1004,7 @@ function testStringToJsonSuccess() {
             test:assertEquals(jsonValue.title.toString(), "Sample title", msg = "String to Json conversion failed");
             test:assertEquals(jsonValue.author.name.toString(), "Author1", msg = "String to Json conversion failed");
         }
-        GitClientError gitClientError => {
+        error err => {
             test:assertFail(msg = "stringToJson() returned error");
         }
     }

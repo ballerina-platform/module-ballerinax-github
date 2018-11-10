@@ -28,10 +28,10 @@ function constructRequest(http:Request request, json stringQuery) {
 }
 
 # Validate the HTTP response and return payload or error.
-# + response - HTTP response object or HTTP Connector error object
+# + response - HTTP response object or HTTP Connector error
 # + validateComponent - Component to check in the response
 # + return - `json` payload of the response or Connector error
-function getValidatedResponse(http:Response|error response, string validateComponent) returns json|GitClientError {
+function getValidatedResponse(http:Response|error response, string validateComponent) returns json|error {
 
     match response {
         http:Response gitResponse => {
@@ -41,7 +41,7 @@ function getValidatedResponse(http:Response|error response, string validateCompo
             match responsePayload {
                 json jsonPayload => {
                     string[] payLoadKeys = jsonPayload.getKeys();
-                    //Check all the keys in the payload to see if an error object is returned.
+                    //Check all the keys in the payload to see if an error is returned.
                     foreach key in payLoadKeys {
                         if (GIT_ERRORS.equalsIgnoreCase(key)) {
                             string errors;
@@ -53,44 +53,42 @@ function getValidatedResponse(http:Response|error response, string validateCompo
                                     errors += ",";
                                 }
                             }
-                            GitClientError gitClientError = { message: errors };
-                            return gitClientError;
+                            error err = { message: errors };
+                            return err;
                         }
 
                         if (GIT_MESSAGE.equalsIgnoreCase(key)) {
-                            GitClientError gitClientError = { message: jsonPayload[GIT_MESSAGE].toString() };
-                            return gitClientError;
+                            error err = { message: jsonPayload[GIT_MESSAGE].toString() };
+                            return err;
                         }
                     }
 
-                    //If no error object is returned, then check if the response contains the requested data.
+                    //If no error is returned, then check if the response contains the requested data.
                     string[] keySet = jsonPayload[GIT_DATA].getKeys();
                     string keyInData = keySet[INDEX_ZERO];
                     if (null == jsonPayload[GIT_DATA][keyInData][validateComponent]) {
-                        GitClientError gitClientError = { message: validateComponent +
+                        error err = { message: validateComponent +
                             " is not available in the response" };
-                        return gitClientError;
+                        return err;
                     }
                     return jsonPayload;
                 }
                 error err => {
-                    GitClientError gitClientError = { message: err.message, cause: err.cause };
-                    return gitClientError;
+                    return err;
                 }
             }
         }
 
         error err => {
-            GitClientError gitClientError = { message: err.message, cause: err.cause };
-            return gitClientError;
+            return err;
         }
     }
 }
 
 # Validate the REST HTTP response and return payload or error.
-# + response - HTTP response object or HTTP Connector error object
+# + response - HTTP response object or HTTP Connector error
 # + return - `json` payload of the response or Connector error
-function getValidatedRestResponse(http:Response|error response) returns json|GitClientError {
+function getValidatedRestResponse(http:Response|error response) returns json|error {
     match response {
         http:Response httpResponse => {
 
@@ -99,20 +97,18 @@ function getValidatedRestResponse(http:Response|error response) returns json|Git
                     if (jsonPayload.message == null) {
                         return jsonPayload;
                     } else {
-                        GitClientError gitClientError = { message: jsonPayload.message.toString() };
-                        return gitClientError;
+                        error err = { message: jsonPayload.message.toString() };
+                        return err;
                     }
                 }
                 error err => {
-                    GitClientError connectorError = { message: err.message, cause: err.cause };
-                    return connectorError;
+                    return err;
                 }
             }
         }
 
         error err => {
-            GitClientError clientError = { message: err.message, cause: err.cause };
-            return clientError;
+            return err;
         }
     }
 }
@@ -123,11 +119,9 @@ function getValidatedRestResponse(http:Response|error response) returns json|Git
 # + githubClient - GitHub client object
 # + return - Column list object or Connector error
 function getProjectColumns(string ownerType, string stringQuery, http:Client githubClient)
-             returns ColumnList|GitClientError {
+             returns ColumnList|error {
 
     endpoint http:Client gitHubEndpoint = githubClient;
-
-    GitClientError clientError = {};
 
     if (ownerType == "" || stringQuery == "") {
         return { message: "Owner type and query cannot be empty" };
@@ -141,8 +135,8 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
             constructRequest(request, jsonQuery);
         }
 
-        GitClientError gitClientError => {
-            return gitClientError;
+        error err => {
+            return err;
         }
     }
 
@@ -150,7 +144,7 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
     var response = gitHubEndpoint->post("", request);
 
     //Check for empty payloads and errors
-    json|GitClientError validatedResponse = getValidatedResponse(response, GIT_PROJECT);
+    json|error validatedResponse = getValidatedResponse(response, GIT_PROJECT);
 
     match validatedResponse {
         json jsonValidateResponse => {
@@ -160,8 +154,8 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
             return columnList;
         }
 
-        GitClientError gitClientError => {
-            return gitClientError;
+        error err => {
+            return err;
         }
     }
 }
@@ -169,15 +163,14 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
 # Convert string representation of JSON object to JSON object.
 # + source - String representation of the JSON object
 # + return - Converted `json` object or Connector error
-function stringToJson(string source) returns json|GitClientError {
+function stringToJson(string source) returns json|error {
     var parsedValue = internal:parseJson(source);
     match parsedValue {
         json jsonValue => {
             return jsonValue;
         }
         error parsedError => {
-            GitClientError clientError = { message: parsedError.message, cause: parsedError.cause };
-            return clientError;
+            return parsedError;
         }
     }
 }

@@ -53,11 +53,11 @@ The `getRepository` function gets a GitHub repository by passing the name of the
 var repo = githubEP->getRepository("wso2-ballerina/module-github");
 ```
 
-The response from `getRepository` is either a `Repository` object (if the request was successful) or a `GitClientError` (if the request was unsuccessful). The `match` operation can be used to handle the response if an error occurs.
+The response from `getRepository` is either a `Repository` object (if the request was successful) or a `error` (if the request was unsuccessful). The `match` operation can be used to handle the response if an error occurs.
 ```ballerina
 match repo {
     github4:Repository repository => io:println(repository);
-    github4:GitClientError err => io:println(err);
+    error err => io:println(err);
 }
 ```
 
@@ -72,12 +72,12 @@ or
 var issues = githubEP->getIssueList(("wso2", "carbon-apimgt"), github4:STATE_CLOSED, recordCount);
 ```
 
-The response from `getIssueList` is either an `IssueList` object (if the request was successful) or a `GitClientError` (if the request was unsuccessful).
+The response from `getIssueList` is either an `IssueList` object (if the request was successful) or a `error` (if the request was unsuccessful).
 
 ```ballerina
 match issues {
     github4:IssueList issueList => io:println(issueList);
-    github4:GitClientError err => io:println(err);
+    error err => io:println(err);
 }
 ```
 
@@ -87,11 +87,11 @@ The `createIssue` function creates a new issue in a given repository.
 var createdIssue = githubEP->createIssue (repositoryOwner, repositoryName, issueTitle, issueContent, labelList, assigneeList);
 ```
 
-It returns the created `Issue` object if successful or `GitClientError` if unsuccessful.
+It returns the created `Issue` object if successful or `error` if unsuccessful.
 
 ```ballerina
 match createdIssue {
     github4:Issue issue => io:println(issue);
-    github4:GitClientError err => io:println(err);
+    error err => io:println(err);
 }
 ```
