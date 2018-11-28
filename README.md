@@ -32,7 +32,7 @@ ballerina init
 
 ### Working with GitHub Endpoint Actions
 
-All the actions return `objects` or `github4:GitClientError`. If the action was a success, then the requested object will be returned while the `github:GitClientError` will be **empty** and vice-versa.
+All the actions return `objects` or `error`. If the action was a success, then the requested object will be returned while the `error` will be **empty** and vice-versa.
 
 ##### Example
 * Request
@@ -59,7 +59,7 @@ function main(string... args) {
         github4:Repository rep => {
             repository = rep;
         }
-        github4:GitClientError err => {
+        error err => {
             io:println(err);
         }
     }
