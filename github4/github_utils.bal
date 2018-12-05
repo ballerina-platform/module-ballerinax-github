@@ -33,55 +33,54 @@ function constructRequest(http:Request request, json stringQuery) {
 # + return - `json` payload of the response or Connector error
 function getValidatedResponse(http:Response|error response, string validateComponent) returns json|error {
 
-    match response {
-        http:Response gitResponse => {
-
-            var responsePayload = gitResponse.getJsonPayload();
-
-            match responsePayload {
-                json jsonPayload => {
-                    string[] payLoadKeys = jsonPayload.getKeys();
-                    //Check all the keys in the payload to see if an error is returned.
-                    foreach key in payLoadKeys {
-                        if (GIT_ERRORS.equalsIgnoreCase(key)) {
-                            string errors;
-                            var errorList = check <json[]>jsonPayload[GIT_ERRORS];
-                            foreach i, singleError in errorList {
-                                string errorMessage = singleError[GIT_MESSAGE].toString();
-                                errors += errorMessage;
-                                if (i + 1 != lengthof errorList) {
-                                    errors += ",";
-                                }
+    if (response is http:Response) {
+        var jsonPayload = response.getJsonPayload();
+        if (jsonPayload is json) {
+            string[] payLoadKeys = jsonPayload.getKeys();
+            //Check all the keys in the payload to see if an error is returned.
+            foreach key in payLoadKeys {
+                if (GIT_ERRORS.equalsIgnoreCase(key)) {
+                    string errors = "";
+                    var errorList = json[].create(jsonPayload[GIT_ERRORS]);
+                    if (errorList is json[]) {
+                        foreach i, singleError in errorList {
+                            string errorMessage = singleError[GIT_MESSAGE].toString();
+                            errors += errorMessage;
+                            if (i + 1 != errorList.length()) {
+                                errors += ",";
                             }
-                            error err = { message: errors };
-                            return err;
                         }
-
-                        if (GIT_MESSAGE.equalsIgnoreCase(key)) {
-                            error err = { message: jsonPayload[GIT_MESSAGE].toString() };
-                            return err;
-                        }
-                    }
-
-                    //If no error is returned, then check if the response contains the requested data.
-                    string[] keySet = jsonPayload[GIT_DATA].getKeys();
-                    string keyInData = keySet[INDEX_ZERO];
-                    if (null == jsonPayload[GIT_DATA][keyInData][validateComponent]) {
-                        error err = { message: validateComponent +
-                            " is not available in the response" };
+                        error err = error(GITHUB_ERROR_CODE, { message: errors });
+                        return err;
+                    } else {
+                        error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while accessing the Json payload of the response." });
                         return err;
                     }
-                    return jsonPayload;
                 }
-                error err => {
+
+                if (GIT_MESSAGE.equalsIgnoreCase(key)) {
+                    error err = error(GITHUB_ERROR_CODE, { message: jsonPayload[GIT_MESSAGE].toString() });
                     return err;
                 }
             }
-        }
 
-        error err => {
+            //If no error is returned, then check if the response contains the requested data.
+            string[] keySet = jsonPayload[GIT_DATA].getKeys();
+            string keyInData = keySet[INDEX_ZERO];
+            if (null == jsonPayload[GIT_DATA][keyInData][validateComponent]) {
+                error err = error(GITHUB_ERROR_CODE, { message: validateComponent +
+                            " is not available in the response" });
+                return err;
+            }
+            return jsonPayload;
+        } else {
+            error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while accessing the json payload
+                                of the response." });
             return err;
         }
+    } else {
+        error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while invoking the github API." });
+        return err;
     }
 }
 
@@ -89,27 +88,17 @@ function getValidatedResponse(http:Response|error response, string validateCompo
 # + response - HTTP response object or HTTP Connector error
 # + return - `json` payload of the response or Connector error
 function getValidatedRestResponse(http:Response|error response) returns json|error {
-    match response {
-        http:Response httpResponse => {
-
-            match httpResponse.getJsonPayload() {
-                json jsonPayload => {
-                    if (jsonPayload.message == null) {
-                        return jsonPayload;
-                    } else {
-                        error err = { message: jsonPayload.message.toString() };
-                        return err;
-                    }
-                }
-                error err => {
-                    return err;
-                }
-            }
-        }
-
-        error err => {
+    if (response is http:Response) {
+        if(response.getJsonPayload() is error) {
+            error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while accessing the json payload
+                                of the response." });
             return err;
+        } else {
+            return response.getJsonPayload();
         }
+    } else {
+        error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while invoking the github API." });
+        return err;
     }
 }
 
@@ -121,42 +110,39 @@ function getValidatedRestResponse(http:Response|error response) returns json|err
 function getProjectColumns(string ownerType, string stringQuery, http:Client githubClient)
              returns ColumnList|error {
 
-    endpoint http:Client gitHubEndpoint = githubClient;
+     http:Client gitHubEndpoint = githubClient;
 
     if (ownerType == "" || stringQuery == "") {
-        return { message: "Owner type and query cannot be empty" };
+        error err = error(GITHUB_ERROR_CODE, { message: "Owner type and query cannot be empty" });
+        return err;
     }
 
     http:Request request = new;
-    var convertedQuery = stringToJson(stringQuery);
-    match convertedQuery {
-        json jsonQuery => {
-            //Set headers and payload to the request
-            constructRequest(request, jsonQuery);
-        }
-
-        error err => {
-            return err;
-        }
+    var jsonQuery = stringToJson(stringQuery);
+    if (jsonQuery is json) {
+        //Set headers and payload to the request
+        constructRequest(request, jsonQuery);
+    } else {
+        error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while accessing the json payload
+                                of the response." });
+        return err;
     }
 
     // Make an HTTP POST request
     var response = gitHubEndpoint->post("", request);
 
     //Check for empty payloads and errors
-    json|error validatedResponse = getValidatedResponse(response, GIT_PROJECT);
+    json|error jsonValidateResponse = getValidatedResponse(response, GIT_PROJECT);
 
-    match validatedResponse {
-        json jsonValidateResponse => {
-            var projectColumnsJson = jsonValidateResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
-            var columnList = jsonToColumnList(projectColumnsJson, ownerType, stringQuery);
+    if (jsonValidateResponse is json) {
+        var projectColumnsJson = jsonValidateResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
+        var columnList = jsonToColumnList(projectColumnsJson, ownerType, stringQuery);
 
-            return columnList;
-        }
-
-        error err => {
-            return err;
-        }
+        return columnList;
+    } else {
+        error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while accessing the json payload
+                                        of the response." });
+        return err;
     }
 }
 
@@ -165,12 +151,11 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
 # + return - Converted `json` object or Connector error
 function stringToJson(string source) returns json|error {
     var parsedValue = internal:parseJson(source);
-    match parsedValue {
-        json jsonValue => {
-            return jsonValue;
-        }
-        error parsedError => {
-            return parsedError;
-        }
+    if (parsedValue is json) {
+        return parsedValue;
+    } else {
+        error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while accessing the json payload
+                                                of the response." });
+        return err;
     }
 }
