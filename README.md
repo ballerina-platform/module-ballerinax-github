@@ -54,7 +54,7 @@ endpoint github4:Client githubClient {
 
 Client githubClient = new(gitHubConfig);
 
-function main(string... args) {
+public function main() {
     
     github4:Repository repository = {};
     var repo = githubClient->getRepository("wso2-ballerina/module-github");
@@ -75,9 +75,9 @@ public type Repository record {
     string id = "";
     string name = "";
     string createdAt = "";
-    string? updatedAt = "";
-    string? description = "";
-    int? forkCount = 0;
+    string updatedAt = "";
+    string description = "";
+    int forkCount = 0;
     boolean hasIssuesEnabled = false;
     boolean hasWikiEnabled = false;
     boolean isArchived = false;
@@ -85,14 +85,14 @@ public type Repository record {
     boolean isLocked = false;
     boolean isMirror = false;
     boolean isPrivate = false;
-    string? homepageUrl = "";
-    string? lockReason = "";
-    string? mirrorUrl = "";
-    string? url = "";
-    string? sshUrl = "";
+    string homepageUrl = "";
+    string lockReason = "";
+    string mirrorUrl = "";
+    string url = "";
+    string sshUrl = "";
     RepositoryOwner owner = {};
     Language primaryLanguage = {};
-    int? stargazerCount = 0;
+    int stargazerCount = 0;
 }
 ```
 

@@ -163,6 +163,7 @@ function RepositoryList.getAllRepositories() returns (Repository[]) {
 # + url - HTTP URL for this project
 # + viewerCanUpdate - Identifies whether current viewer can update this object
 # + creator - User who originally created the project
+# + owner - Project owner (Repository or Organization)
 public type Project record {
     string id = "";
     string name = "";
@@ -177,6 +178,7 @@ public type Project record {
     string url = "";
     boolean viewerCanUpdate = false;
     Creator creator = {};
+    ProjectOwner owner = {};
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

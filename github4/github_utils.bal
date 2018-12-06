@@ -38,17 +38,19 @@ function getValidatedResponse(http:Response|error response, string validateCompo
         if (jsonPayload is json) {
             string[] payLoadKeys = jsonPayload.getKeys();
             //Check all the keys in the payload to see if an error is returned.
-            foreach key in payLoadKeys {
+            foreach var key in payLoadKeys {
                 if (GIT_ERRORS.equalsIgnoreCase(key)) {
                     string errors = "";
-                    var errorList = json[].create(jsonPayload[GIT_ERRORS]);
+                    var errorList = json[].convert(jsonPayload[GIT_ERRORS]);
                     if (errorList is json[]) {
-                        foreach i, singleError in errorList {
+                        int i = 0;
+                        foreach var singleError in errorList {
                             string errorMessage = singleError[GIT_MESSAGE].toString();
                             errors += errorMessage;
                             if (i + 1 != errorList.length()) {
                                 errors += ",";
                             }
+                            i = i + 1;
                         }
                         error err = error(GITHUB_ERROR_CODE, { message: errors });
                         return err;
