@@ -243,7 +243,7 @@ remote function Client.getCardListNextPage(CardList cardList) returns CardList|e
     return err;
 }
 
-    remote function Client.getColumnListNextPage(ColumnList columnList) returns ColumnList|error {
+remote function Client.getColumnListNextPage(ColumnList columnList) returns ColumnList|error {
 
     if (columnList.hasNextPage()) {
     var jsonQuery = stringToJson(columnList.columnListQuery);
