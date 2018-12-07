@@ -31,16 +31,16 @@ RESOURCE_PATH = ""
 ```
 
 ```ballerina
-endpoint github4:Client githubClient {
-        clientConfig: {
-            auth:{
-                scheme:http:OAUTH2,
-                accessToken:config:getAsString("GITHUB_TOKEN")
-            }
-        }
-};
-
-Client githubClient = new(gitHubConfig);
+github4:GitHubConfiguration gitHubConfig = {
+     clientConfig: {
+         auth: {
+             scheme: http:OAUTH2,
+             accessToken: config:getAsString("GITHUB_TOKEN")
+         }
+     }
+ };
+ 
+github4:Client githubClient = new(gitHubConfig);
 ```
 
 Run tests :

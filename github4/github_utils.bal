@@ -143,8 +143,8 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
 
         return columnList;
     } else {
-        error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while accessing the json payload
-                                        of the response." });
+        error err = error(GITHUB_ERROR_CODE
+        , { message: "Error occurred while accessing the json payload of the response." });
         return err;
     }
 }

@@ -213,8 +213,8 @@ remote function Client.getCardListNextPage(CardList cardList) returns CardList|e
                         }
                     }
                 } else {
-                error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while accessing the ColumnList payload
-                                    of the response." });
+                error err = error(GITHUB_ERROR_CODE
+                , { message: "Error occurred while accessing the ColumnList payload of the response." });
                 return err;
                 }
             } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
@@ -693,8 +693,7 @@ returns PullRequestList|error {
     }
 }
 
-remote function Client.getPullRequestListNextPage(PullRequestList pullRequestList)
-returns PullRequestList|error {
+remote function Client.getPullRequestListNextPage(PullRequestList pullRequestList) returns PullRequestList|error {
 
     if (pullRequestList.hasNextPage()) {
 
@@ -765,7 +764,8 @@ remote function Client.getRepository(string name) returns Repository|error {
         var githubRepositoryJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY];
         singleRepository = jsonToRepository(githubRepositoryJson);
     } else {
-        error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while accessing the Json payload of the response." });
+        error err = error(GITHUB_ERROR_CODE
+        , { message: "Error occurred while accessing the Json payload of the response." });
         return err;
     }
 
