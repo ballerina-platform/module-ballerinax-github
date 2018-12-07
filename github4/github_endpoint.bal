@@ -184,7 +184,6 @@ returns Issue|error {
     PATH_SEPARATOR + repositoryName + PATH_SEPARATOR + GIT_ISSUES;
     // Make an HTTP POST request
     var response = self.githubRestClient->post(endpointResource, request);
-
     //Check for empty payloads and errors
     var validatedResponse = getValidatedRestResponse(response);
     if (validatedResponse is json) {
@@ -197,7 +196,7 @@ returns Issue|error {
 
 remote function Client.getCardListNextPage(CardList cardList) returns CardList|error {
 
-    if (cardList.hasNextPage()) {
+    if (cardList.pageInfo.hasPreviousPage) {
         var cardListColumnId = cardList.columnId;
         var convertedQuery = stringToJson(cardList.cardListQuery);
         if (convertedQuery is json) {
@@ -210,7 +209,7 @@ remote function Client.getCardListNextPage(CardList cardList) returns CardList|e
                 if (columnList is ColumnList) {
                     foreach var column in columnList.getAllColumns() {
                         if (column.id == cardListColumnId) {
-                            return column.getCardList();
+                            return column["cards"];
                         }
                     }
                 } else {
@@ -225,7 +224,7 @@ remote function Client.getCardListNextPage(CardList cardList) returns CardList|e
                 if(columnList is ColumnList) {
                     foreach var column in columnList.getAllColumns() {
                         if (column.id == cardListColumnId) {
-                            return column.getCardList();
+                            return column["cards"];
                         }
                     }
                 } else {
@@ -561,7 +560,7 @@ returns RepositoryList|error {
 
 remote function Client.getProjectColumnList(Project project, int recordCount) returns ColumnList|error {
 
-    if (project.owner.getOwnerType() == EMPTY_STRING || project.number <= INDEX_ZERO ||
+    if (project["owner"]["__typename"] == EMPTY_STRING || project.number <= INDEX_ZERO ||
         project.resourcePath == EMPTY_STRING) {
         error err = error(GITHUB_ERROR_CODE
         , { message: "Project owner, number and resource path should be specified" });
@@ -572,7 +571,7 @@ remote function Client.getProjectColumnList(Project project, int recordCount) re
         error err = error(GITHUB_ERROR_CODE, { message: "Maximum record count limited to " + MAX_RECORD_COUNT });
         return err;
     }
-    string projectOwnerType = <string>project.owner.getOwnerType();
+    string projectOwnerType = <string>project["owner"]["__typename"];
     string resourcePath = "";
     if (project.resourcePath.length() == 0) {
         resourcePath = EMPTY_STRING;
@@ -655,7 +654,6 @@ returns PullRequestList|error {
     } else {
         (repositoryOwner, repositoryName) = repository;
     }
-
     if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
         error err = error(GITHUB_ERROR_CODE, { message: "Repository owner and name should be specified" });
         return err;
@@ -680,15 +678,14 @@ returns PullRequestList|error {
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
-
     //Check for empty payloads and errors
     json|error validatedResponse = getValidatedResponse(response, GIT_PULL_REQUESTS);
 
     if (validatedResponse is json) {
         var githubPullRequestsJson = validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
         var pullRequestList = jsonToPullRequestList(githubPullRequestsJson, stringQuery);
-
         return pullRequestList;
+
     } else {
         error err = error(GITHUB_ERROR_CODE
         , { message: "Error occurred while accessing the Json payload of the response." });

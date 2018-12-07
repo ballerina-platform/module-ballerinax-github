@@ -139,7 +139,7 @@ function RepositoryList.hasPreviousPage() returns boolean {
     return self.pageInfo.hasPreviousPage;
 }
 
-function RepositoryList.getAllRepositories() returns (Repository[]) {
+function RepositoryList.getAllRepositories() returns Repository[] {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -206,7 +206,7 @@ public type ProjectList object {
 
     # Get all the projects in the project list.
     # + return - Array of Project objects
-    public function getAllProjects() returns (Project[]);
+    public function getAllProjects() returns Project[];
 };
 //*********************************************************************************************************************
 // ProjectList bound functions
@@ -299,7 +299,7 @@ function ColumnList.getAllColumns() returns (Column[]) {
 # Represents a github card.
 # + id - Card identifcation number
 # + note - Note in the card
-# + state - State of the card (`CONTENT_ONLY`, `NOTE_ONLY`, `REDACTED`)
+# + state - State of the card (CONTENT_ONLY, NOTE_ONLY, REDACTED)
 # + createdAt - Date and time when the object was created
 # + updatedAt - Date and time when the object was last updated
 # + url - HTTP URL for this card
@@ -325,39 +325,18 @@ public type Card record {
 //                                              CardList object                                                      //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # Represents a list of cards of a column.
-public type CardList object {
+# + columnId - The coloum id
+# + cardListQuery - The query of the CardList
+# + listOwner - The owner list
+# + pageInfo - The page info
+# + nodes - The nodes
+public type CardList record {
     string columnId = "";
     string cardListQuery = "";
     string listOwner = "";
     PageInfo pageInfo = {};
     Card[] nodes = [];
-
-    # Check if the card list next page is available.
-    # + return - Return true or false
-    public function hasNextPage() returns boolean;
-
-    # Check if the card list previous page is available.
-    # + return - Return true or false
-    public function hasPreviousPage() returns boolean;
-
-    # Get all the cards in the card list.
-    # + return - Array of card objects
-    public function getAllCards() returns (Card[]);
 };
-//*********************************************************************************************************************
-// CardList bound functions
-//*********************************************************************************************************************
-function CardList.hasNextPage() returns boolean {
-    return self.pageInfo.hasNextPage;
-}
-
-function CardList.hasPreviousPage() returns boolean {
-    return self.pageInfo.hasPreviousPage;
-}
-
-function CardList.getAllCards() returns (Card[]) {
-    return self.nodes;
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of CardList object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -552,31 +531,18 @@ public type Creator record {
 # + projectsResourcePath - HTTP path listing owner projects
 # + projectsUrl - HTTP URL listing owner projects
 # + viewerCanCreateProjects - Identifies whether the current viewer can create new projects on the owner
-public type ProjectOwner object {
-    public string id = "";
-    public string projectsResourcePath = "";
-    public string projectsUrl = "";
-    public string viewerCanCreateProjects = "";
-    private string __typename = "";
+# + __typename - The project owner type name
+public type ProjectOwner record {
+    string id = "";
+    string projectsResourcePath = "";
+    string projectsUrl = "";
+    string viewerCanCreateProjects = "";
+    string __typename = "";
 
-    # Get the type of the project owner.
-    # + return - Type of the owner (Repository or Organization)
-    public function getOwnerType() returns (string);
-
-    # Set the type of the project owner.
-    # + ownerType - Type of the owner (Repository or Organization)
-    public function setOwnerType(string ownerType);
 };
 //*********************************************************************************************************************
 // ProjectOwner bound functions
 //*********************************************************************************************************************
-function ProjectOwner.getOwnerType() returns (string) {
-    return self.__typename;
-}
-
-function ProjectOwner.setOwnerType(string ownerType) {
-    self.__typename = ownerType;
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of ProjectOwner object                                              //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -641,7 +607,7 @@ public type Language record {
 # + hasPreviousPage - Identifies whether there is a previous page of results
 # + startCursor - Start cursor pointing to the begining of the current result set
 # + endCursor - End cursor pointing to the end of the current result set
-type PageInfo record {
+public type PageInfo record {
     boolean hasNextPage = false;
     boolean hasPreviousPage = false;
     string? startCursor = "";

@@ -130,7 +130,7 @@ function testGetProjectColumnList() {
     log:printInfo("githubClient -> getProjectColumnList()");
     int recordCount = 2;
     Project columnListProject = { number: 1, resourcePath: testResourcePath };
-    columnListProject.owner.setOwnerType("Organization");
+    columnListProject["owner"]["__typename"]="Organization";
     ColumnList columnList = new;
     var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
     if (columns is ColumnList) {
@@ -152,7 +152,7 @@ function testGetCardListOfColumn() {
     log:printInfo("column.getCardList()");
     int recordCount = 2;
     Project columnListProject = { number: 1, resourcePath: testResourcePath };
-    columnListProject.owner.setOwnerType("Organization");
+    columnListProject["owner"]["__typename"] = "Organization";
     ColumnList columnList = new;
     var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
     if (columns is ColumnList) {
@@ -162,7 +162,7 @@ function testGetCardListOfColumn() {
     }
     Column column = columnList.getAllColumns()[0];
     CardList cardList = column.getCardList();
-    boolean lengthEqualsRecords = cardList.getAllCards().length() > 0;
+    boolean lengthEqualsRecords = cardList.nodes.length() > 0;
 
     test:assertTrue(lengthEqualsRecords, msg = "Failed getCardList()");
 }
@@ -176,7 +176,7 @@ function testGetCardListNextPage() {
     log:printInfo("githubClient -> getCardListNextPage()");
     int recordCount = 2;
     Project columnListProject = { number: 1, resourcePath: testResourcePath };
-    columnListProject.owner.setOwnerType("Organization");
+    columnListProject["owner"]["__typename"] = "Organization";
     ColumnList columnList = new;
     var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
     if (columns is ColumnList) {
@@ -192,7 +192,7 @@ function testGetCardListNextPage() {
     } else {
         test:assertFail(msg = <string>cardListNextPage.detail().message);
     }
-    boolean lengthEqualsRecords = cardList.getAllCards().length() > 0;
+    boolean lengthEqualsRecords = cardList.nodes.length() > 0;
 
     test:assertTrue(lengthEqualsRecords, msg = "Failed getCardListNextPage()");
 }
@@ -234,7 +234,7 @@ function testGetOrganizationRepositoryListNextPage() {
         test:assertFail(msg = <string>repoList.detail().message);
     }
     // Next page
-    repoList = githubClient->getRepositoryListNextPage(repositoryList);
+    repoList = githubClient->getRepositoryListNextPage(untaint repositoryList);
     if (repoList is RepositoryList) {
         repositoryList = repoList;
     } else {
@@ -268,7 +268,7 @@ function testGetRepository() {
 function testGetRepositoryProject() {
     //Get a Repository Project
     log:printInfo("githubClient -> getRepositoryProject()");
-    Repository projectRepository = { owner: { login: "wso2" }, name: "testgrid" };
+    Repository projectRepository = { owner: { login: "kalaiyarasiganeshalingam" }, name: "testing" };
     Project repositoryProject = {};
     var singleRepoProject = githubClient->getRepositoryProject(projectRepository, 1);
     if (singleRepoProject is Project) {
@@ -337,7 +337,7 @@ function testGetPullRequestList() {
     //Get a list of pull requests in a repository
     log:printInfo("githubClient -> getPullRequestList()");
     int recordCount = 2;
-    Repository pullRequestRepository = { owner: { login: "wso2" }, name: "product-is" };
+    Repository pullRequestRepository = { owner: { login: "wso2" }, name: "siddhi" };
     PullRequestList pullRequestList = new;
     var prList = githubClient->getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
     if (prList is PullRequestList) {
@@ -415,7 +415,7 @@ function testGetIssueListNextPage() {
         test:assertFail(msg = <string>issues.detail().message);
     }
     // Next page
-    issues = githubClient->getIssueListNextPage(issueList);
+    issues = githubClient->getIssueListNextPage(untaint issueList);
     if (issues is IssueList) {
         issueList = issues;
     } else {
@@ -511,7 +511,7 @@ function testColumnGetCardList() {
     log:printInfo("Column.getCardList()");
     Column column = new;
     var cardList = column.getCardList();
-    CardList sampleCardList = new;
+    CardList sampleCardList = {};
     test:assertEquals(cardList, sampleCardList, msg = "Failed Column.getCardList()");
 }
 
@@ -551,9 +551,9 @@ function testColumnListGetAllColumns() {
 }
 function testCardListHasNextPage() {
     log:printInfo("CardList.hasNextPage()");
-    CardList cardList = new;
+    CardList cardList = {};
 
-    test:assertFalse(cardList.hasNextPage(), msg = "Failed CardList.hasNextPage()");
+    test:assertFalse(cardList.pageInfo.hasNextPage, msg = "Failed CardList.hasNextPage()");
 }
 
 @test:Config {
@@ -561,9 +561,9 @@ function testCardListHasNextPage() {
 }
 function testCardListHasPreviousPage() {
     log:printInfo("CardList.hasPreviousPage()");
-    CardList cardList = new;
+    CardList cardList = {};
 
-    test:assertFalse(cardList.hasPreviousPage(), msg = "Failed CardList.hasPreviousPage()");
+    test:assertFalse(cardList.pageInfo.hasPreviousPage, msg = "Failed CardList.hasPreviousPage()");
 }
 
 @test:Config {
@@ -571,8 +571,8 @@ function testCardListHasPreviousPage() {
 }
 function testCardListGetAllCards() {
     log:printInfo("CardList.getAllCards()");
-    CardList cardList = new;
-    var cardArray = cardList.getAllCards();
+    CardList cardList = {};
+    var cardArray = cardList.nodes;
     Card[] sampleCardArray;
     test:assertEquals(cardArray, sampleCardArray, msg = "Failed CardList.getAllCards()");
 }
@@ -644,8 +644,8 @@ function testIssueListGetAllIssues() {
 }
 function testProjectOwnerGetOwnerType() {
     log:printInfo("ProjectOwner.getOwnerType()");
-    ProjectOwner projectOwner = new;
-    test:assertEquals(projectOwner.getOwnerType(), "", msg = "Failed ProjectOwner.getOwnerType()");
+    ProjectOwner projectOwner = {};
+    test:assertEquals(projectOwner["__typename"], "", msg = "Failed ProjectOwner.getOwnerType()");
 }
 
 @test:Config {
@@ -653,11 +653,11 @@ function testProjectOwnerGetOwnerType() {
 }
 function testProjectOwnerSetOwnerType() {
     log:printInfo("ProjectOwner.setOwnerType()");
-    ProjectOwner projectOwner = new;
-    projectOwner.setOwnerType("Organization");
-    string ownerType = projectOwner.getOwnerType();
+    ProjectOwner projectOwner = {};
+    projectOwner["__typename"] = "Organization";
+    string ownerType = <string>projectOwner["__typename"];
 
-    test:assertEquals(ownerType, "Organization", msg = "Failed ProjectOwner.getOwnerType()");
+    test:assertEquals(<string>ownerType, "Organization", msg = "Failed ProjectOwner.getOwnerType()");
 }
 
 @test:Config {
@@ -720,7 +720,8 @@ function testGetValidatedResponseError() {
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
     } else {
-        test:assertFail(msg = <string>validatedResponse.detail().message);
+        test:assertEquals(<string>validatedResponse.detail().message, "API error",
+        msg = "Validated response error mismatch");
     }
 }
 
@@ -881,8 +882,7 @@ function testStringToJsonError() {
     if (convertedValue is json) {
         test:assertFail(msg = "Invalid string json. Expected failure");
     } else {
-        test:assertEquals(<string>convertedValue.detail().message,
-                "Failed to parse json string: unrecognized token 'Sample' at line: 1 column: 17",
+        test:assertEquals(<string>convertedValue.detail().message, "Error occurred while casting the string to json",
                 msg = "Error message mismatch");
     }
 }

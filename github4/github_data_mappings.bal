@@ -52,7 +52,7 @@ function jsonToProjectList(json source_json, string listOwner, string stringQuer
 // JSON --> CardList
 //********************************
 function jsonToCardList(json source_json, string columnId, string listOwner, string stringQuery) returns (CardList) {
-    CardList target_cardList = new;
+    CardList target_cardList = {};
     target_cardList.columnId = columnId;
     target_cardList.cardListQuery = stringQuery;
     target_cardList.listOwner = listOwner;
@@ -80,7 +80,7 @@ function jsonToCardList(json source_json, string columnId, string listOwner, str
 //********************************
 // JSON --> Column
 //********************************
-function jsonToColumn(json source_json, string listOwner, string stringQuery) returns (Column) {
+function jsonToColumn(json source_json, string listOwner, string stringQuery) returns Column {
     Column target_column = new;
     target_column.id = source_json.id.toString();
     target_column.name = source_json.name.toString();
@@ -189,7 +189,6 @@ function jsonToIssueList(json source_json, string stringQuery) returns (IssueLis
         target_issueList.nodes[i] = issue;
         i = i + 1;
     }
-
     return target_issueList;
 }
 

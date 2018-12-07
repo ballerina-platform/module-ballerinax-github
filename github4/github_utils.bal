@@ -55,7 +55,8 @@ function getValidatedResponse(http:Response|error response, string validateCompo
                         error err = error(GITHUB_ERROR_CODE, { message: errors });
                         return err;
                     } else {
-                        error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while accessing the Json payload of the response." });
+                        error err = error(GITHUB_ERROR_CODE
+                        , { message: "Error occurred while accessing the Json payload of the response." });
                         return err;
                     }
                 }
@@ -70,18 +71,18 @@ function getValidatedResponse(http:Response|error response, string validateCompo
             string[] keySet = jsonPayload[GIT_DATA].getKeys();
             string keyInData = keySet[INDEX_ZERO];
             if (null == jsonPayload[GIT_DATA][keyInData][validateComponent]) {
-                error err = error(GITHUB_ERROR_CODE, { message: validateComponent +
-                            " is not available in the response" });
+                error err = error(GITHUB_ERROR_CODE
+                , { message: validateComponent + " is not available in the response" });
                 return err;
             }
             return jsonPayload;
         } else {
-            error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while accessing the json payload
-                                of the response." });
+            error err = error(GITHUB_ERROR_CODE
+            , { message: "Entity body is not json compatible since the received content-type is : null" });
             return err;
         }
     } else {
-        error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while invoking the github API." });
+        error err = error(GITHUB_ERROR_CODE, { message: "HTTP Connector Error" });
         return err;
     }
 }
@@ -92,14 +93,14 @@ function getValidatedResponse(http:Response|error response, string validateCompo
 function getValidatedRestResponse(http:Response|error response) returns json|error {
     if (response is http:Response) {
         if(response.getJsonPayload() is error) {
-            error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while accessing the json payload
-                                of the response." });
+            error err = error(GITHUB_ERROR_CODE
+            , { message: "Entity body is not json compatible since the received content-type is : null" });
             return err;
         } else {
             return response.getJsonPayload();
         }
     } else {
-        error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while invoking the github API." });
+        error err = error(GITHUB_ERROR_CODE, { message: "HTTP Connector Error" });
         return err;
     }
 }
@@ -125,8 +126,8 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
         //Set headers and payload to the request
         constructRequest(request, jsonQuery);
     } else {
-        error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while accessing the json payload
-                                of the response." });
+        error err = error(GITHUB_ERROR_CODE
+        , { message: "Error occurred while accessing the json payload of the response." });
         return err;
     }
 
@@ -156,8 +157,8 @@ function stringToJson(string source) returns json|error {
     if (parsedValue is json) {
         return parsedValue;
     } else {
-        error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while accessing the json payload
-                                                of the response." });
+        error err = error(GITHUB_ERROR_CODE
+        , { message: "Error occurred while casting the string to json" });
         return err;
     }
 }
