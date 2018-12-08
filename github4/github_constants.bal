@@ -73,37 +73,42 @@ final string EMPTY_STRING = "";
 
 // GraphQL queries
 
-final string PAGE_INFO = "pageInfo {
+final string PAGE_INFO = "
+    pageInfo {
         hasNextPage,
         hasPreviousPage,
         startCursor,
         endCursor
     }";
 
-final string CREATOR = "creator {
-          login,
-          resourcePath,
-          url,
-          avatarUrl
-      }";
+final string CREATOR = "
+    creator {
+        login,
+        resourcePath,
+        url,
+        avatarUrl
+    }";
 
-final string PROJECT_OWNER = "owner {
-          id,
-          projectsResourcePath,
-          projectsUrl,
-          viewerCanCreateProjects,
-          __typename
-      }";
+final string PROJECT_OWNER = "
+    owner {
+        id,
+        projectsResourcePath,
+        projectsUrl,
+        viewerCanCreateProjects,
+        __typename
+    }";
 
-final string REPOSITORY_OWNER = "owner {
-          id,
-          login,
-          url,
-          avatarUrl,
-          resourcePath
-      }";
+final string REPOSITORY_OWNER = "
+    owner {
+        id,
+        login,
+        url,
+        avatarUrl,
+        resourcePath
+    }";
 
-final string PROJECTS_NODES = "nodes {
+final string PROJECTS_NODES = "
+    nodes {
         id,
         databaseId,
         name,
@@ -121,50 +126,56 @@ final string PROJECTS_NODES = "nodes {
         " + PROJECT_OWNER + "
     }";
 
-final string PRIMARY_LANGUAGE = "primaryLanguage {
-          id,
-          name,
-          color
-      }";
+final string PRIMARY_LANGUAGE = "
+    primaryLanguage {
+        id,
+        name,
+        color
+    }";
 
-final string AUTHOR = "author {
-          login,
-          resourcePath,
-          url,
-          avatarUrl
-      }";
+final string AUTHOR = "
+    author {
+        login,
+        resourcePath,
+        url,
+        avatarUrl
+    }";
 
-final string COLUMN = "column {
+final string COLUMN = "
+    column {
         id,
         name,
         url
     }";
 
-final string EDITOR = "editor {
-          login,
-          resourcePath,
-          url,
-          avatarUrl,
-      }";
+final string EDITOR = "
+    editor {
+        login,
+        resourcePath,
+        url,
+        avatarUrl,
+    }";
 
-final string LABELS = "labels (first: 100){
-          nodes {
+final string LABELS = "
+    labels (first: 100) {
+        nodes {
             id,
             name,
             description,
             color
-          }
-      }";
+        }
+    }";
 
-final string CONTENT = "content {
-                ... on Issue { title, url, issueState:state}
-                ... on PullRequest { title, url, prState:state}
-            }";
+final string CONTENT = "
+    content {
+        ... on Issue { title, url, issueState:state}
+        ... on PullRequest { title, url, prState:state}
+    }";
 
 final string GET_REPOSITORY_PROJECTS =
-    "query ($owner: String!, $repository: String!, $states:[ProjectState!], $recordCount: Int!){
-        repository(owner:$owner, name:$repository){
-        projects(first:$recordCount, states:$states, orderBy:{field:NAME, direction:ASC}){
+    "query ($owner: String!, $repository: String!, $states:[ProjectState!], $recordCount: Int!) {
+        repository(owner:$owner, name:$repository) {
+        projects(first:$recordCount, states:$states, orderBy:{field:NAME, direction:ASC}) {
           " + PAGE_INFO + ",
       " + PROJECTS_NODES + "
     }
@@ -172,504 +183,507 @@ final string GET_REPOSITORY_PROJECTS =
 }";
 
 final string GET_REPOSITORY_PROJECTS_NEXT_PAGE =
-    "query ($owner: String!, $repository: String!, $states:[ProjectState!], $endCursorProjects: String!, $recordCount: Int!){
-        repository(owner:$owner, name:$repository){
-        projects(first:$recordCount, states:$states, after:$endCursorProjects, orderBy:{field:NAME, direction:ASC}){
-          " + PAGE_INFO + ",
-      " + PROJECTS_NODES + "
-    }
-  }
-}";
+    "query ($owner: String!, $repository: String!, $states:[ProjectState!], $endCursorProjects: String!,
+    $recordCount: Int!) {
+        repository(owner:$owner, name:$repository) {
+            projects(first:$recordCount, states:$states, after:$endCursorProjects,
+            orderBy:{field:NAME, direction:ASC}) {
+                " + PAGE_INFO + ",
+                " + PROJECTS_NODES + "
+            }
+        }
+    }";
 
 final string GET_ORGANIZATION_PROJECTS =
-    "query ($organization: String!, $states:[ProjectState!], $recordCount: Int!){
+    "query ($organization: String!, $states:[ProjectState!], $recordCount: Int!) {
         organization(login:$organization) {
-        projects(first:$recordCount, states:$states, orderBy:{field:NAME, direction:ASC}){
-          " + PAGE_INFO + ",
-      " + PROJECTS_NODES + "
-    }
-  }
-}";
+            projects(first:$recordCount, states:$states, orderBy:{field:NAME, direction:ASC}) {
+                " + PAGE_INFO + ",
+                " + PROJECTS_NODES + "
+            }
+        }
+    }";
 
 final string GET_ORGANIZATION_PROJECTS_NEXT_PAGE =
-    "query ($organization: String!, $states:[ProjectState!], $endCursorProjects:String!, $recordCount: Int!){
+    "query ($organization: String!, $states:[ProjectState!], $endCursorProjects:String!, $recordCount: Int!) {
         organization(login:$organization) {
-        projects(first:$recordCount, states:$states, after:$endCursorProjects, orderBy:{field:NAME, direction:ASC}){
-          " + PAGE_INFO + ",
-      " + PROJECTS_NODES + "
-    }
-  }
-}";
+            projects(first:$recordCount, states:$states, after:$endCursorProjects,
+            orderBy:{field:NAME, direction:ASC}) {
+                " + PAGE_INFO + ",
+                " + PROJECTS_NODES + "
+            }
+        }
+    }";
 
 final string GET_REPOSITORY_PROJECT =
-    "query ($owner: String!, $repository: String!, $number: Int!){
+    "query ($owner: String!, $repository: String!, $number: Int!) {
         repository(owner:$owner, name:$repository) {
-        project(number:$number) {
-            id,
-            databaseId,
-            name,
-            body,
-            number,
-            createdAt,
-            updatedAt,
-            closed,
-            closedAt,
-            resourcePath,
-            state,
-            url,
-            viewerCanUpdate,
-            " + CREATOR + ",
-        " + PROJECT_OWNER + "
-    }
-  }
-}";
+            project(number:$number) {
+                id,
+                databaseId,
+                name,
+                body,
+                number,
+                createdAt,
+                updatedAt,
+                closed,
+                closedAt,
+                resourcePath,
+                state,
+                url,
+                viewerCanUpdate,
+                " + CREATOR + ",
+                " + PROJECT_OWNER + "
+            }
+        }
+    }";
 
 final string GET_ORGANIZATION_PROJECT =
-    "query ($organization: String!, $number: Int!){
+    "query ($organization: String!, $number: Int!) {
         organization(login:$organization) {
-        project(number:$number) {
-            id,
-            databaseId,
-            name,
-            body,
-            number,
-            createdAt,
-            updatedAt,
-            closed,
-            closedAt,
-            resourcePath,
-            state,
-            url,
-            viewerCanUpdate,
-            " + CREATOR + ",
-        " + PROJECT_OWNER + "
-    }
-  }
-}";
+            project(number:$number) {
+                id,
+                databaseId,
+                name,
+                body,
+                number,
+                createdAt,
+                updatedAt,
+                closed,
+                closedAt,
+                resourcePath,
+                state,
+                url,
+                viewerCanUpdate,
+                " + CREATOR + ",
+                " + PROJECT_OWNER + "
+            }
+        }
+    }";
 
 final string GET_REPOSITORY =
-    "query ($owner: String!, $name: String!){
-        repository(owner:$owner, name:$name){
-        id,
-        name,
-        createdAt,
-        updatedAt,
-        description,
-        forkCount,
-        hasIssuesEnabled,
-        hasWikiEnabled,
-        homepageUrl,
-        isArchived,
-        isFork,
-        isLocked,
-        isMirror,
-        isPrivate,
-        lockReason,
-        mirrorUrl,
-        url,
-        sshUrl,
-        " + REPOSITORY_OWNER + ",
-               " + PRIMARY_LANGUAGE + ",
-               stargazers {
-                    totalCount
-               }
-  }
-}";
+    "query ($owner: String!, $name: String!) {
+        repository(owner:$owner, name:$name) {
+            id,
+            name,
+            createdAt,
+            updatedAt,
+            description,
+            forkCount,
+            hasIssuesEnabled,
+            hasWikiEnabled,
+            homepageUrl,
+            isArchived,
+            isFork,
+            isLocked,
+            isMirror,
+            isPrivate,
+            lockReason,
+            mirrorUrl,
+            url,
+            sshUrl,
+            " + REPOSITORY_OWNER + ",
+            " + PRIMARY_LANGUAGE + ",
+            stargazers {
+                totalCount
+            }
+        }
+    }";
 
 final string GET_PULL_REQUESTS =
-    "query ($owner: String!, $name: String!, $states:[PullRequestState!], $recordCount: Int!){
-        repository(owner:$owner, name:$name){
-        pullRequests(first:$recordCount, states:$states, orderBy:{field:CREATED_AT, direction:DESC}) {
-          " + PAGE_INFO + ",
-      nodes {
-        id,
-        title,
-        createdAt,
-        updatedAt,
-        closed,
-        closedAt,
-        mergedAt,
-        state,
-        number,
-        url,
-        body,
-        changedFiles,
-        additions,
-        deletions,
-        resourcePath,
-        revertResourcePath,
-        revertUrl,
-        headRefName,
-        baseRefName,
-        " + AUTHOR + "
-      }
-    }
-  }
-}";
+    "query ($owner: String!, $name: String!, $states:[PullRequestState!], $recordCount: Int!) {
+        repository(owner:$owner, name:$name) {
+            pullRequests(first:$recordCount, states:$states, orderBy:{field:CREATED_AT, direction:DESC}) {
+                " + PAGE_INFO + ",
+                nodes {
+                    id,
+                    title,
+                    createdAt,
+                    updatedAt,
+                    closed,
+                    closedAt,
+                    mergedAt,
+                    state,
+                    number,
+                    url,
+                    body,
+                    changedFiles,
+                    additions,
+                    deletions,
+                    resourcePath,
+                    revertResourcePath,
+                    revertUrl,
+                    headRefName,
+                    baseRefName,
+                    " + AUTHOR + "
+                }
+            }
+        }
+    }";
 
 final string GET_PULL_REQUESTS_NEXT_PAGE =
     "query ($owner: String!, $name: String!, $states:[PullRequestState!], $endCursorPullRequests: String!,
-                                                                                                    $recordCount: Int!){
-        repository(owner:$owner, name:$name){
-        pullRequests(first:$recordCount, states:$states, after: $endCursorPullRequests,
-                                                                            orderBy:{field:CREATED_AT, direction:DESC}) {
-          " + PAGE_INFO + ",
-      nodes {
-        id,
-        title,
-        createdAt,
-        updatedAt,
-        closed,
-        closedAt,
-        mergedAt,
-        state,
-        number,
-        url,
-        body,
-        changedFiles,
-        additions,
-        deletions,
-        resourcePath,
-        revertResourcePath,
-        revertUrl,
-        headRefName,
-        baseRefName,
-        " + AUTHOR + "
-      }
-    }
-  }
-}";
+    $recordCount: Int!) {
+        repository(owner:$owner, name:$name) {
+            pullRequests(first:$recordCount, states:$states, after: $endCursorPullRequests,
+            orderBy:{field:CREATED_AT, direction:DESC}) {
+                " + PAGE_INFO + ",
+                nodes {
+                    id,
+                    title,
+                    createdAt,
+                    updatedAt,
+                    closed,
+                    closedAt,
+                    mergedAt,
+                    state,
+                    number,
+                    url,
+                    body,
+                    changedFiles,
+                    additions,
+                    deletions,
+                    resourcePath,
+                    revertResourcePath,
+                    revertUrl,
+                    headRefName,
+                    baseRefName,
+                    " + AUTHOR + "
+                }
+            }
+        }
+    }";
 
 final string GET_ORGANIZATION =
-"query ($organization: String!) {
-  organization(login:$organization) {
-    avatarUrl,
-    description,
-    email,
-    id,
-    location,
-    login,
-    name,
-    projectsResourcePath,
-    projectsUrl,
-    resourcePath,
-    url,
-    websiteUrl
-  }
-}";
+    "query ($organization: String!) {
+        organization(login:$organization) {
+            avatarUrl,
+            description,
+            email,
+            id,
+            location,
+            login,
+            name,
+            projectsResourcePath,
+            projectsUrl,
+            resourcePath,
+            url,
+            websiteUrl
+        }
+    }";
 
 final string GET_REPOSITORY_PROJECT_COLUMNS =
-    "query ($owner: String!,$name:String!, $number: Int!, $recordCount: Int!){
-      repository (owner:$owner, name:$name) {
-        project (number : $number){
-          columns (first:$recordCount){
-            " + PAGE_INFO + ",
-        nodes {
-          id,
-          name,
-          cards (first:$recordCount){
-            " + PAGE_INFO + ",
-            nodes {
-              id,
-              note,
-              " + CREATOR + ",
-              state,
-              createdAt,
-              updatedAt,
-              url,
-              " + COLUMN + ",
-              " + CONTENT + "
+    "query ($owner: String!,$name:String!, $number: Int!, $recordCount: Int!) {
+        repository (owner:$owner, name:$name) {
+            project (number : $number) {
+                columns (first:$recordCount) {
+                    " + PAGE_INFO + ",
+                    nodes {
+                        id,
+                        name,
+                        cards (first:$recordCount) {
+                            " + PAGE_INFO + ",
+                            nodes {
+                                id,
+                                note,
+                                " + CREATOR + ",
+                                state,
+                                createdAt,
+                                updatedAt,
+                                url,
+                                " + COLUMN + ",
+                                " + CONTENT + "
+                            }
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  }
-}";
+    }";
 
 final string GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE =
-    "query ($owner: String!,$name:String!, $number: Int!, $endCursorColumns: String!, $recordCount: Int!){
-      repository (owner:$owner, name:$name) {
-        project (number : $number){
-          columns (first:$recordCount){
-            " + PAGE_INFO + ",
-        nodes {
-          id,
-          name,
-          cards (first:$recordCount){
-            pageInfo {
-              hasNextPage,
-              hasPreviousPage,
-              startCursor,
-              endCursor
-            },
-            nodes {
-              id,
-              note,
-              creator {
-                login,
-                resourcePath,
-                url,
-                avatarUrl
-              },
-              state,
-              createdAt,
-              updatedAt,
-              url,
-              " + COLUMN + ",
-              " + CONTENT + "
+    "query ($owner: String!,$name:String!, $number: Int!, $endCursorColumns: String!, $recordCount: Int!) {
+        repository (owner:$owner, name:$name) {
+            project (number : $number) {
+                columns (first:$recordCount) {
+                    " + PAGE_INFO + ",
+                    nodes {
+                        id,
+                        name,
+                        cards (first:$recordCount) {
+                            pageInfo {
+                                hasNextPage,
+                                hasPreviousPage,
+                                startCursor,
+                                endCursor
+                            },
+                            nodes {
+                                id,
+                                note,
+                                creator {
+                                    login,
+                                    resourcePath,
+                                    url,
+                                    avatarUrl
+                                },
+                                state,
+                                createdAt,
+                                updatedAt,
+                                url,
+                                " + COLUMN + ",
+                                " + CONTENT + "
+                            }
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  }
-}";
+    }";
 
 final string GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE =
-    "query ($owner: String!,$name:String!, $number: Int!, $endCursorCards: String!, $recordCount: Int!){
-      repository (owner:$owner, name:$name) {
-        project (number : $number){
-          columns (first:$recordCount){
-            " + PAGE_INFO + ",
-        nodes {
-          id,
-          name,
-          cards (first:$recordCount, after: $endCursorCards){
-            " + PAGE_INFO + ",
-            nodes {
-              id,
-              note,
-              " + CREATOR + ",
-              state,
-              createdAt,
-              updatedAt,
-              url,
-              " + COLUMN + ",
-              " + CONTENT + "
+    "query ($owner: String!,$name:String!, $number: Int!, $endCursorCards: String!, $recordCount: Int!) {
+        repository (owner:$owner, name:$name) {
+            project (number : $number) {
+                columns (first:$recordCount) {
+                    " + PAGE_INFO + ",
+                    nodes {
+                        id,
+                        name,
+                        cards (first:$recordCount, after: $endCursorCards) {
+                            " + PAGE_INFO + ",
+                            nodes {
+                                id,
+                                note,
+                                " + CREATOR + ",
+                                state,
+                                createdAt,
+                                updatedAt,
+                                url,
+                                " + COLUMN + ",
+                                " + CONTENT + "
+                            }
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  }
-}";
+    }";
 
 final string GET_ORGANIZATION_PROJECT_COLUMNS =
-    "query ($organization: String!, $number: Int!, $recordCount: Int!){
-      organization (login:$organization) {
-        project (number : $number) {
-          columns (first:$recordCount) {
-            " + PAGE_INFO + ",
-        nodes {
-          id,
-          name,
-          cards (first:$recordCount){
-            " + PAGE_INFO + ",
-            nodes {
-              id,
-              note,
-              " + CREATOR + ",
-              state,
-              createdAt,
-              updatedAt,
-              url,
-              " + COLUMN + ",
-              " + CONTENT + "
+    "query ($organization: String!, $number: Int!, $recordCount: Int!) {
+        organization (login:$organization) {
+            project (number : $number) {
+                columns (first:$recordCount) {
+                    " + PAGE_INFO + ",
+                    nodes {
+                        id,
+                        name,
+                        cards (first:$recordCount) {
+                            " + PAGE_INFO + ",
+                            nodes {
+                                id,
+                                note,
+                                " + CREATOR + ",
+                                state,
+                                createdAt,
+                                updatedAt,
+                                url,
+                                " + COLUMN + ",
+                                " + CONTENT + "
+                            }
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  }
-}";
+    }";
 
 final string GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE =
-    "query ($organization: String!, $number: Int!, $endCursorColumns: String!, $recordCount: Int!){
-      organization (login:$organization) {
-        project (number : $number) {
-          columns (first:$recordCount, after: $endCursorColumns) {
-            " + PAGE_INFO + ",
-        nodes {
-          id,
-          name,
-          cards (first:$recordCount){
-            " + PAGE_INFO + ",
-            nodes {
-              id,
-              note,
-              " + CREATOR + ",
-              state,
-              createdAt,
-              updatedAt,
-              url,
-              " + COLUMN + ",
-              " + CONTENT + "
+    "query ($organization: String!, $number: Int!, $endCursorColumns: String!, $recordCount: Int!) {
+        organization (login:$organization) {
+            project (number : $number) {
+                columns (first:$recordCount, after: $endCursorColumns) {
+                    " + PAGE_INFO + ",
+                    nodes {
+                        id,
+                        name,
+                        cards (first:$recordCount) {
+                            " + PAGE_INFO + ",
+                            nodes {
+                                id,
+                                note,
+                                " + CREATOR + ",
+                                state,
+                                createdAt,
+                                updatedAt,
+                                url,
+                                " + COLUMN + ",
+                                " + CONTENT + "
+                            }
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  }
-}";
+    }";
 
 final string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE =
-    "query ($organization: String!, $number: Int!, $endCursorCards: String!, $recordCount: Int!){
-      organization (login:$organization) {
-        project (number : $number) {
-          columns (first:$recordCount) {
-            " + PAGE_INFO + ",
-        nodes {
-          id,
-          name,
-          cards (first:$recordCount, after: $endCursorCards){
-            " + PAGE_INFO + ",
-            nodes {
-              id,
-              note,
-              " + CREATOR + ",
-              state,
-              createdAt,
-              updatedAt,
-              url,
-              " + COLUMN + ",
-              " + CONTENT + "
+    "query ($organization: String!, $number: Int!, $endCursorCards: String!, $recordCount: Int!) {
+        organization (login:$organization) {
+            project (number : $number) {
+                columns (first:$recordCount) {
+                    " + PAGE_INFO + ",
+                    nodes {
+                        id,
+                        name,
+                        cards (first:$recordCount, after: $endCursorCards) {
+                            " + PAGE_INFO + ",
+                            nodes {
+                                id,
+                                note,
+                                " + CREATOR + ",
+                                state,
+                                createdAt,
+                                updatedAt,
+                                url,
+                                " + COLUMN + ",
+                                " + CONTENT + "
+                            }
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  }
-}";
+    }";
 
 final string GET_ORGANIZATION_REPOSITORIES =
     "query ($organization: String!, $recordCount: Int!) {
-      organization (login:$organization) {
-        repositories (first: $recordCount, orderBy:{field:NAME, direction:ASC}) {
-          " + PAGE_INFO + ",
-      nodes {
-        id,
-        name,
-        createdAt,
-        updatedAt,
-        description,
-        forkCount,
-        hasIssuesEnabled,
-        hasWikiEnabled,
-        homepageUrl,
-        isArchived,
-        isFork,
-        isLocked,
-        isMirror,
-        isPrivate,
-        lockReason,
-        mirrorUrl,
-        url,
-        sshUrl,
-        " + REPOSITORY_OWNER + ",
-        " + PRIMARY_LANGUAGE + "
-      }
-    }
-  }
-}";
+        organization (login:$organization) {
+            repositories (first: $recordCount, orderBy:{field:NAME, direction:ASC}) {
+                " + PAGE_INFO + ",
+                nodes {
+                    id,
+                    name,
+                    createdAt,
+                    updatedAt,
+                    description,
+                    forkCount,
+                    hasIssuesEnabled,
+                    hasWikiEnabled,
+                    homepageUrl,
+                    isArchived,
+                    isFork,
+                    isLocked,
+                    isMirror,
+                    isPrivate,
+                    lockReason,
+                    mirrorUrl,
+                    url,
+                    sshUrl,
+                    " + REPOSITORY_OWNER + ",
+                    " + PRIMARY_LANGUAGE + "
+                }
+            }
+        }
+    }";
 
 final string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE =
     "query ($organization: String!, $endCursorRepos: String!, $recordCount: Int!) {
-      organization (login:$organization) {
-        repositories (first: $recordCount, after: $endCursorRepos, orderBy:{field:NAME, direction:ASC}) {
-          " + PAGE_INFO + ",
-      nodes {
-        id,
-        name,
-        createdAt,
-        updatedAt,
-        description,
-        forkCount,
-        hasIssuesEnabled,
-        hasWikiEnabled,
-        homepageUrl,
-        isArchived,
-        isFork,
-        isLocked,
-        isMirror,
-        isPrivate,
-        lockReason,
-        mirrorUrl,
-        url,
-        sshUrl,
-        " + REPOSITORY_OWNER + ",
-        " + PRIMARY_LANGUAGE + "
-      }
-    }
-  }
-}";
+        organization (login:$organization) {
+            repositories (first: $recordCount, after: $endCursorRepos, orderBy:{field:NAME, direction:ASC}) {
+                " + PAGE_INFO + ",
+                nodes {
+                    id,
+                    name,
+                    createdAt,
+                    updatedAt,
+                    description,
+                    forkCount,
+                    hasIssuesEnabled,
+                    hasWikiEnabled,
+                    homepageUrl,
+                    isArchived,
+                    isFork,
+                    isLocked,
+                    isMirror,
+                    isPrivate,
+                    lockReason,
+                    mirrorUrl,
+                    url,
+                    sshUrl,
+                    " + REPOSITORY_OWNER + ",
+                    " + PRIMARY_LANGUAGE + "
+                }
+            }
+        }
+    }";
 
 final string GET_REPOSITORY_ISSUES =
     "query ($owner:String!, $name:String!, $states:[IssueState!], $recordCount: Int!) {
-      repository(owner:$owner, name: $name) {
-        issues (first: $recordCount, states:$states, orderBy:{field:CREATED_AT, direction:DESC}) {
-          " + PAGE_INFO + ",
-      nodes {
-        id,
-        " + AUTHOR + ",
-        bodyText,
-        closed,
-        closedAt,
-        createdAt,
-        " + EDITOR + ",
-        " + LABELS + ",
-        number,
-        state,
-        title,
-        updatedAt,
-        url,
-        assignees (first: 100){
-          nodes {
-            id,
-            login,
-            email,
-            bio,
-            url
-          }
+        repository(owner:$owner, name: $name) {
+            issues (first: $recordCount, states:$states, orderBy:{field:CREATED_AT, direction:DESC}) {
+                " + PAGE_INFO + ",
+                nodes {
+                    id,
+                    " + AUTHOR + ",
+                    bodyText,
+                    closed,
+                    closedAt,
+                    createdAt,
+                    " + EDITOR + ",
+                    " + LABELS + ",
+                    number,
+                    state,
+                    title,
+                    updatedAt,
+                    url,
+                    assignees (first: 100) {
+                        nodes {
+                            id,
+                            login,
+                            email,
+                            bio,
+                            url
+                        }
+                    }
+                }
+            }
         }
-      }
-    }
-  }
-}";
+    }";
 
 final string GET_REPOSITORY_ISSUES_NEXT_PAGE =
     "query ($owner:String!, $name:String!, $states:[IssueState!], $endCursorIssues: String!, $recordCount: Int!) {
-      repository(owner:$owner, name: $name) {
-        issues (first: $recordCount, states:$states, after: $endCursorIssues, orderBy:{field:CREATED_AT, direction:DESC}) {
-          " + PAGE_INFO + ",
-      nodes {
-        id,
-        " + AUTHOR + ",
-        bodyText,
-        closed,
-        closedAt,
-        createdAt,
-        " + EDITOR + ",
-        " + LABELS + ",
-        number,
-        state,
-        title,
-        updatedAt,
-        url,
-        assignees (first: 100){
-          nodes {
-            id,
-            login,
-            email,
-            bio,
-            url
-          }
+        repository(owner:$owner, name: $name) {
+            issues (first: $recordCount, states:$states, after: $endCursorIssues,
+            orderBy:{field:CREATED_AT, direction:DESC}) {
+                " + PAGE_INFO + ",
+                nodes {
+                    id,
+                    " + AUTHOR + ",
+                    bodyText,
+                    closed,
+                    closedAt,
+                    createdAt,
+                    " + EDITOR + ",
+                    " + LABELS + ",
+                    number,
+                    state,
+                    title,
+                    updatedAt,
+                    url,
+                    assignees (first: 100) {
+                        nodes {
+                            id,
+                            login,
+                            email,
+                            bio,
+                            url
+                        }
+                    }
+                }
+            }
         }
-      }
-    }
-  }
-}";
-
+    }";
 
 // String query templates
 
