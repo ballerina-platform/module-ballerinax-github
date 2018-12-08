@@ -38,20 +38,14 @@ function getValidatedResponse(http:Response|error response, string validateCompo
             //Check all the keys in the payload to see if an error is returned.
             foreach var key in payLoadKeys {
                 if (GIT_ERRORS.equalsIgnoreCase(key)) {
-                    string errors = "";
                     var errorList = json[].convert(jsonPayload[GIT_ERRORS]);
                     if (errorList is json[]) {
                         int i = 0;
                         foreach var singleError in errorList {
                             string errorMessage = singleError[GIT_MESSAGE].toString();
-                            errors += errorMessage;
-                            if (i + 1 != errorList.length()) {
-                                errors += ",";
-                            }
-                            i = i + 1;
+                            error err = error(GITHUB_ERROR_CODE, { message: errorMessage });
+                            return err;
                         }
-                        error err = error(GITHUB_ERROR_CODE, { message: errors });
-                        return err;
                     } else {
                         error err = error(GITHUB_ERROR_CODE,
                         { message: "Error occurred while accessing the Json payload of the response." });
@@ -124,43 +118,23 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
     }
 
     http:Request request = new;
-    var jsonQuery = stringToJson(stringQuery);
-    if (jsonQuery is json) {
-        //Set headers and payload to the request
-        constructRequest(request, jsonQuery);
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the json payload of the response." });
-        return err;
-    }
+    json jsonQuery = check stringToJson(stringQuery);
+    //Set headers and payload to the request
+    constructRequest(request, jsonQuery);
 
     // Make an HTTP POST request
     var response = gitHubEndpoint->post("", request);
 
     //Check for empty payloads and errors
-    json|error jsonValidateResponse = getValidatedResponse(response, GIT_PROJECT);
-
-    if (jsonValidateResponse is json) {
-        var projectColumnsJson = jsonValidateResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
-        var columnList = jsonToColumnList(projectColumnsJson, ownerType, stringQuery);
-        return columnList;
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the json payload of the response." });
-        return err;
-    }
+    json jsonValidateResponse = check getValidatedResponse(response, GIT_PROJECT);
+    var projectColumnsJson = jsonValidateResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
+    var columnList = jsonToColumnList(projectColumnsJson, ownerType, stringQuery);
+    return columnList;
 }
 
 # Convert string representation of JSON object to JSON object.
 # + source - String representation of the JSON object
 # + return - Converted `json` object or Connector error
 function stringToJson(string source) returns json|error {
-    var parsedValue = internal:parseJson(source);
-    if (parsedValue is json) {
-        return parsedValue;
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while casting the string to json" });
-        return err;
-    }
+    return check internal:parseJson(source);
 }

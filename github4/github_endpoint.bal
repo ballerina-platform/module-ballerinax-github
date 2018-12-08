@@ -184,58 +184,35 @@ remote function Client.createIssue(string repositoryOwner, string repositoryName
     // Make an HTTP POST request
     var response = self.githubRestClient->post(endpointResource, request);
     //Check for empty payloads and errors
-    var validatedResponse = getValidatedRestResponse(response);
-    if (validatedResponse is json) {
-        return restResponseJsonToIssue(validatedResponse);
-    } else {
-        error err = error(GITHUB_ERROR_CODE, { message: "Error occurred while invoking the Github API" });
-        return err;
-    }
+    json validatedResponse = check getValidatedRestResponse(response);
+    return restResponseJsonToIssue(validatedResponse);
 }
 
 remote function Client.getCardListNextPage(CardList cardList) returns CardList|error {
 
     if (cardList.pageInfo.hasPreviousPage) {
         var cardListColumnId = cardList.columnId;
-        var convertedQuery = stringToJson(cardList.cardListQuery);
-        if (convertedQuery is json) {
-            convertedQuery.variables.endCursorCards = cardList.pageInfo.endCursor;
+        json convertedQuery = check stringToJson(cardList.cardListQuery);
+        convertedQuery.variables.endCursorCards = cardList.pageInfo.endCursor;
 
-            if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
-                convertedQuery[GIT_QUERY] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
-                ColumnList|error columnList = getProjectColumns(GIT_ORGANIZATION,
-                    convertedQuery.toString(), self.githubGraphQlClient);
-                if (columnList is ColumnList) {
-                    foreach var column in columnList.getAllColumns() {
-                        if (column.id == cardListColumnId) {
-                            return column["cards"];
-                        }
-                    }
-                } else {
-                    error err = error(GITHUB_ERROR_CODE,
-                    { message: "Error occurred while accessing the ColumnList payload of the response." });
-                    return err;
-                }
-            } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
-                convertedQuery[GIT_QUERY] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
-                ColumnList|error columnList = getProjectColumns(GIT_REPOSITORY, convertedQuery.toString()
-                    , self.githubGraphQlClient);
-                if (columnList is ColumnList) {
-                    foreach var column in columnList.getAllColumns() {
-                        if (column.id == cardListColumnId) {
-                            return column["cards"];
-                        }
-                    }
-                } else {
-                    error err = error(GITHUB_ERROR_CODE,
-                    { message: "Error occurred while accessing the ColumnList payload of the response." });
-                    return err;
+        if (cardList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
+            convertedQuery[GIT_QUERY] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
+            ColumnList columnList = check getProjectColumns(GIT_ORGANIZATION,
+                convertedQuery.toString(), self.githubGraphQlClient);
+            foreach var column in columnList.getAllColumns() {
+                if (column.id == cardListColumnId) {
+                    return column["cards"];
                 }
             }
-        } else {
-            error err = error(GITHUB_ERROR_CODE,
-            { message: "Error occurred while accessing the Json payload of the response." });
-            return err;
+        } else if (cardList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
+            convertedQuery[GIT_QUERY] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
+            ColumnList columnList = check getProjectColumns(GIT_REPOSITORY, convertedQuery.toString(),
+                self.githubGraphQlClient);
+            foreach var column in columnList.getAllColumns() {
+                if (column.id == cardListColumnId) {
+                    return column["cards"];
+                }
+            }
         }
     }
     error err = error(GITHUB_ERROR_CODE, { message: "Card list has no next page." });
@@ -245,20 +222,14 @@ remote function Client.getCardListNextPage(CardList cardList) returns CardList|e
 remote function Client.getColumnListNextPage(ColumnList columnList) returns ColumnList|error {
 
     if (columnList.hasNextPage()) {
-        var jsonQuery = stringToJson(columnList.columnListQuery);
-        if (jsonQuery is json) {
-            jsonQuery.variables.endCursorColumns = columnList.pageInfo.endCursor;
-            if (columnList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
-                jsonQuery[GIT_QUERY] = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
-                return getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString(), self.githubGraphQlClient);
-            } else if (columnList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
-                jsonQuery[GIT_QUERY] = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
-                return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString(), self.githubGraphQlClient);
-            }
-        } else {
-            error err = error(GITHUB_ERROR_CODE,
-            { message: "Error occurred while accessing the Json payload of the response." });
-            return err;
+        json jsonQuery = check stringToJson(columnList.columnListQuery);
+        jsonQuery.variables.endCursorColumns = columnList.pageInfo.endCursor;
+        if (columnList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
+            jsonQuery[GIT_QUERY] = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
+            return getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString(), self.githubGraphQlClient);
+        } else if (columnList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
+            jsonQuery[GIT_QUERY] = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
+            return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString(), self.githubGraphQlClient);
         }
     }
     error err = error(GITHUB_ERROR_CODE, { message: "Column list has no next page." });
@@ -291,63 +262,38 @@ remote function Client.getIssueList(Repository|(string, string) repository, stri
         repositoryOwner, repositoryName, state, recordCount);
 
     http:Request request = new;
-    var convertedQuery = stringToJson(stringQuery);
-    if (convertedQuery is json) {
-        //Set headers and payload to the request
-        constructRequest(request, convertedQuery);
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
+    json convertedQuery = check stringToJson(stringQuery);
+    //Set headers and payload to the request
+    constructRequest(request, convertedQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
-    json|error validatedResponse = getValidatedResponse(response, GIT_ISSUES);
-
-    if (validatedResponse is json) {
-        var githubIssuesJson = validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
-        var issueList = jsonToIssueList(githubIssuesJson, stringQuery);
-        return issueList;
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
+    json validatedResponse = check getValidatedResponse(response, GIT_ISSUES);
+    var githubIssuesJson = validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
+    var issueList = jsonToIssueList(githubIssuesJson, stringQuery);
+    return issueList;
 }
 
 remote function Client.getIssueListNextPage(IssueList issueList) returns IssueList|error {
 
     if (issueList.hasNextPage()) {
         http:Request request = new;
-        var jsonQuery = stringToJson(issueList.issueListQuery);
-        if (jsonQuery is json) {
-            jsonQuery.variables.endCursorIssues = issueList.pageInfo.endCursor;
-            jsonQuery[GIT_QUERY] = GET_REPOSITORY_ISSUES_NEXT_PAGE;
-            //Set headers and payload to the request
-            constructRequest(request, jsonQuery);
-        } else {
-            error err = error(GITHUB_ERROR_CODE,
-            { message: "Error occurred while accessing the Json payload of the response." });
-            return err;
-        }
+        json jsonQuery = check stringToJson(issueList.issueListQuery);
+        jsonQuery.variables.endCursorIssues = issueList.pageInfo.endCursor;
+        jsonQuery[GIT_QUERY] = GET_REPOSITORY_ISSUES_NEXT_PAGE;
+        //Set headers and payload to the request
+        constructRequest(request, jsonQuery);
 
         // Make an HTTP POST request
         var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
 
         //Check for empty payloads and errors
-        json|error jsonValidatedResponse = getValidatedResponse(response, GIT_ISSUES);
-        if (jsonValidatedResponse is json) {
-            var repositoryIssuesJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
-            var issuesList = jsonToIssueList(repositoryIssuesJson, issueList.issueListQuery);
-            return issuesList;
-        } else {
-            error err = error(GITHUB_ERROR_CODE,
-            { message: "Error occurred while accessing the Json payload of the response." });
-            return err;
-        }
+        json jsonValidatedResponse = check getValidatedResponse(response, GIT_ISSUES);
+        var repositoryIssuesJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_ISSUES];
+        var issuesList = jsonToIssueList(repositoryIssuesJson, issueList.issueListQuery);
+        return issuesList;
     } else {
         error err = error(GITHUB_ERROR_CODE, { message: "Issue list has no next page." });
         return err;
@@ -365,31 +311,18 @@ remote function Client.getOrganization(string name) returns Organization|error {
     string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION, name);
 
     http:Request request = new;
-    var jsonQuery = stringToJson(stringQuery);
-    if (jsonQuery is json) {
-        // Set headers and payload to the request
-        constructRequest(request, jsonQuery);
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
+    json jsonQuery = check stringToJson(stringQuery);
+    // Set headers and payload to the request
+    constructRequest(request, jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
 
-    json|error jsonValidatedResponse = getValidatedResponse(response, GIT_NAME);
-
-    if (jsonValidatedResponse is json) {
-        var githubRepositoryJson = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION];
-        var value = Organization.convert(githubRepositoryJson);
-        if (value is Organization) {
-            singleOrganization = value;
-        }
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
+    json jsonValidatedResponse = check getValidatedResponse(response, GIT_NAME);
+    var githubRepositoryJson = <json>jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION];
+    var value = Organization.convert(githubRepositoryJson);
+    if (value is Organization) {
+        singleOrganization = value;
     }
 
     return singleOrganization;
@@ -415,34 +348,21 @@ remote function Client.getOrganizationProject(Organization|string organization, 
     string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT, organizationName, projectNumber);
 
     http:Request request = new;
-    var jsonQuery = stringToJson(stringQuery);
-    if (jsonQuery is json) {
-        //Set headers and payload to the request
-        constructRequest(request, jsonQuery);
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
+    json jsonQuery = check stringToJson(stringQuery);
+    //Set headers and payload to the request
+    constructRequest(request, jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
 
-    json|error jsonValidatedResponse = getValidatedResponse(response, GIT_PROJECT);
-
-    if (jsonValidatedResponse is json) {
-        var githubProjectJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECT];
-        var result = Project.convert(githubProjectJson);
-        if (result is Project) {
-            return result;
-        } else {
-            error err = error(GITHUB_ERROR_CODE,
-            { message: "Error occurred while accessing the Project payload of the response." });
-            return err;
-        }
+    json jsonValidatedResponse = check getValidatedResponse(response, GIT_PROJECT);
+    json githubProjectJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECT];
+    var result = jsonToProject(githubProjectJson);
+    if (result is Project) {
+        return result;
     } else {
         error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
+        { message: "Error occurred while converting the json into Project." });
         return err;
     }
 }
@@ -473,31 +393,18 @@ remote function Client.getOrganizationProjectList(Organization|string organizati
     string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECTS, organizationName, state, recordCount);
 
     http:Request request = new;
-    var jsonQuery = stringToJson(stringQuery);
-    if (jsonQuery is json) {
-        //Set headers and payload to the request
-        constructRequest(request, jsonQuery);
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
+    json jsonQuery = check stringToJson(stringQuery);
+    //Set headers and payload to the request
+    constructRequest(request, jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
-    json|error jsonValidatedResponse = getValidatedResponse(response, GIT_PROJECTS);
-
-    if (jsonValidatedResponse is json) {
-        var githubProjectsJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECTS];
-        var projectList = jsonToProjectList(githubProjectsJson, GIT_ORGANIZATION, stringQuery);
-        return projectList;
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
+    json jsonValidatedResponse = check getValidatedResponse(response, GIT_PROJECTS);
+    var githubProjectsJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_PROJECTS];
+    var projectList = jsonToProjectList(githubProjectsJson, GIT_ORGANIZATION, stringQuery);
+    return projectList;
 }
 
 remote function Client.getOrganizationRepositoryList(Organization|string organization, int recordCount)
@@ -523,32 +430,18 @@ remote function Client.getOrganizationRepositoryList(Organization|string organiz
     string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_REPOSITORIES, organizationName, recordCount);
 
     http:Request request = new;
-    var jsonQuery = stringToJson(stringQuery);
-    if (jsonQuery is json) {
-        //Set headers and payload to the request
-        constructRequest(request, jsonQuery);
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
+    json jsonQuery = check stringToJson(stringQuery);
+    //Set headers and payload to the request
+    constructRequest(request, jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
-    json|error validatedResponse = getValidatedResponse(response, GIT_REPOSITORIES);
-
-    if (validatedResponse is json) {
-        var githubRepositoriesJson = validatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
-        var repositoryList = jsonToRepositoryList(githubRepositoriesJson, stringQuery);
-
-        return repositoryList;
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
+    json validatedResponse = check getValidatedResponse(response, GIT_REPOSITORIES);
+    var githubRepositoriesJson = validatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
+    var repositoryList = jsonToRepositoryList(githubRepositoriesJson, stringQuery);
+    return repositoryList;
 }
 
 remote function Client.getProjectColumnList(Project project, int recordCount) returns ColumnList|error {
@@ -596,39 +489,25 @@ remote function Client.getProjectListNextPage(ProjectList projectList) returns P
 
         http:Request request = new;
         json dataQuery;
-        var jsonQuery = stringToJson(projectList.projectListQuery);
-        if (jsonQuery is json) {
-            jsonQuery.variables.endCursorProjects = projectList.pageInfo.endCursor;
-            if (projectList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
-                jsonQuery[GIT_QUERY] = GET_ORGANIZATION_PROJECTS_NEXT_PAGE;
-            } else if (projectList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
-                jsonQuery[GIT_QUERY] = GET_REPOSITORY_PROJECTS_NEXT_PAGE;
-            }
-            dataQuery = jsonQuery;
-            //Set headers and payload to the request
-            constructRequest(request, jsonQuery);
-        } else {
-            error err = error(GITHUB_ERROR_CODE,
-            { message: "Error occurred while accessing the Json payload of the response." });
-            return err;
+        json jsonQuery = check stringToJson(projectList.projectListQuery);
+        jsonQuery.variables.endCursorProjects = projectList.pageInfo.endCursor;
+        if (projectList.listOwner.equalsIgnoreCase(GIT_ORGANIZATION)) {
+            jsonQuery[GIT_QUERY] = GET_ORGANIZATION_PROJECTS_NEXT_PAGE;
+        } else if (projectList.listOwner.equalsIgnoreCase(GIT_REPOSITORY)) {
+            jsonQuery[GIT_QUERY] = GET_REPOSITORY_PROJECTS_NEXT_PAGE;
         }
+        dataQuery = jsonQuery;
+        //Set headers and payload to the request
+        constructRequest(request, jsonQuery);
 
         // Make an HTTP POST request
         var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
 
         //Check for empty payloads and errors
-        json|error validatedResponse = getValidatedResponse(response, GIT_PROJECTS);
-
-        if (validatedResponse is json) {
-            var projectsJson = validatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
-            var projList = jsonToProjectList(projectsJson, projectList.listOwner, dataQuery.toString());
-
-            return projList;
-        } else {
-            error err = error(GITHUB_ERROR_CODE,
-            { message: "Error occurred while accessing the Json payload of the response." });
-            return err;
-        }
+        json validatedResponse = check getValidatedResponse(response, GIT_PROJECTS);
+        var projectsJson = validatedResponse[GIT_DATA][projectList.listOwner][GIT_PROJECTS];
+        var projList = jsonToProjectList(projectsJson, projectList.listOwner, dataQuery.toString());
+        return projList;
     } else {
         error err = error(GITHUB_ERROR_CODE, { message: "Project list has no next page" });
         return err;
@@ -659,29 +538,17 @@ remote function Client.getPullRequestList(Repository|(string, string) repository
     string stringQuery = io:sprintf(TEMPLATE_GET_PULL_REQUESTS, repositoryOwner, repositoryName, state, recordCount);
 
     http:Request request = new;
-    var jsonQuery = stringToJson(stringQuery);
-    if (jsonQuery is json) {
-        //Set headers and payload to the request
-        constructRequest(request, jsonQuery);
-    } else {
-        error err = error(GITHUB_ERROR_CODE, { message: "Maximum record count limited to " + MAX_RECORD_COUNT });
-        return err;
-    }
+    json jsonQuery = check stringToJson(stringQuery);
+    //Set headers and payload to the request
+    constructRequest(request, jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
     //Check for empty payloads and errors
-    json|error validatedResponse = getValidatedResponse(response, GIT_PULL_REQUESTS);
-
-    if (validatedResponse is json) {
-        var githubPullRequestsJson = validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
-        var pullRequestList = jsonToPullRequestList(githubPullRequestsJson, stringQuery);
-        return pullRequestList;
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
+    json validatedResponse = check getValidatedResponse(response, GIT_PULL_REQUESTS);
+    var githubPullRequestsJson = validatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
+    var pullRequestList = jsonToPullRequestList(githubPullRequestsJson, stringQuery);
+    return pullRequestList;
 }
 
 remote function Client.getPullRequestListNextPage(PullRequestList pullRequestList) returns PullRequestList|error {
@@ -689,33 +556,20 @@ remote function Client.getPullRequestListNextPage(PullRequestList pullRequestLis
     if (pullRequestList.hasNextPage()) {
 
         http:Request request = new;
-        var jsonQuery = stringToJson(pullRequestList.pullRequestListQuery);
-        if (jsonQuery is json) {
-            jsonQuery.variables.endCursorPullRequests = pullRequestList.pageInfo.endCursor;
-            jsonQuery[GIT_QUERY] = GET_PULL_REQUESTS_NEXT_PAGE;
-            //Set headers and payload to the request
-            constructRequest(request, jsonQuery);
-        } else {
-            error err = error(GITHUB_ERROR_CODE,
-            { message: "Error occurred while accessing the Json payload of the response." });
-            return err;
-        }
+        json jsonQuery = check stringToJson(pullRequestList.pullRequestListQuery);
+        jsonQuery.variables.endCursorPullRequests = pullRequestList.pageInfo.endCursor;
+        jsonQuery[GIT_QUERY] = GET_PULL_REQUESTS_NEXT_PAGE;
+        //Set headers and payload to the request
+        constructRequest(request, jsonQuery);
 
         // Make an HTTP POST request
         var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
 
         //Check for empty payloads and errors
-        json|error jsonValidatedResponse = getValidatedResponse(response, GIT_PULL_REQUESTS);
-
-        if (jsonValidatedResponse is json) {
-            var projectColumnsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
-            var prList = jsonToPullRequestList(projectColumnsJson, pullRequestList.pullRequestListQuery);
-            return prList;
-        } else {
-            error err = error(GITHUB_ERROR_CODE,
-            { message: "Error occurred while accessing the Json payload of the response." });
-            return err;
-        }
+        json jsonValidatedResponse = check getValidatedResponse(response, GIT_PULL_REQUESTS);
+        var projectColumnsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PULL_REQUESTS];
+        var prList = jsonToPullRequestList(projectColumnsJson, pullRequestList.pullRequestListQuery);
+        return prList;
     } else {
         error err = error(GITHUB_ERROR_CODE, { message: "Pull request list has no next page." });
         return err;
@@ -736,29 +590,16 @@ remote function Client.getRepository(string name) returns Repository|error {
     string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY, repoOwner, repoName);
 
     http:Request request = new;
-    var jsonQuery = stringToJson(stringQuery);
-    if (jsonQuery is json) {
-        // Set headers and payload to the request
-        constructRequest(request, jsonQuery);
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
+    json jsonQuery = check stringToJson(stringQuery);
+    // Set headers and payload to the request
+    constructRequest(request, jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
 
-    json|error jsonValidatedResponse = getValidatedResponse(response, GIT_NAME);
-    if (jsonValidatedResponse is json) {
-        var githubRepositoryJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY];
-        singleRepository = jsonToRepository(githubRepositoryJson);
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
-
+    json jsonValidatedResponse = check getValidatedResponse(response, GIT_NAME);
+    var githubRepositoryJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY];
+    singleRepository = jsonToRepository(githubRepositoryJson);
     return singleRepository;
 }
 
@@ -767,33 +608,20 @@ remote function Client.getRepositoryListNextPage(RepositoryList repositoryList) 
     if (repositoryList.hasNextPage()) {
 
         http:Request request = new;
-        var jsonQuery = stringToJson(repositoryList.repositoryListQuery);
-        if (jsonQuery is json) {
-            jsonQuery.variables.endCursorRepos = repositoryList.pageInfo.endCursor;
-            jsonQuery[GIT_QUERY] = GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE;
-            //Set headers and payload to the request
-            constructRequest(request, jsonQuery);
-        } else {
-            error err = error(GITHUB_ERROR_CODE
-            , { message: "Error occurred while accessing the Json payload of the response." });
-            return err;
-        }
+        json jsonQuery = check stringToJson(repositoryList.repositoryListQuery);
+        jsonQuery.variables.endCursorRepos = repositoryList.pageInfo.endCursor;
+        jsonQuery[GIT_QUERY] = GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE;
+        //Set headers and payload to the request
+        constructRequest(request, jsonQuery);
 
         // Make an HTTP POST request
         var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
 
         //Check for empty payloads and errors
-        json|error jsonValidatedResponse = getValidatedResponse(response, GIT_REPOSITORIES);
-
-        if (jsonValidatedResponse is json) {
-            var repositoriesJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
-            var repoList = jsonToRepositoryList(repositoriesJson, repositoryList.repositoryListQuery);
-            return repoList;
-        } else {
-            error err = error(GITHUB_ERROR_CODE,
-            { message: "Error occurred while accessing the Json payload of the response." });
-            return err;
-        }
+        json jsonValidatedResponse = check getValidatedResponse(response, GIT_REPOSITORIES);
+        var repositoriesJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION][GIT_REPOSITORIES];
+        var repoList = jsonToRepositoryList(repositoriesJson, repositoryList.repositoryListQuery);
+        return repoList;
     } else {
         error err = error(GITHUB_ERROR_CODE, { message: "Repository list has no next page." });
         return err;
@@ -820,30 +648,17 @@ remote function Client.getRepositoryProject(Repository|(string, string) reposito
     string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT, repositoryOwner, repositoryName, projectNumber);
 
     http:Request request = new;
-    var jsonQuery = stringToJson(stringQuery);
-    if (jsonQuery is json) {
-        //Set headers and payload to the request
-        constructRequest(request, jsonQuery);
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
+    json jsonQuery = check stringToJson(stringQuery);
+    //Set headers and payload to the request
+    constructRequest(request, jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
-    json|error jsonValidatedResponse = getValidatedResponse(response, GIT_PROJECT);
-
-    if (jsonValidatedResponse is json) {
-        var githubProjectJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECT];
-        return Project.convert(githubProjectJson);
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
+    json jsonValidatedResponse = check getValidatedResponse(response, GIT_PROJECT);
+    var githubProjectJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECT];
+    return jsonToProject(githubProjectJson);
 }
 
 remote function Client.getRepositoryProjectList(Repository|(string, string) repository, string state,
@@ -872,29 +687,16 @@ remote function Client.getRepositoryProjectList(Repository|(string, string) repo
         repositoryOwner, repositoryName, state, recordCount);
 
     http:Request request = new;
-    var jsonQuery = stringToJson(stringQuery);
-    if (jsonQuery is json) {
-        //Set headers and payload to the request
-        constructRequest(request, jsonQuery);
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
+    json jsonQuery = check stringToJson(stringQuery);
+    //Set headers and payload to the request
+    constructRequest(request, jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
-    json|error jsonValidatedResponse = getValidatedResponse(response, GIT_PROJECTS);
-
-    if (jsonValidatedResponse is json) {
-        var githubProjectsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS];
-        var projectList = jsonToProjectList(githubProjectsJson, GIT_REPOSITORY, stringQuery);
-        return projectList;
-    } else {
-        error err = error(GITHUB_ERROR_CODE,
-        { message: "Error occurred while accessing the Json payload of the response." });
-        return err;
-    }
+    json jsonValidatedResponse = check getValidatedResponse(response, GIT_PROJECTS);
+    var githubProjectsJson = jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY][GIT_PROJECTS];
+    var projectList = jsonToProjectList(githubProjectsJson, GIT_REPOSITORY, stringQuery);
+    return projectList;
 }
