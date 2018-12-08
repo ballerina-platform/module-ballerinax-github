@@ -1,4 +1,3 @@
-//
 // Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 //
 // WSO2 Inc. licenses this file to you under the Apache License,
@@ -14,11 +13,40 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           GitHub Connector Transformers                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//********************************
+// JSON --> Project
+//********************************
+function jsonToProject(json sourceJson) returns Project|error {
+    Project project = {};
+    project.id = <string>sourceJson.id;
+    project.name = <string>sourceJson.name;
+    project.body = <string>sourceJson.body;
+    project.number = check int.convert(sourceJson.number);
+    project.createdAt = <string>sourceJson.createdAt;
+    project.closed = <string>sourceJson.closed;
+    project.closedAt = (sourceJson.closedAt is string) ? <string>sourceJson.closedAt : "";
+    project.updatedAt = (sourceJson.updatedAt is string) ? <string>sourceJson.updatedAt : "";
+    project.resourcePath = <string>sourceJson.resourcePath;
+    project.state = <string>sourceJson.state;
+    project.url = <string>sourceJson.url;
+    project.resourcePath = <string>sourceJson.resourcePath;
+    project.viewerCanUpdate = <boolean>sourceJson.viewerCanUpdate;
+    project.creator.login = <string>sourceJson.creator.login;
+    project.creator.resourcePath = <string>sourceJson.creator.resourcePath;
+    project.creator.url = <string>sourceJson.creator.url;
+    project.creator.avatarUrl = <string>sourceJson.creator.avatarUrl;
+    project.owner.id = <string>sourceJson.owner.id;
+    project.owner.projectsResourcePath = <string>sourceJson.owner.projectsResourcePath;
+    project.owner.projectsUrl = <string>sourceJson.owner.projectsUrl;
+    project.owner.viewerCanCreateProjects = <string>sourceJson.owner.viewerCanCreateProjects;
+    project.owner.__typename = <string>sourceJson.owner.__typename;
+    return project;
+}
 
 //********************************
 // JSON --> ProjectList
@@ -38,7 +66,7 @@ function jsonToProjectList(json source_json, string listOwner, string stringQuer
     }
     int i = 0;
     foreach var node in nodes {
-        var project = Project.convert(node);
+        var project = jsonToProject(node);
         if (project is Project) {
             target_projectList.nodes[i] = project;
         }
@@ -273,7 +301,7 @@ function jsonToIssue(json source_json) returns (Issue) {
     int i = 0;
     foreach var label in labelList {
         var labelValue = Label.convert(label);
-        if(labelValue is Label) {
+        if (labelValue is Label) {
             target_issue.labels[i] = labelValue;
         }
         i = i + 1;
@@ -290,7 +318,7 @@ function jsonToIssue(json source_json) returns (Issue) {
     int j = 0;
     foreach var assignee in assigneeList {
         var assigneeValue = Assignee.convert(assignee);
-        if(assigneeValue is Assignee) {
+        if (assigneeValue is Assignee) {
             target_issue.assignees[j] = assigneeValue;
         }
         j = j + 1;

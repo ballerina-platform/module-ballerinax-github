@@ -1,4 +1,3 @@
-//
 // Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 //
 // WSO2 Inc. licenses this file to you under the Apache License,
@@ -14,7 +13,6 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
 
 import ballerina/http;
 
@@ -362,9 +360,9 @@ public type CardList record {
 # + resourcePath - HTTP path for the pull request
 # + revertResourcePath - HTTP path for reverting the pull request
 # + revertUrl - HTTP URL for reverting the pull request
-# + author - User who created the pull rquest
 # + headRefName - Name of the head Ref associated with the pull request
 # + baseRefName - Name of the base Ref associated with the pull request
+# + author - User who created the pull rquest
 public type PullRequest record {
     string id = "";
     string title = "";
@@ -377,15 +375,15 @@ public type PullRequest record {
     int number = 0;
     string url = "";
     string? body = "";
-    string changedFiles = "";
+    int changedFiles = 0;
     int additions = 0;
     int deletions = 0;
     string? resourcePath = "";
     string? revertResourcePath = "";
     string? revertUrl = "";
-    Creator author = {};
     string? headRefName = "";
     string? baseRefName = "";
+    Creator author = {};
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of PullRequest object                                               //
@@ -454,11 +452,11 @@ public type Issue record {
     string? closedAt = "";
     string createdAt = "";
     Creator author = {};
-    Label[] labels =[];
+    Label[] labels = [];
     int number = 0;
     string state = "";
     string title = "";
-    string? updatedAt ="";
+    string? updatedAt = "";
     string url = "";
     Assignee[] assignees = [];
 };
