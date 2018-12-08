@@ -190,7 +190,7 @@ remote function Client.createIssue(string repositoryOwner, string repositoryName
 
 remote function Client.getCardListNextPage(CardList cardList) returns CardList|error {
 
-    if (cardList.pageInfo.hasPreviousPage) {
+    if (cardList.pageInfo.hasNextPage) {
         var cardListColumnId = cardList.columnId;
         json convertedQuery = check stringToJson(cardList.cardListQuery);
         convertedQuery.variables.endCursorCards = cardList.pageInfo.endCursor;

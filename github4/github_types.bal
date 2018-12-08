@@ -360,9 +360,9 @@ public type CardList record {
 # + resourcePath - HTTP path for the pull request
 # + revertResourcePath - HTTP path for reverting the pull request
 # + revertUrl - HTTP URL for reverting the pull request
-# + author - User who created the pull rquest
 # + headRefName - Name of the head Ref associated with the pull request
 # + baseRefName - Name of the base Ref associated with the pull request
+# + author - User who created the pull rquest
 public type PullRequest record {
     string id = "";
     string title = "";
@@ -375,15 +375,15 @@ public type PullRequest record {
     int number = 0;
     string url = "";
     string? body = "";
-    string changedFiles = "";
+    int changedFiles = 0;
     int additions = 0;
     int deletions = 0;
     string? resourcePath = "";
     string? revertResourcePath = "";
     string? revertUrl = "";
-    Creator author = {};
     string? headRefName = "";
     string? baseRefName = "";
+    Creator author = {};
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of PullRequest object                                               //
