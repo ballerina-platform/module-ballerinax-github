@@ -19,6 +19,36 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //********************************
+// JSON --> Project
+//********************************
+function jsonToProject(json sourceJson) returns Project|error {
+    Project project = {};
+    project.id = <string>sourceJson.id;
+    project.name = <string>sourceJson.name;
+    project.body = <string>sourceJson.body;
+    project.number = check int.convert(sourceJson.number);
+    project.createdAt = <string>sourceJson.createdAt;
+    project.closed = <string>sourceJson.closed;
+    project.closedAt = (sourceJson.closedAt is string) ? <string>sourceJson.closedAt : "";
+    project.updatedAt = (sourceJson.updatedAt is string) ? <string>sourceJson.updatedAt : "";
+    project.resourcePath = <string>sourceJson.resourcePath;
+    project.state = <string>sourceJson.state;
+    project.url = <string>sourceJson.url;
+    project.resourcePath = <string>sourceJson.resourcePath;
+    project.viewerCanUpdate = <boolean>sourceJson.viewerCanUpdate;
+    project.creator.login = <string>sourceJson.creator.login;
+    project.creator.resourcePath = <string>sourceJson.creator.resourcePath;
+    project.creator.url = <string>sourceJson.creator.url;
+    project.creator.avatarUrl = <string>sourceJson.creator.avatarUrl;
+    project.owner.id = <string>sourceJson.owner.id;
+    project.owner.projectsResourcePath = <string>sourceJson.owner.projectsResourcePath;
+    project.owner.projectsUrl = <string>sourceJson.owner.projectsUrl;
+    project.owner.viewerCanCreateProjects = <string>sourceJson.owner.viewerCanCreateProjects;
+    project.owner.__typename = <string>sourceJson.owner.__typename;
+    return project;
+}
+
+//********************************
 // JSON --> ProjectList
 //********************************
 function jsonToProjectList(json source_json, string listOwner, string stringQuery) returns (ProjectList) {
@@ -36,7 +66,7 @@ function jsonToProjectList(json source_json, string listOwner, string stringQuer
     }
     int i = 0;
     foreach var node in nodes {
-        var project = Project.convert(node);
+        var project = jsonToProject(node);
         if (project is Project) {
             target_projectList.nodes[i] = project;
         }
