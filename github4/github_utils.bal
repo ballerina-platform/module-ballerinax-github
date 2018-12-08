@@ -92,12 +92,18 @@ function getValidatedResponse(http:Response|error response, string validateCompo
 # + return - `json` payload of the response or Connector error
 function getValidatedRestResponse(http:Response|error response) returns json|error {
     if (response is http:Response) {
-        if(response.getJsonPayload() is error) {
+        var payload = response.getJsonPayload();
+        if (payload is json) {
+            if (payload.message == null) {
+                return payload;
+            } else {
+                error err = error(GITHUB_ERROR_CODE, { message: payload.message });
+                return err;
+            }
+        } else {
             error err = error(GITHUB_ERROR_CODE
             , { message: "Entity body is not json compatible since the received content-type is : null" });
             return err;
-        } else {
-            return response.getJsonPayload();
         }
     } else {
         error err = error(GITHUB_ERROR_CODE, { message: "HTTP Connector Error" });

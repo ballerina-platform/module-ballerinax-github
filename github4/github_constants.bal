@@ -54,15 +54,15 @@ final string GITHUB_ERROR_CODE = "(wso2/github)GithubError";
 
 // Public constants
 # Pull request state open, closed and merged
-final string PULL_REQUEST_STATE_ALL = "[\"OPEN\",\"CLOSED\",\"MERGED\"]";
+public final string PULL_REQUEST_STATE_ALL = "[\"OPEN\",\"CLOSED\",\"MERGED\"]";
 # Closed state
-final string STATE_CLOSED = "[\"CLOSED\"]";
+public final string STATE_CLOSED = "[\"CLOSED\"]";
 # Merged state
-final string STATE_MERGED = "[\"MERGED\"]";
+public final string STATE_MERGED = "[\"MERGED\"]";
 # Open state
-final string STATE_OPEN = "[\"OPEN\"]";
+public final string STATE_OPEN = "[\"OPEN\"]";
 # State open and closed
-final string STATE_ALL = "[\"OPEN\",\"CLOSED\"]";
+public final string STATE_ALL = "[\"OPEN\",\"CLOSED\"]";
 
 // Integer constants
 final int INDEX_ZERO = 0;

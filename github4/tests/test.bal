@@ -101,7 +101,7 @@ function testGetOrganizationProjectListNextPage() {
     //Get a list of projects of an organization
     log:printInfo("githubClient -> getOrganizationProjectListNextPage()");
     int recordCount = 2;
-     ProjectList  projectList = new;
+    ProjectList  projectList = new;
     Organization projectListOrganization = { login: testOrganizationName };
     var responseProjectList = githubClient->
     getOrganizationProjectList(projectListOrganization, STATE_OPEN, 2);
@@ -469,7 +469,7 @@ function testRepositoryListGetAllRepositories() {
     log:printInfo("RepositoryList.getAllRepositories()");
     RepositoryList repositoryList = new;
     var repoArray = repositoryList.getAllRepositories();
-    Repository[] sampleRepoArray;
+    Repository[] sampleRepoArray = [];
     test:assertEquals(repoArray, sampleRepoArray, msg = "Failed RepositoryList.getAllRepositories()");
 }
 
@@ -500,7 +500,7 @@ function testProjectListGetAllProjects() {
     log:printInfo("ProjectList.getAllRepositories()");
     ProjectList projectList = new;
     var projectArray = projectList.getAllProjects();
-    Project[] sampleProjectArray;
+    Project[] sampleProjectArray = [];
     test:assertEquals(projectArray, sampleProjectArray, msg = "Failed ProjectList.getAllProjects()");
 }
 
@@ -542,7 +542,7 @@ function testColumnListGetAllColumns() {
     log:printInfo("ColumnList.getAllColumns()");
     ColumnList columnList = new;
     var columnArray = columnList.getAllColumns();
-    Column[] sampleColumnArray;
+    Column[] sampleColumnArray = [];
     test:assertEquals(columnArray, sampleColumnArray, msg = "Failed ColumnList.getAllColumns()");
 }
 
@@ -573,7 +573,7 @@ function testCardListGetAllCards() {
     log:printInfo("CardList.getAllCards()");
     CardList cardList = {};
     var cardArray = cardList.nodes;
-    Card[] sampleCardArray;
+    Card[] sampleCardArray = [];
     test:assertEquals(cardArray, sampleCardArray, msg = "Failed CardList.getAllCards()");
 }
 
@@ -604,7 +604,7 @@ function testPullRequestListGetAllPullRequests() {
     log:printInfo("PullRequestList.getAllPullRequests()");
     PullRequestList pullRequestList = new;
     var pullRequestArray = pullRequestList.getAllPullRequests();
-    PullRequest[] samplePullRequestArray;
+    PullRequest[] samplePullRequestArray = [];
     test:assertEquals(pullRequestArray, samplePullRequestArray, msg = "Failed PullRequestList.getAllPullRequests()");
 }
 
@@ -635,7 +635,7 @@ function testIssueListGetAllIssues() {
     log:printInfo("IssueList.getAllIssues()");
     IssueList issueList = new;
     var issueArray = issueList.getAllIssues();
-    Issue[] sampleIssueArray;
+    Issue[] sampleIssueArray = [];
     test:assertEquals(issueArray, sampleIssueArray, msg = "Failed IssueList.getAllIssues()");
 }
 
@@ -672,11 +672,10 @@ function testConstructRequest() {
 
     constructRequest(request, samplePayload);
     var value = request.getJsonPayload();
-    json payloadInRequest = {};
     if(value is error) {
         test:assertFail(msg = <string>value.detail().message);
     } else {
-        test:assertEquals(payloadInRequest, samplePayload, msg = "Payload mismatch");
+        test:assertEquals(value, samplePayload, msg = "Payload mismatch");
     }
 }
 
@@ -827,7 +826,8 @@ function testGetValidatedRestResponseError() {
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
     } else {
-        test:assertEquals(<string>validatedResponse.detail().message, "API error", msg = "Validated response error mismatch");
+        test:assertEquals(<string>validatedResponse.detail().message, "API error"
+        , msg = "Validated response error mismatch");
     }
 }
 

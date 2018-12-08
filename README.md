@@ -62,7 +62,6 @@ public function main() {
         repository = rep;
     } else {
         io:println(err);
-        
     }
 
     io:println(repository);

@@ -353,7 +353,7 @@ function jsonToRepository(json source_json) returns (Repository) {
         target_repository.owner = {};
     } else {
         var result = RepositoryOwner.convert(source_json.owner);
-        if(result is RepositoryOwner) {
+        if (result is RepositoryOwner) {
             target_repository.owner = result;
         }
     }
@@ -361,7 +361,7 @@ function jsonToRepository(json source_json) returns (Repository) {
         target_repository.primaryLanguage = {};
     } else {
         var result = Language.convert(source_json.primaryLanguage);
-        if(result is Language) {
+        if (result is Language) {
             target_repository.primaryLanguage = result;
         }
     }
