@@ -1,4 +1,3 @@
-//
 // Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 //
 // WSO2 Inc. licenses this file to you under the Apache License,
@@ -14,7 +13,6 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           GitHub Connector Transformers                                           //
@@ -273,7 +271,7 @@ function jsonToIssue(json source_json) returns (Issue) {
     int i = 0;
     foreach var label in labelList {
         var labelValue = Label.convert(label);
-        if(labelValue is Label) {
+        if (labelValue is Label) {
             target_issue.labels[i] = labelValue;
         }
         i = i + 1;
@@ -290,7 +288,7 @@ function jsonToIssue(json source_json) returns (Issue) {
     int j = 0;
     foreach var assignee in assigneeList {
         var assigneeValue = Assignee.convert(assignee);
-        if(assigneeValue is Assignee) {
+        if (assigneeValue is Assignee) {
             target_issue.assignees[j] = assigneeValue;
         }
         j = j + 1;

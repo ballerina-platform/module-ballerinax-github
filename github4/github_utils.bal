@@ -1,4 +1,3 @@
-//
 // Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 //
 // WSO2 Inc. licenses this file to you under the Apache License,
@@ -14,7 +13,6 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
 
 import ballerina/http;
 import ballerina/internal;
@@ -55,8 +53,8 @@ function getValidatedResponse(http:Response|error response, string validateCompo
                         error err = error(GITHUB_ERROR_CODE, { message: errors });
                         return err;
                     } else {
-                        error err = error(GITHUB_ERROR_CODE
-                        , { message: "Error occurred while accessing the Json payload of the response." });
+                        error err = error(GITHUB_ERROR_CODE,
+                        { message: "Error occurred while accessing the Json payload of the response." });
                         return err;
                     }
                 }
@@ -71,14 +69,14 @@ function getValidatedResponse(http:Response|error response, string validateCompo
             string[] keySet = jsonPayload[GIT_DATA].getKeys();
             string keyInData = keySet[INDEX_ZERO];
             if (null == jsonPayload[GIT_DATA][keyInData][validateComponent]) {
-                error err = error(GITHUB_ERROR_CODE
-                , { message: validateComponent + " is not available in the response" });
+                error err = error(GITHUB_ERROR_CODE,
+                { message: validateComponent + " is not available in the response" });
                 return err;
             }
             return jsonPayload;
         } else {
-            error err = error(GITHUB_ERROR_CODE
-            , { message: "Entity body is not json compatible since the received content-type is : null" });
+            error err = error(GITHUB_ERROR_CODE,
+            { message: "Entity body is not json compatible since the received content-type is : null" });
             return err;
         }
     } else {
@@ -101,8 +99,8 @@ function getValidatedRestResponse(http:Response|error response) returns json|err
                 return err;
             }
         } else {
-            error err = error(GITHUB_ERROR_CODE
-            , { message: "Entity body is not json compatible since the received content-type is : null" });
+            error err = error(GITHUB_ERROR_CODE,
+            { message: "Entity body is not json compatible since the received content-type is : null" });
             return err;
         }
     } else {
@@ -116,10 +114,9 @@ function getValidatedRestResponse(http:Response|error response) returns json|err
 # + stringQuery - GraphQL API query to get the project board columns
 # + githubClient - GitHub client object
 # + return - Column list object or Connector error
-function getProjectColumns(string ownerType, string stringQuery, http:Client githubClient)
-             returns ColumnList|error {
+function getProjectColumns(string ownerType, string stringQuery, http:Client githubClient) returns ColumnList|error {
 
-     http:Client gitHubEndpoint = githubClient;
+    http:Client gitHubEndpoint = githubClient;
 
     if (ownerType == "" || stringQuery == "") {
         error err = error(GITHUB_ERROR_CODE, { message: "Owner type and query cannot be empty" });
@@ -132,8 +129,8 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
         //Set headers and payload to the request
         constructRequest(request, jsonQuery);
     } else {
-        error err = error(GITHUB_ERROR_CODE
-        , { message: "Error occurred while accessing the json payload of the response." });
+        error err = error(GITHUB_ERROR_CODE,
+        { message: "Error occurred while accessing the json payload of the response." });
         return err;
     }
 
@@ -146,11 +143,10 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
     if (jsonValidateResponse is json) {
         var projectColumnsJson = jsonValidateResponse[GIT_DATA][ownerType][GIT_PROJECT][GIT_COLUMNS];
         var columnList = jsonToColumnList(projectColumnsJson, ownerType, stringQuery);
-
         return columnList;
     } else {
-        error err = error(GITHUB_ERROR_CODE
-        , { message: "Error occurred while accessing the json payload of the response." });
+        error err = error(GITHUB_ERROR_CODE,
+        { message: "Error occurred while accessing the json payload of the response." });
         return err;
     }
 }
@@ -163,8 +159,8 @@ function stringToJson(string source) returns json|error {
     if (parsedValue is json) {
         return parsedValue;
     } else {
-        error err = error(GITHUB_ERROR_CODE
-        , { message: "Error occurred while casting the string to json" });
+        error err = error(GITHUB_ERROR_CODE,
+        { message: "Error occurred while casting the string to json" });
         return err;
     }
 }

@@ -1,4 +1,3 @@
-//
 // Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 //
 // WSO2 Inc. licenses this file to you under the Apache License,
@@ -14,7 +13,6 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
 
 import ballerina/config;
 import ballerina/http;
@@ -84,7 +82,7 @@ function testGetOrganizationProjectList() {
     var responseProjectList = githubClient->
     getOrganizationProjectList(projectListOrganization, STATE_OPEN, recordCount);
     if (responseProjectList is ProjectList) {
-            projectList = responseProjectList;
+        projectList = responseProjectList;
     } else {
         test:assertFail(msg = <string>responseProjectList.detail().message);
     }
@@ -101,17 +99,17 @@ function testGetOrganizationProjectListNextPage() {
     //Get a list of projects of an organization
     log:printInfo("githubClient -> getOrganizationProjectListNextPage()");
     int recordCount = 2;
-    ProjectList  projectList = new;
+    ProjectList projectList = new;
     Organization projectListOrganization = { login: testOrganizationName };
     var responseProjectList = githubClient->
     getOrganizationProjectList(projectListOrganization, STATE_OPEN, 2);
     if (responseProjectList is ProjectList) {
-             projectList = untaint responseProjectList;
+        projectList = untaint responseProjectList;
     } else {
         test:assertFail(msg = <string>responseProjectList.detail().message);
     }
     // Next page
-    responseProjectList = githubClient->getProjectListNextPage( projectList);
+    responseProjectList = githubClient->getProjectListNextPage(projectList);
     if (responseProjectList is ProjectList) {
         projectList = responseProjectList;
     } else {
@@ -130,11 +128,11 @@ function testGetProjectColumnList() {
     log:printInfo("githubClient -> getProjectColumnList()");
     int recordCount = 2;
     Project columnListProject = { number: 1, resourcePath: testResourcePath };
-    columnListProject["owner"]["__typename"]="Organization";
+    columnListProject["owner"]["__typename"] = "Organization";
     ColumnList columnList = new;
     var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
     if (columns is ColumnList) {
-            columnList = columns;
+        columnList = columns;
     } else {
         test:assertFail(msg = <string>columns.detail().message);
     }
@@ -292,7 +290,7 @@ function testGetRepositoryProjectList() {
     var responseRepoProjectList = githubClient->
     getRepositoryProjectList(projectRepositoryList, STATE_OPEN, recordCount);
     if (responseRepoProjectList is ProjectList) {
-            repoProjectList = responseRepoProjectList;
+        repoProjectList = responseRepoProjectList;
     } else {
         test:assertFail(msg = <string>responseRepoProjectList.detail().message);
     }
@@ -432,7 +430,7 @@ function testGetIssueListNextPage() {
 function testCreateIssue() {
     log:printInfo("githubClient -> createIssue()");
 
-    var createdIssue = githubClient->createIssue (testRepositoryOwner, "ballerina-connector-test",
+    var createdIssue = githubClient->createIssue(testRepositoryOwner, "ballerina-connector-test",
         "This is a test issue", "This is the body of the test issue", ["bug", "critical"], [testIssueAssignee]);
 
     if (createdIssue is Issue) {
@@ -672,7 +670,7 @@ function testConstructRequest() {
 
     constructRequest(request, samplePayload);
     var value = request.getJsonPayload();
-    if(value is error) {
+    if (value is error) {
         test:assertFail(msg = <string>value.detail().message);
     } else {
         test:assertEquals(value, samplePayload, msg = "Payload mismatch");
@@ -720,7 +718,7 @@ function testGetValidatedResponseError() {
         test:assertFail(msg = "Payload error should be handled");
     } else {
         test:assertEquals(<string>validatedResponse.detail().message, "API error",
-        msg = "Validated response error mismatch");
+            msg = "Validated response error mismatch");
     }
 }
 
@@ -743,7 +741,7 @@ function testGetValidatedResponseNoRequestedData() {
         test:assertFail(msg = "Payload error should be handled");
     } else {
         test:assertEquals(<string>validatedResponse.detail().message, "name is not available in the response",
-                msg = "Validated response error mismatch");
+            msg = "Validated response error mismatch");
     }
 }
 
@@ -763,8 +761,8 @@ function testGetValidatedResponseNoPayload() {
         test:assertFail(msg = "Payload error should be handled");
     } else {
         test:assertEquals(<string>validatedResponse.detail().message,
-                "Entity body is not json compatible since the received content-type is : null",
-                msg = "Validated response error mismatch");
+            "Entity body is not json compatible since the received content-type is : null",
+            msg = "Validated response error mismatch");
     }
 }
 
@@ -776,14 +774,15 @@ function testGetValidatedResponseHttpError() {
 
     error sampleHttpError = error(GITHUB_ERROR_CODE, { message: "HTTP Connector Error." });
 
-http:Response|error response = sampleHttpError;
+    http:Response|error response = sampleHttpError;
 
     json|error validatedResponse = getValidatedResponse(response, "name");
 
     if (validatedResponse is json) {
         test:assertFail(msg = "HttpConnector error should be handled");
     } else {
-        test:assertEquals(<string>validatedResponse.detail().message, "HTTP Connector Error", msg = "Validated response error mismatch");
+        test:assertEquals(<string>validatedResponse.detail().message, "HTTP Connector Error", msg =
+            "Validated response error mismatch");
     }
 }
 
@@ -827,7 +826,7 @@ function testGetValidatedRestResponseError() {
         test:assertFail(msg = "Payload error should be handled");
     } else {
         test:assertEquals(<string>validatedResponse.detail().message, "API error"
-        , msg = "Validated response error mismatch");
+            , msg = "Validated response error mismatch");
     }
 }
 
@@ -847,8 +846,8 @@ function testGetValidatedRestResponseNoPayload() {
         test:assertFail(msg = "Payload error should be handled");
     } else {
         test:assertEquals(<string>validatedResponse.detail().message,
-                "Entity body is not json compatible since the received content-type is : null",
-                msg = "Validated response error mismatch");
+            "Entity body is not json compatible since the received content-type is : null",
+            msg = "Validated response error mismatch");
     }
 }
 
@@ -867,7 +866,8 @@ function testGetValidatedRestResponseHttpError() {
     if (validatedResponse is json) {
         test:assertFail(msg = "HttpConnector error should be handled");
     } else {
-        test:assertEquals(<string>validatedResponse.detail().message, "HTTP Connector Error", msg = "Validated response error mismatch");
+        test:assertEquals(<string>validatedResponse.detail().message, "HTTP Connector Error", msg =
+            "Validated response error mismatch");
     }
 }
 
@@ -883,7 +883,7 @@ function testStringToJsonError() {
         test:assertFail(msg = "Invalid string json. Expected failure");
     } else {
         test:assertEquals(<string>convertedValue.detail().message, "Error occurred while casting the string to json",
-                msg = "Error message mismatch");
+            msg = "Error message mismatch");
     }
 }
 
