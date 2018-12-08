@@ -48,7 +48,6 @@ github4:GitHubConfiguration gitHubConfig = {
  };
  
 github4:Client githubClient = new(gitHubConfig);
-
 ```
 
 The `getRepository` function gets a GitHub repository by passing the name of the repository and its owner in the format of "owner/repository".
@@ -68,7 +67,7 @@ if (repo is github4:Repository) {
 The `getIssueList` function gets a list of issues for a given repository by providing the `Repository` object or repository and owner name, state of the issue, and the number of records to read.
 
 ```ballerina
-github4:Repository issueRepository = {owner:{login:"wso2"}, name:"carbon-apimgt"};
+github4:Repository issueRepository = { owner: { login: "wso2" }, name: "carbon-apimgt" };
 var issues = githubEP->getIssueList(issueRepository, github4:STATE_CLOSED, recordCount);
 ```
 or
@@ -100,5 +99,4 @@ if (createdIssue is github4:Issue) {
 } else {
     io:println(createdIssue);
 }
-
 ```
