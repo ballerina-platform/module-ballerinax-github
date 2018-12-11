@@ -55,7 +55,6 @@ github4:GitHubConfiguration gitHubConfig = {
 github4:Client githubClient = new(gitHubConfig);
 
 public function main() {
-    
     github4:Repository repository = {};
     var repo = githubClient->getRepository("wso2-ballerina/module-github");
     if (repo is github4:Repository) {
@@ -63,7 +62,6 @@ public function main() {
     } else {
         io:println(err);
     }
-
     io:println(repository);
 }
 ```
