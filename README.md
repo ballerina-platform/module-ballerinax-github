@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/wso2-ballerina/package-github.svg?branch=master)](https://travis-ci.org/wso2-ballerina/package-github)
+[![Build Status](https://travis-ci.org/wso2-ballerina/module-github.svg?branch=master)](https://travis-ci.org/wso2-ballerina/module-github)
 
 # Ballerina GitHub Endpoint
 
@@ -11,7 +11,7 @@ sections explains how to use Ballerina GitHub4 connector. You can refer the [Git
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
-| 0.981.0           | v4                 |
+| 0.990.0           | v4                 |
 
 ![Ballerina GitHub Endpoint Overview](./docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
 
@@ -22,7 +22,7 @@ Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 
 * Clone the repository by running the following command
 ```shell
-git clone https://github.com/wso2-ballerina/package-github
+git clone https://github.com/wso2-ballerina/module-github
 ```
 
 * Initialize the ballerina project.
@@ -32,7 +32,7 @@ ballerina init
 
 ### Working with GitHub Endpoint Actions
 
-All the actions return `objects` or `github4:GitClientError`. If the action was a success, then the requested object will be returned while the `github:GitClientError` will be **empty** and vice-versa.
+All the actions return `objects` or `error`. If the action was a success, then the requested object will be returned while the `error` will be **empty** and vice-versa.
 
 ##### Example
 * Request
@@ -43,27 +43,25 @@ import ballerina/http;
 import ballerina/io;
 import wso2/github4;
 
-function main(string... args) {
-    endpoint github4:Client githubClient {
-        clientConfig: {
-            auth:{
-                scheme:http:OAUTH2,
-                accessToken:config:getAsString("GITHUB_TOKEN")
-            }
-        }
-    };
+github4:GitHubConfiguration gitHubConfig = {
+     clientConfig: {
+         auth: {
+             scheme: http:OAUTH2,
+             accessToken: config:getAsString("GITHUB_TOKEN")
+         }
+     }
+ };
+ 
+github4:Client githubClient = new(gitHubConfig);
 
+public function main() {
     github4:Repository repository = {};
-    var repo = githubClient->getRepository("wso2-ballerina/package-github");
-    match repo {
-        github4:Repository rep => {
-            repository = rep;
-        }
-        github4:GitClientError err => {
-            io:println(err);
-        }
+    var repo = githubClient->getRepository("wso2-ballerina/module-github");
+    if (repo is github4:Repository) {
+        repository = rep;
+    } else {
+        io:println(err);
     }
-
     io:println(repository);
 }
 ```
@@ -71,27 +69,27 @@ function main(string... args) {
 * Response object
 ```ballerina
 public type Repository record {
-    string id;
-    string name;
-    string createdAt;
-    string updatedAt;
-    string description;
-    int forkCount;
-    boolean hasIssuesEnabled;
-    boolean hasWikiEnabled;
-    string homepageUrl;
-    boolean isArchived;
-    boolean isFork;
-    boolean isLocked;
-    boolean isMirror;
-    boolean isPrivate;
-    string lockReason;
-    string mirrorUrl;
-    string url;
-    string sshUrl;
-    RepositoryOwner owner;
-    Language primaryLanguage;
-    int stargazerCount;
+    string id = "";
+    string name = "";
+    string createdAt = "";
+    string updatedAt = "";
+    string description = "";
+    int forkCount = 0;
+    boolean hasIssuesEnabled = false;
+    boolean hasWikiEnabled = false;
+    boolean isArchived = false;
+    boolean isFork = false;
+    boolean isLocked = false;
+    boolean isMirror = false;
+    boolean isPrivate = false;
+    string homepageUrl = "";
+    string lockReason = "";
+    string mirrorUrl = "";
+    string url = "";
+    string sshUrl = "";
+    RepositoryOwner owner = {};
+    Language primaryLanguage = {};
+    int stargazerCount = 0;
 }
 ```
 

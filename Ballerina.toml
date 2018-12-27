@@ -1,7 +1,7 @@
 [project]
 org-name = "wso2"
-version = "0.9.14"
+version = "0.9.19"
 authors = ["WSO2"]
 keywords = ["github", "endpoint", "API"]
-repository = "https://github.com/wso2-ballerina/package-github"
+repository = "https://github.com/wso2-ballerina/module-github"
 license = "Apache-2.0"
