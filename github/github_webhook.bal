@@ -16,122 +16,65 @@
 import ballerina/http;
 import ballerina/websub;
 
-documentation {
-    The WebSub Hub URL for GitHub.
-}
-@final public string HUB = "https://api.github.com/hub";
+# The WebSub Hub URL for GitHub.
+public const string HUB = "https://api.github.com/hub";
 
-@final string TOPIC_HEADER = "X-GitHub-Event";
-
-//////////////////////////////////////////////////////////
-/// GitHub Webhook Service (WebSub Subscriber Service) ///
-//////////////////////////////////////////////////////////
-documentation {
-    The object representing the GitHub Webhook Service.
-}
-public type WebhookService object {
-
-    public function getEndpoint() returns (WebhookListener) {
-        WebhookListener ep = new;
-        return ep;
-    }
-
-};
+const string TOPIC_HEADER = "X-GitHub-Event";
 
 ////////////////////////////////////////////////////////////////////
-/// GitHub Webhook Endpoint (WebSub Subscriber Service Endpoint) ///
+/// GitHub Webhook Listener (WebSub Subscriber Service Listener) ///
 ////////////////////////////////////////////////////////////////////
-documentation {
-    Object representing the GitHub Webhook (WebSub Subscriber Service) Endpoint.
+# Object representing the GitHub Webhook (WebSub Subscriber Service) Listener.
 
-    E{{}}
-    F{{webhookListenerConfig}}  The configuration for the endpoint
-}
+# + webhookListenerConfig - The configuration for the listener
 public type WebhookListener object {
 
-    public WebhookListenerConfiguration webhookListenerConfig;
+    *AbstractListener;
+
+    public WebhookListenerConfiguration? webhookListenerConfig = ();
 
     private websub:Listener websubListener;
 
-    public new() {
-        websubListener = new;
+    public function __init(int port, WebhookListenerConfiguration? config = ()) {
+        self.webhookListenerConfig = config;
+        websub:ExtensionConfig extensionConfig = {
+            topicIdentifier: websub:TOPIC_ID_HEADER_AND_PAYLOAD,
+            topicHeader: TOPIC_HEADER,
+            headerResourceMap: GITHUB_TOPIC_HEADER_RESOURCE_MAP,
+            headerAndPayloadKeyResourceMap: GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP
+        };
+        websub:SubscriberServiceEndpointConfiguration sseConfig = {
+            extensionConfig: extensionConfig
+        };
+        if (config is WebhookListenerConfiguration) {
+            sseConfig.host = config.host;
+        }
+        self.websubListener = new(port, config = sseConfig);
     }
 
-    documentation {
-        Gets called when the endpoint is being initialized during package init.
-
-        P{{config}} The SubscriberServiceEndpointConfiguration of the endpoint
+    public function __attach(service s, map<any> data) returns error? {
+        return self.websubListener.__attach(s, data);
     }
-    public function init(WebhookListenerConfiguration config);
 
-    documentation {
-        Gets called whenever a service attaches itself to this endpoint and during package init.
-
-        P{{serviceType}}    The service attached
+    public function __start() returns error? {
+        return self.websubListener.__start();
     }
-    public function register(typedesc serviceType);
 
-    documentation {
-        Starts the registered service.
+    public function __stop() returns error? {
+        return self.websubListener.__stop();
     }
-    public function start();
-
-    documentation {
-        Returns the connector that client code uses.
-
-        R{{}}   The connector that client code uses
-    }
-    public function getCallerActions() returns http:Connection;
-
-    documentation {
-        Stops the endpoint.
-    }
-    public function stop();
-
 };
 
-documentation {
-    Object representing the configuration for the GitHub Webhook Listener.
+# Object representing the configuration for the GitHub Webhook Listener.
 
-    F{{host}}   The host name/IP of the endpoint
-    F{{port}}   The port to which the endpoint should bind to
-}
+# + host - The host name/IP of the listener
+# + port - The port to which the listener should bind to
 public type WebhookListenerConfiguration record {
-    string host,
-    int port,
+    string host;
+    int port;
 };
 
-function WebhookListener::init(WebhookListenerConfiguration config) {
-    self.webhookListenerConfig = config;
-    websub:ExtensionConfig extensionConfig = {
-        topicIdentifier: websub:TOPIC_ID_HEADER_AND_PAYLOAD,
-        topicHeader: TOPIC_HEADER,
-        headerResourceMap: GITHUB_TOPIC_HEADER_RESOURCE_MAP,
-        headerAndPayloadKeyResourceMap: GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP
-    };
-    websub:SubscriberServiceEndpointConfiguration sseConfig = { host: config.host, port: config.port,
-                                                                extensionConfig: extensionConfig };
-    self.websubListener.init(sseConfig);
-}
-
-function WebhookListener::register(typedesc serviceType) {
-    self.websubListener.register(serviceType);
-}
-
-function WebhookListener::start() {
-    self.websubListener.start();
-}
-
-function WebhookListener::getCallerActions() returns http:Connection {
-    return self.websubListener.getCallerActions();
-}
-
-function WebhookListener::stop () {
-    self.websubListener.stop();
-}
-
-
-@final map<(string, typedesc)> GITHUB_TOPIC_HEADER_RESOURCE_MAP = {
+final map<(string, typedesc)> GITHUB_TOPIC_HEADER_RESOURCE_MAP = {
     "ping" : ("onPing", PingEvent),
     "commit_comment" : ("onCommitComment", CommitCommentEvent),
     "fork" : ("onFork", ForkEvent),
@@ -143,7 +86,7 @@ function WebhookListener::stop () {
     "watch" : ("onWatch", WatchEvent)
 };
 
-@final map<map<map<(string, typedesc)>>> GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP = {
+final map<map<map<(string, typedesc)>>> GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP = {
     "create" : {
         "ref_type" : {
             "repository" : ("onCreateRepository", CreateEvent),
