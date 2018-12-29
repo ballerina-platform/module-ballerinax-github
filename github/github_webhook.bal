@@ -47,7 +47,11 @@ public type WebhookListener object {
             extensionConfig: extensionConfig
         };
         if (config is WebhookListenerConfiguration) {
-            sseConfig.host = config.host;
+            string? specHost = config["host"];
+            if (specHost is string) {
+                sseConfig.host = specHost;
+            }
+            sseConfig.httpServiceSecureSocket = config["httpServiceSecureSocket"];
         }
         self.websubListener = new(port, config = sseConfig);
     }
@@ -68,10 +72,11 @@ public type WebhookListener object {
 # Object representing the configuration for the GitHub Webhook Listener.
 
 # + host - The host name/IP of the listener
-# + port - The port to which the listener should bind to
+# + httpServiceSecureSocket - The SSL configurations for the listener
 public type WebhookListenerConfiguration record {
-    string host;
-    int port;
+    string host?;
+    http:ServiceSecureSocket httpServiceSecureSocket?;
+    !...
 };
 
 final map<(string, typedesc)> GITHUB_TOPIC_HEADER_RESOURCE_MAP = {
