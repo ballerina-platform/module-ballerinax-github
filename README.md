@@ -32,7 +32,7 @@ ballerina init
 
 ### Working with GitHub Endpoint Actions
 
-All the actions return `objects` or `error`. If the action was a success, then the requested object will be returned while the `error` will be **empty** and vice-versa.
+All the actions return a `record` or an `object`, or an `error`. If the action was a success, then the requested `object` or `record` will be returned while the `error` will be **empty** and vice-versa.
 
 ##### Example
 * Request
@@ -55,18 +55,16 @@ github4:GitHubConfiguration gitHubConfig = {
 github4:Client githubClient = new(gitHubConfig);
 
 public function main() {
-    github4:Repository repository = {};
-    var repo = githubClient->getRepository("wso2-ballerina/module-github");
-    if (repo is github4:Repository) {
-        repository = rep;
+    github4:Repository|error result = githubClient->getRepository("wso2-ballerina/module-github");
+    if (result is github4:Repository) {
+        io:println("Repository wso2-ballerina/module-github: ", result);
     } else {
-        io:println(err);
+        io:println("Error occurred on getRepository(): ", result);
     }
-    io:println(repository);
 }
 ```
 
-* Response object
+* The type descriptor of the `record` that will be returned on success
 ```ballerina
 public type Repository record {
     string id = "";
