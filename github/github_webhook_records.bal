@@ -32,6 +32,7 @@ public type User record {
     string received_events_url;
     string ^"type"; //"type" in payload
     boolean site_admin;
+    !...;
 };
 
 public type Repository record {
@@ -104,6 +105,7 @@ public type Repository record {
     int open_issues;
     int watchers;
     string default_branch;
+    !...;
 };
 
 public type CommitComment record {
@@ -120,6 +122,7 @@ public type CommitComment record {
     string updated_at;
     string author_association;
     string body;
+    !...;
 };
 
 public type Page record {
@@ -129,6 +132,7 @@ public type Page record {
     string action;
     string sha;
     string html_url;
+    !...;
 };
 
 public type Installation record {
@@ -148,6 +152,7 @@ public type Installation record {
     string single_file_name;
     Repository[] repositories;
     User sender;
+    !...;
 };
 
 public type Issue record {
@@ -174,6 +179,7 @@ public type Issue record {
     string? closed_at;
     string author_association;
     string body;
+    !...;
 };
 
 public type IssueComment record {
@@ -187,6 +193,7 @@ public type IssueComment record {
     string updated_at;
     string author_association;
     string body;
+    !...;
 };
 
 public type Label record {
@@ -196,6 +203,7 @@ public type Label record {
     string name;
     string color;
     boolean default;
+    !...;
 };
 
 public type Milestone record {
@@ -215,6 +223,7 @@ public type Milestone record {
     string updated_at;
     string due_on;
     string? closed_at;
+    !...;
 };
 
 public type Changes record {
@@ -226,26 +235,32 @@ public type Changes record {
     Description? description;
     DueOn? due_on;
     Note? note;
+    !...;
 };
 
 public type Title record {
     string ^"from";
+    !...;
 };
 
 public type Body record {
     string ^"from";
+    !...;
 };
 
 public type Name record {
     string ^"from";
+    !...;
 };
 
 public type Color record {
     string ^"from";
+    !...;
 };
 
 public type Permission record {
     string ^"from";
+    !...;
 };
 
 public type Description record {
@@ -254,10 +269,12 @@ public type Description record {
 
 public type DueOn record {
     string ^"from";
+    !...;
 };
 
 public type Note record {
     string ^"from";
+    !...;
 };
 
 public type Team record {
@@ -271,6 +288,7 @@ public type Team record {
     string members_url;
     string repositories_url;
     string permission;
+    !...;
 };
 
 public type Organization record {
@@ -286,6 +304,7 @@ public type Organization record {
     string public_members_url;
     string avatar_url;
     string? description;
+    !...;
 };
 
 public type Invitation record {
@@ -297,6 +316,7 @@ public type Invitation record {
     User inviter;
     int team_count;
     string invitation_team_url;
+    !...;
 };
 
 public type Membership record {
@@ -305,6 +325,7 @@ public type Membership record {
     string role;
     string organization_url;
     User user;
+    !...;
 };
 
 public type ProjectCard record {
@@ -317,6 +338,7 @@ public type ProjectCard record {
     User creator;
     string created_at;
     string updated_at;
+    !...;
 };
 
 public type ProjectColumn record {
@@ -328,6 +350,7 @@ public type ProjectColumn record {
     string name;
     string created_at;
     string updated_at;
+    !...;
 };
 
 public type Project record {
@@ -344,6 +367,7 @@ public type Project record {
     User creator;
     string created_at;
     string updated_at;
+    !...;
 };
 
 public type Branch record {
@@ -352,6 +376,7 @@ public type Branch record {
     string sha;
     User user;
     Repository repo;
+    !...;
 };
 
 public type Links record {
@@ -364,42 +389,52 @@ public type Links record {
     CommitsLink? commits;
     StatusesLink? statuses;
     PullRequestLink? pull_request;
+    !...;
 };
 
 public type SelfLink record {
     string href;
+    !...;
 };
 
 public type HtmlLink record {
     string href;
+    !...;
 };
 
 public type IssueLink record {
     string href;
+    !...;
 };
 
 public type CommentsLink record {
     string href;
+    !...;
 };
 
 public type ReviewCommentsLink record {
     string href;
+    !...;
 };
 
 public type ReviewCommentLink record {
     string href;
+    !...;
 };
 
 public type CommitsLink record {
     string href;
+    !...;
 };
 
 public type StatusesLink record {
     string href;
+    !...;
 };
 
 public type PullRequestLink record {
     string href;
+    !...;
 };
 
 public type PullRequest record {
@@ -448,6 +483,7 @@ public type PullRequest record {
     int additions;
     int deletions;
     int changed_files;
+    !...;
 };
 
 public type Review record {
@@ -462,7 +498,7 @@ public type Review record {
     string pull_request_url;
     string author_association;
     Links _links;
-
+    !...;
 };
 
 public type PullRequestReviewComment record {
@@ -484,6 +520,7 @@ public type PullRequestReviewComment record {
     string pull_request_url;
     string author_association;
     Links _links;
+    !...;
 };
 
 public type Commit record {
@@ -492,11 +529,13 @@ public type Commit record {
     CommitAuthor author;
     string url;
     boolean distinct;
+    !...;
 };
 
 public type CommitAuthor record {
     string name;
     string email;
+    !...;
 };
 
 public type Release record {
@@ -518,6 +557,7 @@ public type Release record {
     string tarball_url;
     string zipball_url;
     string? body;
+    !...;
 };
 
 public type Asset record {
@@ -534,6 +574,7 @@ public type Asset record {
     string created_at;
     string updated_at;
     User uploader;
+    !...;
 };
 
 public type Alert record {
@@ -546,6 +587,7 @@ public type Alert record {
     User dismisser;
     string dismiss_reason;
     string dismissed_at;
+    !...;
 };
 
 public type Hook record {
@@ -561,6 +603,7 @@ public type Hook record {
     string test_url;
     string ping_url;
     HookLastResponse last_response;
+    !...;
 };
 
 public type HookConfig record {
@@ -568,12 +611,14 @@ public type HookConfig record {
     string secret;
     string url;
     string insecure_ssl;
+    !...;
 };
 
 public type HookLastResponse record {
     string? code;
     string status;
     string? message;
+    !...;
 };
 
 public type CommitCommentEvent record {
@@ -581,6 +626,7 @@ public type CommitCommentEvent record {
     CommitComment comment;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type CreateEvent record {
@@ -591,6 +637,7 @@ public type CreateEvent record {
     string pusher_type;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type DeleteEvent record {
@@ -599,28 +646,33 @@ public type DeleteEvent record {
     string pusher_type;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type ForkEvent record {
     Repository forkee;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type GitHubAppAuthorizationEvent record {
     string action;
     User sender;
+    !...;
 };
 
 public type GollumEvent record {
     Page[] pages;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type InstallationEvent record {
     string action;
     Installation installation;
+    !...;
 };
 
 public type IssueCommentEvent record {
@@ -629,6 +681,7 @@ public type IssueCommentEvent record {
     IssueComment comment;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type IssuesEvent record {
@@ -637,6 +690,7 @@ public type IssuesEvent record {
     Changes? changes;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type LabelEvent record {
@@ -645,6 +699,7 @@ public type LabelEvent record {
     Changes? changes;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type MemberEvent record {
@@ -653,6 +708,7 @@ public type MemberEvent record {
     Changes? changes;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type MembershipEvent record {
@@ -662,6 +718,7 @@ public type MembershipEvent record {
     User sender;
     Team team;
     Organization organization;
+    !...;
 };
 
 public type MilestoneEvent record {
@@ -670,6 +727,7 @@ public type MilestoneEvent record {
     Changes? changes;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type OrganizationEvent record {
@@ -677,6 +735,7 @@ public type OrganizationEvent record {
     Membership membership;
     Organization organization;
     User sender;
+    !...;
 };
 
 public type ProjectCardEvent record {
@@ -686,6 +745,7 @@ public type ProjectCardEvent record {
     ProjectCard project_card;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type ProjectColumnEvent record {
@@ -695,6 +755,7 @@ public type ProjectColumnEvent record {
     ProjectColumn project_column;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type ProjectEvent record {
@@ -703,6 +764,7 @@ public type ProjectEvent record {
     Project project;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type PullRequestEvent record {
@@ -712,6 +774,7 @@ public type PullRequestEvent record {
     PullRequest pull_request;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type PullRequestReviewEvent record {
@@ -720,6 +783,7 @@ public type PullRequestReviewEvent record {
     PullRequest pull_request;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type PullRequestReviewCommentEvent record {
@@ -729,6 +793,7 @@ public type PullRequestReviewCommentEvent record {
     PullRequestReviewComment comment;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type PushEvent record {
@@ -745,6 +810,7 @@ public type PushEvent record {
     Repository repository;
     CommitAuthor pusher;
     User sender;
+    !...;
 };
 
 public type ReleaseEvent record {
@@ -752,28 +818,33 @@ public type ReleaseEvent record {
     Release release;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type RepositoryEvent record {
     string action;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type RepositoryVulnerabilityAlertEvent record {
     string action;
     Alert alert;
+    !...;
 };
 
 public type TeamAddEvent record {
     Team team;
     Repository repository;
+    !...;
 };
 
 public type WatchEvent record {
     string action;
     Repository repository;
     User sender;
+    !...;
 };
 
 public type PingEvent record {
@@ -782,4 +853,5 @@ public type PingEvent record {
     Hook hook;
     Repository repository;
     User sender;
+    !...;
 };

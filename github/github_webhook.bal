@@ -69,14 +69,14 @@ public type WebhookListener object {
     }
 };
 
-# Object representing the configuration for the GitHub Webhook Listener.
+# Record representing the configuration for the GitHub Webhook Listener.
 
 # + host - The host name/IP of the listener
 # + httpServiceSecureSocket - The SSL configurations for the listener
 public type WebhookListenerConfiguration record {
     string host?;
     http:ServiceSecureSocket httpServiceSecureSocket?;
-    !...
+    !...;
 };
 
 final map<(string, typedesc)> GITHUB_TOPIC_HEADER_RESOURCE_MAP = {
