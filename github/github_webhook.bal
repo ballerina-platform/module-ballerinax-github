@@ -94,7 +94,6 @@ final map<(string, typedesc)> GITHUB_TOPIC_HEADER_RESOURCE_MAP = {
 final map<map<map<(string, typedesc)>>> GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP = {
     "create" : {
         "ref_type" : {
-            "repository" : ("onCreateRepository", CreateEvent),
             "branch" : ("onCreateBranch", CreateEvent),
             "tag" : ("onCreateTag", CreateEvent)
         }
