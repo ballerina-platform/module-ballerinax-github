@@ -129,15 +129,15 @@ public type RepositoryList object {
 //*********************************************************************************************************************
 // RepositoryList bound functions
 //*********************************************************************************************************************
-function RepositoryList.hasNextPage() returns boolean {
+public function RepositoryList.hasNextPage() returns boolean {
     return self.pageInfo.hasNextPage;
 }
 
-function RepositoryList.hasPreviousPage() returns boolean {
+public function RepositoryList.hasPreviousPage() returns boolean {
     return self.pageInfo.hasPreviousPage;
 }
 
-function RepositoryList.getAllRepositories() returns Repository[] {
+public function RepositoryList.getAllRepositories() returns Repository[] {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -209,15 +209,15 @@ public type ProjectList object {
 //*********************************************************************************************************************
 // ProjectList bound functions
 //*********************************************************************************************************************
-function ProjectList.hasNextPage() returns boolean {
+public function ProjectList.hasNextPage() returns boolean {
     return self.pageInfo.hasNextPage;
 }
 
-function ProjectList.hasPreviousPage() returns boolean {
+public function ProjectList.hasPreviousPage() returns boolean {
     return self.pageInfo.hasPreviousPage;
 }
 
-function ProjectList.getAllProjects() returns Project[] {
+public function ProjectList.getAllProjects() returns Project[] {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -244,7 +244,7 @@ public type Column object {
 //*********************************************************************************************************************
 // Column bound functions
 //*********************************************************************************************************************
-function Column.getCardList() returns CardList {
+public function Column.getCardList() returns CardList {
     return self.cards;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,15 +276,15 @@ public type ColumnList object {
 //*********************************************************************************************************************
 // ColumnList bound functions
 //*********************************************************************************************************************
-function ColumnList.hasNextPage() returns boolean {
+public function ColumnList.hasNextPage() returns boolean {
     return self.pageInfo.hasNextPage;
 }
 
-function ColumnList.hasPreviousPage() returns boolean {
+public function ColumnList.hasPreviousPage() returns boolean {
     return self.pageInfo.hasPreviousPage;
 }
 
-function ColumnList.getAllColumns() returns (Column[]) {
+public function ColumnList.getAllColumns() returns (Column[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -413,15 +413,15 @@ public type PullRequestList object {
 //*********************************************************************************************************************
 // PullRequestList bound functions
 //*********************************************************************************************************************
-function PullRequestList.hasNextPage() returns boolean {
+public function PullRequestList.hasNextPage() returns boolean {
     return self.pageInfo.hasNextPage;
 }
 
-function PullRequestList.hasPreviousPage() returns boolean {
+public function PullRequestList.hasPreviousPage() returns boolean {
     return self.pageInfo.hasPreviousPage;
 }
 
-function PullRequestList.getAllPullRequests() returns (PullRequest[]) {
+public function PullRequestList.getAllPullRequests() returns (PullRequest[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -488,15 +488,15 @@ public type IssueList object {
 //*********************************************************************************************************************
 // IssueList bound functions
 //*********************************************************************************************************************
-function IssueList.hasNextPage() returns boolean {
+public function IssueList.hasNextPage() returns boolean {
     return self.pageInfo.hasNextPage;
 }
 
-function IssueList.hasPreviousPage() returns boolean {
+public function IssueList.hasPreviousPage() returns boolean {
     return self.pageInfo.hasPreviousPage;
 }
 
-function IssueList.getAllIssues() returns (Issue[]) {
+public function IssueList.getAllIssues() returns (Issue[]) {
     return self.nodes;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

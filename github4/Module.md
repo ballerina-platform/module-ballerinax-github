@@ -20,7 +20,7 @@ The `wso2/github4` module has support for creating and listing issues.
 ## Compatibility
 |                             |       Version               |
 |:---------------------------:|:---------------------------:|
-| Ballerina Language          | 0.990.0                     |
+| Ballerina Language          | 0.990.3                     |
 | GitHub API                  | V4                          |
 
 ## Sample

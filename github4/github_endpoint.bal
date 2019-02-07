@@ -148,7 +148,7 @@ public type GitHubConfiguration record {
     http:ClientEndpointConfig clientConfig;
 };
 
-remote function Client.createIssue(string repositoryOwner, string repositoryName, string issueTitle,
+public remote function Client.createIssue(string repositoryOwner, string repositoryName, string issueTitle,
                                    string issueContent, string[] labelList, string[] assigneeList)
                            returns Issue|error {
 
@@ -188,7 +188,7 @@ remote function Client.createIssue(string repositoryOwner, string repositoryName
     return restResponseJsonToIssue(validatedResponse);
 }
 
-remote function Client.getCardListNextPage(CardList cardList) returns CardList|error {
+public remote function Client.getCardListNextPage(CardList cardList) returns CardList|error {
 
     if (cardList.pageInfo.hasNextPage) {
         var cardListColumnId = cardList.columnId;
@@ -219,7 +219,7 @@ remote function Client.getCardListNextPage(CardList cardList) returns CardList|e
     return err;
 }
 
-remote function Client.getColumnListNextPage(ColumnList columnList) returns ColumnList|error {
+public remote function Client.getColumnListNextPage(ColumnList columnList) returns ColumnList|error {
 
     if (columnList.hasNextPage()) {
         json jsonQuery = check stringToJson(columnList.columnListQuery);
@@ -236,7 +236,7 @@ remote function Client.getColumnListNextPage(ColumnList columnList) returns Colu
     return err;
 }
 
-remote function Client.getIssueList(Repository|(string, string) repository, string state, int recordCount)
+public remote function Client.getIssueList(Repository|(string, string) repository, string state, int recordCount)
                            returns IssueList|error {
 
     string repositoryOwner = "";
@@ -276,7 +276,7 @@ remote function Client.getIssueList(Repository|(string, string) repository, stri
     return issueList;
 }
 
-remote function Client.getIssueListNextPage(IssueList issueList) returns IssueList|error {
+public remote function Client.getIssueListNextPage(IssueList issueList) returns IssueList|error {
 
     if (issueList.hasNextPage()) {
         http:Request request = new;
@@ -300,7 +300,7 @@ remote function Client.getIssueListNextPage(IssueList issueList) returns IssueLi
     }
 }
 
-remote function Client.getOrganization(string name) returns Organization|error {
+public remote function Client.getOrganization(string name) returns Organization|error {
 
     if (name == EMPTY_STRING) {
         error err = error(GITHUB_ERROR_CODE, { message: "Organization name should be specified." });
@@ -328,7 +328,7 @@ remote function Client.getOrganization(string name) returns Organization|error {
     return singleOrganization;
 }
 
-remote function Client.getOrganizationProject(Organization|string organization, int projectNumber)
+public remote function Client.getOrganizationProject(Organization|string organization, int projectNumber)
                            returns Project|error {
 
     string organizationName = "";
@@ -367,7 +367,7 @@ remote function Client.getOrganizationProject(Organization|string organization, 
     }
 }
 
-remote function Client.getOrganizationProjectList(Organization|string organization, string state,
+public remote function Client.getOrganizationProjectList(Organization|string organization, string state,
                                                   int recordCount) returns ProjectList|error {
 
     http:Client gitHubEndpoint = self.githubGraphQlClient;
@@ -407,7 +407,7 @@ remote function Client.getOrganizationProjectList(Organization|string organizati
     return projectList;
 }
 
-remote function Client.getOrganizationRepositoryList(Organization|string organization, int recordCount)
+public remote function Client.getOrganizationRepositoryList(Organization|string organization, int recordCount)
                            returns RepositoryList|error {
 
     string organizationName = "";
@@ -444,8 +444,7 @@ remote function Client.getOrganizationRepositoryList(Organization|string organiz
     return repositoryList;
 }
 
-remote function Client.getProjectColumnList(Project project, int recordCount) returns ColumnList|error {
-
+public remote function Client.getProjectColumnList(Project project, int recordCount) returns ColumnList|error {
     if (project["owner"]["__typename"] == EMPTY_STRING || project.number <= INDEX_ZERO ||
             project.resourcePath == EMPTY_STRING) {
         error err = error(GITHUB_ERROR_CODE,
@@ -483,7 +482,7 @@ remote function Client.getProjectColumnList(Project project, int recordCount) re
     }
 }
 
-remote function Client.getProjectListNextPage(ProjectList projectList) returns ProjectList|error {
+public remote function Client.getProjectListNextPage(ProjectList projectList) returns ProjectList|error {
 
     if (projectList.hasNextPage()) {
 
@@ -514,7 +513,7 @@ remote function Client.getProjectListNextPage(ProjectList projectList) returns P
     }
 }
 
-remote function Client.getPullRequestList(Repository|(string, string) repository, string state, int recordCount)
+public remote function Client.getPullRequestList(Repository|(string, string) repository, string state, int recordCount)
                            returns PullRequestList|error {
 
     string repositoryOwner;
@@ -551,7 +550,7 @@ remote function Client.getPullRequestList(Repository|(string, string) repository
     return pullRequestList;
 }
 
-remote function Client.getPullRequestListNextPage(PullRequestList pullRequestList) returns PullRequestList|error {
+public remote function Client.getPullRequestListNextPage(PullRequestList pullRequestList) returns PullRequestList|error {
 
     if (pullRequestList.hasNextPage()) {
 
@@ -576,7 +575,7 @@ remote function Client.getPullRequestListNextPage(PullRequestList pullRequestLis
     }
 }
 
-remote function Client.getRepository(string name) returns Repository|error {
+public remote function Client.getRepository(string name) returns Repository|error {
 
     if (name == EMPTY_STRING || name == EMPTY_STRING) {
         error err = error(GITHUB_ERROR_CODE, { message: "Repository owner and name should be specified." });
@@ -603,7 +602,7 @@ remote function Client.getRepository(string name) returns Repository|error {
     return singleRepository;
 }
 
-remote function Client.getRepositoryListNextPage(RepositoryList repositoryList) returns RepositoryList|error {
+public remote function Client.getRepositoryListNextPage(RepositoryList repositoryList) returns RepositoryList|error {
 
     if (repositoryList.hasNextPage()) {
 
@@ -628,7 +627,7 @@ remote function Client.getRepositoryListNextPage(RepositoryList repositoryList) 
     }
 }
 
-remote function Client.getRepositoryProject(Repository|(string, string) repository, int projectNumber)
+public remote function Client.getRepositoryProject(Repository|(string, string) repository, int projectNumber)
                            returns Project|error {
 
     string repositoryOwner;
@@ -661,7 +660,7 @@ remote function Client.getRepositoryProject(Repository|(string, string) reposito
     return jsonToProject(githubProjectJson);
 }
 
-remote function Client.getRepositoryProjectList(Repository|(string, string) repository, string state,
+public remote function Client.getRepositoryProjectList(Repository|(string, string) repository, string state,
                                                 int recordCount) returns ProjectList|error {
 
     string repositoryOwner;
