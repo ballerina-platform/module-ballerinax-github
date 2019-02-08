@@ -54,7 +54,7 @@ github4:GitHubConfiguration gitHubConfig = {
  
 github4:Client githubClient = new(gitHubConfig);
 
-public function main() {
+public function main(string... args) {
     github4:Repository|error result = githubClient->getRepository("wso2-ballerina/module-github");
     if (result is github4:Repository) {
         io:println("Repository wso2-ballerina/module-github: ", result);
