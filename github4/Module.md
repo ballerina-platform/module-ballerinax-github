@@ -50,7 +50,7 @@ github4:GitHubConfiguration gitHubConfig = {
 github4:Client githubClient = new(gitHubConfig);
 ```
 
-The `getRepository` function gets a GitHub repository by passing the name of the repository and its owner in the format of "owner/repository".
+The `getRepository` remote function gets a GitHub repository by passing the name of the repository and its owner in the format of "owner/repository".
 ```ballerina
 var repo = githubClient->getRepository("wso2-ballerina/module-github");
 ```
@@ -64,7 +64,7 @@ if (repo is github4:Repository) {
 }
 ```
 
-The `getIssueList` function gets a list of issues for a given repository by providing the `Repository` object or repository and owner name, state of the issue, and the number of records to read.
+The `getIssueList` remote function gets a list of issues for a given repository by providing the `Repository` object or repository and owner name, state of the issue, and the number of records to read.
 
 ```ballerina
 github4:Repository issueRepository = { owner: { login: "wso2" }, name: "carbon-apimgt" };
@@ -79,16 +79,16 @@ The response from `getIssueList` is either an `IssueList` object (if the request
 
 ```ballerina
 if (issues is github4:IssueList) {
-    io:println("Issue Details: ", issues);
+    io:println("Issue List: ", issues);
 } else {
     io:println("Error: ", issues);
 }
 ```
 
-The `createIssue` function creates a new issue in a given repository.
+The `createIssue` remote function creates a new issue in a given repository.
 
 ```ballerina
-var createdIssue = githubClient->createIssue (repositoryOwner, repositoryName, issueTitle, issueContent, labelList, assigneeList);
+var createdIssue = githubClient->createIssue(repositoryOwner, repositoryName, issueTitle, issueContent, labelList, assigneeList);
 ```
 
 It returns the created `Issue` object if successful or `error` if unsuccessful.
