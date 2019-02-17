@@ -111,7 +111,7 @@ import wso2/githubwebhook3;
 listener githubwebhook3:WebhookListener githubListener = new(8080);
 
 @websub:SubscriberServiceConfig {
-   path:"/webhook",
+   path: "/webhook",
    subscribeOnStartUp: true,
    hub: githubwebhook3:HUB,
    topic: "https://github.com/<GH_USERNAME>/<GH_REPO_NAME>/events/*.json", // for all events
@@ -119,8 +119,8 @@ listener githubwebhook3:WebhookListener githubListener = new(8080);
    callback: "<CALLBACK_URL>", // only needs to be specified if not http(s)://<HOST>:<PORT>/<path>
    subscriptionClientConfig: {
         auth: {
-            scheme:http:OAUTH2,
-            accessToken:"<GH_ACCESS_TOKEN>"
+            scheme: http:OAUTH2,
+            accessToken: "<GH_ACCESS_TOKEN>"
         }
    }
 }
