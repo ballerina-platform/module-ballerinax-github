@@ -92,3 +92,54 @@ public type Repository record {
 ```
 
 ***
+
+# Ballerina GitHub Webhook
+
+The Ballerina GitHub webhook, registers a [GitHub webhook](https://developer.github.com/webhooks/) to subscribe to 
+notifications on the occurrence of events, and starts up a callback service at which notifications will be received.
+
+| Ballerina Version | GitHub API Version |
+|-------------------|--------------------|
+| 0.990.3           | v3                 |
+
+```ballerina
+import ballerina/http;
+import ballerina/io;
+import ballerina/websub;
+import wso2/githubwebhook3;
+
+listener githubwebhook3:WebhookListener githubListener = new(8080);
+
+@websub:SubscriberServiceConfig {
+   path:"/webhook",
+   subscribeOnStartUp: true,
+   hub: githubwebhook3:HUB,
+   topic: "https://github.com/<GH_USERNAME>/<GH_REPO_NAME>/events/*.json", // for all events
+   secret: "<SECRET>",
+   callback: "<CALLBACK_URL>", // only needs to be specified if not http(s)://<HOST>:<PORT>/<path>
+   subscriptionClientConfig: {
+        auth: {
+            scheme:http:OAUTH2,
+            accessToken:"<GH_ACCESS_TOKEN>"
+        }
+   }
+}
+service githubWebhook on githubListener {
+
+    resource function onPing(websub:Notification notification, githubwebhook3:PingEvent event) {
+        io:println("[onPing] Webhook Registered: ", event);
+    }
+
+    resource function onIssuesOpened(websub:Notification notification, githubwebhook3:IssuesEvent event) {
+        io:println("[onIssuesOpened] Issue ID: ", event.issue.number);
+    }
+
+    resource function onWatch(websub:Notification notification, githubwebhook3:WatchEvent event) {
+        io:println("[onWatch] Repository starred by: ", event.sender);
+    }
+}
+```
+
+Every time an issue is opened in the repository or when the repository is starred, a content delivery request 
+will be received at the relevant resource.
+***
