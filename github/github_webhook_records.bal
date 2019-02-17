@@ -108,23 +108,6 @@ public type Repository record {
     !...;
 };
 
-public type CommitComment record {
-    string url;
-    string html_url;
-    int id;
-    string node_id;
-    User user;
-    int? position;
-    int? line;
-    string? path;
-    string commit_id;
-    string created_at;
-    string updated_at;
-    string author_association;
-    string body;
-    !...;
-};
-
 public type Page record {
     string page_name;
     string title;
@@ -132,26 +115,6 @@ public type Page record {
     string action;
     string sha;
     string html_url;
-    !...;
-};
-
-public type Installation record {
-    int id;
-    User account;
-    string repository_selection;
-    string access_tokens_url;
-    string repositories_url;
-    string html_url;
-    int app_id;
-    int target_id;
-    string target_type;
-    map<string> permissions;
-    string[] events;
-    string created_at;
-    string updated_at;
-    string single_file_name;
-    Repository[] repositories;
-    User sender;
     !...;
 };
 
@@ -319,57 +282,6 @@ public type Invitation record {
     !...;
 };
 
-public type Membership record {
-    string url;
-    string state;
-    string role;
-    string organization_url;
-    User user;
-    !...;
-};
-
-public type ProjectCard record {
-    string url;
-    string column_url;
-    int column_id;
-    int id;
-    string node_id;
-    string? note;
-    User creator;
-    string created_at;
-    string updated_at;
-    !...;
-};
-
-public type ProjectColumn record {
-    string url;
-    string project_url;
-    string cards_url;
-    int id;
-    string node_id;
-    string name;
-    string created_at;
-    string updated_at;
-    !...;
-};
-
-public type Project record {
-    string owner_url;
-    string url;
-    string html_url;
-    string columns_url;
-    int id;
-    string node_id;
-    string name;
-    string? body;
-    int number;
-    string state;
-    User creator;
-    string created_at;
-    string updated_at;
-    !...;
-};
-
 public type Branch record {
     string label;
     string ref;
@@ -472,8 +384,8 @@ public type PullRequest record {
     Links _links;
     string author_association;
     boolean merged;
-    boolean mergeable;
-    boolean rebaseable;
+    boolean? mergeable;
+    boolean? rebaseable;
     string mergeable_state;
     User? merged_by;
     int comments;
@@ -577,19 +489,6 @@ public type Asset record {
     !...;
 };
 
-public type Alert record {
-    int id;
-    string affected_range;
-    string affected_package_name;
-    string external_reference;
-    string external_identifier;
-    string fixed_in;
-    User dismisser;
-    string dismiss_reason;
-    string dismissed_at;
-    !...;
-};
-
 public type Hook record {
     string ^"type";
     int id;
@@ -621,57 +520,10 @@ public type HookLastResponse record {
     !...;
 };
 
-public type CommitCommentEvent record {
-    string action;
-    CommitComment comment;
-    Repository repository;
-    User sender;
-    !...;
-};
-
-public type CreateEvent record {
-    string? ref;
-    string ref_type;
-    string master_branch;
-    string? description;
-    string pusher_type;
-    Repository repository;
-    User sender;
-    !...;
-};
-
-public type DeleteEvent record {
-    string ref;
-    string ref_type;
-    string pusher_type;
-    Repository repository;
-    User sender;
-    !...;
-};
-
 public type ForkEvent record {
     Repository forkee;
     Repository repository;
     User sender;
-    !...;
-};
-
-public type GitHubAppAuthorizationEvent record {
-    string action;
-    User sender;
-    !...;
-};
-
-public type GollumEvent record {
-    Page[] pages;
-    Repository repository;
-    User sender;
-    !...;
-};
-
-public type InstallationEvent record {
-    string action;
-    Installation installation;
     !...;
 };
 
@@ -702,66 +554,10 @@ public type LabelEvent record {
     !...;
 };
 
-public type MemberEvent record {
-    string action;
-    User member;
-    Changes? changes;
-    Repository repository;
-    User sender;
-    !...;
-};
-
-public type MembershipEvent record {
-    string action;
-    string ^"scope";
-    User member;
-    User sender;
-    Team team;
-    Organization organization;
-    !...;
-};
-
 public type MilestoneEvent record {
     string action;
     Milestone milestone;
     Changes? changes;
-    Repository repository;
-    User sender;
-    !...;
-};
-
-public type OrganizationEvent record {
-    string action;
-    Membership membership;
-    Organization organization;
-    User sender;
-    !...;
-};
-
-public type ProjectCardEvent record {
-    string action;
-    Changes? changes;
-    int? after_id;
-    ProjectCard project_card;
-    Repository repository;
-    User sender;
-    !...;
-};
-
-public type ProjectColumnEvent record {
-    string action;
-    Changes? changes;
-    int? after_id;
-    ProjectColumn project_column;
-    Repository repository;
-    User sender;
-    !...;
-};
-
-public type ProjectEvent record {
-    string action;
-    Changes? changes;
-    Project project;
     Repository repository;
     User sender;
     !...;
@@ -818,25 +614,6 @@ public type ReleaseEvent record {
     Release release;
     Repository repository;
     User sender;
-    !...;
-};
-
-public type RepositoryEvent record {
-    string action;
-    Repository repository;
-    User sender;
-    !...;
-};
-
-public type RepositoryVulnerabilityAlertEvent record {
-    string action;
-    Alert alert;
-    !...;
-};
-
-public type TeamAddEvent record {
-    Team team;
-    Repository repository;
     !...;
 };
 

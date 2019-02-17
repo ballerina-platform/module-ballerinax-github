@@ -81,35 +81,13 @@ public type WebhookListenerConfiguration record {
 
 final map<(string, typedesc)> GITHUB_TOPIC_HEADER_RESOURCE_MAP = {
     "ping" : ("onPing", PingEvent),
-    "commit_comment" : ("onCommitComment", CommitCommentEvent),
     "fork" : ("onFork", ForkEvent),
-    "github_app_authorization" : ("onGitHubAppAuthorization", GitHubAppAuthorizationEvent),
-    "gollum" : ("onGollum", GollumEvent),
     "push" : ("onPush", PushEvent),
     "release" : ("onRelease", ReleaseEvent),
-    "team_add" : ("onTeamAdd", TeamAddEvent),
     "watch" : ("onWatch", WatchEvent)
 };
 
 final map<map<map<(string, typedesc)>>> GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP = {
-    "create" : {
-        "ref_type" : {
-            "branch" : ("onCreateBranch", CreateEvent),
-            "tag" : ("onCreateTag", CreateEvent)
-        }
-    },
-    "delete" : {
-        "ref_type" : {
-            "branch" : ("onDeleteBranch", DeleteEvent),
-            "tag" : ("onDeleteTag", DeleteEvent)
-        }
-    },
-    "installation" : {
-        "action" : {
-            "created" : ("onInstallationCreated", DeleteEvent),
-            "deleted" : ("onInstallationDeleted", DeleteEvent)
-        }
-    },
     "issue_comment" : {
         "action" : {
             "created" : ("onIssueCommentCreated", IssueCommentEvent),
@@ -138,19 +116,6 @@ final map<map<map<(string, typedesc)>>> GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESO
             "deleted" : ("onLabelDeleted", LabelEvent)
         }
     },
-    "member" : {
-        "action" : {
-            "created" : ("onMemberCreated", MemberEvent),
-            "edited" : ("onMemberEdited", MemberEvent),
-            "deleted" : ("onMemberDeleted", MemberEvent)
-        }
-    },
-    "membership" : {
-        "action" : {
-            "added" : ("onMembershipAdded", MembershipEvent),
-            "removed" : ("onMembershipRemoved", MembershipEvent)
-        }
-    },
     "milestone" : {
         "action" : {
             "created" : ("onMilestoneCreated", MilestoneEvent),
@@ -158,39 +123,6 @@ final map<map<map<(string, typedesc)>>> GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESO
             "opened" : ("onMilestoneOpened", MilestoneEvent),
             "edited" : ("onMilestoneEdited", MilestoneEvent),
             "deleted" : ("onMilestoneDeleted", MilestoneEvent)
-        }
-    },
-    "organization" : {
-        "action" : {
-            "member_added" : ("onOrganizationMemberAdded", OrganizationEvent),
-            "member_removed" : ("onOrganizationMemberRemoved", OrganizationEvent),
-            "member_invited" : ("onOrganizationMemberInvited", OrganizationEvent)
-        }
-    },
-    "project_card" : {
-        "action" : {
-            "created" : ("onProjectCardCreated", ProjectCardEvent),
-            "edited" : ("onProjectCardEdited", ProjectCardEvent),
-            "converted" : ("onProjectCardConverted", ProjectCardEvent),
-            "moved" : ("onProjectCardMoved", ProjectCardEvent),
-            "deleted" : ("onProjectCardDeleted", ProjectCardEvent)
-        }
-    },
-    "project_column" : {
-        "action" : {
-            "created" : ("onProjectColumnCreated", ProjectColumnEvent),
-            "edited" : ("onProjectColumnEdited", ProjectColumnEvent),
-            "moved" : ("onProjectColumnMoved", ProjectColumnEvent),
-            "deleted" : ("onProjectColumnDeleted", ProjectColumnEvent)
-        }
-    },
-    "project" : {
-        "action" : {
-            "created" : ("onProjectCreated", ProjectEvent),
-            "edited" : ("onProjectEdited", ProjectEvent),
-            "closed" : ("onProjectClosed", ProjectEvent),
-            "reopened" : ("onProjectReopened", ProjectEvent),
-            "deleted" : ("onProjectDeleted", ProjectEvent)
         }
     },
     "pull_request" : {
@@ -219,23 +151,6 @@ final map<map<map<(string, typedesc)>>> GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESO
             "created" : ("onPullRequestReviewCommentCreated", PullRequestReviewCommentEvent),
             "edited" : ("onPullRequestReviewCommentEdited", PullRequestReviewCommentEvent),
             "deleted" : ("onPullRequestReviewCommentDeleted", PullRequestReviewCommentEvent)
-        }
-    },
-    "repository" : {
-        "action" : {
-            "created" : ("onRepositoryCreated", RepositoryEvent),
-            "deleted" : ("onRepositoryDeleted", RepositoryEvent),
-            "archived" : ("onRepositoryArchived", RepositoryEvent),
-            "unarchived" : ("onRepositoryUnarchived", RepositoryEvent),
-            "publicized" : ("onRepositoryPublicized", RepositoryEvent),
-            "privatized" : ("onRepositoryPrivatized", RepositoryEvent)
-        }
-    },
-    "repository_vulnerability_alert" : {
-        "action" : {
-            "create" : ("onRepositoryVulnerabilityAlertCreated", RepositoryVulnerabilityAlertEvent),
-            "dismiss" : ("onRepositoryVulnerabilityAlertDismissed", RepositoryVulnerabilityAlertEvent),
-            "resolve" : ("onRepositoryVulnerabilityAlertResolved", RepositoryVulnerabilityAlertEvent)
         }
     }
 };
