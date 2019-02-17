@@ -39,7 +39,7 @@ Changes? issueChanges = ();
 listener WebhookListener githubListener = new(8080);
 
 @websub:SubscriberServiceConfig {
-    path:"/webhook",
+    path: "/webhook",
     subscribeOnStartUp: true,
     hub: HUB,
     topic: config:getAsString("GITHUB_TOPIC"),

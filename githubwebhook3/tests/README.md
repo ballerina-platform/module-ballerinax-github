@@ -17,20 +17,22 @@ GITHUB_USERNAME="GITHUB_USERNAME"
 GITHUB_REPO_NAME="GITHUB_REPO_NAME"
 ```
 
+**Note: Webhooks already added with the same callback URL need to be removed, prior to running the tests, in order to trigger the `ping` notification**
+
 ```ballerina
 @websub:SubscriberServiceConfig {
-   path: "/webhook",
-   subscribeOnStartUp: true,
-   hub: githubwebhook3:HUB,
-   topic: config:getAsString("GITHUB_TOPIC"), 
-   secret: config:getAsString("GITHUB_SECRET"),
-   callback: config:getAsString("GITHUB_CALLBACK"), // only needs to be specified if not http(s)://<HOST>:<PORT>/<path>
-   subscriptionClientConfig: {
+    path: "/webhook",
+    subscribeOnStartUp: true,
+    hub: githubwebhook3:HUB,
+    topic: config:getAsString("GITHUB_TOPIC"), 
+    secret: config:getAsString("GITHUB_SECRET"),
+    callback: config:getAsString("GITHUB_CALLBACK"), // only needs to be specified if not http(s)://<HOST>:<PORT>/<path>
+    subscriptionClientConfig: {
         auth: {
             scheme: http:OAUTH2,
             accessToken: config:getAsString("GITHUB_TOKEN")
         }
-   }
+    }
 }
 ```
 
