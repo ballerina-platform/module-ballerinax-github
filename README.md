@@ -108,7 +108,7 @@ import ballerina/io;
 import ballerina/websub;
 import wso2/githubwebhook3;
 
-listener githubwebhook3:WebhookListener githubListener = new(8080);
+listener githubwebhook3:Listener githubListener = new(8080);
 
 @websub:SubscriberServiceConfig {
    path: "/webhook",

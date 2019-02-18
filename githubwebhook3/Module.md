@@ -5,7 +5,7 @@ Registers a GitHub webhook.
 This module allows programmatically registering a [GitHub webhook](https://developer.github.com/webhooks/), 
 to subscribe to GitHub events one is interested in.
 
-The webhook callback is represented by a service that listens on a listener of type `githubwebhook3:WebhookListener`.
+The webhook callback is represented by a service that listens on a listener of type `githubwebhook3:Listener`.
 The resources allowed in this service map to possible GitHub events (e.g., `onIssueCommentCreated`, 
 `onIssueCommentEdited`, `onIssuesAssigned`, `onIssuesClosed`, etc.). 
 The first parameter of each resource is the generic `websub:Notification` record. The second parameter of each 
@@ -68,7 +68,7 @@ import ballerina/io;
 import ballerina/websub;
 import wso2/githubwebhook3;
 
-listener githubwebhook3:WebhookListener githubListener = new(8080);
+listener githubwebhook3:Listener githubListener = new(8080);
 
 @websub:SubscriberServiceConfig {
     path: "/webhook",

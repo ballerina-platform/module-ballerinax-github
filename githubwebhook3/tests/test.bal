@@ -36,7 +36,7 @@ string issueAssignee = "";
 boolean issueEditedNotified = false;
 Changes? issueChanges = ();
 
-listener WebhookListener githubListener = new(8080);
+listener Listener githubListener = new(8080);
 
 @websub:SubscriberServiceConfig {
     path: "/webhook",

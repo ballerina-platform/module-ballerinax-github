@@ -27,7 +27,7 @@ const string TOPIC_HEADER = "X-GitHub-Event";
 # Object representing the GitHub Webhook (WebSub Subscriber Service) Listener.
 #
 # + webhookListenerConfig - The configuration for the listener
-public type WebhookListener object {
+public type Listener object {
 
     *AbstractListener;
 
