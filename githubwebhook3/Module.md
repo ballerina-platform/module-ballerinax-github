@@ -2,23 +2,23 @@ Registers a GitHub webhook.
 
 # Module Overview
 
-This module allows programmatically registering a [GitHub webhook](https://developer.github.com/webhooks/), 
+This module allows registering a [GitHub webhook](https://developer.github.com/webhooks/) programmatically, 
 to subscribe to GitHub events one is interested in.
 
 The webhook callback is represented by a service that listens on a listener of type `githubwebhook3:Listener`.
 The resources allowed in this service map to possible GitHub events (e.g., `onIssueCommentCreated`, 
 `onIssueCommentEdited`, `onIssuesAssigned`, `onIssuesClosed`, etc.). 
 The first parameter of each resource is the generic `websub:Notification` record. The second parameter of each 
-resource is a `record` mapping the `json` payload that is expected for each event (e.g., `githubwebhook3:IssueCommentEvent`, 
+resource is a `record`, mapping the `json` payload that is expected with each event (e.g., `githubwebhook3:IssueCommentEvent`, 
 `githubwebhook3:IssuesEvent`, etc.).
 
-This module supports the following functionality:
-- Programmatic subscription (requires a GitHub access token), alternatively a webhook can also be registered via the UI
-- Authenticated content distribution (if a webhook was registered specifying a secret, signature validation would 
-be done for each content delivery request)
-- Data binding of the `json` payload for each event to a `record` mapping the same
+This module supports the following functionalities:
+- Programmatic subscription (requires a GitHub access token). Alternatively, a webhook can also be registered via the UI.
+- Authenticated content distribution (If a webhook was registered specifying a secret, signature validation would 
+be done for each content delivery request.)
+- Data binding of the `json` payload for each event, to a `record` mapping the same
 - Programmatic response to all content delivery requests - an appropriate response is sent for all content delivery 
-requests, prior to dispatching them to the relevant resource
+requests, prior to dispatching them to the relevant resource.
 
 ## Compatibility
 |                             |       Version               |
@@ -33,12 +33,12 @@ First, import the `wso2/githubwebhook3` module into the Ballerina project.
 import wso2/githubwebhook3;
 ```
 
-**Obtaining the Access Token to Run the Sample**
+**Obtaining the Access Token to run the Sample**
 
-1. In your [GitHub profile settings](https://github.com/settings/profile), go to **Developer settings -> Personal access tokens**.
-2. Generate a new token with at least the `admin:repo_hook` scope for webhook related functionality.
+1. In your [GitHub profile settings](https://github.com/settings/profile), click **Developer settings**, and then click **Personal access tokens**.
+2. Generate a new token with at least the `admin:repo_hook` scope for webhook-related functionality.
 
-This access token needs to be specified when specifying the subscription parameters as the service annotation.
+This access token needs to be specified when configuring the subscription parameters of the service annotation.
 ```ballerina
 @websub:SubscriberServiceConfig {
     path: "/webhook",
@@ -55,9 +55,9 @@ This access token needs to be specified when specifying the subscription paramet
 }
 ```
 
-Introducing a service as follows, with `subscribeOnStartUp` set to `true` in the service annotation, would result in 
-a subscription request being sent to the `githubwebhook3:HUB`, for the specified topic. If successful, GitHub would send a 
-`ping` request, that could be received by introducing an `onPing` resource.
+Introducing a service as follows, with the value of the `subscribeOnStartUp` parameter set to `true` in the service annotation would result in 
+a subscription request being sent to the `githubwebhook3:HUB` for the specified topic. If successful, GitHub would send a 
+`ping` request that could be received by introducing an `onPing` resource.
 
 Additionally, the following sample code also accepts notifications when an issue is opened (`onIssuesOpened`) and 
 when the repository is starred (`onWatch`).

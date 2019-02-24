@@ -2,11 +2,11 @@
 
 ## Running tests
 
-In order to run the tests, the user will need to have a GitHub Personal Access Token with the `admin:repo_hook` and `repo` scopes. The token can be obtained by visiting
+In order to run the tests, you need to have a GitHub Personal Access Token with the `admin:repo_hook` and `repo` scopes. The token can be obtained by visiting
 
 **https://github.com/{profile} -> Settings -> Developer Settings -> Personal access tokens**
 
-Specify the obtained token along with the topic and optionally the callback URL and secret in a `ballerina.conf` file in the project. Also include the username and repository name against which testing will be done.
+Specify the obtained token, the topic, and optionally, the callback URL and the secret in a `ballerina.conf` file in the project. Also, include the username and repository name, which will be used for testing.
 
 ```.conf
 GITHUB_TOKEN="ACCESS_TOKEN"
@@ -17,7 +17,7 @@ GITHUB_USERNAME="GITHUB_USERNAME"
 GITHUB_REPO_NAME="GITHUB_REPO_NAME"
 ```
 
-**Note: Webhooks already added with the same callback URL need to be removed, prior to running the tests, in order to trigger the `ping` notification**
+**Note:** Prior to running the tests, Webhooks that are already added with the same callback URL need to be removed, in order to trigger the `ping` notification.
 
 ```ballerina
 @websub:SubscriberServiceConfig {
@@ -36,7 +36,7 @@ GITHUB_REPO_NAME="GITHUB_REPO_NAME"
 }
 ```
 
-Run tests :
+Execute the below command to run the tests:
 ```
 ballerina test githubwebhook3
 ```

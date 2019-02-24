@@ -95,8 +95,8 @@ public type Repository record {
 
 # Ballerina GitHub Webhook
 
-The Ballerina GitHub webhook, registers a [GitHub webhook](https://developer.github.com/webhooks/) to subscribe to 
-notifications on the occurrence of events, and starts up a callback service at which notifications will be received.
+The Ballerina GitHub webhook registers a [GitHub webhook](https://developer.github.com/webhooks/) to subscribe to 
+notifications on the occurrence of events, and starts up a callback service, which will receive notification requests.
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
