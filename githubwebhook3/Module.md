@@ -3,7 +3,7 @@ Registers a GitHub webhook.
 # Module Overview
 
 This module allows registering a [GitHub webhook](https://developer.github.com/webhooks/) programmatically, 
-to subscribe to GitHub events one is interested in.
+to subscribe to interested GitHub events.
 
 The webhook callback is represented by a service that listens on a listener of type `githubwebhook3:Listener`.
 The resources allowed in this service map to possible GitHub events (e.g., `onIssueCommentCreated`, 
