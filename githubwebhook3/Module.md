@@ -23,7 +23,7 @@ requests, prior to dispatching them to the relevant resource.
 ## Compatibility
 |                             |       Version               |
 |:---------------------------:|:---------------------------:|
-| Ballerina Language          | 0.990.3                     |
+| Ballerina Language          | 0.991.0                     |
 
 ## Sample
 
@@ -48,9 +48,14 @@ This access token needs to be specified when configuring the subscription parame
     secret: "<SECRET>",
     subscriptionClientConfig: {
         auth: {
-            scheme:http:OAUTH2,
-            accessToken:"<GH_ACCESS_TOKEN>"
-        }
+              scheme: http:OAUTH2,
+              config: {
+                  grantType: http:DIRECT_TOKEN,
+                  config: {
+                      accessToken: config:getAsString("GITHUB_TOKEN")
+                  }
+              }
+          }
     }
 }
 ```
@@ -78,10 +83,15 @@ listener githubwebhook3:Listener githubListener = new(8080);
     secret: "<SECRET>",
     callback: "<CALLBACK_URL>", // only needs to be specified if not http(s)://<HOST>:<PORT>/<path>
     subscriptionClientConfig: {
-        auth: {
-            scheme: http:OAUTH2,
-            accessToken: "<GH_ACCESS_TOKEN>"
-        }
+       auth: {
+             scheme: http:OAUTH2,
+             config: {
+                 grantType: http:DIRECT_TOKEN,
+                 config: {
+                     accessToken: config:getAsString("GITHUB_TOKEN")
+                 }
+             }
+         }
     }
 }
 service githubWebhook on githubListener {

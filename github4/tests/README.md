@@ -6,7 +6,7 @@ The Ballerina GitHub endpoint allow users to access the GitHub API through balle
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
-| 0.990.3           | v4                 |
+| 0.991.0           | v4                 |
 
 ## Running tests
 
@@ -35,7 +35,12 @@ github4:GitHubConfiguration gitHubConfig = {
      clientConfig: {
          auth: {
              scheme: http:OAUTH2,
-             accessToken: config:getAsString("GITHUB_TOKEN")
+             config: {
+                 grantType: http:DIRECT_TOKEN,
+                 config: {
+                     accessToken: config:getAsString("GITHUB_TOKEN")
+                 }
+             }
          }
      }
  };

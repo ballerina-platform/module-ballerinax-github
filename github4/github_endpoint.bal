@@ -244,7 +244,7 @@ public remote function Client.getIssueList(Repository|(string, string) repositor
     if (repository is Repository) {
         repositoryOwner = repository.owner.login;
         repositoryName = repository.name;
-    } else if (repository is (string, string)) {
+    } else {
         (repositoryOwner, repositoryName) = repository;
     }
 
@@ -264,7 +264,7 @@ public remote function Client.getIssueList(Repository|(string, string) repositor
     http:Request request = new;
     json convertedQuery = check stringToJson(stringQuery);
     //Set headers and payload to the request
-    constructRequest(request, convertedQuery);
+    constructRequest(request, untaint convertedQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
@@ -284,7 +284,7 @@ public remote function Client.getIssueListNextPage(IssueList issueList) returns 
         jsonQuery.variables.endCursorIssues = issueList.pageInfo.endCursor;
         jsonQuery[GIT_QUERY] = GET_REPOSITORY_ISSUES_NEXT_PAGE;
         //Set headers and payload to the request
-        constructRequest(request, jsonQuery);
+        constructRequest(request, untaint jsonQuery);
 
         // Make an HTTP POST request
         var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
@@ -313,7 +313,7 @@ public remote function Client.getOrganization(string name) returns Organization|
     http:Request request = new;
     json jsonQuery = check stringToJson(stringQuery);
     // Set headers and payload to the request
-    constructRequest(request, jsonQuery);
+    constructRequest(request, untaint jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
@@ -350,7 +350,7 @@ public remote function Client.getOrganizationProject(Organization|string organiz
     http:Request request = new;
     json jsonQuery = check stringToJson(stringQuery);
     //Set headers and payload to the request
-    constructRequest(request, jsonQuery);
+    constructRequest(request, untaint jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
@@ -395,7 +395,7 @@ public remote function Client.getOrganizationProjectList(Organization|string org
     http:Request request = new;
     json jsonQuery = check stringToJson(stringQuery);
     //Set headers and payload to the request
-    constructRequest(request, jsonQuery);
+    constructRequest(request, untaint jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
@@ -432,7 +432,7 @@ public remote function Client.getOrganizationRepositoryList(Organization|string 
     http:Request request = new;
     json jsonQuery = check stringToJson(stringQuery);
     //Set headers and payload to the request
-    constructRequest(request, jsonQuery);
+    constructRequest(request, untaint jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
@@ -497,7 +497,7 @@ public remote function Client.getProjectListNextPage(ProjectList projectList) re
         }
         dataQuery = jsonQuery;
         //Set headers and payload to the request
-        constructRequest(request, jsonQuery);
+        constructRequest(request, untaint jsonQuery);
 
         // Make an HTTP POST request
         var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
@@ -539,7 +539,7 @@ public remote function Client.getPullRequestList(Repository|(string, string) rep
     http:Request request = new;
     json jsonQuery = check stringToJson(stringQuery);
     //Set headers and payload to the request
-    constructRequest(request, jsonQuery);
+    constructRequest(request, untaint jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
@@ -559,7 +559,7 @@ public remote function Client.getPullRequestListNextPage(PullRequestList pullReq
         jsonQuery.variables.endCursorPullRequests = pullRequestList.pageInfo.endCursor;
         jsonQuery[GIT_QUERY] = GET_PULL_REQUESTS_NEXT_PAGE;
         //Set headers and payload to the request
-        constructRequest(request, jsonQuery);
+        constructRequest(request, untaint jsonQuery);
 
         // Make an HTTP POST request
         var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
@@ -591,7 +591,7 @@ public remote function Client.getRepository(string name) returns Repository|erro
     http:Request request = new;
     json jsonQuery = check stringToJson(stringQuery);
     // Set headers and payload to the request
-    constructRequest(request, jsonQuery);
+    constructRequest(request, untaint jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
@@ -611,7 +611,7 @@ public remote function Client.getRepositoryListNextPage(RepositoryList repositor
         jsonQuery.variables.endCursorRepos = repositoryList.pageInfo.endCursor;
         jsonQuery[GIT_QUERY] = GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE;
         //Set headers and payload to the request
-        constructRequest(request, jsonQuery);
+        constructRequest(request, untaint jsonQuery);
 
         // Make an HTTP POST request
         var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
@@ -649,7 +649,7 @@ public remote function Client.getRepositoryProject(Repository|(string, string) r
     http:Request request = new;
     json jsonQuery = check stringToJson(stringQuery);
     //Set headers and payload to the request
-    constructRequest(request, jsonQuery);
+    constructRequest(request, untaint jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
@@ -688,7 +688,7 @@ public remote function Client.getRepositoryProjectList(Repository|(string, strin
     http:Request request = new;
     json jsonQuery = check stringToJson(stringQuery);
     //Set headers and payload to the request
-    constructRequest(request, jsonQuery);
+    constructRequest(request, untaint jsonQuery);
 
     // Make an HTTP POST request
     var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
