@@ -45,15 +45,15 @@ import wso2/github4;
 
 github4:GitHubConfiguration gitHubConfig = {
      clientConfig: {
-         auth: {
-              scheme: http:OAUTH2,
-              config: {
-                  grantType: http:DIRECT_TOKEN,
-                  config: {
-                      accessToken: config:getAsString("GITHUB_TOKEN")
-                  }
-              }
-          }
+        auth: {
+            scheme: http:OAUTH2,
+            config: {
+                grantType: http:DIRECT_TOKEN,
+                config: {
+                    accessToken: config:getAsString("GITHUB_TOKEN")
+                }
+            }
+        }
      }
  };
  
@@ -124,14 +124,14 @@ listener githubwebhook3:Listener githubListener = new(8080);
    callback: "<CALLBACK_URL>", // only needs to be specified if not http(s)://<HOST>:<PORT>/<path>
    subscriptionClientConfig: {
         auth: {
-              scheme: http:OAUTH2,
-              config: {
-                  grantType: http:DIRECT_TOKEN,
-                  config: {
-                      accessToken: config:getAsString("GITHUB_TOKEN")
-                  }
-              }
-          }
+            scheme: http:OAUTH2,
+            config: {
+                grantType: http:DIRECT_TOKEN,
+                config: {
+                  accessToken: "<GH_ACCESS_TOKEN>"
+                }
+            }
+        }
    }
 }
 service githubWebhook on githubListener {
