@@ -128,7 +128,7 @@ listener githubwebhook3:Listener githubListener = new(8080);
             config: {
                 grantType: http:DIRECT_TOKEN,
                 config: {
-                  accessToken: "<GH_ACCESS_TOKEN>"
+                    accessToken: "<GH_ACCESS_TOKEN>"
                 }
             }
         }

@@ -40,15 +40,15 @@ You can now enter the access token in the HTTP client config.
 ```ballerina
 github4:GitHubConfiguration gitHubConfig = {
      clientConfig: {
-         auth: {
-              scheme: http:OAUTH2,
-              config: {
-                  grantType: http:DIRECT_TOKEN,
-                  config: {
-                      accessToken: config:getAsString("GITHUB_TOKEN")
-                  }
-              }
-         }
+        auth: {
+            scheme: http:OAUTH2,
+            config: {
+                grantType: http:DIRECT_TOKEN,
+                config: {
+                    accessToken: config:getAsString("GITHUB_TOKEN")
+                }
+            }
+        }
      }
  };
  
