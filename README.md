@@ -50,7 +50,7 @@ github4:GitHubConfiguration gitHubConfig = {
             config: {
                 grantType: http:DIRECT_TOKEN,
                 config: {
-                    accessToken: config:getAsString("GITHUB_TOKEN")
+                    accessToken: "<GH_ACCESS_TOKEN>"
                 }
             }
         }
