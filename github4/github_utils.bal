@@ -15,7 +15,7 @@
 // under the License.
 
 import ballerina/http;
-import ballerina/internal;
+import ballerina/io;
 import ballerina/mime;
 
 # Construct the request by adding the payload and authorization tokens.
@@ -120,7 +120,7 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
     http:Request request = new;
     json jsonQuery = check stringToJson(stringQuery);
     //Set headers and payload to the request
-    constructRequest(request, jsonQuery);
+    constructRequest(request, untaint jsonQuery);
 
     // Make an HTTP POST request
     var response = gitHubEndpoint->post("", request);
@@ -136,5 +136,6 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
 # + source - String representation of the JSON object
 # + return - Converted `json` object or Connector error
 function stringToJson(string source) returns json|error {
-    return check internal:parseJson(source);
+    io:StringReader reader = new(source);
+    return reader.readJson();
 }

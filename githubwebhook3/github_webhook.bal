@@ -56,8 +56,8 @@ public type Listener object {
         self.websubListener = new(port, config = sseConfig);
     }
 
-    public function __attach(service s, map<any> data) returns error? {
-        return self.websubListener.__attach(s, data);
+    public function __attach(service s, string? name = ()) returns error? {
+        return self.websubListener.__attach(s, name = name);
     }
 
     public function __start() returns error? {
@@ -73,11 +73,10 @@ public type Listener object {
 #
 # + host - The host name/IP of the listener
 # + httpServiceSecureSocket - The SSL configurations for the listener
-public type WebhookListenerConfiguration record {
+public type WebhookListenerConfiguration record {|
     string host?;
     http:ServiceSecureSocket httpServiceSecureSocket?;
-    !...;
-};
+|};
 
 final map<(string, typedesc)> GITHUB_TOPIC_HEADER_RESOURCE_MAP = {
     "ping": ("onPing", PingEvent),

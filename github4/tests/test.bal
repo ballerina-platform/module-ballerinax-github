@@ -28,7 +28,12 @@ GitHubConfiguration gitHubConfig = {
     clientConfig: {
         auth: {
             scheme: http:OAUTH2,
-            accessToken: config:getAsString("GITHUB_TOKEN")
+            config: {
+                grantType: http:DIRECT_TOKEN,
+                config: {
+                    accessToken: config:getAsString("GITHUB_TOKEN")
+                }
+            }
         }
     }
 };
@@ -870,8 +875,7 @@ function testStringToJsonError() {
         test:assertFail(msg = "Invalid string json. Expected failure");
     } else {
         test:assertEquals(<string>convertedValue.detail().message,
-            "Failed to parse json string: unrecognized token 'Sample' at line: 1 column: 17",
-            msg = "Error message mismatch");
+            "unrecognized token 'Sample' at line: 1 column: 17", msg = "Error message mismatch");
     }
 }
 

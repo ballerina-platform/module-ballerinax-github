@@ -47,8 +47,13 @@ listener Listener githubListener = new(8080);
     callback: config:getAsString("GITHUB_CALLBACK"), // only needs to be specified if not http(s)://<HOST>:<PORT>/<path>
     subscriptionClientConfig: {
         auth: {
-            scheme:http:OAUTH2,
-            accessToken: config:getAsString("GITHUB_TOKEN")
+            scheme: http:OAUTH2,
+            config: {
+                grantType: http:DIRECT_TOKEN,
+                config: {
+                    accessToken: config:getAsString("GITHUB_TOKEN")
+                }
+            }
         }
     }
 }
@@ -110,7 +115,12 @@ function testWebhookNotificationOnIssueCreation() {
         clientConfig: {
             auth: {
                 scheme: http:OAUTH2,
-                accessToken: config:getAsString("GITHUB_TOKEN")
+                config: {
+                    grantType: http:DIRECT_TOKEN,
+                    config: {
+                        accessToken: config:getAsString("GITHUB_TOKEN")
+                    }
+                }
             }
         }
     });

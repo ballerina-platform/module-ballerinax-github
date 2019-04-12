@@ -14,7 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-public type User record {
+public type User record {|
     string login;
     int id;
     string avatar_url;
@@ -32,10 +32,9 @@ public type User record {
     string received_events_url;
     string ^"type"; //"type" in payload
     boolean site_admin;
-    !...;
-};
+|};
 
-public type Repository record {
+public type Repository record {|
     int id;
     string node_id;
     string name;
@@ -105,20 +104,18 @@ public type Repository record {
     int open_issues;
     int watchers;
     string default_branch;
-    !...;
-};
+|};
 
-public type Page record {
+public type Page record {|
     string page_name;
     string title;
     string? summary;
     string action;
     string sha;
     string html_url;
-    !...;
-};
+|};
 
-public type Issue record {
+public type Issue record {|
     string url;
     string repository_url;
     string labels_url;
@@ -142,10 +139,9 @@ public type Issue record {
     string? closed_at;
     string author_association;
     string body;
-    !...;
-};
+|};
 
-public type IssueComment record {
+public type IssueComment record {|
     string url;
     string html_url;
     string issue_url;
@@ -156,20 +152,18 @@ public type IssueComment record {
     string updated_at;
     string author_association;
     string body;
-    !...;
-};
+|};
 
-public type Label record {
+public type Label record {|
     int id;
     string node_id;
     string url;
     string name;
     string color;
-    boolean default;
-    !...;
-};
+    boolean ^"default";
+|};
 
-public type Milestone record {
+public type Milestone record {|
     string url;
     string html_url;
     string labels_url;
@@ -186,10 +180,9 @@ public type Milestone record {
     string updated_at;
     string due_on;
     string? closed_at;
-    !...;
-};
+|};
 
-public type Changes record {
+public type Changes record {|
     Name? name;
     Title? title;
     Body? body;
@@ -198,49 +191,41 @@ public type Changes record {
     Description? description;
     DueOn? due_on;
     Note? note;
-    !...;
-};
+|};
 
-public type Title record {
+public type Title record {|
     string ^"from";
-    !...;
-};
+|};
 
-public type Body record {
+public type Body record {|
     string ^"from";
-    !...;
-};
+|};
 
-public type Name record {
+public type Name record {|
     string ^"from";
-    !...;
-};
+|};
 
-public type Color record {
+public type Color record {|
     string ^"from";
-    !...;
-};
+|};
 
-public type Permission record {
+public type Permission record {|
     string ^"from";
-    !...;
-};
+|};
 
 public type Description record {
     string ^"from";
 };
 
-public type DueOn record {
+public type DueOn record {|
     string ^"from";
-    !...;
-};
+|};
 
-public type Note record {
+public type Note record {|
     string ^"from";
-    !...;
-};
+|};
 
-public type Team record {
+public type Team record {|
     string name;
     int id;
     string node_id;
@@ -251,10 +236,9 @@ public type Team record {
     string members_url;
     string repositories_url;
     string permission;
-    !...;
-};
+|};
 
-public type Organization record {
+public type Organization record {|
     string login;
     int id;
     string node_id;
@@ -267,10 +251,9 @@ public type Organization record {
     string public_members_url;
     string avatar_url;
     string? description;
-    !...;
-};
+|};
 
-public type Invitation record {
+public type Invitation record {|
     int id;
     string login;
     string email;
@@ -279,19 +262,17 @@ public type Invitation record {
     User inviter;
     int team_count;
     string invitation_team_url;
-    !...;
-};
+|};
 
-public type Branch record {
+public type Branch record {|
     string label;
     string ref;
     string sha;
     User user;
     Repository repo;
-    !...;
-};
+|};
 
-public type Links record {
+public type Links record {|
     SelfLink? selfLink; // issue here; needs to be self
     HtmlLink? html;
     IssueLink? issue;
@@ -301,55 +282,45 @@ public type Links record {
     CommitsLink? commits;
     StatusesLink? statuses;
     PullRequestLink? pull_request;
-    !...;
-};
+|};
 
-public type SelfLink record {
+public type SelfLink record {|
     string href;
-    !...;
-};
+|};
 
-public type HtmlLink record {
+public type HtmlLink record {|
     string href;
-    !...;
-};
+|};
 
-public type IssueLink record {
+public type IssueLink record {|
     string href;
-    !...;
-};
+|};
 
-public type CommentsLink record {
+public type CommentsLink record {|
     string href;
-    !...;
-};
+|};
 
-public type ReviewCommentsLink record {
+public type ReviewCommentsLink record {|
     string href;
-    !...;
-};
+|};
 
-public type ReviewCommentLink record {
+public type ReviewCommentLink record {|
     string href;
-    !...;
-};
+|};
 
-public type CommitsLink record {
+public type CommitsLink record {|
     string href;
-    !...;
-};
+|};
 
-public type StatusesLink record {
+public type StatusesLink record {|
     string href;
-    !...;
-};
+|};
 
-public type PullRequestLink record {
+public type PullRequestLink record {|
     string href;
-    !...;
-};
+|};
 
-public type PullRequest record {
+public type PullRequest record {|
     string url;
     int id;
     string node_id;
@@ -395,10 +366,9 @@ public type PullRequest record {
     int additions;
     int deletions;
     int changed_files;
-    !...;
-};
+|};
 
-public type Review record {
+public type Review record {|
     int id;
     string node_id;
     User user;
@@ -410,10 +380,9 @@ public type Review record {
     string pull_request_url;
     string author_association;
     Links _links;
-    !...;
-};
+|};
 
-public type PullRequestReviewComment record {
+public type PullRequestReviewComment record {|
     string url;
     int pull_request_review_id;
     int id;
@@ -432,25 +401,22 @@ public type PullRequestReviewComment record {
     string pull_request_url;
     string author_association;
     Links _links;
-    !...;
-};
+|};
 
-public type Commit record {
+public type Commit record {|
     string sha;
     string message;
     CommitAuthor author;
     string url;
     boolean distinct;
-    !...;
-};
+|};
 
-public type CommitAuthor record {
+public type CommitAuthor record {|
     string name;
     string email;
-    !...;
-};
+|};
 
-public type Release record {
+public type Release record {|
     string url;
     string assets_url;
     string upload_url;
@@ -469,10 +435,9 @@ public type Release record {
     string tarball_url;
     string zipball_url;
     string? body;
-    !...;
-};
+|};
 
-public type Asset record {
+public type Asset record {|
     string url;
     string browser_download_url;
     int id;
@@ -486,10 +451,9 @@ public type Asset record {
     string created_at;
     string updated_at;
     User uploader;
-    !...;
-};
+|};
 
-public type Hook record {
+public type Hook record {|
     string ^"type";
     int id;
     string name;
@@ -502,97 +466,86 @@ public type Hook record {
     string test_url;
     string ping_url;
     HookLastResponse last_response;
-    !...;
-};
+|};
 
-public type HookConfig record {
+public type HookConfig record {|
     string content_type;
     string secret;
     string url;
     string insecure_ssl;
-    !...;
-};
+|};
 
-public type HookLastResponse record {
+public type HookLastResponse record {|
     string? code;
     string status;
     string? message;
-    !...;
-};
+|};
 
-public type ForkEvent record {
+public type ForkEvent record {|
     Repository forkee;
     Repository repository;
     User sender;
-    !...;
-};
+|};
 
-public type IssueCommentEvent record {
+public type IssueCommentEvent record {|
     string action;
     Issue issue;
     IssueComment comment;
     Repository repository;
     User sender;
-    !...;
-};
+|};
 
-public type IssuesEvent record {
+public type IssuesEvent record {|
     string action;
     Issue issue;
     Changes? changes;
     Repository repository;
     User sender;
-    !...;
-};
+|};
 
-public type LabelEvent record {
+public type LabelEvent record {|
     string action;
     Label label;
     Changes? changes;
     Repository repository;
     User sender;
-    !...;
-};
+|};
 
-public type MilestoneEvent record {
+public type MilestoneEvent record {|
     string action;
     Milestone milestone;
     Changes? changes;
     Repository repository;
     User sender;
-    !...;
-};
+|};
 
-public type PullRequestEvent record {
+public type PullRequestEvent record {|
     string action;
     int number;
     Changes? changes;
     PullRequest pull_request;
     Repository repository;
     User sender;
-    !...;
-};
+|};
 
-public type PullRequestReviewEvent record {
+public type PullRequestReviewEvent record {|
     string action;
     Review review;
     PullRequest pull_request;
     Repository repository;
     User sender;
-    !...;
-};
+|};
 
-public type PullRequestReviewCommentEvent record {
+public type PullRequestReviewCommentEvent record {|
     string action;
     Changes? changes;
     PullRequest pull_request;
     PullRequestReviewComment comment;
     Repository repository;
     User sender;
-    !...;
-};
+|};
 
-public type PushEvent record {
+public type PushEvent record {|
     string ref;
     string before;
     string after;
@@ -606,29 +559,25 @@ public type PushEvent record {
     Repository repository;
     CommitAuthor pusher;
     User sender;
-    !...;
-};
+|};
 
-public type ReleaseEvent record {
+public type ReleaseEvent record {|
     string action;
     Release release;
     Repository repository;
     User sender;
-    !...;
-};
+|};
 
-public type WatchEvent record {
+public type WatchEvent record {|
     string action;
     Repository repository;
     User sender;
-    !...;
-};
+|};
 
-public type PingEvent record {
+public type PingEvent record {|
     string zen;
     int hook_id;
     Hook hook;
     Repository repository;
     User sender;
-    !...;
-};
+|};

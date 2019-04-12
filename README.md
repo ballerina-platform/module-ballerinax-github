@@ -11,7 +11,7 @@ sections explains how to use Ballerina GitHub4 connector. You can refer the [Git
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
-| 0.990.3           | v4                 |
+| 0.991.0           | v4                 |
 
 ![Ballerina GitHub Endpoint Overview](./docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
 
@@ -45,10 +45,15 @@ import wso2/github4;
 
 github4:GitHubConfiguration gitHubConfig = {
      clientConfig: {
-         auth: {
-             scheme: http:OAUTH2,
-             accessToken: config:getAsString("GITHUB_TOKEN")
-         }
+        auth: {
+            scheme: http:OAUTH2,
+            config: {
+                grantType: http:DIRECT_TOKEN,
+                config: {
+                    accessToken: config:getAsString("GITHUB_TOKEN")
+                }
+            }
+        }
      }
  };
  
@@ -100,7 +105,7 @@ notifications on the occurrence of events, and starts up a callback service, whi
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
-| 0.990.3           | v3                 |
+| 0.991.0           | v3                 |
 
 ```ballerina
 import ballerina/http;
@@ -120,7 +125,12 @@ listener githubwebhook3:Listener githubListener = new(8080);
    subscriptionClientConfig: {
         auth: {
             scheme: http:OAUTH2,
-            accessToken: "<GH_ACCESS_TOKEN>"
+            config: {
+                grantType: http:DIRECT_TOKEN,
+                config: {
+                    accessToken: "<GH_ACCESS_TOKEN>"
+                }
+            }
         }
    }
 }

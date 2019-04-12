@@ -30,7 +30,12 @@ GITHUB_REPO_NAME="GITHUB_REPO_NAME"
     subscriptionClientConfig: {
         auth: {
             scheme: http:OAUTH2,
-            accessToken: config:getAsString("GITHUB_TOKEN")
+            config: {
+                grantType: http:DIRECT_TOKEN,
+                config: {
+                    accessToken: config:getAsString("GITHUB_TOKEN")
+                }
+            }
         }
     }
 }

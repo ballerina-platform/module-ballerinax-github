@@ -20,7 +20,7 @@ The `wso2/github4` module has support for creating and listing issues.
 ## Compatibility
 |                             |       Version               |
 |:---------------------------:|:---------------------------:|
-| Ballerina Language          | 0.990.3                     |
+| Ballerina Language          | 0.991.0                     |
 | GitHub API                  | V4                          |
 
 ## Sample
@@ -40,10 +40,15 @@ You can now enter the access token in the HTTP client config.
 ```ballerina
 github4:GitHubConfiguration gitHubConfig = {
      clientConfig: {
-         auth: {
-             scheme: http:OAUTH2,
-             accessToken: config:getAsString("GITHUB_TOKEN")
-         }
+        auth: {
+            scheme: http:OAUTH2,
+            config: {
+                grantType: http:DIRECT_TOKEN,
+                config: {
+                    accessToken: config:getAsString("GITHUB_TOKEN")
+                }
+            }
+        }
      }
  };
  
