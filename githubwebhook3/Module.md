@@ -52,7 +52,7 @@ This access token needs to be specified when configuring the subscription parame
             config: {
                 grantType: http:DIRECT_TOKEN,
                 config: {
-                    accessToken: config:getAsString("GITHUB_TOKEN")
+                    accessToken:"<GH_ACCESS_TOKEN>"
                 }
             }
         }
@@ -88,7 +88,7 @@ listener githubwebhook3:Listener githubListener = new(8080);
             config: {
                 grantType: http:DIRECT_TOKEN,
                 config: {
-                    accessToken: config:getAsString("GITHUB_TOKEN")
+                    accessToken: "<GH_ACCESS_TOKEN>"
                 }
             }
         }
