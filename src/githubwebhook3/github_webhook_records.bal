@@ -30,7 +30,7 @@ public type User record {|
     string repos_url;
     string events_url;
     string received_events_url;
-    string ^"type"; //"type" in payload
+    string 'type; //"type" in payload
     boolean site_admin;
 |};
 
@@ -40,10 +40,10 @@ public type Repository record {|
     string name;
     string full_name;
     User owner;
-    boolean ^"private"; //"private" in payload
+    boolean 'private; //"private" in payload
     string html_url;
     string? description;
-    boolean ^"fork";
+    boolean 'fork;
     string url;
     string forks_url;
     string keys_url;
@@ -160,7 +160,7 @@ public type Label record {|
     string url;
     string name;
     string color;
-    boolean ^"default";
+    boolean 'default;
 |};
 
 public type Milestone record {|
@@ -194,35 +194,35 @@ public type Changes record {|
 |};
 
 public type Title record {|
-    string ^"from";
+    string 'from;
 |};
 
 public type Body record {|
-    string ^"from";
+    string 'from;
 |};
 
 public type Name record {|
-    string ^"from";
+    string 'from;
 |};
 
 public type Color record {|
-    string ^"from";
+    string 'from;
 |};
 
 public type Permission record {|
-    string ^"from";
+    string 'from;
 |};
 
 public type Description record {
-    string ^"from";
+    string 'from;
 };
 
 public type DueOn record {|
-    string ^"from";
+    string 'from;
 |};
 
 public type Note record {|
-    string ^"from";
+    string 'from;
 |};
 
 public type Team record {|
@@ -454,7 +454,7 @@ public type Asset record {|
 |};
 
 public type Hook record {|
-    string ^"type";
+    string 'type;
     int id;
     string name;
     boolean active;

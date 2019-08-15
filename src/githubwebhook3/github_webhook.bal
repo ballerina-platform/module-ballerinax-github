@@ -14,6 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 import ballerina/http;
+import ballerina/ 'lang\.object as lang;
 import ballerina/websub;
 
 # The WebSub Hub URL for GitHub.
@@ -29,7 +30,7 @@ const string TOPIC_HEADER = "X-GitHub-Event";
 # + webhookListenerConfig - The configuration for the listener
 public type Listener object {
 
-    *AbstractListener;
+    *lang:AbstractListener;
 
     public WebhookListenerConfiguration? webhookListenerConfig = ();
 
@@ -38,7 +39,7 @@ public type Listener object {
     public function __init(int port, WebhookListenerConfiguration? config = ()) {
         self.webhookListenerConfig = config;
         websub:ExtensionConfig extensionConfig = {
-            topicIdentifier: websub:TOPIC_ID_HEADER_AND_PAYLOAD,
+            topicIdentifier: websub: TOPIC_ID_HEADER_AND_PAYLOAD,
             topicHeader: TOPIC_HEADER,
             headerResourceMap: GITHUB_TOPIC_HEADER_RESOURCE_MAP,
             headerAndPayloadKeyResourceMap: GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP
@@ -53,11 +54,11 @@ public type Listener object {
             }
             sseConfig.httpServiceSecureSocket = config["httpServiceSecureSocket"];
         }
-        self.websubListener = new(port, config = sseConfig);
+        self.websubListener = new (port, sseConfig);
     }
 
     public function __attach(service s, string? name = ()) returns error? {
-        return self.websubListener.__attach(s, name = name);
+        return self.websubListener.__attach(s, name);
     }
 
     public function __start() returns error? {
@@ -78,78 +79,78 @@ public type WebhookListenerConfiguration record {|
     http:ServiceSecureSocket httpServiceSecureSocket?;
 |};
 
-final map<(string, typedesc)> GITHUB_TOPIC_HEADER_RESOURCE_MAP = {
-    "ping": ("onPing", PingEvent),
-    "fork": ("onFork", ForkEvent),
-    "push": ("onPush", PushEvent),
-    "release": ("onRelease", ReleaseEvent),
-    "watch": ("onWatch", WatchEvent)
+final map<[string, typedesc<any>]> GITHUB_TOPIC_HEADER_RESOURCE_MAP = {
+    "ping": ["onPing", PingEvent],
+    "fork": ["onFork", ForkEvent],
+    "push": ["onPush", PushEvent],
+    "release": ["onRelease", ReleaseEvent],
+    "watch": ["onWatch", WatchEvent]
 };
 
-final map<map<map<(string, typedesc)>>> GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP = {
+final map<map<map<[string, typedesc<any>]>>> GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP = {
     "issue_comment": {
         "action": {
-            "created": ("onIssueCommentCreated", IssueCommentEvent),
-            "edited": ("onIssueCommentEdited", IssueCommentEvent),
-            "deleted": ("onIssueCommentDeleted", IssueCommentEvent)
+            "created": ["onIssueCommentCreated", IssueCommentEvent],
+            "edited": ["onIssueCommentEdited", IssueCommentEvent],
+            "deleted": ["onIssueCommentDeleted", IssueCommentEvent]
         }
     },
     "issues": {
         "action": {
-            "assigned": ("onIssuesAssigned", IssuesEvent),
-            "unassigned": ("onIssuesUnassigned", IssuesEvent),
-            "labeled": ("onIssuesLabeled", IssuesEvent),
-            "unlabeled": ("onIssuesUnlabeled", IssuesEvent),
-            "opened": ("onIssuesOpened", IssuesEvent),
-            "edited": ("onIssuesEdited", IssuesEvent),
-            "milestoned": ("onIssuesMilestoned", IssuesEvent),
-            "demilestoned": ("onIssuesDemilestoned", IssuesEvent),
-            "closed": ("onIssuesClosed", IssuesEvent),
-            "reopened": ("onIssuesReopened", IssuesEvent)
+            "assigned": ["onIssuesAssigned", IssuesEvent],
+            "unassigned": ["onIssuesUnassigned", IssuesEvent],
+            "labeled": ["onIssuesLabeled", IssuesEvent],
+            "unlabeled": ["onIssuesUnlabeled", IssuesEvent],
+            "opened": ["onIssuesOpened", IssuesEvent],
+            "edited": ["onIssuesEdited", IssuesEvent],
+            "milestoned": ["onIssuesMilestoned", IssuesEvent],
+            "demilestoned": ["onIssuesDemilestoned", IssuesEvent],
+            "closed": ["onIssuesClosed", IssuesEvent],
+            "reopened": ["onIssuesReopened", IssuesEvent]
         }
     },
     "label": {
         "action": {
-            "created": ("onLabelCreated", LabelEvent),
-            "edited": ("onLabelEdited", LabelEvent),
-            "deleted": ("onLabelDeleted", LabelEvent)
+            "created": ["onLabelCreated", LabelEvent],
+            "edited": ["onLabelEdited", LabelEvent],
+            "deleted": ["onLabelDeleted", LabelEvent]
         }
     },
     "milestone": {
         "action": {
-            "created": ("onMilestoneCreated", MilestoneEvent),
-            "closed": ("onMilestoneClosed", MilestoneEvent),
-            "opened": ("onMilestoneOpened", MilestoneEvent),
-            "edited": ("onMilestoneEdited", MilestoneEvent),
-            "deleted": ("onMilestoneDeleted", MilestoneEvent)
+            "created": ["onMilestoneCreated", MilestoneEvent],
+            "closed": ["onMilestoneClosed", MilestoneEvent],
+            "opened": ["onMilestoneOpened", MilestoneEvent],
+            "edited": ["onMilestoneEdited", MilestoneEvent],
+            "deleted": ["onMilestoneDeleted", MilestoneEvent]
         }
     },
     "pull_request": {
         "action": {
-            "assigned": ("onPullRequestAssigned", PullRequestEvent),
-            "unassigned": ("onPullRequestUnassigned", PullRequestEvent),
-            "review_requested": ("onPullRequestReviewRequested", PullRequestEvent),
-            "review_request_removed": ("onPullRequestReviewRequestRemoved", PullRequestEvent),
-            "labeled": ("onPullRequestLabeled", PullRequestEvent),
-            "unlabeled": ("onPullRequestUnlabeled", PullRequestEvent),
-            "opened": ("onPullRequestOpened", PullRequestEvent),
-            "edited": ("onPullRequestEdited", PullRequestEvent),
-            "closed": ("onPullRequestClosed", PullRequestEvent),
-            "reopened": ("onPullRequestReopened", PullRequestEvent)
+            "assigned": ["onPullRequestAssigned", PullRequestEvent],
+            "unassigned": ["onPullRequestUnassigned", PullRequestEvent],
+            "review_requested": ["onPullRequestReviewRequested", PullRequestEvent],
+            "review_request_removed": ["onPullRequestReviewRequestRemoved", PullRequestEvent],
+            "labeled": ["onPullRequestLabeled", PullRequestEvent],
+            "unlabeled": ["onPullRequestUnlabeled", PullRequestEvent],
+            "opened": ["onPullRequestOpened", PullRequestEvent],
+            "edited": ["onPullRequestEdited", PullRequestEvent],
+            "closed": ["onPullRequestClosed", PullRequestEvent],
+            "reopened": ["onPullRequestReopened", PullRequestEvent]
         }
     },
     "pull_request_review": {
         "action": {
-            "submitted": ("onPullRequestReviewSubmitted", PullRequestReviewEvent),
-            "edited": ("onPullRequestReviewEdited", PullRequestReviewEvent),
-            "dismissed": ("onPullRequestReviewDismissed", PullRequestReviewEvent)
+            "submitted": ["onPullRequestReviewSubmitted", PullRequestReviewEvent],
+            "edited": ["onPullRequestReviewEdited", PullRequestReviewEvent],
+            "dismissed": ["onPullRequestReviewDismissed", PullRequestReviewEvent]
         }
     },
     "pull_request_review_comment": {
         "action": {
-            "created": ("onPullRequestReviewCommentCreated", PullRequestReviewCommentEvent),
-            "edited": ("onPullRequestReviewCommentEdited", PullRequestReviewCommentEvent),
-            "deleted": ("onPullRequestReviewCommentDeleted", PullRequestReviewCommentEvent)
+            "created": ["onPullRequestReviewCommentCreated", PullRequestReviewCommentEvent],
+            "edited": ["onPullRequestReviewCommentEdited", PullRequestReviewCommentEvent],
+            "deleted": ["onPullRequestReviewCommentDeleted", PullRequestReviewCommentEvent]
         }
     }
 };
