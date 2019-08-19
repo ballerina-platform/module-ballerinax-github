@@ -44,17 +44,17 @@ public type Listener object {
             headerResourceMap: GITHUB_TOPIC_HEADER_RESOURCE_MAP,
             headerAndPayloadKeyResourceMap: GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP
         };
-        websub:SubscriberServiceEndpointConfiguration sseConfig = {
+        websub:SubscriberListenerConfiguration slConfig = {
             extensionConfig: extensionConfig
         };
         if (config is WebhookListenerConfiguration) {
             string? specHost = config["host"];
             if (specHost is string) {
-                sseConfig.host = specHost;
+                slConfig.host = specHost;
             }
-            sseConfig.httpServiceSecureSocket = config["httpServiceSecureSocket"];
+            slConfig.httpServiceSecureSocket = config["httpServiceSecureSocket"];
         }
-        self.websubListener = new (port, sseConfig);
+        self.websubListener = new (port, slConfig);
     }
 
     public function __attach(service s, string? name = ()) returns error? {
@@ -65,8 +65,12 @@ public type Listener object {
         return self.websubListener.__start();
     }
 
-    public function __stop() returns error? {
-        return self.websubListener.__stop();
+    public function __gracefulStop() returns error? {
+        return self.websubListener.__gracefulStop();
+    }
+
+    public function __immediateStop() returns error? {
+        return self.websubListener.__immediateStop();
     }
 };
 
@@ -76,10 +80,10 @@ public type Listener object {
 # + httpServiceSecureSocket - The SSL configurations for the listener
 public type WebhookListenerConfiguration record {|
     string host?;
-    http:ServiceSecureSocket httpServiceSecureSocket?;
+    http:ListenerSecureSocket httpServiceSecureSocket?;
 |};
 
-final map<[string, typedesc<any>]> GITHUB_TOPIC_HEADER_RESOURCE_MAP = {
+final map<[string,typedesc<record {}>]> GITHUB_TOPIC_HEADER_RESOURCE_MAP = {
     "ping": ["onPing", PingEvent],
     "fork": ["onFork", ForkEvent],
     "push": ["onPush", PushEvent],
@@ -87,7 +91,7 @@ final map<[string, typedesc<any>]> GITHUB_TOPIC_HEADER_RESOURCE_MAP = {
     "watch": ["onWatch", WatchEvent]
 };
 
-final map<map<map<[string, typedesc<any>]>>> GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP = {
+final map<map<map<[string,typedesc<record {}>]>>> GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP = {
     "issue_comment": {
         "action": {
             "created": ["onIssueCommentCreated", IssueCommentEvent],
