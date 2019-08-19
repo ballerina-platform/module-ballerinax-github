@@ -28,6 +28,7 @@ final string GIT_END_CURSOR_CARD = "endCursorCard";
 final string GIT_END_CURSOR_COLUMN = "endCursorColumn";
 final string GIT_ERRORS = "errors";
 final string GIT_HAS_NEXT_PAGE = "hasNextPage";
+final string GIT_REFS = "refs";
 final string GIT_ISSUES = "issues";
 final string GIT_MESSAGE = "message";
 final string GIT_NAME = "name";
@@ -556,6 +557,37 @@ final string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE =
         }
     }";
 
+final string GET_USER_REPOSITORIES =
+    "query ($owner: String!, $recordCount: Int!) {       
+        user (login:$owner) {
+            repositories (first: $recordCount, orderBy:{field:NAME, direction:ASC}) {
+                " + PAGE_INFO + ",
+                nodes {
+                    id,
+                    name,
+                    createdAt,
+                    updatedAt,
+                    description,
+                    forkCount,
+                    hasIssuesEnabled,
+                    hasWikiEnabled,
+                    homepageUrl,
+                    isArchived,
+                    isFork,
+                    isLocked,
+                    isMirror,
+                    isPrivate,
+                    lockReason,
+                    mirrorUrl,
+                    url,
+                    sshUrl,
+                    " + REPOSITORY_OWNER + ",
+                    " + PRIMARY_LANGUAGE + "
+                }
+            }
+        }
+    }";
+
 final string GET_ORGANIZATION_REPOSITORIES =
     "query ($organization: String!, $recordCount: Int!) {
         organization (login:$organization) {
@@ -613,6 +645,18 @@ final string GET_ORGANIZATION_REPOSITORIES_NEXT_PAGE =
                     sshUrl,
                     " + REPOSITORY_OWNER + ",
                     " + PRIMARY_LANGUAGE + "
+                }
+            }
+        }
+    }";
+
+final string GET_REPOSITORY_BRANCHES =
+    "query ($owner:String!, $name:String!, $recordCount: Int!) {
+        repository(owner:$owner, name: $name) {
+            refs(first: $recordCount, refPrefix: \\\"refs/heads/\\\") {
+                " + PAGE_INFO + ",
+                nodes {
+                    name
                 }
             }
         }
@@ -711,6 +755,9 @@ final string TEMPLATE_GET_REPOSITORY_PROJECTS = "{\"variables\":{\"owner\":\"%s\
 final string TEMPLATE_GET_REPOSITORY_PROJECT = "{\"variables\":{\"owner\":\"%s\",\"repository\":\"%s\",
                                                         \"number\":%d},\"query\":\"" + GET_REPOSITORY_PROJECT + "\"}";
 
+final string TEMPLATE_GET_REPOSITORY_BRANCHES = "{\"variables\":{\"owner\":\"%s\",\"name\":\"%s\",
+                                                    \"recordCount\":%d},\"query\":\"" + GET_REPOSITORY_BRANCHES + "\"}";
+
 final string TEMPLATE_GET_REPOSITORY_ISSUES = "{\"variables\":{\"owner\":\"%s\",\"name\":\"%s\",\"states\":%s,
                                                     \"recordCount\":%d},\"query\":\"" + GET_REPOSITORY_ISSUES + "\"}";
 
@@ -719,3 +766,6 @@ final string TEMPLATE_GET_ORGANIZATION_PROJECTS = "{\"variables\":{\"organizatio
 
 final string TEMPLATE_GET_ORGANIZATION_REPOSITORIES = "{\"variables\":{\"organization\":\"%s\",
                                             \"recordCount\":%d},\"query\":\"" + GET_ORGANIZATION_REPOSITORIES + "\"}";
+
+final string TEMPLATE_GET_USER_REPOSITORIES = "{\"variables\":{\"owner\":\"%s\",
+                                            \"recordCount\":%d},\"query\":\"" + GET_USER_REPOSITORIES + "\"}";

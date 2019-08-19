@@ -14,21 +14,52 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import ballerina/lang. 'int as ints;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           GitHub Connector Transformers                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function parseInt(json | error input) returns int | error {
+    if (input is error) {
+        return input;
+    } else if (input is string) {
+        return ints:fromString(<string>input);
+    } else if (input is int | float | decimal) {
+        return <int>input;
+    }
+    error e = error("incompatible type");
+    return e;
+}
+
+function parseBoolean(json | error input) returns boolean | error {
+    if (input is error) {
+        return input;
+    } else if (input is string) {
+        if (input == "true") {
+            return true;
+        } else if (input == "false") {
+            return false;
+        }
+    } else if (input is boolean) {
+        return <boolean>input;
+    }
+    error e = error("incompatible type");
+    return e;
+}
+
+
 //********************************
 // JSON --> Project
 //********************************
-function jsonToProject(json sourceJson) returns Project|error {
+function jsonToProject(json sourceJson) returns Project | error {
     Project project = {};
     project.id = <string>sourceJson.id;
     project.name = <string>sourceJson.name;
     project.body = <string>sourceJson.body;
-    project.number = check int.convert(sourceJson.number);
+    project.number = check parseInt(sourceJson.number);
     project.createdAt = <string>sourceJson.createdAt;
-    project.closed = (sourceJson.closed is boolean) ? check string.convert(sourceJson.closed) : "";
+    project.closed = (sourceJson.closed is boolean) ? sourceJson.closed.toString() : "";
     project.closedAt = (sourceJson.closedAt is string) ? <string>sourceJson.closedAt : "";
     project.updatedAt = (sourceJson.updatedAt is string) ? <string>sourceJson.updatedAt : "";
     project.resourcePath = <string>sourceJson.resourcePath;
@@ -44,7 +75,7 @@ function jsonToProject(json sourceJson) returns Project|error {
     project.owner.projectsResourcePath = <string>sourceJson.owner.projectsResourcePath;
     project.owner.projectsUrl = <string>sourceJson.owner.projectsUrl;
     project.owner.viewerCanCreateProjects = (sourceJson.owner.viewerCanCreateProjects is boolean) ?
-                                            check string.convert(sourceJson.owner.viewerCanCreateProjects) : "";
+    sourceJson.owner.viewerCanCreateProjects.toString() : "";
     project.owner.__typename = <string>sourceJson.owner.__typename;
     return project;
 }
@@ -56,12 +87,12 @@ function jsonToProjectList(json source_json, string listOwner, string stringQuer
     ProjectList target_projectList = new;
     target_projectList.listOwner = listOwner;
     target_projectList.projectListQuery = stringQuery;
-    var value = PageInfo.convert(source_json.pageInfo);
+    var value = PageInfo.constructFrom(<json>source_json.pageInfo);
     if (value is PageInfo) {
         target_projectList.pageInfo = value;
     }
     json[] nodes = [];
-    var result = json[].convert(source_json.nodes);
+    var result = json[].constructFrom(<json>source_json.nodes);
     if (result is json[]) {
         nodes = result;
     }
@@ -85,18 +116,18 @@ function jsonToCardList(json source_json, string columnId, string listOwner, str
     target_cardList.columnId = columnId;
     target_cardList.cardListQuery = stringQuery;
     target_cardList.listOwner = listOwner;
-    var value = PageInfo.convert(source_json.pageInfo);
+    var value = PageInfo.constructFrom(<json>source_json.pageInfo);
     if (value is PageInfo) {
         target_cardList.pageInfo = value;
     }
-    var result = json[].convert(source_json.nodes);
+    var result = json[].constructFrom(<json>source_json.nodes);
     json[] nodes = [];
     if (result is json[]) {
         nodes = result;
     }
     int i = 0;
     foreach var node in nodes {
-        var card = Card.convert(node);
+        var card = Card.constructFrom(<json>node);
         if (card is Card) {
             target_cardList.nodes[i] = card;
         }
@@ -115,7 +146,7 @@ function jsonToColumn(json source_json, string listOwner, string stringQuery) re
     target_column.name = source_json.name.toString();
     target_column.columnQuery = stringQuery;
     target_column.listOwner = listOwner;
-    target_column.cards = jsonToCardList(source_json.cards, source_json.id.toString(), listOwner, stringQuery);
+    target_column.cards = jsonToCardList(<json>source_json.cards, source_json.id.toString(), listOwner, stringQuery);
     return target_column;
 }
 
@@ -126,12 +157,12 @@ function jsonToColumnList(json source_json, string listOwner, string stringQuery
     ColumnList target_columnList = new;
     target_columnList.listOwner = listOwner;
     target_columnList.columnListQuery = stringQuery;
-    var value = PageInfo.convert(source_json.pageInfo);
+    var value = PageInfo.constructFrom(<json>source_json.pageInfo);
     json[] nodes = [];
     if (value is PageInfo) {
         target_columnList.pageInfo = value;
     }
-    var result = json[].convert(source_json.nodes);
+    var result = json[].constructFrom(<json>source_json.nodes);
     if (result is json[]) {
         nodes = result;
     }
@@ -151,12 +182,12 @@ function jsonToColumnList(json source_json, string listOwner, string stringQuery
 function jsonToRepositoryList(json source_json, string stringQuery) returns (RepositoryList) {
     RepositoryList target_repositoryList = new;
     target_repositoryList.repositoryListQuery = stringQuery;
-    var value = PageInfo.convert(source_json.pageInfo);
+    var value = PageInfo.constructFrom(<json>source_json.pageInfo);
     if (value is PageInfo) {
         target_repositoryList.pageInfo = value;
     }
     json[] nodes = [];
-    var result = json[].convert(source_json.nodes);
+    var result = json[].constructFrom(<json>source_json.nodes);
     if (result is json[]) {
         nodes = result;
     }
@@ -176,18 +207,18 @@ function jsonToRepositoryList(json source_json, string stringQuery) returns (Rep
 function jsonToPullRequestList(json source_json, string stringQuery) returns (PullRequestList) {
     PullRequestList target_pullRequestList = new;
     target_pullRequestList.pullRequestListQuery = stringQuery;
-    var value = PageInfo.convert(source_json.pageInfo);
+    var value = PageInfo.constructFrom(<json>source_json.pageInfo);
     if (value is PageInfo) {
         target_pullRequestList.pageInfo = value;
     }
-    var result = json[].convert(source_json.nodes);
+    var result = json[].constructFrom(<json>source_json.nodes);
     json[] nodes = [];
     if (result is json[]) {
         nodes = result;
     }
     int i = 0;
     foreach var node in nodes {
-        var pullRequest = PullRequest.convert(node);
+        var pullRequest = PullRequest.constructFrom(<json>node);
         if (pullRequest is PullRequest) {
             target_pullRequestList.nodes[i] = pullRequest;
         }
@@ -198,16 +229,49 @@ function jsonToPullRequestList(json source_json, string stringQuery) returns (Pu
 }
 
 //********************************
+// JSON --> BranchList
+//********************************
+function jsonToBranchList(json source_json, string stringQuery) returns (BranchList) {
+    BranchList target_branchList = new;
+    target_branchList.branchListQuery = stringQuery;
+    var pageInfo = PageInfo.constructFrom(<json>source_json.pageInfo);
+    if (pageInfo is PageInfo) {
+        target_branchList.pageInfo = pageInfo;
+    }
+    var result = json[].constructFrom(<json>source_json.nodes);
+    json[] nodes = [];
+    if (result is json[]) {
+        nodes = result;
+    }
+    int i = 0;
+    foreach var node in nodes {
+        var branch = jsonToBranch(node);
+        target_branchList.nodes[i] = branch;
+        i = i + 1;
+    }
+    return target_branchList;
+}
+
+//********************************
+// JSON --> Branch
+//********************************
+function jsonToBranch(json source_json) returns (Branch) {
+    Branch target_branch = {};
+    target_branch.name = source_json.name.toString();
+    return target_branch;
+}
+
+//********************************
 // JSON --> IssueList
 //********************************
 function jsonToIssueList(json source_json, string stringQuery) returns (IssueList) {
     IssueList target_issueList = new;
     target_issueList.issueListQuery = stringQuery;
-    var value = PageInfo.convert(source_json.pageInfo);
-    if (value is PageInfo) {
-        target_issueList.pageInfo = value;
+    var pageInfo = PageInfo.constructFrom(<json>source_json.pageInfo);
+    if (pageInfo is PageInfo) {
+        target_issueList.pageInfo = pageInfo;
     }
-    var result = json[].convert(source_json.nodes);
+    var result = json[].constructFrom(<json>source_json.nodes);
     json[] nodes = [];
     if (result is json[]) {
         nodes = result;
@@ -230,18 +294,15 @@ function restResponseJsonToIssue(json source_json) returns (Issue) {
     target_issue.title = source_json.title.toString();
     target_issue.bodyText = source_json.body.toString();
     target_issue.closedAt = source_json.closed_at.toString();
-    target_issue.convertdAt = source_json.convertd_at.toString();
+    target_issue.createdAt = source_json.created_at.toString();
     target_issue.author.login = source_json.user.login.toString();
     target_issue.author.url = source_json.user.url.toString();
     target_issue.author.avatarUrl = source_json.user.avatar_url.toString();
-    string stringNumber = source_json.number.toString();
-    var value = int.convert(stringNumber);
-    int intNumber = 0;
-    if (value is int) {
-        intNumber = value;
+    int | error num = parseInt(source_json.number);
+    if (num is int) {
+        target_issue.number = num;
     }
-    target_issue.number = intNumber;
-    var result = json[].convert(source_json.labels);
+    var result = json[].constructFrom(<json>source_json.labels);
     json[] labelList = [];
     if (result is json[]) {
         labelList = result;
@@ -256,7 +317,7 @@ function restResponseJsonToIssue(json source_json) returns (Issue) {
         target_issue.labels[i] = singleLabel;
         i = i + 1;
     }
-    var jsonValue = json[].convert(source_json.assignees);
+    var jsonValue = json[].constructFrom(<json>source_json.assignees);
     json[] assigneeList = [];
     if (jsonValue is json[]) {
         assigneeList = jsonValue;
@@ -284,24 +345,25 @@ function jsonToIssue(json source_json) returns (Issue) {
     target_issue.bodyText = source_json.bodyText.toString();
     target_issue.closed = source_json.closed.toString();
     target_issue.closedAt = source_json.closedAt.toString();
-    target_issue.convertdAt = source_json.convertdAt.toString();
-    var creatorValue = Creator.convert(source_json.author);
-    if (creatorValue is Creator) {
-        target_issue.author = creatorValue;
+    target_issue.createdAt = source_json.createdAt.toString();
+    var value = Creator.constructFrom(<json>source_json.author);
+    if (value is Creator) {
+        target_issue.author = value;
     }
-    string stringNumber = source_json.number.toString();
-    var intNumber = int.convert(stringNumber);
-    if (intNumber is int) {
-        target_issue.number = intNumber;
+
+    var number = parseInt(source_json.number);
+    if (number is int) {
+        target_issue.number = number;
     }
+
     json[] labelList = [];
-    var jsonValue = json[].convert(source_json.labels.nodes);
+    var jsonValue = json[].constructFrom(<json>source_json.labels.nodes);
     if (jsonValue is json[]) {
         labelList = jsonValue;
     }
     int i = 0;
     foreach var label in labelList {
-        var labelValue = Label.convert(label);
+        var labelValue = Label.constructFrom(<json>label);
         if (labelValue is Label) {
             target_issue.labels[i] = labelValue;
         }
@@ -312,13 +374,13 @@ function jsonToIssue(json source_json) returns (Issue) {
     target_issue.url = source_json.url.toString();
 
     json[] assigneeList = [];
-    var jsonVal = json[].convert(source_json.assignees.nodes);
+    var jsonVal = json[].constructFrom(<json>source_json.assignees.nodes);
     if (jsonVal is json[]) {
         assigneeList = jsonVal;
     }
     int j = 0;
     foreach var assignee in assigneeList {
-        var assigneeValue = Assignee.convert(assignee);
+        var assigneeValue = Assignee.constructFrom(<json>assignee);
         if (assigneeValue is Assignee) {
             target_issue.assignees[j] = assigneeValue;
         }
@@ -335,43 +397,48 @@ function jsonToRepository(json source_json) returns (Repository) {
     Repository target_repository = {};
     target_repository.id = source_json.id.toString();
     target_repository.name = source_json.name.toString();
-    target_repository.convertdAt = source_json.convertdAt.toString();
+    target_repository.createdAt = source_json.createdAt.toString();
     target_repository.updatedAt = source_json.updatedAt.toString();
     target_repository.description = source_json.description.toString();
-    string stringForkCount = source_json.forkCount.toString();
-    var intNumber = int.convert(stringForkCount);
-    if (intNumber is int) {
-        target_repository.forkCount = intNumber;
+    var forkCount = parseInt(source_json.forkCount);
+    if (forkCount is int) {
+        target_repository.forkCount = forkCount;
     }
 
-    string stringHasWikiEnabled = source_json.hasWikiEnabled.toString();
-    //boolean booleanHasWikiEnabled = false;
-    boolean booleanHasWikiEnabled = boolean.convert(stringHasWikiEnabled);
-    target_repository.hasWikiEnabled = booleanHasWikiEnabled;
+    var booleanHasWikiEnabled = parseBoolean(source_json.hasWikiEnabled);
+    if (booleanHasWikiEnabled is boolean) {
+        target_repository.hasWikiEnabled = booleanHasWikiEnabled;
+    }
 
-    string stringHasIssuesEnabled = source_json.hasIssuesEnabled.toString();
-    boolean booleanHasIssuesEnabled = boolean.convert(stringHasIssuesEnabled);
-    target_repository.hasIssuesEnabled = booleanHasIssuesEnabled;
+    var booleanHasIssuesEnabled = parseBoolean(source_json.hasIssuesEnabled);
+    if (booleanHasIssuesEnabled is boolean) {
+        target_repository.hasIssuesEnabled = booleanHasIssuesEnabled;
+    }
 
-    string stringIsArchived = source_json.isArchived.toString();
-    boolean booleanIsArchived = boolean.convert(stringIsArchived);
-    target_repository.isArchived = booleanIsArchived;
+    var booleanIsArchived = parseBoolean(source_json.isArchived);
+    if (booleanIsArchived is boolean) {
+        target_repository.isArchived = booleanIsArchived;
+    }
 
-    string stringIsFork = source_json.isFork.toString();
-    boolean booleanIsFork = boolean.convert(stringIsFork);
-    target_repository.isFork = booleanIsFork;
+    var booleanIsFork = parseBoolean(source_json.isForksFork);
+    if (booleanIsFork is boolean) {
+        target_repository.isFork = booleanIsFork;
+    }
 
-    string stringIsLocked = source_json.isLocked.toString();
-    boolean booleanIsLocked = boolean.convert(stringIsLocked);
-    target_repository.isLocked = booleanIsLocked;
+    var booleanIsLocked = parseBoolean(source_json.isLocked);
+    if (booleanIsLocked is boolean) {
+        target_repository.isLocked = booleanIsLocked;
+    }
 
-    string stringIsMirror = source_json.isMirror.toString();
-    boolean booleanIsMirror = boolean.convert(stringIsMirror);
-    target_repository.isMirror = booleanIsMirror;
+    var booleanIsMirror = parseBoolean(source_json.isMirror);
+    if (booleanIsMirror is boolean) {
+        target_repository.isMirror = booleanIsMirror;
+    }
 
-    string stringIsPrivate = source_json.isPrivate.toString();
-    boolean booleanIsPrivate = boolean.convert(stringIsPrivate);
-    target_repository.isPrivate = booleanIsPrivate;
+    var booleanIsPrivate = parseBoolean(source_json.isPrivate);
+    if (booleanIsPrivate is boolean) {
+        target_repository.isPrivate = booleanIsPrivate;
+    }
 
     target_repository.homepageUrl = source_json.homepageUrl.toString();
     target_repository.lockReason = source_json.lockReason.toString();
@@ -381,7 +448,7 @@ function jsonToRepository(json source_json) returns (Repository) {
     if (source_json.owner == null) {
         target_repository.owner = {};
     } else {
-        var result = RepositoryOwner.convert(source_json.owner);
+        var result = RepositoryOwner.constructFrom(<json>source_json.owner);
         if (result is RepositoryOwner) {
             target_repository.owner = result;
         }
@@ -389,17 +456,15 @@ function jsonToRepository(json source_json) returns (Repository) {
     if (source_json.primaryLanguage == null) {
         target_repository.primaryLanguage = {};
     } else {
-        var result = Language.convert(source_json.primaryLanguage);
+        var result = Language.constructFrom(<json>source_json.primaryLanguage);
         if (result is Language) {
             target_repository.primaryLanguage = result;
         }
     }
-    var intNum = int.convert(source_json.stargazers.totalCount);
-    int stargazerCount = 0;
-    if (intNum is int) {
-        stargazerCount = intNum;
+    var stargazerCount = parseInt(source_json.stargazers.totalCount);
+    if (stargazerCount is int) {
+        target_repository.stargazerCount = stargazerCount;
     }
-    target_repository.stargazerCount = stargazerCount;
     return target_repository;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
