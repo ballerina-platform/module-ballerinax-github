@@ -14,168 +14,168 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/config;
-import ballerina/http;
-import ballerina/runtime;
-import ballerina/test;
-import ballerina/websub;
-import wso2/github4;
+// import ballerina/config;
+// import ballerina/http;
+// import ballerina/runtime;
+// import ballerina/test;
+// import ballerina/websub;
+// import wso2/github4;
 
-boolean webhookRegistrationNotified = false;
-string webhookHookType = "";
+// boolean webhookRegistrationNotified = false;
+// string webhookHookType = "";
 
-boolean issueCreationNotified = false;
-string issueTitle = "";
+// boolean issueCreationNotified = false;
+// string issueTitle = "";
 
-boolean issueLabeledNotified = false;
-string issueLabels = "";
+// boolean issueLabeledNotified = false;
+// string issueLabels = "";
 
-boolean issueAssignedNotified = false;
-string issueAssignee = "";
+// boolean issueAssignedNotified = false;
+// string issueAssignee = "";
 
-boolean issueEditedNotified = false;
-Changes? issueChanges = ();
+// boolean issueEditedNotified = false;
+// Changes? issueChanges = ();
 
-listener Listener githubListener = new(8080);
+// listener Listener githubListener = new(8080);
 
-@websub:SubscriberServiceConfig {
-    path: "/webhook",
-    subscribeOnStartUp: true,
-    hub: HUB,
-    topic: config:getAsString("GITHUB_TOPIC"),
-    secret: config:getAsString("GITHUB_SECRET"),
-    callback: config:getAsString("GITHUB_CALLBACK"), // only needs to be specified if not http(s)://<HOST>:<PORT>/<path>
-    subscriptionClientConfig: {
-        auth: {
-            scheme: http:OAUTH2,
-            config: {
-                grantType: http:DIRECT_TOKEN,
-                config: {
-                    accessToken: config:getAsString("GITHUB_TOKEN")
-                }
-            }
-        }
-    }
-}
-service githubWebhook on githubListener {
-    resource function onPing(websub:Notification notification, PingEvent event) {
-        webhookRegistrationNotified = true;
-        webhookHookType = untaint event.hook.^"type";
-    }
+// @websub:SubscriberServiceConfig {
+//     path: "/webhook",
+//     subscribeOnStartUp: true,
+//     hub: HUB,
+//     topic: config:getAsString("GITHUB_TOPIC"),
+//     secret: config:getAsString("GITHUB_SECRET"),
+//     callback: config:getAsString("GITHUB_CALLBACK"), // only needs to be specified if not http(s)://<HOST>:<PORT>/<path>
+//     subscriptionClientConfig: {
+//         auth: {
+//             scheme: http:OAUTH2,
+//             config: {
+//                 grantType: http:DIRECT_TOKEN,
+//                 config: {
+//                     accessToken: config:getAsString("GITHUB_TOKEN")
+//                 }
+//             }
+//         }
+//     }
+// }
+// service githubWebhook on githubListener {
+//     resource function onPing(websub:Notification notification, PingEvent event) {
+//         webhookRegistrationNotified = true;
+//         webhookHookType = untaint event.hook.^"type";
+//     }
 
-    resource function onIssuesOpened(websub:Notification notification, IssuesEvent event) {
-        issueCreationNotified = true;
-        issueTitle = untaint event.issue.title;
-    }
+//     resource function onIssuesOpened(websub:Notification notification, IssuesEvent event) {
+//         issueCreationNotified = true;
+//         issueTitle = untaint event.issue.title;
+//     }
 
-    resource function onIssuesLabeled(websub:Notification notification, IssuesEvent event) {
-        issueLabeledNotified = true;
-        string receivedIssueLabels = "";
-        foreach Label label in event.issue.labels {
-            receivedIssueLabels += untaint label.name;
-        }
-        issueLabels = receivedIssueLabels;
-    }
+//     resource function onIssuesLabeled(websub:Notification notification, IssuesEvent event) {
+//         issueLabeledNotified = true;
+//         string receivedIssueLabels = "";
+//         foreach Label label in event.issue.labels {
+//             receivedIssueLabels += untaint label.name;
+//         }
+//         issueLabels = receivedIssueLabels;
+//     }
 
-    resource function onIssuesAssigned(websub:Notification notification, IssuesEvent event) {
-        issueAssignedNotified = true;
-        User assignee = <User> event.issue.assignee;
-        issueAssignee = untaint assignee.login;
-    }
+//     resource function onIssuesAssigned(websub:Notification notification, IssuesEvent event) {
+//         issueAssignedNotified = true;
+//         User assignee = <User> event.issue.assignee;
+//         issueAssignee = untaint assignee.login;
+//     }
 
-    resource function onIssuesEdited(websub:Notification notification, IssuesEvent event) {
-        issueEditedNotified = true;
-        issueChanges = untaint event.changes;
-    }
-}
+//     resource function onIssuesEdited(websub:Notification notification, IssuesEvent event) {
+//         issueEditedNotified = true;
+//         issueChanges = untaint event.changes;
+//     }
+// }
 
-@test:Config {}
-function testWebhookRegistration() {
-    int counter = 10;
-    while (!webhookRegistrationNotified && counter >= 0) {
-        runtime:sleep(1000);
-        counter -= 1;
-    }
-    test:assertTrue(webhookRegistrationNotified,
-                    msg = "expected a webhook to be registered and receive a ping notification");
-    test:assertEquals(webhookHookType, "Repository", msg = "expected a repository hook to be added");
-}
+// @test:Config {}
+// function testWebhookRegistration() {
+//     int counter = 10;
+//     while (!webhookRegistrationNotified && counter >= 0) {
+//         runtime:sleep(1000);
+//         counter -= 1;
+//     }
+//     test:assertTrue(webhookRegistrationNotified,
+//                     msg = "expected a webhook to be registered and receive a ping notification");
+//     test:assertEquals(webhookHookType, "Repository", msg = "expected a repository hook to be added");
+// }
 
-string createdIssueUsername = config:getAsString("GITHUB_USERNAME");
-string createdIssueRepoName = config:getAsString("GITHUB_REPO_NAME");
-string createdIssueTitle = "This is a test issue";
-string[] createdIssueLabelArray = ["bug", "critical"];
-string createdIssueAssignee = createdIssueUsername;
+// string createdIssueUsername = config:getAsString("GITHUB_USERNAME");
+// string createdIssueRepoName = config:getAsString("GITHUB_REPO_NAME");
+// string createdIssueTitle = "This is a test issue";
+// string[] createdIssueLabelArray = ["bug", "critical"];
+// string createdIssueAssignee = createdIssueUsername;
 
-@test:Config {
-    dependsOn: ["testWebhookRegistration"]
-}
-function testWebhookNotificationOnIssueCreation() {
-    github4:Client githubClient = new({
-        clientConfig: {
-            auth: {
-                scheme: http:OAUTH2,
-                config: {
-                    grantType: http:DIRECT_TOKEN,
-                    config: {
-                        accessToken: config:getAsString("GITHUB_TOKEN")
-                    }
-                }
-            }
-        }
-    });
-    var issueCreationStatus = githubClient->createIssue(createdIssueUsername, createdIssueRepoName, createdIssueTitle,
-                                            "This is the body of the test issue", createdIssueLabelArray,
-                                            [createdIssueAssignee]);
-    if (issueCreationStatus is error) {
-        test:assertFail(msg = "Issue creation failed: " + <string> issueCreationStatus.detail().message);
-    }
+// @test:Config {
+//     dependsOn: ["testWebhookRegistration"]
+// }
+// function testWebhookNotificationOnIssueCreation() {
+//     github4:Client githubClient = new({
+//         clientConfig: {
+//             auth: {
+//                 scheme: http:OAUTH2,
+//                 config: {
+//                     grantType: http:DIRECT_TOKEN,
+//                     config: {
+//                         accessToken: config:getAsString("GITHUB_TOKEN")
+//                     }
+//                 }
+//             }
+//         }
+//     });
+//     var issueCreationStatus = githubClient->createIssue(createdIssueUsername, createdIssueRepoName, createdIssueTitle,
+//                                             "This is the body of the test issue", createdIssueLabelArray,
+//                                             [createdIssueAssignee]);
+//     if (issueCreationStatus is error) {
+//         test:assertFail(msg = "Issue creation failed: " + <string> issueCreationStatus.detail().message);
+//     }
 
-    int counter = 10;
-    while (!issueCreationNotified && counter >= 0) {
-        runtime:sleep(1000);
-        counter -= 1;
-    }
-    test:assertTrue(issueCreationNotified, msg = "expected an issue creation notification");
-    test:assertEquals(issueTitle, createdIssueTitle, msg = "invalid issue title");
-}
+//     int counter = 10;
+//     while (!issueCreationNotified && counter >= 0) {
+//         runtime:sleep(1000);
+//         counter -= 1;
+//     }
+//     test:assertTrue(issueCreationNotified, msg = "expected an issue creation notification");
+//     test:assertEquals(issueTitle, createdIssueTitle, msg = "invalid issue title");
+// }
 
-@test:Config {
-    dependsOn: ["testWebhookNotificationOnIssueCreation"]
-}
-function testWebhookNotificationOnIssueLabeling() {
-    string createdIssueLabelString = "";
-    foreach string label in createdIssueLabelArray {
-        createdIssueLabelString += label;
-    }
-    test:assertTrue(issueLabeledNotified, msg = "expected an issue labeled notification");
-    test:assertEquals(issueLabels, createdIssueLabelString, msg = "invalid issue labels");
-}
+// @test:Config {
+//     dependsOn: ["testWebhookNotificationOnIssueCreation"]
+// }
+// function testWebhookNotificationOnIssueLabeling() {
+//     string createdIssueLabelString = "";
+//     foreach string label in createdIssueLabelArray {
+//         createdIssueLabelString += label;
+//     }
+//     test:assertTrue(issueLabeledNotified, msg = "expected an issue labeled notification");
+//     test:assertEquals(issueLabels, createdIssueLabelString, msg = "invalid issue labels");
+// }
 
-@test:Config {
-    dependsOn: ["testWebhookNotificationOnIssueCreation"]
-}
-function testWebhookNotificationOnIssueAssignment() {
-    test:assertTrue(issueAssignedNotified, msg = "expected an issue assigned notification");
-    test:assertEquals(issueAssignee, createdIssueAssignee, msg = "invalid issue labels");
-}
+// @test:Config {
+//     dependsOn: ["testWebhookNotificationOnIssueCreation"]
+// }
+// function testWebhookNotificationOnIssueAssignment() {
+//     test:assertTrue(issueAssignedNotified, msg = "expected an issue assigned notification");
+//     test:assertEquals(issueAssignee, createdIssueAssignee, msg = "invalid issue labels");
+// }
 
-@test:Config {
-    dependsOn: ["testWebhookNotificationOnIssueCreation"]
-}
-function testWebhookNotificationOnIssueEdited() {
-    test:assertTrue(issueEditedNotified, msg = "expected an issue edited notification");
-    if (issueChanges is ()) {
-        test:assertFail(msg = "expected `issueChanges` to not be `()`");
-    }
+// @test:Config {
+//     dependsOn: ["testWebhookNotificationOnIssueCreation"]
+// }
+// function testWebhookNotificationOnIssueEdited() {
+//     test:assertTrue(issueEditedNotified, msg = "expected an issue edited notification");
+//     if (issueChanges is ()) {
+//         test:assertFail(msg = "expected `issueChanges` to not be `()`");
+//     }
 
-    Changes setIssueChanges = <Changes> issueChanges;
-    boolean changesEmpty = true;
-    foreach var (key, value) in setIssueChanges {
-        if (!(value is ())) {
-            changesEmpty = false;
-            break;
-        }
-    }
-    test:assertTrue(changesEmpty, msg = "expected changes to be empty");
-}
+//     Changes setIssueChanges = <Changes> issueChanges;
+//     boolean changesEmpty = true;
+//     foreach var (key, value) in setIssueChanges {
+//         if (!(value is ())) {
+//             changesEmpty = false;
+//             break;
+//         }
+//     }
+//     test:assertTrue(changesEmpty, msg = "expected changes to be empty");
+// }
