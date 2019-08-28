@@ -16,7 +16,6 @@
 
 import ballerina/http;
 import ballerina/io;
-import ballerina/mime;
 import ballerinax/java;
 
 # Construct the request by adding the payload and authorization tokens.
