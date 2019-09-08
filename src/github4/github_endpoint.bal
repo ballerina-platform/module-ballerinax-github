@@ -88,7 +88,7 @@ public type Client client object {
     public remote function getCardListNextPage(CardList cardList) returns CardList|error {
         if (cardList.pageInfo.hasNextPage) {
             var cardListColumnId = cardList.columnId;
-            json convertedQuery = check stringToJson(cardList.cardListQuery);
+            json convertedQuery = check stringToJson(cardList.cardListQuery.toJsonString());
             if (convertedQuery is map<json>) {
                 json variables = convertedQuery["variables"];
                 if (variables is map<json>) {
@@ -101,7 +101,7 @@ public type Client client object {
                 if (cardList.listOwner == (GIT_ORGANIZATION)) {
                     convertedQuery[GIT_QUERY] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
                     ColumnList columnList = check getProjectColumns(GIT_ORGANIZATION,
-                        convertedQuery.toString(), self.githubGraphQlClient, self.accessToken);
+                        convertedQuery.toJsonString(), self.githubGraphQlClient, self.accessToken);
                     foreach var column in columnList.getAllColumns() {
                         if (column.id == cardListColumnId) {
                             return column.cards;
@@ -109,7 +109,7 @@ public type Client client object {
                     }
                 } else if (cardList.listOwner == (GIT_REPOSITORY)) {
                     convertedQuery[GIT_QUERY] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
-                    ColumnList columnList = check getProjectColumns(GIT_REPOSITORY, convertedQuery.toString(),
+                    ColumnList columnList = check getProjectColumns(GIT_REPOSITORY, convertedQuery.toJsonString(),
                         self.githubGraphQlClient, self.accessToken);
                     foreach var column in columnList.getAllColumns() {
                         if (column.id == cardListColumnId) {
@@ -117,6 +117,9 @@ public type Client client object {
                         }
                     }
                 }
+            } else {
+                error err = error(GITHUB_ERROR_CODE, message = "Cannot parse cardListQuery.");
+                return err;
             }
         }
         error err = error(GITHUB_ERROR_CODE, message = "Card list has no next page.");
@@ -588,7 +591,6 @@ public type Client client object {
             string repositoryName = split(resourcePath, PATH_SEPARATOR, INDEX_TWO);
             string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS,
                 ownerName, repositoryName, project.number, recordCount);
-io:println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" +  stringQuery);
             return getProjectColumns(GIT_REPOSITORY, stringQuery, self.githubGraphQlClient, self.accessToken);
         } else {
             error err = error(GITHUB_ERROR_CODE, message = "No records found.");

@@ -15,6 +15,7 @@
 // under the License.
 
 import ballerina/http;
+import ballerina/io;
 import ballerinax/java;
 import ballerina/internal;
 
@@ -57,6 +58,7 @@ function getValidatedResponse(http:Response|error response, string validateCompo
                 }
 
                 if (internal:equalsIgnoreCase(GIT_MESSAGE, key)) {
+
                     error err = error(GITHUB_ERROR_CODE, message = mapJsonPayload[GIT_MESSAGE].toString());
                     return err;
                 }
@@ -139,6 +141,7 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
 
     //Check for empty payloads and errors
     json jsonValidateResponse = check getValidatedResponse(response, GIT_PROJECT);
+io:println("!!!!!!!!!!!!!!!!!!!" + jsonValidateResponse.toString());
     map<json> mapJsonValidateResponse = <map<json>> jsonValidateResponse;
     map<json> data = <map<json>> mapJsonValidateResponse[GIT_DATA];
     map<json> mapJsonownerType = <map<json>> data[ownerType];

@@ -488,5 +488,5 @@ function jsonToOrganization(map<json> response) returns Organization {
     organization.url = response["avatarUrl"].toString();
     organization.websiteUrl = response["websiteUrl"].toString();
     organization.avatarUrl = response["avatarUrl"].toString();
-return organization;
+    return organization;
 }

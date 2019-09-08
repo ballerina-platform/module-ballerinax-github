@@ -14,24 +14,26 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/http;
 import ballerina/log;
+import ballerina/http;
+import ballerina/io;
 import ballerina/test;
 
-string testOrganizationName = "wso2";
-string testRepositoryName = "product-apim";
-string testResourcePath = "/ldclakmal/ballerina-github-testing/projects/1";
-string testIssueAssignee = "ldclakmal";
+string testOrganizationName = config:getAsString("ORGANIZATION_NAME");
+string testRepositoryName = config:getAsString("REPOSITORY_NAME");
+string testResourcePath = config:getAsString("RESOURCE_PATH");
+string testIssueAssignee = config:getAsString("ISSUE_ASSIGNEE");
 
 GitHubConfiguration gitHubConfig = {
-    accessToken: "4d0e9ddbc0044f653a69c2bd3773ed46f509d848",
-    clientConfig: { secureSocket: {
-                    trustStore: {
-                            path: "${ballerina.home}/bre/security/ballerinaTruststore.p12",
-                            password: "ballerina"
-                        }
-                    }
-                }
+    accessToken: "access_token",
+    clientConfig: {
+        secureSocket: {
+            trustStore: {
+                path: "${ballerina.home}/bre/security/ballerinaTruststore.p12",
+                password: "ballerina"
+            }
+        }
+    }
 };
 
 Client githubClient = new(gitHubConfig);
