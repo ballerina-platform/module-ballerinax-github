@@ -25,7 +25,7 @@ string testResourcePath = config:getAsString("RESOURCE_PATH");
 string testIssueAssignee = config:getAsString("ISSUE_ASSIGNEE");
 
 GitHubConfiguration gitHubConfig = {
-    accessToken: "c5d48871d31b8554939095cb7a4b2334136259e1",
+    accessToken: "access_token",
     clientConfig: {
         secureSocket: {
             trustStore: {
