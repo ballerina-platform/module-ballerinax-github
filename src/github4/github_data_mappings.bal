@@ -14,8 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/lang. 'int as ints;
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           GitHub Connector Transformers                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,9 +21,7 @@ import ballerina/lang. 'int as ints;
 function parseInt(json | error input) returns int | error {
     if (input is error) {
         return input;
-    } else if (input is string) {
-        return ints:fromString(<string>input);
-    } else if (input is int | float | decimal) {
+    } else if (input is int | float | decimal | string) {
         return <int>input;
     }
     error e = error("incompatible type");

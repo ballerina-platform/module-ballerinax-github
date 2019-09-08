@@ -42,7 +42,7 @@ github4:GitHubConfiguration gitHubConfig = {
         accessToken: "access_token",
         clientConfig: { 
             secureSocket: {
-                rustStore: {
+                trustStore: {
                     path: "${ballerina.home}/bre/security/ballerinaTruststore.p12",
                     password: "ballerina"
                 }

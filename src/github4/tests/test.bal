@@ -14,9 +14,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import ballerina/config;
 import ballerina/log;
 import ballerina/http;
-import ballerina/io;
 import ballerina/test;
 
 string testOrganizationName = config:getAsString("ORGANIZATION_NAME");
@@ -25,7 +25,7 @@ string testResourcePath = config:getAsString("RESOURCE_PATH");
 string testIssueAssignee = config:getAsString("ISSUE_ASSIGNEE");
 
 GitHubConfiguration gitHubConfig = {
-    accessToken: "access_token",
+    accessToken: "c5d48871d31b8554939095cb7a4b2334136259e1",
     clientConfig: {
         secureSocket: {
             trustStore: {

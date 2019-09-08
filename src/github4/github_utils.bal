@@ -15,7 +15,6 @@
 // under the License.
 
 import ballerina/http;
-import ballerina/io;
 import ballerinax/java;
 import ballerina/internal;
 
@@ -141,7 +140,6 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
 
     //Check for empty payloads and errors
     json jsonValidateResponse = check getValidatedResponse(response, GIT_PROJECT);
-io:println("!!!!!!!!!!!!!!!!!!!" + jsonValidateResponse.toString());
     map<json> mapJsonValidateResponse = <map<json>> jsonValidateResponse;
     map<json> data = <map<json>> mapJsonValidateResponse[GIT_DATA];
     map<json> mapJsonownerType = <map<json>> data[ownerType];
