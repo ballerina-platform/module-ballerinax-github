@@ -15,8 +15,8 @@
 // under the License.
 
 import ballerina/http;
-import ballerina/io;
 import ballerinax/java;
+import ballerina/internal;
 
 # Construct the request by adding the payload and authorization tokens.
 # + request - HTTP request object
@@ -29,25 +29,25 @@ function constructRequest(http:Request request, json stringQuery) {
 # + response - HTTP response object or HTTP Connector error
 # + validateComponent - Component to check in the response
 # + return - `json` payload of the response or Connector error
-function getValidatedResponse(http:Response | error response, string validateComponent) returns json | error {
+function getValidatedResponse(http:Response|error response, string validateComponent) returns @tainted json | error {
 
     if (response is http:Response) {
         var jsonPayload = response.getJsonPayload();
-        if (jsonPayload is map<json>) {
-            string[] payLoadKeys = jsonPayload.keys();
+        if (jsonPayload is json) {
+            string[] payLoadKeys = [];
+            map<json> mapJsonPayload = <map<json>> jsonPayload;
+            payLoadKeys = mapJsonPayload.keys();
             //Check all the keys in the payload to see if an error is returned.
             foreach var key in payLoadKeys {
-                if (GIT_ERRORS == key) {
-                    var errorList =json[].constructFrom( <json>jsonPayload[GIT_ERRORS]);
+                if (internal:equalsIgnoreCase(GIT_ERRORS, key)) {
+                    var errorList = mapJsonPayload[GIT_ERRORS];
                     if (errorList is json[]) {
                         int i = 0;
                         foreach var singleError in errorList {
-                            string errorMessage = "";
-                            if (singleError is map<json>) {
-                                errorMessage =singleError[GIT_MESSAGE].toString();
-                            }
+                            map<json> mapSingleerror = <map<json>> singleError;
+                            string errorMessage = mapSingleerror[GIT_MESSAGE].toString();
                             error err = error(GITHUB_ERROR_CODE, message = errorMessage);
-                            return <@untainted>err;
+                            return err;
                         }
                     } else {
                         error err = error(GITHUB_ERROR_CODE,
@@ -56,27 +56,27 @@ function getValidatedResponse(http:Response | error response, string validateCom
                     }
                 }
 
-                if (GIT_MESSAGE == key) {
-                    error err = error(GITHUB_ERROR_CODE, message =jsonPayload[GIT_MESSAGE].toString());
-                    return <@untainted>err;
+                if (internal:equalsIgnoreCase(GIT_MESSAGE, key)) {
+                    error err = error(GITHUB_ERROR_CODE, message = mapJsonPayload[GIT_MESSAGE].toString());
+                    return err;
                 }
             }
 
             //If no error is returned, then check if the response contains the requested data.
-            json gitData = jsonPayload[GIT_DATA];
-            string[] keySet;
-            if (gitData is map<json>) {
-                keySet = gitData.keys();
-
-                string keyInData = keySet[INDEX_ZERO];
-                json val = gitData[keyInData];
-                if (val is map<json> && val[validateComponent] != null) {
-                    return <@untainted>jsonPayload;
-                }
+            string[] keySet = [];
+            var data = mapJsonPayload[GIT_DATA];
+            if (data is map<json>) {
+                keySet = data.keys();
             }
-            error err = error(GITHUB_ERROR_CODE,
-            message = validateComponent + " is not available in the response");
-            return err;
+            map<json> mapJsondata = <map<json>> data;
+            string keyInData = keySet[INDEX_ZERO];
+            map<json> output = <map<json>> mapJsondata[keyInData];
+            if (output[validateComponent] == null) {
+                error err = error(GITHUB_ERROR_CODE,
+                message =  validateComponent + " is not available in the response");
+                return err;
+            }
+            return jsonPayload;
         } else {
             error err = error(GITHUB_ERROR_CODE,
             message = "Entity body is not json compatible since the received content-type is : null");
@@ -94,11 +94,12 @@ function getValidatedResponse(http:Response | error response, string validateCom
 function getValidatedRestResponse(http:Response | error response) returns json | error {
     if (response is http:Response) {
         var payload = response.getJsonPayload();
-        if (payload is map<json>) {
-            if (payload["message"] == null) {
+        if (payload is json) {
+            map<json> mapPayload = <map<json>> payload;
+            if (mapPayload["message"] == null) {
                 return <@untainted>payload;
             } else {
-                error err = error(GITHUB_ERROR_CODE, message =payload["message"].toString());
+                error err = error(GITHUB_ERROR_CODE, message =mapPayload["message"].toString());
                 return <@untainted>err;
             }
         } else {
@@ -117,7 +118,8 @@ function getValidatedRestResponse(http:Response | error response) returns json |
 # + stringQuery - GraphQL API query to get the project board columns
 # + githubClient - GitHub client object
 # + return - Column list object or Connector error
-function getProjectColumns(string ownerType, string stringQuery, http:Client githubClient) returns ColumnList | error {
+function getProjectColumns(string ownerType, string stringQuery, http:Client githubClient, string accessToken) returns
+@tainted ColumnList | error {
 
     http:Client gitHubEndpoint = githubClient;
 
@@ -127,6 +129,7 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
     }
 
     http:Request request = new;
+    setHeader(request, accessToken);
     json jsonQuery = check stringToJson(stringQuery);
     //Set headers and payload to the request
     constructRequest(request, <@untainted>jsonQuery);
@@ -136,31 +139,23 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
 
     //Check for empty payloads and errors
     json jsonValidateResponse = check getValidatedResponse(response, GIT_PROJECT);
-    if (jsonValidateResponse is map<json>) {
-        var gitdata = jsonValidateResponse[GIT_DATA];
-        if (gitdata is map<json>) {
-            var ownerTypeData = gitdata[ownerType];
-            if (ownerTypeData is map<json>) {
-                var gitProject = ownerTypeData[GIT_PROJECT];
-                if (gitProject is map<json>) {
-                    var projectColumnsJson = gitProject[GIT_COLUMNS];
-                    var columnList = jsonToColumnList(projectColumnsJson, ownerType, stringQuery);
-                    return columnList;
-                }
-            }
-        }
-    }
+    map<json> mapJsonValidateResponse = <map<json>> jsonValidateResponse;
+    map<json> data = <map<json>> mapJsonValidateResponse[GIT_DATA];
+    map<json> mapJsonownerType = <map<json>> data[ownerType];
+    map<json> gitPoject = <map<json>> mapJsonownerType[GIT_PROJECT];
+    json projectColumnsJson = <map<json>> gitPoject[GIT_COLUMNS];
+    return jsonToColumnList(projectColumnsJson, ownerType, stringQuery);
+}
 
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing github project columns");
-    return err;
+function setHeader(http:Request request, string accessToken){
+    request.setHeader("Authorization", "token " + accessToken);
 }
 
 # Convert string representation of JSON object to JSON object.
 # + src - String representation of the JSON object
 # + return - Converted `json` object or Connector error
 function stringToJson(string src) returns json | error {
-    io:StringReader reader = new (src);
-    return <@untainted>reader.readJson();
+    return src.fromJsonString();
 }
 
 # Split the given string using the given delimeter and return the string component of the given index.

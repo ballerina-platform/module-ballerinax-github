@@ -243,6 +243,7 @@ public type Organization record {|
     int id;
     string node_id;
     string url;
+    string name;
     string repos_url;
     string events_url;
     string hooks_url;

@@ -448,9 +448,12 @@ function jsonToRepository(json source_json) returns (Repository) {
     if (source_json.owner == null) {
         target_repository.owner = {};
     } else {
-        var result = RepositoryOwner.constructFrom(<json>source_json.owner);
-        if (result is RepositoryOwner) {
-            target_repository.owner = result;
+        var owner = source_json.owner;
+        if (owner is json) {
+            var result = RepositoryOwner.constructFrom(owner);
+            if (result is RepositoryOwner) {
+                target_repository.owner = result;
+            }
         }
     }
     if (source_json.primaryLanguage == null) {
@@ -470,3 +473,20 @@ function jsonToRepository(json source_json) returns (Repository) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of Connector Transformers                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function jsonToOrganization(map<json> response) returns Organization {
+    Organization organization = {};
+    organization.id = response["id"].toString();
+    organization.login = response["login"].toString();
+    organization.name = response["name"].toString();
+    organization.email = response["email"].toString();
+    organization.description = response["description"].toString();
+    organization.location = response["location"].toString();
+    organization.resourcePath = response["resourcePath"].toString();
+    organization.projectsResourcePath = response["projectsResourcePath"].toString();
+    organization.projectsUrl = response["projectsUrl"].toString();
+    organization.url = response["avatarUrl"].toString();
+    organization.websiteUrl = response["websiteUrl"].toString();
+    organization.avatarUrl = response["avatarUrl"].toString();
+return organization;
+}

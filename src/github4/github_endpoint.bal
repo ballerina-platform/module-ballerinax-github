@@ -18,14 +18,17 @@ import ballerina/http;
 import ballerina/io;
 
 # GitHub Client object.
+# + accessToken - The access token of the github account
 # + githubRestClient - HTTP client endpoint
 # + githubGraphQlClient - HTTP client endpoint
 public type Client client object {
 
+    string accessToken;
     http:Client githubRestClient;
     http:Client githubGraphQlClient;
 
     public function __init(GitHubConfiguration gitHubConfig) {
+        self.accessToken = gitHubConfig.accessToken;
         self.githubRestClient = new(GIT_REST_API_URL, gitHubConfig.clientConfig);
         self.githubGraphQlClient = new(GIT_GRAPHQL_API_URL, gitHubConfig.clientConfig);
     }
@@ -66,6 +69,7 @@ public type Client client object {
             "assignees": jsonAssigneeList };
 
         http:Request request = new;
+        setHeader(request, self.accessToken);
         //Set headers and payload to the request
         constructRequest(request, <@untainted> issueJsonPayload);
 
@@ -82,11 +86,10 @@ public type Client client object {
     # + cardList - Card list object
     # + return - Card list object of next page or Connector error
     public remote function getCardListNextPage(CardList cardList) returns CardList|error {
-
         if (cardList.pageInfo.hasNextPage) {
             var cardListColumnId = cardList.columnId;
             json convertedQuery = check stringToJson(cardList.cardListQuery);
-            if (convertedQuery is map<json>) {          
+            if (convertedQuery is map<json>) {
                 json variables = convertedQuery["variables"];
                 if (variables is map<json>) {
                     variables["endCursorCards"] = cardList.pageInfo.endCursor;
@@ -94,11 +97,11 @@ public type Client client object {
                     variables = {endCursorCards : cardList.pageInfo.endCursor};
                     convertedQuery["variables"] = variables;
                 }
-            
+
                 if (cardList.listOwner == (GIT_ORGANIZATION)) {
                     convertedQuery[GIT_QUERY] = GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE;
                     ColumnList columnList = check getProjectColumns(GIT_ORGANIZATION,
-                        convertedQuery.toString(), self.githubGraphQlClient);
+                        convertedQuery.toString(), self.githubGraphQlClient, self.accessToken);
                     foreach var column in columnList.getAllColumns() {
                         if (column.id == cardListColumnId) {
                             return column.cards;
@@ -107,16 +110,13 @@ public type Client client object {
                 } else if (cardList.listOwner == (GIT_REPOSITORY)) {
                     convertedQuery[GIT_QUERY] = GET_REPOSITORY_PROJECT_CARDS_NEXT_PAGE;
                     ColumnList columnList = check getProjectColumns(GIT_REPOSITORY, convertedQuery.toString(),
-                        self.githubGraphQlClient);
+                        self.githubGraphQlClient, self.accessToken);
                     foreach var column in columnList.getAllColumns() {
                         if (column.id == cardListColumnId) {
                             return column.cards;
                         }
                     }
                 }
-            } else {
-                error err = error(GITHUB_ERROR_CODE, message = "Cannot parse cardListQuery.");
-                return err;
             }
         }
         error err = error(GITHUB_ERROR_CODE, message = "Card list has no next page.");
@@ -141,10 +141,12 @@ public type Client client object {
 
                 if (columnList.listOwner == GIT_ORGANIZATION) {
                     jsonQuery[GIT_QUERY] = GET_ORGANIZATION_PROJECT_COLUMNS_NEXT_PAGE;
-                    return getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString(), self.githubGraphQlClient);
+                    return getProjectColumns(GIT_ORGANIZATION, jsonQuery.toString(), self.githubGraphQlClient,
+                    self.accessToken);
                 } else if (columnList.listOwner == GIT_REPOSITORY) {
                     jsonQuery[GIT_QUERY] = GET_REPOSITORY_PROJECT_COLUMNS_NEXT_PAGE;
-                    return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString(), self.githubGraphQlClient);
+                    return getProjectColumns(GIT_REPOSITORY, jsonQuery.toString(), self.githubGraphQlClient,
+                    self.accessToken);
                 }
             } else {
                 error err = error(GITHUB_ERROR_CODE, message = "Cannot parse columnListQuery.");
@@ -160,7 +162,7 @@ public type Client client object {
     # + recordCount - Specify number of records in the list
     # + return - Branch list object or Connector error
     public remote function getBranchList(Repository|[string, string] repository, int recordCount)
-                           returns BranchList|error {
+                           returns @tainted BranchList|error {
 
         string repositoryOwner = "";
         string repositoryName = "";
@@ -185,6 +187,7 @@ public type Client client object {
             repositoryOwner, repositoryName, recordCount);
 
         http:Request request = new;
+        setHeader(request, self.accessToken);
         json convertedQuery = check stringToJson(stringQuery);
         //Set headers and payload to the request
         constructRequest(request, <@untainted> convertedQuery);
@@ -216,7 +219,7 @@ public type Client client object {
     # + recordCount - Specify number of records in the list
     # + return - Issue list object or Connector error
     public remote function getIssueList(Repository|[string, string] repository, string state, int recordCount)
-                           returns IssueList|error {
+                           returns @tainted IssueList|error {
 
         string repositoryOwner = "";
         string repositoryName = "";
@@ -241,6 +244,7 @@ public type Client client object {
             repositoryOwner, repositoryName, state, recordCount);
 
         http:Request request = new;
+        setHeader(request, self.accessToken);
         json convertedQuery = check stringToJson(stringQuery);
         //Set headers and payload to the request
         constructRequest(request, <@untainted> convertedQuery);
@@ -269,10 +273,11 @@ public type Client client object {
     # Get the next page of the issue list.
     # + issueList - Issue list object
     # + return - Issue list object of next page or Connector error
-    public remote function getIssueListNextPage(IssueList issueList) returns IssueList|error {
+    public remote function getIssueListNextPage(IssueList issueList) returns @tainted IssueList|error {
 
         if (issueList.hasNextPage()) {
             http:Request request = new;
+            setHeader(request, self.accessToken);
             json jsonQuery = check stringToJson(issueList.issueListQuery);
             if (jsonQuery is map<json>) {
                 json variables = jsonQuery["variables"];
@@ -318,7 +323,7 @@ public type Client client object {
     # Get an organization.
     # + name - Name of the organization
     # + return - Organization object or Connector error
-    public remote function getOrganization(string name) returns Organization|error {
+    public remote function getOrganization(string name) returns @tainted Organization|error {
 
         if (name == EMPTY_STRING) {
             error err = error(GITHUB_ERROR_CODE, message = "Organization name should be specified.");
@@ -329,7 +334,9 @@ public type Client client object {
         string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION, name);
 
         http:Request request = new;
+        setHeader(request, self.accessToken);
         json jsonQuery = check stringToJson(stringQuery);
+        // Set headers and payload to the request
         // Set headers and payload to the request
         constructRequest(request, <@untainted> jsonQuery);
 
@@ -337,17 +344,10 @@ public type Client client object {
         var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
 
         json jsonValidatedResponse = check getValidatedResponse(response, GIT_NAME);
-        if (jsonValidatedResponse is map<map<json>>) {
-            var githubRepositoryJson = jsonValidatedResponse[GIT_DATA][GIT_ORGANIZATION];
-            var value = Organization.constructFrom(<json>githubRepositoryJson);
-            if (value is Organization) {
-                singleOrganization = value;
-            }
-        } else {
-            error err = error(GITHUB_ERROR_CODE, message = "Error parsing organization");
-            return err;
-        }
-        return singleOrganization;
+        map<json> jsonPayloadInMap = <map<json>> jsonValidatedResponse;
+        json githubRepositoryJson = jsonPayloadInMap[GIT_DATA];
+        map<json> jsonPayloadInMap1 = <map<json>> githubRepositoryJson;
+        return jsonToOrganization(<map<json>>jsonPayloadInMap1[GIT_ORGANIZATION]);
     }
 
     # Get a single project of an organization.
@@ -355,7 +355,7 @@ public type Client client object {
     # + projectNumber - The number of the project
     # + return - Project object or Connector error
     public remote function getOrganizationProject(Organization|string organization, int projectNumber)
-                           returns Project|error {
+                           returns @tainted Project|error {
 
         string organizationName = "";
         var value = organization;
@@ -374,6 +374,7 @@ public type Client client object {
         string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT, organizationName, projectNumber);
 
         http:Request request = new;
+        setHeader(request, self.accessToken);
         json jsonQuery = check stringToJson(stringQuery);
         //Set headers and payload to the request
         constructRequest(request, <@untainted> jsonQuery);
@@ -406,7 +407,7 @@ public type Client client object {
     # + recordCount - Specify number of records in the list
     # + return - Project list object or Connector error
     public remote function getOrganizationProjectList(Organization|string organization, string state,
-                                                  int recordCount) returns ProjectList|error {
+                                                  int recordCount) returns @tainted ProjectList|error {
 
         http:Client gitHubEndpoint = self.githubGraphQlClient;
         string organizationName = "";
@@ -431,6 +432,7 @@ public type Client client object {
         string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECTS, organizationName, state, recordCount);
 
         http:Request request = new;
+        setHeader(request, self.accessToken);
         json jsonQuery = check stringToJson(stringQuery);
         //Set headers and payload to the request
         constructRequest(request, <@untainted> jsonQuery);
@@ -460,7 +462,7 @@ public type Client client object {
     # + recordCount - Specify number of records in the list
     # + return - Repository list object or Connector error
     public remote function getUserRepositoryList(User|string user, int recordCount)
-                           returns RepositoryList|error {
+                           returns @tainted RepositoryList|error {
 
         string userName = "";
         if (user is User) {
@@ -482,6 +484,7 @@ public type Client client object {
         string stringQuery = io:sprintf(TEMPLATE_GET_USER_REPOSITORIES, userName, recordCount);
 
         http:Request request = new;
+        setHeader(request, self.accessToken);
         json jsonQuery = check stringToJson(stringQuery);
         //Set headers and payload to the request
         constructRequest(request, <@untainted> jsonQuery);
@@ -511,7 +514,7 @@ public type Client client object {
     # + recordCount - Specify number of records in the list
     # + return - Repository list object or Connector error
     public remote function getOrganizationRepositoryList(Organization|string organization, int recordCount)
-                           returns RepositoryList|error {
+                           returns @tainted RepositoryList|error {
 
         string organizationName = "";
         if (organization is Organization) {
@@ -526,13 +529,15 @@ public type Client client object {
         }
 
         if (recordCount > MAX_RECORD_COUNT) {
-            error err = error(GITHUB_ERROR_CODE, message = "Maximum record count limited to " + MAX_RECORD_COUNT.toString());
+            error err = error(GITHUB_ERROR_CODE, message = "Maximum record count limited to " +
+            MAX_RECORD_COUNT.toString());
             return err;
         }
 
         string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_REPOSITORIES, organizationName, recordCount);
 
         http:Request request = new;
+        setHeader(request, self.accessToken);
         json jsonQuery = check stringToJson(stringQuery);
         //Set headers and payload to the request
         constructRequest(request, <@untainted> jsonQuery);
@@ -542,26 +547,18 @@ public type Client client object {
 
         //Check for empty payloads and errors
         json validatedResponse = check getValidatedResponse(response, GIT_REPOSITORIES);
-        if (validatedResponse is map<json>) {
-            var gitData = validatedResponse[GIT_DATA];
-            if (gitData is map<json>) {
-                var gitOrgs = gitData[GIT_ORGANIZATION];
-                if (gitOrgs is map<json>) {
-                    var githubRepositoriesJson = gitOrgs[GIT_REPOSITORIES];
-                    var repositoryList = jsonToRepositoryList(githubRepositoriesJson, stringQuery);
-                    return repositoryList;
-                }
-            }
-        }
-        error err = error(GITHUB_ERROR_CODE, message = "Error parsing org repos");
-        return err;
+        map<json> mapValidatedResponse = <map<json>> validatedResponse;
+        map<json> data = <map<json>> mapValidatedResponse[GIT_DATA];
+        map<json> organizationData = <map<json>> data[GIT_ORGANIZATION];
+        json githubRepositoriesJson = organizationData[GIT_REPOSITORIES];
+        return jsonToRepositoryList(githubRepositoriesJson, stringQuery);
     }
 
     # Get all columns of a project board.
     # + project - Project object
     # + recordCount - Specify number of records in the list
     # + return - Column list object or Connector error
-    public remote function getProjectColumnList(Project project, int recordCount) returns ColumnList|error {
+    public remote function getProjectColumnList(Project project, int recordCount) returns @tainted ColumnList|error {
         if (project["owner"]["__typename"] == EMPTY_STRING || project.number <= INDEX_ZERO ||
                 project.resourcePath == EMPTY_STRING) {
             error err = error(GITHUB_ERROR_CODE, message = "Project owner, number and resource path should be specified");
@@ -580,18 +577,19 @@ public type Client client object {
         } else {        
             resourcePath = EMPTY_STRING;
         }
-
         if (projectOwnerType == GIT_ORGANIZATION) {
             string organization = split(resourcePath, PATH_SEPARATOR, INDEX_TWO);
             string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS,
                 organization, project.number, recordCount);
-            return getProjectColumns(GIT_ORGANIZATION, stringQuery, self.githubGraphQlClient);
+            return getProjectColumns(GIT_ORGANIZATION, stringQuery, self.githubGraphQlClient, self.accessToken);
         } else if (projectOwnerType == GIT_REPOSITORY) {
+
             string ownerName = split(resourcePath, PATH_SEPARATOR, INDEX_ONE);
             string repositoryName = split(resourcePath, PATH_SEPARATOR, INDEX_TWO);
             string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS,
                 ownerName, repositoryName, project.number, recordCount);
-            return getProjectColumns(GIT_REPOSITORY, stringQuery, self.githubGraphQlClient);
+io:println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE" +  stringQuery);
+            return getProjectColumns(GIT_REPOSITORY, stringQuery, self.githubGraphQlClient, self.accessToken);
         } else {
             error err = error(GITHUB_ERROR_CODE, message = "No records found.");
             return err;
@@ -606,6 +604,7 @@ public type Client client object {
         if (projectList.hasNextPage()) {
 
             http:Request request = new;
+            setHeader(request, self.accessToken);
             json dataQuery;
             json jsonQuery = check stringToJson(projectList.projectListQuery);
             if (jsonQuery is map<json>) {
@@ -660,7 +659,7 @@ public type Client client object {
     # + recordCount - Specify number of records in the list
     # + return - Pull request list object or Connector error
     public remote function getPullRequestList(Repository|[string, string] repository, string state, int recordCount)
-                           returns PullRequestList|error {
+                           returns @tainted PullRequestList|error {
 
         string repositoryOwner;
         string repositoryName;
@@ -683,6 +682,7 @@ public type Client client object {
         string stringQuery = io:sprintf(TEMPLATE_GET_PULL_REQUESTS, repositoryOwner, repositoryName, state, recordCount);
 
         http:Request request = new;
+        setHeader(request, self.accessToken);
         json jsonQuery = check stringToJson(stringQuery);
         //Set headers and payload to the request
         constructRequest(request, <@untainted> jsonQuery);
@@ -709,11 +709,13 @@ public type Client client object {
     # Get the next page of the pull request list.
     # + pullRequestList - Pull request list object
     # + return - Pull request list object of next page or Connector error
-    public remote function getPullRequestListNextPage(PullRequestList pullRequestList) returns PullRequestList|error {
+    public remote function getPullRequestListNextPage(PullRequestList pullRequestList) returns @tainted
+    PullRequestList|error {
 
         if (pullRequestList.hasNextPage()) {
 
             http:Request request = new;
+            setHeader(request, self.accessToken);
             json jsonQuery = check stringToJson(pullRequestList.pullRequestListQuery);
             if (jsonQuery is map<json>) {
                 json variables = jsonQuery["variables"];
@@ -759,7 +761,8 @@ public type Client client object {
     # Get a repository of an owner.
     # + repoIdentifier - Name of the repository and its owner Format: ("owner/repository")
     # + return - Repository object or Connector error
-    public remote function getRepository(string|[string, string] repoIdentifier) returns Repository|error {
+    public remote function getRepository(string|[string, string] repoIdentifier) returns @tainted
+    Repository|error {
 
         string repoOwner;
         string repoName;
@@ -780,6 +783,7 @@ public type Client client object {
         string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY, repoOwner, repoName);
 
         http:Request request = new;
+        setHeader(request, self.accessToken);
         json jsonQuery = check stringToJson(stringQuery);
         // Set headers and payload to the request
         constructRequest(request, <@untainted> jsonQuery);
@@ -788,24 +792,22 @@ public type Client client object {
         var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
 
         json jsonValidatedResponse = check getValidatedResponse(response, GIT_NAME);
-        if (jsonValidatedResponse is map<map<json>>) {
-            var githubRepositoryJson = <json>jsonValidatedResponse[GIT_DATA][GIT_REPOSITORY];
-            singleRepository = jsonToRepository(githubRepositoryJson);
-            return singleRepository;
-        } else {
-            error err = error(GITHUB_ERROR_CODE, message = "Error parsing repos");
-            return err;
-        }
+        map<json> mapJsonValidatedResponse = <map<json>> jsonValidatedResponse;
+        map<json> data = <map<json>> mapJsonValidatedResponse[GIT_DATA];
+        map<json> githubRepositoryJson = <map<json>> data[GIT_REPOSITORY];
+        return jsonToRepository(githubRepositoryJson);
     }
 
     # Get the next page of a repository list.
     # + repositoryList - Repository list object
     # + return - Repository list object of next page or Connector error
-    public remote function getRepositoryListNextPage(RepositoryList repositoryList) returns RepositoryList|error {
+    public remote function getRepositoryListNextPage(RepositoryList repositoryList) returns @tainted
+    RepositoryList|error {
 
         if (repositoryList.hasNextPage()) {
 
             http:Request request = new;
+            setHeader(request, self.accessToken);
             json jsonQuery = check stringToJson(repositoryList.repositoryListQuery);
             if (jsonQuery is map<json>) {
                 json variables = jsonQuery["variables"];
@@ -853,7 +855,7 @@ public type Client client object {
     # + projectNumber - Project identification number
     # + return - Project object or Connector error
     public remote function getRepositoryProject(Repository|[string, string] repository, int projectNumber)
-                           returns Project|error {
+                           returns @tainted Project|error {
 
         string repositoryOwner;
         string repositoryName;
@@ -872,6 +874,7 @@ public type Client client object {
         string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT, repositoryOwner, repositoryName, projectNumber);
 
         http:Request request = new;
+        setHeader(request, self.accessToken);
         json jsonQuery = check stringToJson(stringQuery);
         //Set headers and payload to the request
         constructRequest(request, <@untainted> jsonQuery);
@@ -901,7 +904,7 @@ public type Client client object {
     # + recordCount - Specify number of records in the list
     # + return - Project list object or Connector error
     public remote function getRepositoryProjectList(Repository|[string, string] repository, string state,
-                                                int recordCount) returns ProjectList|error {
+                                                int recordCount) returns @tainted ProjectList|error {
 
         string repositoryOwner;
         string repositoryName;
@@ -926,6 +929,7 @@ public type Client client object {
             repositoryOwner, repositoryName, state, recordCount);
 
         http:Request request = new;
+        setHeader(request, self.accessToken);
         json jsonQuery = check stringToJson(stringQuery);
         //Set headers and payload to the request
         constructRequest(request, <@untainted> jsonQuery);
@@ -953,6 +957,8 @@ public type Client client object {
 
 # Represents the Github Client Connector Endpoint configuration.
 # + clientConfig - HTTP client endpoint configuration
+# + accessToken - The access token of the Github account
 public type GitHubConfiguration record {
-    http:ClientEndpointConfig clientConfig;
+    http:ClientEndpointConfig clientConfig = {};
+    string accessToken;
 };

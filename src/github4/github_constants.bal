@@ -558,7 +558,7 @@ final string GET_ORGANIZATION_PROJECT_CARDS_NEXT_PAGE =
     }";
 
 final string GET_USER_REPOSITORIES =
-    "query ($owner: String!, $recordCount: Int!) {       
+    "query ($owner: String!, $recordCount: Int!) {
         user (login:$owner) {
             repositories (first: $recordCount, orderBy:{field:NAME, direction:ASC}) {
                 " + PAGE_INFO + ",
