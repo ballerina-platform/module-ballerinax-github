@@ -18,20 +18,16 @@
 //                                           GitHub Connector Transformers                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function parseInt(json | error input) returns int | error {
-    if (input is error) {
-        return input;
-    } else if (input is int | float | decimal | string) {
+function parseInt(json input) returns int | error {
+    if (input is int | float | decimal | string) {
         return <int>input;
     }
     error e = error("incompatible type");
     return e;
 }
 
-function parseBoolean(json | error input) returns boolean | error {
-    if (input is error) {
-        return input;
-    } else if (input is string) {
+function parseBoolean(json input) returns boolean | error {
+    if (input is string) {
         if (input == "true") {
             return true;
         } else if (input == "false") {
@@ -53,7 +49,7 @@ function jsonToProject(json sourceJson) returns Project | error {
     project.id = <string>sourceJson.id;
     project.name = <string>sourceJson.name;
     project.body = <string>sourceJson.body;
-    project.number = check parseInt(sourceJson.number);
+    project.number = check parseInt(check sourceJson.number);
     project.createdAt = <string>sourceJson.createdAt;
     project.closed = (sourceJson.closed is boolean) ? sourceJson.closed.toString() : "";
     project.closedAt = (sourceJson.closedAt is string) ? <string>sourceJson.closedAt : "";
@@ -294,9 +290,12 @@ function restResponseJsonToIssue(json source_json) returns (Issue) {
     target_issue.author.login = source_json.user.login.toString();
     target_issue.author.url = source_json.user.url.toString();
     target_issue.author.avatarUrl = source_json.user.avatar_url.toString();
-    int | error num = parseInt(source_json.number);
-    if (num is int) {
-        target_issue.number = num;
+    var number = source_json.number;
+    if (number is json) {
+        int | error num = parseInt(number);
+        if (num is int) {
+            target_issue.number = num;
+        }
     }
     var result = json[].constructFrom(<json>source_json.labels);
     json[] labelList = [];
@@ -347,9 +346,12 @@ function jsonToIssue(json source_json) returns (Issue) {
         target_issue.author = value;
     }
 
-    var number = parseInt(source_json.number);
-    if (number is int) {
-        target_issue.number = number;
+    var num = source_json.number;
+    if (num is json) {
+        var number = parseInt(num);
+        if (number is int) {
+            target_issue.number = number;
+        }
     }
 
     json[] labelList = [];
@@ -396,44 +398,68 @@ function jsonToRepository(json source_json) returns (Repository) {
     target_repository.createdAt = source_json.createdAt.toString();
     target_repository.updatedAt = source_json.updatedAt.toString();
     target_repository.description = source_json.description.toString();
-    var forkCount = parseInt(source_json.forkCount);
-    if (forkCount is int) {
-        target_repository.forkCount = forkCount;
+    var jsonforkCount = source_json.forkCount;
+    if (jsonforkCount is json) {
+        var forkCount = parseInt(jsonforkCount);
+        if (forkCount is int) {
+            target_repository.forkCount = forkCount;
+        }
     }
 
-    var booleanHasWikiEnabled = parseBoolean(source_json.hasWikiEnabled);
-    if (booleanHasWikiEnabled is boolean) {
-        target_repository.hasWikiEnabled = booleanHasWikiEnabled;
+    var wikiEnabled = source_json.hasWikiEnabled;
+    if (wikiEnabled is json) {
+        var booleanHasWikiEnabled = parseBoolean(wikiEnabled);
+        if (booleanHasWikiEnabled is boolean) {
+            target_repository.hasWikiEnabled = booleanHasWikiEnabled;
+        }
     }
 
-    var booleanHasIssuesEnabled = parseBoolean(source_json.hasIssuesEnabled);
-    if (booleanHasIssuesEnabled is boolean) {
-        target_repository.hasIssuesEnabled = booleanHasIssuesEnabled;
+    var issuesEnabled = source_json.hasIssuesEnabled;
+    if (issuesEnabled is json) {
+        var booleanHasIssuesEnabled = parseBoolean(issuesEnabled);
+        if (booleanHasIssuesEnabled is boolean) {
+            target_repository.hasIssuesEnabled = booleanHasIssuesEnabled;
+        }
     }
 
-    var booleanIsArchived = parseBoolean(source_json.isArchived);
-    if (booleanIsArchived is boolean) {
-        target_repository.isArchived = booleanIsArchived;
+    var isArchived = source_json.isArchived;
+    if (isArchived is json) {
+        var booleanIsArchived = parseBoolean(isArchived);
+        if (booleanIsArchived is boolean) {
+            target_repository.isArchived = booleanIsArchived;
+        }
     }
 
-    var booleanIsFork = parseBoolean(source_json.isForksFork);
-    if (booleanIsFork is boolean) {
-        target_repository.isFork = booleanIsFork;
+    var isForksFork = source_json.isForksFork;
+    if (isForksFork is json) {
+        var booleanIsFork = parseBoolean(isForksFork);
+        if (booleanIsFork is boolean) {
+            target_repository.isFork = booleanIsFork;
+        }
     }
 
-    var booleanIsLocked = parseBoolean(source_json.isLocked);
-    if (booleanIsLocked is boolean) {
-        target_repository.isLocked = booleanIsLocked;
+    var isLocked = source_json.isLocked;
+    if (isLocked is json) {
+        var booleanIsLocked = parseBoolean(isLocked);
+        if (booleanIsLocked is boolean) {
+            target_repository.isLocked = booleanIsLocked;
+        }
     }
 
-    var booleanIsMirror = parseBoolean(source_json.isMirror);
-    if (booleanIsMirror is boolean) {
-        target_repository.isMirror = booleanIsMirror;
+    var isMirror = source_json.isMirror;
+    if (isMirror is json) {
+        var booleanIsMirror = parseBoolean(isMirror);
+        if (booleanIsMirror is boolean) {
+            target_repository.isMirror = booleanIsMirror;
+        }
     }
 
-    var booleanIsPrivate = parseBoolean(source_json.isPrivate);
-    if (booleanIsPrivate is boolean) {
-        target_repository.isPrivate = booleanIsPrivate;
+    var isPrivate = source_json.isPrivate;
+    if (isPrivate is json) {
+        var booleanIsPrivate = parseBoolean(isPrivate);
+        if (booleanIsPrivate is boolean) {
+            target_repository.isPrivate = booleanIsPrivate;
+        }
     }
 
     target_repository.homepageUrl = source_json.homepageUrl.toString();
@@ -460,9 +486,12 @@ function jsonToRepository(json source_json) returns (Repository) {
             target_repository.primaryLanguage = result;
         }
     }
-    var stargazerCount = parseInt(source_json.stargazers.totalCount);
-    if (stargazerCount is int) {
-        target_repository.stargazerCount = stargazerCount;
+    var count = source_json.stargazers.totalCount;
+    if (count is json) {
+        var stargazerCount = parseInt(count);
+        if (stargazerCount is int) {
+            target_repository.stargazerCount = stargazerCount;
+        }
     }
     return target_repository;
 }
