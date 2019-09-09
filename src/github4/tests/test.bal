@@ -15,8 +15,8 @@
 // under the License.
 
 import ballerina/config;
-import ballerina/http;
 import ballerina/log;
+import ballerina/http;
 import ballerina/test;
 
 string testOrganizationName = config:getAsString("ORGANIZATION_NAME");
@@ -25,17 +25,7 @@ string testResourcePath = config:getAsString("RESOURCE_PATH");
 string testIssueAssignee = config:getAsString("ISSUE_ASSIGNEE");
 
 GitHubConfiguration gitHubConfig = {
-    clientConfig: {
-        auth: {
-            scheme: http:OAUTH2,
-            config: {
-                grantType: http:DIRECT_TOKEN,
-                config: {
-                    accessToken: config:getAsString("GITHUB_TOKEN")
-                }
-            }
-        }
-    }
+    accessToken: "access_token"
 };
 
 Client githubClient = new(gitHubConfig);
@@ -46,19 +36,17 @@ Client githubClient = new(gitHubConfig);
 function testGetOrganization() {
     //Get a single organization
     log:printInfo("githubClient -> getOrganization()");
-    Organization organization = {};
     var organizationData = githubClient->getOrganization("wso2");
     if (organizationData is Organization) {
-        organization = organizationData;
+        test:assertEquals(organizationData.name, "WSO2", msg = "Failed getOrganization()");
     } else {
-        test:assertFail(msg = <string>organizationData.detail().message);
+        test:assertFail(msg = <string>organizationData.detail()["message"]);
     }
 
-    test:assertEquals(organization.name, "WSO2", msg = "Failed getOrganization()");
 }
 
 @test:Config {
-    groups: ["network-calls"]
+ groups: ["network-calls"]
 }
 function testGetOrganizationProject() {
     // Get an organization project
@@ -69,9 +57,8 @@ function testGetOrganizationProject() {
     if (projectData is Project) {
         orgProject = projectData;
     } else {
-        test:assertFail(msg = <string>projectData.detail().message);
+        test:assertFail(msg = <string>projectData.detail()["message"]);
     }
-
     test:assertEquals(orgProject.number, 1, msg = "Failed getOrganizationProject()");
 }
 
@@ -89,12 +76,12 @@ function testGetOrganizationProjectList() {
     if (responseProjectList is ProjectList) {
         projectList = responseProjectList;
     } else {
-        test:assertFail(msg = <string>responseProjectList.detail().message);
+        test:assertFail(msg = <string>responseProjectList.detail()["message"]);
     }
     boolean lengthEqualsRecords = projectList.getAllProjects().length() >= recordCount;
 
     test:assertTrue(lengthEqualsRecords, msg = "Organization project count of " + testOrganizationName
-            + " does not match with " + recordCount);
+         + " does not match with " + recordCount.toString());
 }
 
 @test:Config {
@@ -110,16 +97,16 @@ function testGetOrganizationProjectListNextPage() {
     var responseProjectList = githubClient->
     getOrganizationProjectList(projectListOrganization, STATE_OPEN, 2);
     if (responseProjectList is ProjectList) {
-        projectList = untaint responseProjectList;
+        projectList = responseProjectList;
     } else {
-        test:assertFail(msg = <string>responseProjectList.detail().message);
+        test:assertFail(msg = <string>responseProjectList.detail()["message"]);
     }
     // Next page
     responseProjectList = githubClient->getProjectListNextPage(projectList);
     if (responseProjectList is ProjectList) {
         projectList = responseProjectList;
     } else {
-        test:assertFail(msg = <string>responseProjectList.detail().message);
+        test:assertFail(msg = <string>responseProjectList.detail()["message"]);
     }
     boolean lengthEqualsRecords = projectList.getAllProjects().length() >= recordCount;
 
@@ -134,13 +121,13 @@ function testGetProjectColumnList() {
     log:printInfo("githubClient -> getProjectColumnList()");
     int recordCount = 1;
     Project columnListProject = { number: 1, resourcePath: testResourcePath };
-    columnListProject["owner"]["__typename"] = "Repository";
+    columnListProject["owner"]["__typename"] = "repository";
     ColumnList columnList = new;
     var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
     if (columns is ColumnList) {
         columnList = columns;
     } else {
-        test:assertFail(msg = <string>columns.detail().message);
+        test:assertFail(msg = <string>columns.detail()["message"]);
     }
     boolean lengthEqualsRecords = columnList.getAllColumns().length() >= recordCount;
 
@@ -156,13 +143,13 @@ function testGetCardListOfColumn() {
     log:printInfo("Column -> getCardList()");
     int recordCount = 1;
     Project columnListProject = { number: 1, resourcePath: testResourcePath };
-    columnListProject["owner"]["__typename"] = "Repository";
+    columnListProject["owner"]["__typename"] = "repository";
     ColumnList columnList = new;
     var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
     if (columns is ColumnList) {
         columnList = columns;
     } else {
-        test:assertFail(msg = <string>columns.detail().message);
+        test:assertFail(msg = <string>columns.detail()["message"]);
     }
     Column column = columnList.getAllColumns()[0];
     CardList cardList = column.getCardList();
@@ -180,13 +167,13 @@ function testGetCardListNextPage() {
     log:printInfo("githubClient -> getCardListNextPage()");
     int recordCount = 1;
     Project columnListProject = { number: 1, resourcePath: testResourcePath };
-    columnListProject.owner.__typename = "Repository";
+    columnListProject.owner.__typename = "repository";
     ColumnList columnList = new;
     var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
     if (columns is ColumnList) {
         columnList = columns;
     } else {
-        test:assertFail(msg = <string>columns.detail().message);
+        test:assertFail(msg = <string>columns.detail()["message"]);
     }
     Column column = columnList.getAllColumns()[0];
     CardList cardList = column.getCardList();
@@ -194,7 +181,7 @@ function testGetCardListNextPage() {
     if (cardListNextPage is CardList) {
         cardList = cardListNextPage;
     } else {
-        test:assertFail(msg = <string>cardListNextPage.detail().message);
+        test:assertFail(msg = <string>cardListNextPage.detail()["message"]);
     }
     boolean lengthEqualsRecords = cardList.nodes.length() >= recordCount;
 
@@ -214,7 +201,7 @@ function testGetOrganizationRepositoryList() {
     if (repoList is RepositoryList) {
         repositoryList = repoList;
     } else {
-        test:assertFail(msg = <string>repoList.detail().message);
+        test:assertFail(msg = <string>repoList.detail()["message"]);
     }
     boolean lengthEqualsRecords = repositoryList.getAllRepositories().length() >= recordCount;
 
@@ -235,14 +222,14 @@ function testGetOrganizationRepositoryListNextPage() {
     if (repoList is RepositoryList) {
         repositoryList = repoList;
     } else {
-        test:assertFail(msg = <string>repoList.detail().message);
+        test:assertFail(msg = <string>repoList.detail()["message"]);
     }
     // Next page
-    repoList = githubClient->getRepositoryListNextPage(untaint repositoryList);
+    repoList = githubClient->getRepositoryListNextPage(repositoryList);
     if (repoList is RepositoryList) {
         repositoryList = repoList;
     } else {
-        test:assertFail(msg = <string>repoList.detail().message);
+        test:assertFail(msg = <string>repoList.detail()["message"]);
     }
     boolean lengthEqualsRecords = repositoryList.getAllRepositories().length() >= recordCount;
 
@@ -260,7 +247,7 @@ function testGetRepository() {
     if (repo is Repository) {
         repository = repo;
     } else {
-        test:assertFail(msg = <string>repo.detail().message);
+        test:assertFail(msg = <string>repo.detail()["message"]);
     }
 
     test:assertEquals(repository.name, "product-apim", msg = "Failed getRepository()");
@@ -278,14 +265,14 @@ function testGetRepositoryProject() {
     if (singleRepoProject is Project) {
         repositoryProject = singleRepoProject;
     } else {
-        test:assertFail(msg = <string>singleRepoProject.detail().message);
+        test:assertFail(msg = <string>singleRepoProject.detail()["message"]);
     }
 
     test:assertEquals(repositoryProject.name, "Sample Project 1", msg = "Failed getRepositoryProject()");
 }
 
 @test:Config {
-    groups: ["network-calls"]
+ groups: ["network-calls"]
 }
 function testGetRepositoryProjectList() {
     //Get a list of projects of a repository
@@ -298,12 +285,12 @@ function testGetRepositoryProjectList() {
     if (responseRepoProjectList is ProjectList) {
         repoProjectList = responseRepoProjectList;
     } else {
-        test:assertFail(msg = <string>responseRepoProjectList.detail().message);
+        test:assertFail(msg = <string>responseRepoProjectList.detail()["message"]);
     }
     boolean lengthEqualsRecords = repoProjectList.getAllProjects().length() == recordCount;
 
     test:assertTrue(lengthEqualsRecords, msg = "Project list count of ldclakmal/ballerina-github-testing does not match with "
-            + recordCount);
+         + recordCount.toString());
 }
 
 @test:Config {
@@ -319,16 +306,16 @@ function testGetRepositoryProjectListNextPage() {
     var responseRepoProjectList = githubClient->
     getRepositoryProjectList(projectRepository, STATE_OPEN, 1);
     if (responseRepoProjectList is ProjectList) {
-        repoProjectList = untaint responseRepoProjectList;
+        repoProjectList = responseRepoProjectList;
     } else {
-        test:assertFail(msg = <string>responseRepoProjectList.detail().message);
+        test:assertFail(msg = <string>responseRepoProjectList.detail()["message"]);
     }
     // Next page
     responseRepoProjectList = githubClient->getProjectListNextPage(repoProjectList);
     if (responseRepoProjectList is ProjectList) {
         repoProjectList = responseRepoProjectList;
     } else {
-        test:assertFail(msg = <string>responseRepoProjectList.detail().message);
+        test:assertFail(msg = <string>responseRepoProjectList.detail()["message"]);
     }
     boolean lengthEqualsRecords = repoProjectList.getAllProjects().length() == recordCount;
 
@@ -348,7 +335,7 @@ function testGetPullRequestList() {
     if (prList is PullRequestList) {
         pullRequestList = prList;
     } else {
-        test:assertFail(msg = <string>prList.detail().message);
+        test:assertFail(msg = <string>prList.detail()["message"]);
     }
     boolean lengthEqualsRecords = pullRequestList.getAllPullRequests().length() >= recordCount;
 
@@ -367,16 +354,16 @@ function testGetPullRequestListNextPage() {
     PullRequestList pullRequestList = new;
     var prList = githubClient->getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
     if (prList is PullRequestList) {
-        pullRequestList = untaint prList;
+        pullRequestList = prList;
     } else {
-        test:assertFail(msg = <string>prList.detail().message);
+        test:assertFail(msg = <string>prList.detail()["message"]);
     }
     // Next page
     prList = githubClient->getPullRequestListNextPage(pullRequestList);
     if (prList is PullRequestList) {
         pullRequestList = prList;
     } else {
-        test:assertFail(msg = <string>prList.detail().message);
+        test:assertFail(msg = <string>prList.detail()["message"]);
     }
     boolean lengthEqualsRecords = pullRequestList.getAllPullRequests().length() >= recordCount;
 
@@ -396,7 +383,7 @@ function testGetIssueList() {
     if (issues is IssueList) {
         issueList = issues;
     } else {
-        test:assertFail(msg = <string>issues.detail().message);
+        test:assertFail(msg = <string>issues.detail()["message"]);
     }
     boolean lengthEqualsRecords = issueList.getAllIssues().length() >= recordCount;
 
@@ -417,14 +404,14 @@ function testGetIssueListNextPage() {
     if (issues is IssueList) {
         issueList = issues;
     } else {
-        test:assertFail(msg = <string>issues.detail().message);
+        test:assertFail(msg = <string>issues.detail()["message"]);
     }
     // Next page
-    issues = githubClient->getIssueListNextPage(untaint issueList);
+    issues = githubClient->getIssueListNextPage(issueList);
     if (issues is IssueList) {
         issueList = issues;
     } else {
-        test:assertFail(msg = <string>issues.detail().message);
+        test:assertFail(msg = <string>issues.detail()["message"]);
     }
     boolean lengthEqualsRecords = issueList.getAllIssues().length() >= recordCount;
 
@@ -437,11 +424,11 @@ function testGetIssueListNextPage() {
 function testCreateIssue() {
     log:printInfo("githubClient -> createIssue()");
     var createdIssue = githubClient->createIssue("ldclakmal", "ballerina-github-testing",
-        "This is a test issue", "This is the body of the test issue", ["bug", "critical"], [testIssueAssignee]);
+     "This is a test issue", "This is the body of the test issue", ["bug", "critical"], [testIssueAssignee]);
     if (createdIssue is Issue) {
         test:assertEquals(createdIssue.title, "This is a test issue", msg = "Failed createIssue()");
     } else {
-        test:assertFail(msg = <string>createdIssue.detail().message);
+        test:assertFail(msg = <string>createdIssue.detail()["message"]);
     }
 }
 
@@ -540,7 +527,7 @@ function testColumnListGetAllColumns() {
     ColumnList columnList = new;
     var columnArray = columnList.getAllColumns();
     Column[] sampleColumnArray = [];
-    test:assertEquals(columnArray, sampleColumnArray, msg = "Failed ColumnList.getAllColumns()");
+    test:assertEquals(columnArray.toString(), sampleColumnArray.toString(), msg = "Failed ColumnList.getAllColumns()");
 }
 
 @test:Config {
@@ -576,18 +563,18 @@ function testCardListGetAllCards() {
     groups: ["object-functions"]
 }
 function testPullRequestListHasNextPage() {
-    log:printInfo("PullRequestList -> hasNextPage()");
-    PullRequestList pullRequestList = new;
-    test:assertFalse(pullRequestList.hasNextPage(), msg = "Failed PullRequestList.hasNextPage()");
+     log:printInfo("PullRequestList -> hasNextPage()");
+     PullRequestList pullRequestList = new;
+     test:assertFalse(pullRequestList.hasNextPage(), msg = "Failed PullRequestList.hasNextPage()");
 }
 
 @test:Config {
     groups: ["object-functions"]
 }
 function testPullRequestListHasPreviousPage() {
-    log:printInfo("PullRequestList -> hasPreviousPage()");
-    PullRequestList pullRequestList = new;
-    test:assertFalse(pullRequestList.hasPreviousPage(), msg = "Failed PullRequestList.hasPreviousPage()");
+     log:printInfo("PullRequestList -> hasPreviousPage()");
+     PullRequestList pullRequestList = new;
+     test:assertFalse(pullRequestList.hasPreviousPage(), msg = "Failed PullRequestList.hasPreviousPage()");
 }
 
 @test:Config {
@@ -614,40 +601,40 @@ function testIssueListHasNextPage() {
     groups: ["object-functions"]
 }
 function testIssueListHasPreviousPage() {
-    log:printInfo("IssueList -> hasPreviousPage()");
-    IssueList issueList = new;
-    test:assertFalse(issueList.hasPreviousPage(), msg = "Failed IssueList.hasPreviousPage()");
+     log:printInfo("IssueList -> hasPreviousPage()");
+     IssueList issueList = new;
+     test:assertFalse(issueList.hasPreviousPage(), msg = "Failed IssueList.hasPreviousPage()");
 }
 
 @test:Config {
     groups: ["object-functions"]
 }
 function testIssueListGetAllIssues() {
-    log:printInfo("IssueList -> getAllIssues()");
-    IssueList issueList = new;
-    var issueArray = issueList.getAllIssues();
-    Issue[] sampleIssueArray = [];
-    test:assertEquals(issueArray, sampleIssueArray, msg = "Failed IssueList.getAllIssues()");
+     log:printInfo("IssueList -> getAllIssues()");
+     IssueList issueList = new;
+     var issueArray = issueList.getAllIssues();
+     Issue[] sampleIssueArray = [];
+     test:assertEquals(issueArray, sampleIssueArray, msg = "Failed IssueList.getAllIssues()");
 }
 
 @test:Config {
     groups: ["object-functions"]
 }
 function testProjectOwnerGetOwnerType() {
-    log:printInfo("ProjectOwner -> getOwnerType()");
-    ProjectOwner projectOwner = {};
-    test:assertEquals(projectOwner["__typename"], "", msg = "Failed ProjectOwner.getOwnerType()");
+     log:printInfo("ProjectOwner -> getOwnerType()");
+     ProjectOwner projectOwner = {};
+     test:assertEquals(projectOwner["__typename"], "", msg = "Failed ProjectOwner.getOwnerType()");
 }
 
 @test:Config {
     groups: ["object-functions"]
 }
 function testProjectOwnerSetOwnerType() {
-    log:printInfo("ProjectOwner -> setOwnerType()");
-    ProjectOwner projectOwner = {};
-    projectOwner["__typename"] = "Organization";
-    string ownerType = <string>projectOwner["__typename"];
-    test:assertEquals(<string>ownerType, "Organization", msg = "Failed ProjectOwner.getOwnerType()");
+     log:printInfo("ProjectOwner -> setOwnerType()");
+     ProjectOwner projectOwner = {};
+     projectOwner["__typename"] = "Organization";
+     string ownerType = <string>projectOwner["__typename"];
+     test:assertEquals(<string>ownerType, "Organization", msg = "Failed ProjectOwner.getOwnerType()");
 }
 
 @test:Config {
@@ -663,7 +650,7 @@ function testConstructRequest() {
     constructRequest(request, samplePayload);
     var value = request.getJsonPayload();
     if (value is error) {
-        test:assertFail(msg = <string>value.detail().message);
+        test:assertFail(msg = <string>value.detail()["message"]);
     } else {
         test:assertEquals(value, samplePayload, msg = "Payload mismatch");
     }
@@ -687,7 +674,7 @@ function testGetValidatedResponseSuccess() {
         string orgName = validatedResponse.data.org.name.toString();
         test:assertEquals(orgName, "WSO2", msg = "Returned json data mismatch");
     } else {
-        test:assertFail(msg = <string>validatedResponse.detail().message);
+        test:assertFail(msg = <string>validatedResponse.detail()["message"]);
     }
 }
 
@@ -709,8 +696,8 @@ function testGetValidatedResponseError() {
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
     } else {
-        test:assertEquals(<string>validatedResponse.detail().message, "API error",
-            msg = "Validated response error mismatch");
+        test:assertEquals(<string>validatedResponse.detail()["message"], "API error",
+        msg = "Validated response error mismatch");
     }
 }
 
@@ -732,8 +719,8 @@ function testGetValidatedResponseNoRequestedData() {
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
     } else {
-        test:assertEquals(<string>validatedResponse.detail().message, "name is not available in the response",
-            msg = "Validated response error mismatch");
+        test:assertEquals(<string>validatedResponse.detail()["message"], "name is not available in the response",
+        msg = "Validated response error mismatch");
     }
 }
 
@@ -752,9 +739,9 @@ function testGetValidatedResponseNoPayload() {
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
     } else {
-        test:assertEquals(<string>validatedResponse.detail().message,
-            "Entity body is not json compatible since the received content-type is : null",
-            msg = "Validated response error mismatch");
+        test:assertEquals(<string>validatedResponse.detail()["message"],
+        "Entity body is not json compatible since the received content-type is : null",
+        msg = "Validated response error mismatch");
     }
 }
 
@@ -764,7 +751,7 @@ function testGetValidatedResponseNoPayload() {
 function testGetValidatedResponseHttpError() {
     log:printInfo("getValidatedResponse() HttpConnectorError");
 
-    error sampleHttpError = error(GITHUB_ERROR_CODE, { message: "HTTP Connector Error." });
+    error sampleHttpError = error(GITHUB_ERROR_CODE, message = "HTTP Connector Error.");
 
     http:Response|error response = sampleHttpError;
 
@@ -773,8 +760,8 @@ function testGetValidatedResponseHttpError() {
     if (validatedResponse is json) {
         test:assertFail(msg = "HttpConnector error should be handled");
     } else {
-        test:assertEquals(<string>validatedResponse.detail().message, "HTTP Connector Error",
-            msg = "Validated response error mismatch");
+        test:assertEquals(<string>validatedResponse.detail()["message"], "HTTP Connector Error",
+        msg = "Validated response error mismatch");
     }
 }
 
@@ -796,7 +783,7 @@ function testGetValidatedRestResponseSuccess() {
         string orgName = validatedResponse.title.toString();
         test:assertEquals(orgName, "Sample title", msg = "Returned json data mismatch");
     } else {
-        test:assertFail(msg = <string>validatedResponse.detail().message);
+        test:assertFail(msg = <string>validatedResponse.detail()["message"]);
     }
 }
 
@@ -817,8 +804,8 @@ function testGetValidatedRestResponseError() {
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
     } else {
-        test:assertEquals(<string>validatedResponse.detail().message, "API error",
-            msg = "Validated response error mismatch");
+        test:assertEquals(<string>validatedResponse.detail()["message"], "API error",
+        msg = "Validated response error mismatch");
     }
 }
 
@@ -837,9 +824,9 @@ function testGetValidatedRestResponseNoPayload() {
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
     } else {
-        test:assertEquals(<string>validatedResponse.detail().message,
-            "Entity body is not json compatible since the received content-type is : null",
-            msg = "Validated response error mismatch");
+        test:assertEquals(<string>validatedResponse.detail()["message"],
+         "Entity body is not json compatible since the received content-type is : null",
+        msg = "Validated response error mismatch");
     }
 }
 
@@ -849,7 +836,7 @@ function testGetValidatedRestResponseNoPayload() {
 function testGetValidatedRestResponseHttpError() {
     log:printInfo("getValidatedRestResponse() HttpConnectorError");
 
-    error sampleHttpError = error(GITHUB_ERROR_CODE, { message: "HTTP Connector Error." });
+    error sampleHttpError = error(GITHUB_ERROR_CODE, message = "HTTP Connector Error.");
 
     http:Response|error response = sampleHttpError;
 
@@ -858,8 +845,8 @@ function testGetValidatedRestResponseHttpError() {
     if (validatedResponse is json) {
         test:assertFail(msg = "HttpConnector error should be handled");
     } else {
-        test:assertEquals(<string>validatedResponse.detail().message, "HTTP Connector Error",
-            msg = "Validated response error mismatch");
+        test:assertEquals(<string>validatedResponse.detail()["message"], "HTTP Connector Error",
+        msg = "Validated response error mismatch");
     }
 }
 
@@ -874,8 +861,8 @@ function testStringToJsonError() {
     if (convertedValue is json) {
         test:assertFail(msg = "Invalid string json. Expected failure");
     } else {
-        test:assertEquals(<string>convertedValue.detail().message,
-            "unrecognized token 'Sample' at line: 1 column: 17", msg = "Error message mismatch");
+        test:assertEquals(<string>convertedValue.detail()["message"],
+        "unrecognized token 'Sample' at line: 1 column: 17", msg = "Error message mismatch");
     }
 }
 

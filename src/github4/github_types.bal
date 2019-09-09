@@ -14,9 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/http;
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              Organization object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +31,7 @@ import ballerina/http;
 # + url - HTTP URL for the organization
 # + websiteUrl - Organization public profile URL
 # + avatarUrl - Organization public avatar URL
-public type Organization record {
+public type Organization record {|
     string id = "";
     string login = "";
     string name = "";
@@ -47,7 +44,7 @@ public type Organization record {
     string? url = "";
     string? websiteUrl = "";
     string? avatarUrl = "";
-};
+|};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                       End of Organization object                                                  //
@@ -78,7 +75,7 @@ public type Organization record {
 # + owner - Owner of the repository
 # + primaryLanguage - Primary language of the repository code
 # + stargazerCount - The count
-public type Repository record {
+public type Repository record {|
     string id = "";
     string name = "";
     string createdAt = "";
@@ -100,7 +97,7 @@ public type Repository record {
     RepositoryOwner owner = {};
     Language primaryLanguage = {};
     int? stargazerCount = 0;
-};
+|};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of Repository object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,31 +112,26 @@ public type RepositoryList object {
     Repository[] nodes = [];
 
     # Check if repository list next page is available.
+    #
     # + return - Return true or false
-    public function hasNextPage() returns boolean;
+    public function hasNextPage() returns boolean {
+        return self.pageInfo.hasNextPage;
+    }
 
     # Check if repository list previous page is available.
+    #
     # + return - Return true or false
-    public function hasPreviousPage() returns boolean;
+    public function hasPreviousPage() returns boolean {
+        return self.pageInfo.hasPreviousPage;
+    }
 
     # Get all the repositories in the repository list.
+    #
     # + return - Array of Repository objects
-    public function getAllRepositories() returns (Repository[]);
+    public function getAllRepositories() returns Repository[] {
+        return self.nodes;
+    }
 };
-//*********************************************************************************************************************
-// RepositoryList bound functions
-//*********************************************************************************************************************
-public function RepositoryList.hasNextPage() returns boolean {
-    return self.pageInfo.hasNextPage;
-}
-
-public function RepositoryList.hasPreviousPage() returns boolean {
-    return self.pageInfo.hasPreviousPage;
-}
-
-public function RepositoryList.getAllRepositories() returns Repository[] {
-    return self.nodes;
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                         End of RepositoryList object                                              //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -162,7 +154,7 @@ public function RepositoryList.getAllRepositories() returns Repository[] {
 # + viewerCanUpdate - Identifies whether current viewer can update this object
 # + creator - User who originally created the project
 # + owner - Project owner (Repository or Organization)
-public type Project record {
+public type Project record {|
     string id = "";
     string name = "";
     string body = "";
@@ -177,7 +169,7 @@ public type Project record {
     boolean viewerCanUpdate = false;
     Creator creator = {};
     ProjectOwner owner = {};
-};
+|};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of Project object                                                 //
@@ -195,31 +187,26 @@ public type ProjectList object {
     Project[] nodes = [];
 
     # Check if project list next page is available.
+    #
     # + return - Return true or false
-    public function hasNextPage() returns boolean;
+    public function hasNextPage() returns boolean {
+        return self.pageInfo.hasNextPage;
+    }
 
     # Check if project list previous page is available.
+    #
     # + return - Return true or false
-    public function hasPreviousPage() returns boolean;
+    public function hasPreviousPage() returns boolean {
+        return self.pageInfo.hasPreviousPage;
+    }
 
     # Get all the projects in the project list.
+    #
     # + return - Array of Project objects
-    public function getAllProjects() returns Project[];
+    public function getAllProjects() returns Project[] {
+        return self.nodes;
+    }
 };
-//*********************************************************************************************************************
-// ProjectList bound functions
-//*********************************************************************************************************************
-public function ProjectList.hasNextPage() returns boolean {
-    return self.pageInfo.hasNextPage;
-}
-
-public function ProjectList.hasPreviousPage() returns boolean {
-    return self.pageInfo.hasPreviousPage;
-}
-
-public function ProjectList.getAllProjects() returns Project[] {
-    return self.nodes;
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of ProjectList object                                             //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -238,15 +225,12 @@ public type Column object {
     CardList cards = {};
 
     # Get a list of cards of a column.
+    #
     # + return - Card list object
-    public function getCardList() returns CardList;
+    public function getCardList() returns CardList {
+        return self.cards;
+    }
 };
-//*********************************************************************************************************************
-// Column bound functions
-//*********************************************************************************************************************
-public function Column.getCardList() returns CardList {
-    return self.cards;
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              End of Column object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -262,31 +246,26 @@ public type ColumnList object {
     Column[] nodes = [];
 
     # Check if column list next page is available.
+    #
     # + return - Return true or false
-    public function hasNextPage() returns boolean;
+    public function hasNextPage() returns boolean {
+        return self.pageInfo.hasNextPage;
+    }
 
     # Check if column list previosu page is available.
+    #
     # + return - Return true or false
-    public function hasPreviousPage() returns boolean;
+    public function hasPreviousPage() returns boolean {
+        return self.pageInfo.hasPreviousPage;
+    }
 
     # Get all the columns in the column list.
+    #
     # + return - Array of column objects
-    public function getAllColumns() returns (Column[]);
+    public function getAllColumns() returns Column[] {
+        return self.nodes;
+    }
 };
-//*********************************************************************************************************************
-// ColumnList bound functions
-//*********************************************************************************************************************
-public function ColumnList.hasNextPage() returns boolean {
-    return self.pageInfo.hasNextPage;
-}
-
-public function ColumnList.hasPreviousPage() returns boolean {
-    return self.pageInfo.hasPreviousPage;
-}
-
-public function ColumnList.getAllColumns() returns (Column[]) {
-    return self.nodes;
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          End of ColumnList object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -304,7 +283,7 @@ public function ColumnList.getAllColumns() returns (Column[]) {
 # + creator - User who created this card
 # + column - Project column this card is associated under
 # + content - Card content
-public type Card record {
+public type Card record {|
     string id = "";
     string? note = "";
     string state = "";
@@ -314,7 +293,7 @@ public type Card record {
     Creator creator = {};
     json column = {};
     json content = {};
-};
+|};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                               End of Card object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -328,13 +307,13 @@ public type Card record {
 # + listOwner - The owner list
 # + pageInfo - The page info
 # + nodes - The nodes
-public type CardList record {
+public type CardList record {|
     string columnId = "";
     string cardListQuery = "";
     string listOwner = "";
     PageInfo pageInfo = {};
     Card[] nodes = [];
-};
+|};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of CardList object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -363,7 +342,7 @@ public type CardList record {
 # + headRefName - Name of the head Ref associated with the pull request
 # + baseRefName - Name of the base Ref associated with the pull request
 # + author - User who created the pull rquest
-public type PullRequest record {
+public type PullRequest record {|
     string id = "";
     string title = "";
     string createdAt = "";
@@ -384,7 +363,7 @@ public type PullRequest record {
     string? headRefName = "";
     string? baseRefName = "";
     Creator author = {};
-};
+|};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of PullRequest object                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -399,33 +378,74 @@ public type PullRequestList object {
     PullRequest[] nodes = [];
 
     # Check if pull request list next page is available.
+    #
     # + return - Return true or false
-    public function hasNextPage() returns boolean;
+    public function hasNextPage() returns boolean {
+        return self.pageInfo.hasNextPage;
+    }
 
     # Check if pull request list previous page is avaiable.
+    #
     # + return - Return true or false
-    public function hasPreviousPage() returns boolean;
+    public function hasPreviousPage() returns boolean {
+        return self.pageInfo.hasPreviousPage;
+    }
 
     # Get all the pull requests in the pull request list.
+    #
     # + return - Array of pull request objects
-    public function getAllPullRequests() returns (PullRequest[]);
+    public function getAllPullRequests() returns PullRequest[] {
+        return self.nodes;
+    }
 };
-//*********************************************************************************************************************
-// PullRequestList bound functions
-//*********************************************************************************************************************
-public function PullRequestList.hasNextPage() returns boolean {
-    return self.pageInfo.hasNextPage;
-}
-
-public function PullRequestList.hasPreviousPage() returns boolean {
-    return self.pageInfo.hasPreviousPage;
-}
-
-public function PullRequestList.getAllPullRequests() returns (PullRequest[]) {
-    return self.nodes;
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          End of PullRequestList object                                            //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                Branch object                                                       //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# Represents a github branch.
+# + name - Branch name
+public type Branch record {|
+    string name = "";
+|};
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                              End of Branch object                                                  //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                IssueList object                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# Represents a list of github branches.
+public type BranchList object {
+    string branchListQuery = "";
+    PageInfo pageInfo = {};
+    Branch[] nodes = [];
+
+    # Check if issue list next page is available.
+    #
+    # + return - Return true or false
+    public function hasNextPage() returns boolean {
+        return self.pageInfo.hasNextPage;
+    }
+
+    # Check if issue list previous page is avaiable.
+    #
+    # + return - Return true or false
+    public function hasPreviousPage() returns boolean {
+        return self.pageInfo.hasPreviousPage;
+    }
+
+    # Get all the issues in the issue list.
+    #
+    # + return - Array of issue objects
+    public function getAllBranches() returns Branch[] {
+        return self.nodes;
+    }
+};
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                            End of IssueList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -445,7 +465,7 @@ public function PullRequestList.getAllPullRequests() returns (PullRequest[]) {
 # + updatedAt - Date and time when the object was updated
 # + url - HTTP URL of the issue
 # + assignees - List of users assigned to the issue
-public type Issue record {
+public type Issue record {|
     string id = "";
     string? bodyText = "";
     string? closed = "";
@@ -459,7 +479,7 @@ public type Issue record {
     string? updatedAt = "";
     string url = "";
     Assignee[] assignees = [];
-};
+|};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              End of Issue object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -474,31 +494,26 @@ public type IssueList object {
     Issue[] nodes = [];
 
     # Check if issue list next page is available.
+    #
     # + return - Return true or false
-    public function hasNextPage() returns boolean;
+    public function hasNextPage() returns boolean {
+        return self.pageInfo.hasNextPage;
+    }
 
     # Check if issue list previous page is avaiable.
+    #
     # + return - Return true or false
-    public function hasPreviousPage() returns boolean;
+    public function hasPreviousPage() returns boolean {
+        return self.pageInfo.hasPreviousPage;
+    }
 
     # Get all the issues in the issue list.
+    #
     # + return - Array of issue objects
-    public function getAllIssues() returns (Issue[]);
+    public function getAllIssues() returns Issue[] {
+        return self.nodes;
+    }
 };
-//*********************************************************************************************************************
-// IssueList bound functions
-//*********************************************************************************************************************
-public function IssueList.hasNextPage() returns boolean {
-    return self.pageInfo.hasNextPage;
-}
-
-public function IssueList.hasPreviousPage() returns boolean {
-    return self.pageInfo.hasPreviousPage;
-}
-
-public function IssueList.getAllIssues() returns (Issue[]) {
-    return self.nodes;
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of IssueList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -511,12 +526,12 @@ public function IssueList.getAllIssues() returns (Issue[]) {
 # + resourcePath - HTTP path of the creator
 # + url - HTTP URL of the creator
 # + avatarUrl - HTTP URL of the public avatar of the creator
-public type Creator record {
+public type Creator record {|
     string login = "";
     string? resourcePath = "";
     string? url = "";
     string? avatarUrl = "";
-};
+|};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of Creator object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -530,14 +545,14 @@ public type Creator record {
 # + projectsUrl - HTTP URL listing owner projects
 # + viewerCanCreateProjects - Identifies whether the current viewer can create new projects on the owner
 # + __typename - The project owner type name
-public type ProjectOwner record {
+public type ProjectOwner record {|
     string id = "";
     string projectsResourcePath = "";
     string projectsUrl = "";
     string viewerCanCreateProjects = "";
     string __typename = "";
 
-};
+|};
 //*********************************************************************************************************************
 // ProjectOwner bound functions
 //*********************************************************************************************************************
@@ -554,13 +569,13 @@ public type ProjectOwner record {
 # + url - HTTP URL of the owner
 # + avatarUrl - HTTP URL of the public avatar of the repository owner
 # + resourcePath - HTTP path of the repository owner recource
-public type RepositoryOwner record {
+public type RepositoryOwner record {|
     string id = "";
     string login = "";
     string url = "";
     string? avatarUrl = "";
     string? resourcePath = "";
-};
+|};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          End RepositoryOwner object                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -572,11 +587,11 @@ public type RepositoryOwner record {
 # + title - Title of the card
 # + url - HTTP URL for the content of the card
 # + issueState - State of the issue (OPEN, CLOSED)
-public type Content record {
+public type Content record {|
     string? title = "";
     string? url = "";
     string? issueState = "";
-};
+|};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of Content object                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -588,11 +603,11 @@ public type Content record {
 # + id - Language identification number
 # + name - Name of the language
 # + color - Color defined for the language
-public type Language record {
+public type Language record {|
     string id = "";
     string? name = "";
     string? color = "";
-};
+|};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of Language object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -605,12 +620,12 @@ public type Language record {
 # + hasPreviousPage - Identifies whether there is a previous page of results
 # + startCursor - Start cursor pointing to the begining of the current result set
 # + endCursor - End cursor pointing to the end of the current result set
-public type PageInfo record {
+public type PageInfo record {|
     boolean hasNextPage = false;
     boolean hasPreviousPage = false;
     string? startCursor = "";
     string? endCursor = "";
-};
+|};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of PageInfo object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -623,12 +638,12 @@ public type PageInfo record {
 # + name - Label name
 # + description - Description of the label
 # + color - Color of the label
-public type Label record {
+public type Label record {|
     string id = "";
     string name = "";
     string? description = "";
     string? color = "";
-};
+|};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of Label object                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -642,13 +657,33 @@ public type Label record {
 # + email - Email of the user
 # + bio - Bio description of the user
 # + url - HTTP URL of the user profile
-public type Assignee record {
+public type Assignee record {|
     string id = "";
     string login = "";
     string email = "";
     string? bio = "";
     string? url = "";
-};
+|};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of Assignee object                                                 //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                            User object                                                 //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# Represents a github user.
+# + id - User identification number
+# + login - Username of the user
+# + url - HTTP URL of the user
+# + avatarUrl - HTTP URL of the public avatar of the user
+# + resourcePath - HTTP path of the user recource
+public type User record {|
+    string id = "";
+    string login = "";
+    string url = "";
+    string? avatarUrl = "";
+    string? resourcePath = "";
+|};
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                          End User object                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
