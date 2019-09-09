@@ -44,15 +44,7 @@ import ballerina/io;
 import wso2/github4;
 
 github4:GitHubConfiguration gitHubConfig = {
-    accessToken: "access_token",
-    clientConfig: { 
-        secureSocket: {
-            trustStore: {
-                path: "${ballerina.home}/bre/security/ballerinaTruststore.p12",
-                password: "ballerina"
-            }
-        }
-     }
+    accessToken: "access_token"
 };
  
 github4:Client githubClient = new(gitHubConfig);

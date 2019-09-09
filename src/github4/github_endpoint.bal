@@ -961,6 +961,6 @@ public type Client client object {
 # + clientConfig - HTTP client endpoint configuration
 # + accessToken - The access token of the Github account
 public type GitHubConfiguration record {
-    http:ClientEndpointConfig clientConfig = {};
+    http:ClientConfiguration clientConfig = {};
     string accessToken;
 };

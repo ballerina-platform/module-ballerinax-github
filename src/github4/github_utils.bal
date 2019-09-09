@@ -16,7 +16,7 @@
 
 import ballerina/http;
 import ballerinax/java;
-import ballerina/internal;
+import ballerina/stringutils;
 
 # Construct the request by adding the payload and authorization tokens.
 # + request - HTTP request object
@@ -39,7 +39,7 @@ function getValidatedResponse(http:Response|error response, string validateCompo
             payLoadKeys = mapJsonPayload.keys();
             //Check all the keys in the payload to see if an error is returned.
             foreach var key in payLoadKeys {
-                if (internal:equalsIgnoreCase(GIT_ERRORS, key)) {
+                if (stringutils:equalsIgnoreCase(GIT_ERRORS, key)) {
                     var errorList = mapJsonPayload[GIT_ERRORS];
                     if (errorList is json[]) {
                         int i = 0;
@@ -56,7 +56,7 @@ function getValidatedResponse(http:Response|error response, string validateCompo
                     }
                 }
 
-                if (internal:equalsIgnoreCase(GIT_MESSAGE, key)) {
+                if (stringutils:equalsIgnoreCase(GIT_MESSAGE, key)) {
 
                     error err = error(GITHUB_ERROR_CODE, message = mapJsonPayload[GIT_MESSAGE].toString());
                     return err;
@@ -100,7 +100,7 @@ function getValidatedRestResponse(http:Response | error response) returns json |
             if (mapPayload["message"] == null) {
                 return <@untainted>payload;
             } else {
-                error err = error(GITHUB_ERROR_CODE, message =mapPayload["message"].toString());
+                error err = error(GITHUB_ERROR_CODE, message = mapPayload["message"].toString());
                 return <@untainted>err;
             }
         } else {
@@ -165,11 +165,8 @@ function stringToJson(string src) returns json | error {
 # + index - Index of the string component which should be returned
 # + return - String component
 function split(string receiver, string delimeter, int index) returns string {
-    handle receiverHandle = java:fromString(receiver);
-    handle delimeterHandle = java:fromString(delimeter);
-    handle resultArray = java_split(receiverHandle, delimeterHandle);
-    string result = java:getArrayElement(resultArray, index).toString();
-    return result;
+    string[] resultArray = stringutils:split(receiver, delimeter);
+    return resultArray[index];
 }
 function java_split(handle receiver, handle delimeter) returns handle = @java:Method {
     name: "split",

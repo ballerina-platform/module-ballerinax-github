@@ -25,15 +25,7 @@ string testResourcePath = config:getAsString("RESOURCE_PATH");
 string testIssueAssignee = config:getAsString("ISSUE_ASSIGNEE");
 
 GitHubConfiguration gitHubConfig = {
-    accessToken: "access_token",
-    clientConfig: {
-        secureSocket: {
-            trustStore: {
-                path: "${ballerina.home}/bre/security/ballerinaTruststore.p12",
-                password: "ballerina"
-            }
-        }
-    }
+    accessToken: "access_token"
 };
 
 Client githubClient = new(gitHubConfig);
