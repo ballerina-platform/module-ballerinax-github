@@ -53,13 +53,13 @@ function testGetOrganizationProject() {
     log:printInfo("githubClient -> getOrganizationProject()");
     Project orgProject = {};
     Organization projectOrganization = { login: testOrganizationName };
-    var projectData = githubClient->getOrganizationProject(projectOrganization, 1);
+    var projectData = githubClient->getOrganizationProject(projectOrganization, 26);
     if (projectData is Project) {
         orgProject = projectData;
     } else {
         test:assertFail(msg = <string>projectData.detail()["message"]);
     }
-    test:assertEquals(orgProject.number, 1, msg = "Failed getOrganizationProject()");
+    test:assertEquals(orgProject.number, 26, msg = "Failed getOrganizationProject()");
 }
 
 @test:Config {
@@ -95,7 +95,7 @@ function testGetOrganizationProjectListNextPage() {
     ProjectList projectList = new;
     Organization projectListOrganization = { login: testOrganizationName };
     var responseProjectList = githubClient->
-    getOrganizationProjectList(projectListOrganization, STATE_OPEN, 2);
+    getOrganizationProjectList(projectListOrganization, STATE_OPEN, 1);
     if (responseProjectList is ProjectList) {
         projectList = responseProjectList;
     } else {
@@ -386,7 +386,7 @@ function testGetIssueList() {
         test:assertFail(msg = <string>issues.detail()["message"]);
     }
     boolean lengthEqualsRecords = issueList.getAllIssues().length() >= recordCount;
-
+    
     test:assertTrue(lengthEqualsRecords, msg = "Failed getIssueList()");
 }
 
