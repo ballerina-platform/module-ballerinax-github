@@ -11,7 +11,7 @@ sections explains how to use Ballerina GitHub4 connector. You can refer the [Git
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
-| 1.0.0             | v4                 |
+| 1.1.0             | v4                 |
 
 ![Ballerina GitHub Endpoint Overview](./docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
 
@@ -95,7 +95,7 @@ notifications on the occurrence of events, and starts up a callback service, whi
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
-| 1.0.0             | v3                 |
+| 1.1.0             | v3                 |
 
 ```ballerina
 import ballerina/http;
