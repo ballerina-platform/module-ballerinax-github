@@ -14,6 +14,7 @@
 // specific language governing permissions and limitations
 // under the License.
 import ballerina/http;
+import ballerina/ 'lang\.object as lang;
 import ballerina/websub;
 
 # The WebSub Hub URL for GitHub.
@@ -28,6 +29,8 @@ const string TOPIC_HEADER = "X-GitHub-Event";
 #
 # + webhookListenerConfig - The configuration for the listener
 public type Listener object {
+
+    *lang:Listener;
 
     public WebhookListenerConfiguration? webhookListenerConfig = ();
 
