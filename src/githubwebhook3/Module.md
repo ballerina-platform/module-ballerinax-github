@@ -61,18 +61,18 @@ Additionally, the following sample code also accepts notifications when an issue
 when the repository is starred (`onWatch`).
 
 ```ballerina
-import ballerina/io;
-import ballerina/websub;
 import ballerina/http;
+import ballerina/io;
 import ballerina/oauth2;
+import ballerina/websub;
 import wso2/githubwebhook3;
 
-listener githubwebhook3:Listener githubListener = new(8080);
+listener githubwebhook3:Listener githubListener = new (8080);
 
-oauth2:OutboundOAuth2Provider githubOAuth2Provider = new({
+oauth2:OutboundOAuth2Provider githubOAuth2Provider = new ({
     accessToken: "<GH_ACCESS_TOKEN>"
 });
-http:BearerAuthHandler githubOAuth2Handler = new(githubOAuth2Provider);
+http:BearerAuthHandler githubOAuth2Handler = new (githubOAuth2Provider);
 
 @websub:SubscriberServiceConfig {
    path: "/webhook",
