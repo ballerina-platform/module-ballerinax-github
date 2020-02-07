@@ -42,7 +42,7 @@ github4:GitHubConfiguration gitHubConfig = {
         accessToken: "access_token"
 };
  
-github4:Client githubClient = new(gitHubConfig);
+github4:Client githubClient = new (gitHubConfig);
 ```
 
 The `getRepository` remote function gets a GitHub repository by passing the name of the repository and its owner in the format of "owner/repository".

@@ -13,28 +13,7 @@
 # limitations under the License.
 
 script:
-
-- BALLERINA_VERSION=${VERSION:-1.0.0}
-- echo -e "\033[36m${BALLERINA_VERSION}\033[m"
-
-- DISTRIBUTION_NAME=ballerina-${BALLERINA_VERSION}
-- echo -e "\033[36m${DISTRIBUTION_NAME}\033[m"
-
-- DOWNLOAD_CHANNEL=${CHANNEL:-nightly}
-- echo -e "\033[36m${DOWNLOAD_CHANNEL}\033[m"
-
-- DOWNLOAD_LOCATION=${URL:-https://product-dist.ballerina.io}
-- echo -e "\033[36m${DOWNLOAD_LOCATION}\033[m"
-
-- echo -e "\033[36m${DOWNLOAD_LOCATION}/${DOWNLOAD_CHANNEL}/${BALLERINA_VERSION}${RC:-}/${DISTRIBUTION_NAME}${RC:-}.zip\033[m"
-- wget ${DOWNLOAD_LOCATION}/${DOWNLOAD_CHANNEL}/${BALLERINA_VERSION}${RC:-}/${DISTRIBUTION_NAME}${RC:-}.zip
-
-- unzip -q ${DISTRIBUTION_NAME}${RC:-}.zip
-
-- export PATH=${PATH}:$(pwd)/${DISTRIBUTION_NAME}/bin
-
-- ballerina version
-
-- ballerina init
-
-- ballerina build github4 --skiptests
+  - wget https://product-dist.ballerina.io/downloads/1.1.0/ballerina-linux-installer-x64-1.1.0.deb
+  - sudo dpkg -i ballerina-linux-installer-x64-1.1.0.deb
+  - sudo apt-get install -f
+  - ballerina build -a -c --skip-tests

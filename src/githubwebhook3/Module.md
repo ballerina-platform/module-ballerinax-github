@@ -23,7 +23,7 @@ requests, prior to dispatching them to the relevant resource.
 ## Compatibility
 |                             |       Version               |
 |:---------------------------:|:---------------------------:|
-| Ballerina Language          | 0.991.0                     |
+| Ballerina Language          | 1.1.x                     |
 
 ## Sample
 
@@ -41,22 +41,15 @@ import wso2/githubwebhook3;
 This access token needs to be specified when configuring the subscription parameters of the service annotation.
 ```ballerina
 @websub:SubscriberServiceConfig {
-    path: "/webhook",
-    subscribeOnStartUp: true,
-    hub: githubwebhook3:HUB,
-    topic: "https://github.com/<GH_USERNAME>/<GH_REPO_NAME>/events/*.json", // for all events
-    secret: "<SECRET>",
-    subscriptionClientConfig: {
-        auth: {
-            scheme: http:OAUTH2,
-            config: {
-                grantType: http:DIRECT_TOKEN,
-                config: {
-                    accessToken:"<GH_ACCESS_TOKEN>"
-                }
-            }
-        }
-    }
+   path: "/webhook",
+   subscribeOnStartUp: true,
+   target: [githubwebhook3:HUB, "https://github.com/<GH_USERNAME>/<GH_REPO_NAME>/events/*.json"],
+   hubClientConfig: {
+       auth: {
+           authHandler: githubOAuth2Handler
+       }
+   },
+   callback: "<CALLBACK_URL>"
 }
 ```
 
@@ -70,29 +63,27 @@ when the repository is starred (`onWatch`).
 ```ballerina
 import ballerina/http;
 import ballerina/io;
+import ballerina/oauth2;
 import ballerina/websub;
 import wso2/githubwebhook3;
 
-listener githubwebhook3:Listener githubListener = new(8080);
+listener githubwebhook3:Listener githubListener = new (8080);
+
+oauth2:OutboundOAuth2Provider githubOAuth2Provider = new ({
+    accessToken: "<GH_ACCESS_TOKEN>"
+});
+http:BearerAuthHandler githubOAuth2Handler = new (githubOAuth2Provider);
 
 @websub:SubscriberServiceConfig {
-    path: "/webhook",
-    subscribeOnStartUp: true,
-    hub: githubwebhook3:HUB,
-    topic: "https://github.com/<GH_USERNAME>/<GH_REPO_NAME>/events/*.json", // for all events
-    secret: "<SECRET>",
-    callback: "<CALLBACK_URL>", // only needs to be specified if not http(s)://<HOST>:<PORT>/<path>
-    subscriptionClientConfig: {
-        auth: {
-            scheme: http:OAUTH2,
-            config: {
-                grantType: http:DIRECT_TOKEN,
-                config: {
-                    accessToken: "<GH_ACCESS_TOKEN>"
-                }
-            }
-        }
-    }
+   path: "/webhook",
+   subscribeOnStartUp: true,
+   target: [githubwebhook3:HUB, "https://github.com/<GH_USERNAME>/<GH_REPO_NAME>/events/*.json"],
+   hubClientConfig: {
+       auth: {
+           authHandler: githubOAuth2Handler
+       }
+   },
+   callback: "<CALLBACK_URL>"
 }
 service githubWebhook on githubListener {
 

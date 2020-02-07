@@ -11,7 +11,7 @@ sections explains how to use Ballerina GitHub4 connector. You can refer the [Git
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
-| 1.0.0             | v4                 |
+| 1.1.0             | v4                 |
 
 ![Ballerina GitHub Endpoint Overview](./docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
 
@@ -47,7 +47,7 @@ github4:GitHubConfiguration gitHubConfig = {
     accessToken: "access_token"
 };
  
-github4:Client githubClient = new(gitHubConfig);
+github4:Client githubClient = new (gitHubConfig);
 
 public function main() {
     github4:Repository|error result = githubClient->getRepository("wso2-ballerina/module-github");
@@ -95,34 +95,32 @@ notifications on the occurrence of events, and starts up a callback service, whi
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
-| 1.0.0             | v3                 |
+| 1.1.0             | v3                 |
 
 ```ballerina
 import ballerina/http;
 import ballerina/io;
+import ballerina/oauth2;
 import ballerina/websub;
 import wso2/githubwebhook3;
 
-listener githubwebhook3:Listener githubListener = new(8080);
+listener githubwebhook3:Listener githubListener = new (8080);
+
+oauth2:OutboundOAuth2Provider githubOAuth2Provider = new ({
+    accessToken: "<GH_ACCESS_TOKEN>"
+});
+http:BearerAuthHandler githubOAuth2Handler = new (githubOAuth2Provider);
 
 @websub:SubscriberServiceConfig {
    path: "/webhook",
    subscribeOnStartUp: true,
-   hub: githubwebhook3:HUB,
-   topic: "https://github.com/<GH_USERNAME>/<GH_REPO_NAME>/events/*.json", // for all events
-   secret: "<SECRET>",
-   callback: "<CALLBACK_URL>", // only needs to be specified if not http(s)://<HOST>:<PORT>/<path>
-   subscriptionClientConfig: {
-        auth: {
-            scheme: http:OAUTH2,
-            config: {
-                grantType: http:DIRECT_TOKEN,
-                config: {
-                    accessToken: "<GH_ACCESS_TOKEN>"
-                }
-            }
-        }
-   }
+   target: [githubwebhook3:HUB, "https://github.com/<GH_USERNAME>/<GH_REPO_NAME>/events/*.json"],
+   hubClientConfig: {
+       auth: {
+           authHandler: githubOAuth2Handler
+       }
+   },
+   callback: "<CALLBACK_URL>"
 }
 service githubWebhook on githubListener {
 

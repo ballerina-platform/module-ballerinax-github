@@ -35,7 +35,7 @@ github4:GitHubConfiguration gitHubConfig = {
     accessToken: "access_token"
 };
  
-github4:Client githubClient = new(gitHubConfig);
+github4:Client githubClient = new (gitHubConfig);
 ```
 
 Run tests :

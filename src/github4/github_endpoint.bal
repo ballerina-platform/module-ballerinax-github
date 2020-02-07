@@ -601,7 +601,7 @@ public type Client client object {
     # Gets the next page of a project list.
     # + projectList - Project list object
     # + return - Project list object of next page or Connector error
-    public remote function getProjectListNextPage(ProjectList projectList) returns ProjectList|error {
+    public remote function getProjectListNextPage(ProjectList projectList) returns @tainted ProjectList|error {
 
         if (projectList.hasNextPage()) {
 

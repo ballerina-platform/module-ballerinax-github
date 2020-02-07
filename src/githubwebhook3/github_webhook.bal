@@ -30,7 +30,7 @@ const string TOPIC_HEADER = "X-GitHub-Event";
 # + webhookListenerConfig - The configuration for the listener
 public type Listener object {
 
-    *lang:AbstractListener;
+    *lang:Listener;
 
     public WebhookListenerConfiguration? webhookListenerConfig = ();
 
