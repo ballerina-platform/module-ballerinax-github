@@ -1,0 +1,22 @@
+name: CI
+
+on: [push]
+
+jobs:
+    build:
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Ballerina Build
+              uses: ballerina-platform/ballerina-action/@master
+              with:
+                  args:
+                      build -a -c 
+              env:
+                  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+                  ORG_NAME: ${{ secrets.ORG_NAME }}
+                  REPO_NAME: ${{ secrets.REPO_NAME }}
+                  ASSIGNEE: ${{ secrets.ASSIGNEE }}
+                  RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
