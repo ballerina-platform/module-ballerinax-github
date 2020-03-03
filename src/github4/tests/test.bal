@@ -15,20 +15,21 @@
 // under the License.
 
 import ballerina/config;
-import ballerina/log;
 import ballerina/http;
+import ballerina/log;
+import ballerina/system;
 import ballerina/test;
 
-string testOrganizationName = config:getAsString("ORGANIZATION_NAME");
-string testRepositoryName = config:getAsString("REPOSITORY_NAME");
-string testResourcePath = config:getAsString("RESOURCE_PATH");
-string testIssueAssignee = config:getAsString("ISSUE_ASSIGNEE");
+string testOrganizationName = getConfigValue("ORG_NAME");
+string testRepositoryName = getConfigValue("REPO_NAME");
+string testResourcePath = getConfigValue("RESOURCE_PATH");
+string testIssueAssignee = getConfigValue("ASSIGNEE");
 
 GitHubConfiguration gitHubConfig = {
-    accessToken: "access_token"
+    accessToken: getConfigValue("ACCESS_TOKEN")
 };
 
-Client githubClient = new(gitHubConfig);
+Client githubClient = new (gitHubConfig);
 
 @test:Config {
     groups: ["network-calls"]
@@ -46,13 +47,13 @@ function testGetOrganization() {
 }
 
 @test:Config {
- groups: ["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetOrganizationProject() {
     // Get an organization project
     log:printInfo("githubClient -> getOrganizationProject()");
     Project orgProject = {};
-    Organization projectOrganization = { login: testOrganizationName };
+    Organization projectOrganization = {login: testOrganizationName};
     var projectData = githubClient->getOrganizationProject(projectOrganization, 26);
     if (projectData is Project) {
         orgProject = projectData;
@@ -70,7 +71,7 @@ function testGetOrganizationProjectList() {
     log:printInfo("githubClient -> getOrganizationProjectList()");
     int recordCount = 1;
     ProjectList projectList = new;
-    Organization projectListOrganization = { login: testOrganizationName };
+    Organization projectListOrganization = {login: testOrganizationName};
     var responseProjectList = githubClient->
     getOrganizationProjectList(projectListOrganization, STATE_OPEN, recordCount);
     if (responseProjectList is ProjectList) {
@@ -93,7 +94,7 @@ function testGetOrganizationProjectListNextPage() {
     log:printInfo("githubClient -> getOrganizationProjectListNextPage()");
     int recordCount = 1;
     ProjectList projectList = new;
-    Organization projectListOrganization = { login: testOrganizationName };
+    Organization projectListOrganization = {login: testOrganizationName};
     var responseProjectList = githubClient->
     getOrganizationProjectList(projectListOrganization, STATE_OPEN, 1);
     if (responseProjectList is ProjectList) {
@@ -120,7 +121,7 @@ function testGetProjectColumnList() {
     //Get project column list
     log:printInfo("githubClient -> getProjectColumnList()");
     int recordCount = 1;
-    Project columnListProject = { number: 1, resourcePath: testResourcePath };
+    Project columnListProject = {number: 1, resourcePath: testResourcePath};
     columnListProject["owner"]["__typename"] = "repository";
     ColumnList columnList = new;
     var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
@@ -142,7 +143,7 @@ function testGetCardListOfColumn() {
     //Get column card list
     log:printInfo("Column -> getCardList()");
     int recordCount = 1;
-    Project columnListProject = { number: 1, resourcePath: testResourcePath };
+    Project columnListProject = {number: 1, resourcePath: testResourcePath};
     columnListProject["owner"]["__typename"] = "repository";
     ColumnList columnList = new;
     var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
@@ -166,7 +167,7 @@ function testGetCardListNextPage() {
     //Get card list next page
     log:printInfo("githubClient -> getCardListNextPage()");
     int recordCount = 1;
-    Project columnListProject = { number: 1, resourcePath: testResourcePath };
+    Project columnListProject = {number: 1, resourcePath: testResourcePath};
     columnListProject.owner.__typename = "repository";
     ColumnList columnList = new;
     var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
@@ -195,7 +196,7 @@ function testGetOrganizationRepositoryList() {
     //Get a all the repositories of Organization
     log:printInfo("githubClient -> getOrganizationRepositoryList()");
     int recordCount = 1;
-    Organization repositoryListOrganization = { login: testOrganizationName };
+    Organization repositoryListOrganization = {login: testOrganizationName};
     RepositoryList repositoryList = new;
     var repoList = githubClient->getOrganizationRepositoryList(repositoryListOrganization, recordCount);
     if (repoList is RepositoryList) {
@@ -216,7 +217,7 @@ function testGetOrganizationRepositoryListNextPage() {
     //Get a all the repositories of Organization
     log:printInfo("githubClient -> getRepositoryListNextPage()");
     int recordCount = 1;
-    Organization repositoryListOrganization = { login: testOrganizationName };
+    Organization repositoryListOrganization = {login: testOrganizationName};
     RepositoryList repositoryList = new;
     var repoList = githubClient->getOrganizationRepositoryList(repositoryListOrganization, recordCount);
     if (repoList is RepositoryList) {
@@ -259,7 +260,7 @@ function testGetRepository() {
 function testGetRepositoryProject() {
     //Get a Repository Project
     log:printInfo("githubClient -> getRepositoryProject()");
-    Repository projectRepository = { owner: { login: "ldclakmal" }, name: "ballerina-github-testing" };
+    Repository projectRepository = {owner: {login: testIssueAssignee}, name: "github-connector"};
     Project repositoryProject = {};
     var singleRepoProject = githubClient->getRepositoryProject(projectRepository, 1);
     if (singleRepoProject is Project) {
@@ -272,13 +273,13 @@ function testGetRepositoryProject() {
 }
 
 @test:Config {
- groups: ["network-calls"]
+    groups: ["network-calls"]
 }
 function testGetRepositoryProjectList() {
     //Get a list of projects of a repository
     log:printInfo("githubClient -> getRepositoryProjectList()");
     int recordCount = 1;
-    Repository projectRepositoryList = { owner: { login: "ldclakmal" }, name: "ballerina-github-testing" };
+    Repository projectRepositoryList = {owner: {login: testIssueAssignee}, name: "github-connector"};
     ProjectList repoProjectList = new;
     var responseRepoProjectList = githubClient->
     getRepositoryProjectList(projectRepositoryList, STATE_OPEN, recordCount);
@@ -289,8 +290,8 @@ function testGetRepositoryProjectList() {
     }
     boolean lengthEqualsRecords = repoProjectList.getAllProjects().length() == recordCount;
 
-    test:assertTrue(lengthEqualsRecords, msg = "Project list count of ldclakmal/ballerina-github-testing does not match with "
-         + recordCount.toString());
+    test:assertTrue(lengthEqualsRecords, msg = "Project list count of github-connector does not match with "
+    + recordCount.toString());
 }
 
 @test:Config {
@@ -301,7 +302,7 @@ function testGetRepositoryProjectListNextPage() {
     //Get a list of projects of a repository
     log:printInfo("githubClient -> getProjectListNextPage()");
     int recordCount = 1;
-    Repository projectRepository = { owner: { login: "ldclakmal" }, name: "ballerina-github-testing" };
+    Repository projectRepository = {owner: {login: testIssueAssignee}, name: "github-connector"};
     ProjectList repoProjectList = new;
     var responseRepoProjectList = githubClient->
     getRepositoryProjectList(projectRepository, STATE_OPEN, 1);
@@ -329,7 +330,7 @@ function testGetPullRequestList() {
     //Get a list of pull requests in a repository
     log:printInfo("githubClient -> getPullRequestList()");
     int recordCount = 1;
-    Repository pullRequestRepository = { owner: { login: testOrganizationName }, name: testRepositoryName };
+    Repository pullRequestRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
     PullRequestList pullRequestList = new;
     var prList = githubClient->getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
     if (prList is PullRequestList) {
@@ -350,7 +351,7 @@ function testGetPullRequestListNextPage() {
     //Get a list of pull requests in a repository
     log:printInfo("githubClient -> getPullRequestListNextPage()");
     int recordCount = 1;
-    Repository pullRequestRepository = { owner: { login: testOrganizationName }, name: testRepositoryName };
+    Repository pullRequestRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
     PullRequestList pullRequestList = new;
     var prList = githubClient->getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
     if (prList is PullRequestList) {
@@ -377,7 +378,7 @@ function testGetIssueList() {
     //Get a list of issues of a repository
     log:printInfo("githubClient -> getIssueList()");
     int recordCount = 1;
-    Repository issueRepository = { owner: { login: testOrganizationName }, name: testRepositoryName };
+    Repository issueRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
     IssueList issueList = new;
     var issues = githubClient->getIssueList(issueRepository, STATE_CLOSED, recordCount);
     if (issues is IssueList) {
@@ -386,7 +387,7 @@ function testGetIssueList() {
         test:assertFail(msg = <string>issues.detail()["message"]);
     }
     boolean lengthEqualsRecords = issueList.getAllIssues().length() >= recordCount;
-    
+
     test:assertTrue(lengthEqualsRecords, msg = "Failed getIssueList()");
 }
 
@@ -398,7 +399,7 @@ function testGetIssueListNextPage() {
     //Get a list of issues of a repository
     log:printInfo("githubClient -> getIssueListNextPage()");
     int recordCount = 1;
-    Repository issueRepository = { owner: { login: testOrganizationName }, name: testRepositoryName };
+    Repository issueRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
     IssueList issueList = new;
     var issues = githubClient->getIssueList(issueRepository, STATE_CLOSED, recordCount);
     if (issues is IssueList) {
@@ -423,8 +424,8 @@ function testGetIssueListNextPage() {
 }
 function testCreateIssue() {
     log:printInfo("githubClient -> createIssue()");
-    var createdIssue = githubClient->createIssue("ldclakmal", "ballerina-github-testing",
-     "This is a test issue", "This is the body of the test issue", ["bug", "critical"], [testIssueAssignee]);
+    var createdIssue = githubClient->createIssue(testIssueAssignee, "github-connector",
+    "This is a test issue", "This is the body of the test issue", ["bug", "critical"], [testIssueAssignee]);
     if (createdIssue is Issue) {
         test:assertEquals(createdIssue.title, "This is a test issue", msg = "Failed createIssue()");
     } else {
@@ -643,7 +644,7 @@ function testProjectOwnerSetOwnerType() {
 function testConstructRequest() {
     log:printInfo("constructRequest()");
     http:Request request = new;
-    json samplePayload = { "query": "query body" };
+    json samplePayload = {"query": "query body"};
     string sampleToken = "12345";
     string expectedToken = "Bearer " + sampleToken;
 
@@ -663,7 +664,7 @@ function testGetValidatedResponseSuccess() {
     log:printInfo("getValidatedResponse() successful");
     http:Response sampleHttpResponse = new;
 
-    json samplePayload = { "data": { "org": { "name": "WSO2" } } };
+    json samplePayload = {"data": {"org": {"name": "WSO2"}}};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
     http:Response|error response = sampleHttpResponse;
@@ -686,7 +687,7 @@ function testGetValidatedResponseError() {
 
     http:Response sampleHttpResponse = new;
 
-    json samplePayload = { "data": { "org": { "name": "" } }, "errors": [{ "message": "API error" }] };
+    json samplePayload = {"data": {"org": {"name": ""}}, "errors": [{"message": "API error"}]};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
     http:Response|error response = sampleHttpResponse;
@@ -709,7 +710,7 @@ function testGetValidatedResponseNoRequestedData() {
 
     http:Response sampleHttpResponse = new;
 
-    json samplePayload = { "data": { "org": {} } };
+    json samplePayload = {"data": {"org": {}}};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
     http:Response|error response = sampleHttpResponse;
@@ -772,7 +773,7 @@ function testGetValidatedRestResponseSuccess() {
     log:printInfo("getValidatedRestResponse() successful");
     http:Response sampleHttpResponse = new;
 
-    json samplePayload = { "title": "Sample title", "number": 150 };
+    json samplePayload = {"title": "Sample title", "number": 150};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
     http:Response|error response = sampleHttpResponse;
@@ -793,9 +794,9 @@ function testGetValidatedRestResponseSuccess() {
 function testGetValidatedRestResponseError() {
     log:printInfo("getValidatedRestResponse() error payload");
 
-    http:Response sampleHttpResponse = new();
+    http:Response sampleHttpResponse = new;
 
-    json samplePayload = { "message": "API error" };
+    json samplePayload = {"message": "API error"};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
     http:Response|error response = sampleHttpResponse;
@@ -825,7 +826,7 @@ function testGetValidatedRestResponseNoPayload() {
         test:assertFail(msg = "Payload error should be handled");
     } else {
         test:assertEquals(<string>validatedResponse.detail()["message"],
-         "Entity body is not json compatible since the received content-type is : null",
+        "Entity body is not json compatible since the received content-type is : null",
         msg = "Validated response error mismatch");
     }
 }
@@ -880,4 +881,8 @@ function testStringToJsonSuccess() {
     } else {
         test:assertFail(msg = "stringToJson() returned error");
     }
+}
+
+function getConfigValue(string key) returns string {
+    return (system:getEnv(key) != "") ? system:getEnv(key) : config:getAsString(key);
 }

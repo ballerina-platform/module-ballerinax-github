@@ -25,8 +25,8 @@ and provide the obtained token to the client endpoint configuration by adding th
 .conf`
 
 ```.conf
-GITHUB_TOKEN="ACCESS_TOKEN"
-ORGANIZATION_NAME = ""
+ACCESS_TOKEN="ACCESS_TOKEN"
+ORG_NAME = ""
 RESOURCE_PATH = ""
 ```
 
