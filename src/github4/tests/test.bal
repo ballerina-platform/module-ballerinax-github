@@ -269,7 +269,7 @@ function testGetRepositoryProject() {
         test:assertFail(msg = <string>singleRepoProject.detail()["message"]);
     }
 
-    test:assertEquals(repositoryProject.name, "Sample Project 1", msg = "Failed getRepositoryProject()");
+    test:assertEquals(repositoryProject.name, "New Project", msg = "Failed getRepositoryProject()");
 }
 
 @test:Config {
