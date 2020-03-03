@@ -82,7 +82,7 @@ function testGetOrganizationProjectList() {
     boolean lengthEqualsRecords = projectList.getAllProjects().length() >= recordCount;
 
     test:assertTrue(lengthEqualsRecords, msg = "Organization project count of " + testOrganizationName
-    + " does not match with " + recordCount.toString());
+         + " does not match with " + recordCount.toString());
 }
 
 @test:Config {
@@ -260,7 +260,7 @@ function testGetRepository() {
 function testGetRepositoryProject() {
     //Get a Repository Project
     log:printInfo("githubClient -> getRepositoryProject()");
-    Repository projectRepository = {owner: {login: "ldclakmal"}, name: "ballerina-github-testing"};
+    Repository projectRepository = {owner: {login: testIssueAssignee}, name: "github-connector"};
     Project repositoryProject = {};
     var singleRepoProject = githubClient->getRepositoryProject(projectRepository, 1);
     if (singleRepoProject is Project) {
@@ -279,7 +279,7 @@ function testGetRepositoryProjectList() {
     //Get a list of projects of a repository
     log:printInfo("githubClient -> getRepositoryProjectList()");
     int recordCount = 1;
-    Repository projectRepositoryList = {owner: {login: "ldclakmal"}, name: "ballerina-github-testing"};
+    Repository projectRepositoryList = {owner: {login: testIssueAssignee}, name: "github-connector"};
     ProjectList repoProjectList = new;
     var responseRepoProjectList = githubClient->
     getRepositoryProjectList(projectRepositoryList, STATE_OPEN, recordCount);
@@ -290,7 +290,7 @@ function testGetRepositoryProjectList() {
     }
     boolean lengthEqualsRecords = repoProjectList.getAllProjects().length() == recordCount;
 
-    test:assertTrue(lengthEqualsRecords, msg = "Project list count of ldclakmal/ballerina-github-testing does not match with "
+    test:assertTrue(lengthEqualsRecords, msg = "Project list count of github-connector does not match with "
     + recordCount.toString());
 }
 
@@ -302,7 +302,7 @@ function testGetRepositoryProjectListNextPage() {
     //Get a list of projects of a repository
     log:printInfo("githubClient -> getProjectListNextPage()");
     int recordCount = 1;
-    Repository projectRepository = {owner: {login: "ldclakmal"}, name: "ballerina-github-testing"};
+    Repository projectRepository = {owner: {login: testIssueAssignee}, name: "github-connector"};
     ProjectList repoProjectList = new;
     var responseRepoProjectList = githubClient->
     getRepositoryProjectList(projectRepository, STATE_OPEN, 1);
@@ -424,7 +424,7 @@ function testGetIssueListNextPage() {
 }
 function testCreateIssue() {
     log:printInfo("githubClient -> createIssue()");
-    var createdIssue = githubClient->createIssue("ldclakmal", "ballerina-github-testing",
+    var createdIssue = githubClient->createIssue(testIssueAssignee, "github-connector",
     "This is a test issue", "This is the body of the test issue", ["bug", "critical"], [testIssueAssignee]);
     if (createdIssue is Issue) {
         test:assertEquals(createdIssue.title, "This is a test issue", msg = "Failed createIssue()");
@@ -564,18 +564,18 @@ function testCardListGetAllCards() {
     groups: ["object-functions"]
 }
 function testPullRequestListHasNextPage() {
-    log:printInfo("PullRequestList -> hasNextPage()");
-    PullRequestList pullRequestList = new;
-    test:assertFalse(pullRequestList.hasNextPage(), msg = "Failed PullRequestList.hasNextPage()");
+     log:printInfo("PullRequestList -> hasNextPage()");
+     PullRequestList pullRequestList = new;
+     test:assertFalse(pullRequestList.hasNextPage(), msg = "Failed PullRequestList.hasNextPage()");
 }
 
 @test:Config {
     groups: ["object-functions"]
 }
 function testPullRequestListHasPreviousPage() {
-    log:printInfo("PullRequestList -> hasPreviousPage()");
-    PullRequestList pullRequestList = new;
-    test:assertFalse(pullRequestList.hasPreviousPage(), msg = "Failed PullRequestList.hasPreviousPage()");
+     log:printInfo("PullRequestList -> hasPreviousPage()");
+     PullRequestList pullRequestList = new;
+     test:assertFalse(pullRequestList.hasPreviousPage(), msg = "Failed PullRequestList.hasPreviousPage()");
 }
 
 @test:Config {
@@ -602,40 +602,40 @@ function testIssueListHasNextPage() {
     groups: ["object-functions"]
 }
 function testIssueListHasPreviousPage() {
-    log:printInfo("IssueList -> hasPreviousPage()");
-    IssueList issueList = new;
-    test:assertFalse(issueList.hasPreviousPage(), msg = "Failed IssueList.hasPreviousPage()");
+     log:printInfo("IssueList -> hasPreviousPage()");
+     IssueList issueList = new;
+     test:assertFalse(issueList.hasPreviousPage(), msg = "Failed IssueList.hasPreviousPage()");
 }
 
 @test:Config {
     groups: ["object-functions"]
 }
 function testIssueListGetAllIssues() {
-    log:printInfo("IssueList -> getAllIssues()");
-    IssueList issueList = new;
-    var issueArray = issueList.getAllIssues();
-    Issue[] sampleIssueArray = [];
-    test:assertEquals(issueArray, sampleIssueArray, msg = "Failed IssueList.getAllIssues()");
+     log:printInfo("IssueList -> getAllIssues()");
+     IssueList issueList = new;
+     var issueArray = issueList.getAllIssues();
+     Issue[] sampleIssueArray = [];
+     test:assertEquals(issueArray, sampleIssueArray, msg = "Failed IssueList.getAllIssues()");
 }
 
 @test:Config {
     groups: ["object-functions"]
 }
 function testProjectOwnerGetOwnerType() {
-    log:printInfo("ProjectOwner -> getOwnerType()");
-    ProjectOwner projectOwner = {};
-    test:assertEquals(projectOwner["__typename"], "", msg = "Failed ProjectOwner.getOwnerType()");
+     log:printInfo("ProjectOwner -> getOwnerType()");
+     ProjectOwner projectOwner = {};
+     test:assertEquals(projectOwner["__typename"], "", msg = "Failed ProjectOwner.getOwnerType()");
 }
 
 @test:Config {
     groups: ["object-functions"]
 }
 function testProjectOwnerSetOwnerType() {
-    log:printInfo("ProjectOwner -> setOwnerType()");
-    ProjectOwner projectOwner = {};
-    projectOwner["__typename"] = "Organization";
-    string ownerType = <string>projectOwner["__typename"];
-    test:assertEquals(<string>ownerType, "Organization", msg = "Failed ProjectOwner.getOwnerType()");
+     log:printInfo("ProjectOwner -> setOwnerType()");
+     ProjectOwner projectOwner = {};
+     projectOwner["__typename"] = "Organization";
+     string ownerType = <string>projectOwner["__typename"];
+     test:assertEquals(<string>ownerType, "Organization", msg = "Failed ProjectOwner.getOwnerType()");
 }
 
 @test:Config {
@@ -667,9 +667,9 @@ function testGetValidatedResponseSuccess() {
     json samplePayload = {"data": {"org": {"name": "WSO2"}}};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
-    http:Response | error response = sampleHttpResponse;
+    http:Response|error response = sampleHttpResponse;
 
-    json | error validatedResponse = getValidatedResponse(response, "name");
+    json|error validatedResponse = getValidatedResponse(response, "name");
 
     if (validatedResponse is json) {
         string orgName = validatedResponse.data.org.name.toString();
@@ -690,9 +690,9 @@ function testGetValidatedResponseError() {
     json samplePayload = {"data": {"org": {"name": ""}}, "errors": [{"message": "API error"}]};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
-    http:Response | error response = sampleHttpResponse;
+    http:Response|error response = sampleHttpResponse;
 
-    json | error validatedResponse = getValidatedResponse(response, "name");
+    json|error validatedResponse = getValidatedResponse(response, "name");
 
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
@@ -713,9 +713,9 @@ function testGetValidatedResponseNoRequestedData() {
     json samplePayload = {"data": {"org": {}}};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
-    http:Response | error response = sampleHttpResponse;
+    http:Response|error response = sampleHttpResponse;
 
-    json | error validatedResponse = getValidatedResponse(response, "name");
+    json|error validatedResponse = getValidatedResponse(response, "name");
 
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
@@ -733,9 +733,9 @@ function testGetValidatedResponseNoPayload() {
 
     http:Response sampleHttpResponse = new;
 
-    http:Response | error response = sampleHttpResponse;
+    http:Response|error response = sampleHttpResponse;
 
-    json | error validatedResponse = getValidatedResponse(response, "name");
+    json|error validatedResponse = getValidatedResponse(response, "name");
 
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
@@ -754,9 +754,9 @@ function testGetValidatedResponseHttpError() {
 
     error sampleHttpError = error(GITHUB_ERROR_CODE, message = "HTTP Connector Error.");
 
-    http:Response | error response = sampleHttpError;
+    http:Response|error response = sampleHttpError;
 
-    json | error validatedResponse = getValidatedResponse(response, "name");
+    json|error validatedResponse = getValidatedResponse(response, "name");
 
     if (validatedResponse is json) {
         test:assertFail(msg = "HttpConnector error should be handled");
@@ -776,9 +776,9 @@ function testGetValidatedRestResponseSuccess() {
     json samplePayload = {"title": "Sample title", "number": 150};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
-    http:Response | error response = sampleHttpResponse;
+    http:Response|error response = sampleHttpResponse;
 
-    json | error validatedResponse = getValidatedRestResponse(response);
+    json|error validatedResponse = getValidatedRestResponse(response);
 
     if (validatedResponse is json) {
         string orgName = validatedResponse.title.toString();
@@ -794,13 +794,13 @@ function testGetValidatedRestResponseSuccess() {
 function testGetValidatedRestResponseError() {
     log:printInfo("getValidatedRestResponse() error payload");
 
-    http:Response sampleHttpResponse = new ();
+    http:Response sampleHttpResponse = new;
 
     json samplePayload = {"message": "API error"};
     sampleHttpResponse.setJsonPayload(samplePayload);
 
-    http:Response | error response = sampleHttpResponse;
-    json | error validatedResponse = getValidatedRestResponse(response);
+    http:Response|error response = sampleHttpResponse;
+    json|error validatedResponse = getValidatedRestResponse(response);
 
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
@@ -818,9 +818,9 @@ function testGetValidatedRestResponseNoPayload() {
 
     http:Response sampleHttpResponse = new;
 
-    http:Response | error response = sampleHttpResponse;
+    http:Response|error response = sampleHttpResponse;
 
-    json | error validatedResponse = getValidatedRestResponse(response);
+    json|error validatedResponse = getValidatedRestResponse(response);
 
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
@@ -839,9 +839,9 @@ function testGetValidatedRestResponseHttpError() {
 
     error sampleHttpError = error(GITHUB_ERROR_CODE, message = "HTTP Connector Error.");
 
-    http:Response | error response = sampleHttpError;
+    http:Response|error response = sampleHttpError;
 
-    json | error validatedResponse = getValidatedRestResponse(response);
+    json|error validatedResponse = getValidatedRestResponse(response);
 
     if (validatedResponse is json) {
         test:assertFail(msg = "HttpConnector error should be handled");
