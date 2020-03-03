@@ -25,12 +25,8 @@ string testRepositoryName = getConfigValue("REPO_NAME");
 string testResourcePath = getConfigValue("RESOURCE_PATH");
 string testIssueAssignee = getConfigValue("ASSIGNEE");
 
-function getConfigValue(string key) returns string {
-    return (system:getEnv(key) != "") ? system:getEnv(key) : config:getAsString(key);
-}
-
 GitHubConfiguration gitHubConfig = {
-    accessToken: system:getEnv("ACCESS_TOKEN")
+    accessToken: getConfigValue("ACCESS_TOKEN")
 };
 
 Client githubClient = new (gitHubConfig);
@@ -885,4 +881,8 @@ function testStringToJsonSuccess() {
     } else {
         test:assertFail(msg = "stringToJson() returned error");
     }
+}
+
+function getConfigValue(string key) returns string {
+    return (system:getEnv(key) != "") ? system:getEnv(key) : config:getAsString(key);
 }
