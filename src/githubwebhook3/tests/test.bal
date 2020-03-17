@@ -20,7 +20,7 @@
 // import ballerina/runtime;
 // import ballerina/test;
 // import ballerina/websub;
-// import wso2/github4;
+// import ballerinax/github4;
 
 // boolean webhookRegistrationNotified = false;
 // string webhookHookType = "";

@@ -27,10 +27,10 @@ requests, prior to dispatching them to the relevant resource.
 
 ## Sample
 
-First, import the `wso2/githubwebhook3` module into the Ballerina project.
+First, import the `ballerinax/githubwebhook3` module into the Ballerina project.
 
 ```ballerina
-import wso2/githubwebhook3;
+import ballerinax/githubwebhook3;
 ```
 
 **Obtaining the Access Token to run the Sample**
@@ -65,7 +65,7 @@ import ballerina/http;
 import ballerina/io;
 import ballerina/oauth2;
 import ballerina/websub;
-import wso2/githubwebhook3;
+import ballerinax/githubwebhook3;
 
 listener githubwebhook3:Listener githubListener = new (8080);
 
