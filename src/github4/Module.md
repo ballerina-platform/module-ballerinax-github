@@ -20,7 +20,7 @@ The `ballerinax/github4` module has support for creating and listing issues.
 ## Compatibility
 |                             |       Version               |
 |:---------------------------:|:---------------------------:|
-| Ballerina Language          | 1.1.x                       |
+| Ballerina Language          | 1.2.x                       |
 | GitHub API                  | V4                          |
 
 ## Sample

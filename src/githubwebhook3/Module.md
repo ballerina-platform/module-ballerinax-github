@@ -23,7 +23,7 @@ requests, prior to dispatching them to the relevant resource.
 ## Compatibility
 |                             |       Version               |
 |:---------------------------:|:---------------------------:|
-| Ballerina Language          | 1.1.x                     |
+| Ballerina Language          | 1.2.x                     |
 
 ## Sample
 
