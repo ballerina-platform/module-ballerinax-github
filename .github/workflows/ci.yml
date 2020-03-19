@@ -20,3 +20,4 @@ jobs:
                   REPO_NAME: ${{ secrets.REPO_NAME }}
                   ASSIGNEE: ${{ secrets.ASSIGNEE }}
                   RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
+                  JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
