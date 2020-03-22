@@ -48,7 +48,7 @@ final string GIT_REPOSITORY_OWNER = "repositoryOwner";
 final string GIT_START_CURSOR = "startCursor";
 
 // Error Codes
-final string GITHUB_ERROR_CODE = "(wso2/github)GithubError";
+final string GITHUB_ERROR_CODE = "(ballerinax/github)GithubError";
 
 // Public constants
 # Pull request state open, closed and merged

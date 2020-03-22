@@ -6,7 +6,7 @@ The Github connector has built-in support for working with projects, pull reques
 
 **Project Operations**
 
-The `wso2/github4` module covers most of the project-related operations including columns and cards. It returns the information in structs that can be easily accessed.
+The `ballerinax/github4` module covers most of the project-related operations including columns and cards. It returns the information in structs that can be easily accessed.
 
 **Pull Request Operations**
 
@@ -14,21 +14,21 @@ This module can retrieve pull requests from GitHub GraphQL. It returns comprehen
 
 **Issues Operations**
 
-The `wso2/github4` module has support for creating and listing issues.
+The `ballerinax/github4` module has support for creating and listing issues.
 
 
 ## Compatibility
 |                             |       Version               |
 |:---------------------------:|:---------------------------:|
-| Ballerina Language          | 1.1.x                       |
+| Ballerina Language          | 1.2.x                       |
 | GitHub API                  | V4                          |
 
 ## Sample
 
-First, import the `wso2/github4` module into the Ballerina project.
+First, import the `ballerinax/github4` module into the Ballerina project.
 
 ```ballerina
-import wso2/github4;
+import ballerinax/github4;
 ```
 
 **Obtaining the Access Token to Run the Sample**
@@ -47,7 +47,7 @@ github4:Client githubClient = new (gitHubConfig);
 
 The `getRepository` remote function gets a GitHub repository by passing the name of the repository and its owner in the format of "owner/repository".
 ```ballerina
-var repo = githubClient->getRepository("wso2-ballerina/module-github");
+var repo = githubClient->getRepository("ballerina-platform/module-github");
 ```
 
 The response from `getRepository` is either a `Repository` object (if the request was successful) or an `error` (if the request was unsuccessful).

@@ -15,7 +15,7 @@
 // under the License.
 
 import ballerina/http;
-import ballerinax/java;
+import ballerina/java;
 import ballerina/stringutils;
 
 # Construct the request by adding the payload and authorization tokens.

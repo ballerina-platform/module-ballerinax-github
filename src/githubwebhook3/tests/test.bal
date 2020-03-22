@@ -16,10 +16,11 @@
 
 // import ballerina/config;
 // import ballerina/http;
+// import ballerina/oauth2;
 // import ballerina/runtime;
 // import ballerina/test;
 // import ballerina/websub;
-// import wso2/github4;
+// import ballerinax/github4;
 
 // boolean webhookRegistrationNotified = false;
 // string webhookHookType = "";
@@ -38,54 +39,51 @@
 
 // listener Listener githubListener = new(8080);
 
+// oauth2:OutboundOAuth2Provider githubOAuth2Provider = new ({
+//     accessToken: config:getAsString("GITHUB_TOKEN")
+// });
+// http:BearerAuthHandler githubOAuth2Handler = new (githubOAuth2Provider);
+
 // @websub:SubscriberServiceConfig {
 //     path: "/webhook",
 //     subscribeOnStartUp: true,
-//     hub: HUB,
-//     topic: config:getAsString("GITHUB_TOPIC"),
-//     secret: config:getAsString("GITHUB_SECRET"),
-//     callback: config:getAsString("GITHUB_CALLBACK"), // only needs to be specified if not http(s)://<HOST>:<PORT>/<path>
-//     subscriptionClientConfig: {
-//         auth: {
-//             scheme: http:OAUTH2,
-//             config: {
-//                 grantType: http:DIRECT_TOKEN,
-//                 config: {
-//                     accessToken: config:getAsString("GITHUB_TOKEN")
-//                 }
-//             }
-//         }
-//     }
+//     target: [HUB, config:getAsString("GITHUB_TOPIC")],
+//     hubClientConfig: {
+//        auth: {
+//            authHandler: githubOAuth2Handler
+//        }
+//     },
+//     callback: GITHUB_CALLBACK // only needs to be specified if not http(s)://<HOST>:<PORT>/<path>
 // }
 // service githubWebhook on githubListener {
 //     resource function onPing(websub:Notification notification, PingEvent event) {
 //         webhookRegistrationNotified = true;
-//         webhookHookType = untaint event.hook.^"type";
+//         webhookHookType = <@untainted> event.hook["type"];
 //     }
 
 //     resource function onIssuesOpened(websub:Notification notification, IssuesEvent event) {
 //         issueCreationNotified = true;
-//         issueTitle = untaint event.issue.title;
+//         issueTitle = <@untainted> event.issue.title;
 //     }
 
 //     resource function onIssuesLabeled(websub:Notification notification, IssuesEvent event) {
 //         issueLabeledNotified = true;
 //         string receivedIssueLabels = "";
 //         foreach Label label in event.issue.labels {
-//             receivedIssueLabels += untaint label.name;
+//             receivedIssueLabels += label.name;
 //         }
-//         issueLabels = receivedIssueLabels;
+//         issueLabels = <@untainted> receivedIssueLabels;
 //     }
 
 //     resource function onIssuesAssigned(websub:Notification notification, IssuesEvent event) {
 //         issueAssignedNotified = true;
 //         User assignee = <User> event.issue.assignee;
-//         issueAssignee = untaint assignee.login;
+//         issueAssignee = <@untainted> assignee.login;
 //     }
 
 //     resource function onIssuesEdited(websub:Notification notification, IssuesEvent event) {
 //         issueEditedNotified = true;
-//         issueChanges = untaint event.changes;
+//         issueChanges = <@untainted> event.changes;
 //     }
 // }
 
@@ -111,24 +109,15 @@
 //     dependsOn: ["testWebhookRegistration"]
 // }
 // function testWebhookNotificationOnIssueCreation() {
-//     github4:Client githubClient = new({
-//         clientConfig: {
-//             auth: {
-//                 scheme: http:OAUTH2,
-//                 config: {
-//                     grantType: http:DIRECT_TOKEN,
-//                     config: {
-//                         accessToken: config:getAsString("GITHUB_TOKEN")
-//                     }
-//                 }
-//             }
-//         }
-//     });
+//     github4:GitHubConfiguration gitHubConfig = {
+//         accessToken: config:getAsString("GITHUB_TOKEN")
+//     };
+//     github4:Client githubClient = new (gitHubConfig);
 //     var issueCreationStatus = githubClient->createIssue(createdIssueUsername, createdIssueRepoName, createdIssueTitle,
 //                                             "This is the body of the test issue", createdIssueLabelArray,
 //                                             [createdIssueAssignee]);
 //     if (issueCreationStatus is error) {
-//         test:assertFail(msg = "Issue creation failed: " + <string> issueCreationStatus.detail().message);
+//         test:assertFail(msg = "Issue creation failed: " + issueCreationStatus.reason());
 //     }
 
 //     int counter = 10;

@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/wso2-ballerina/module-github.svg?branch=master)](https://travis-ci.org/wso2-ballerina/module-github)
+[![Build Status](https://travis-ci.org/ballerina-platform/module-github.svg?branch=master)](https://travis-ci.org/ballerina-platform/module-github)
 
 # Ballerina GitHub Endpoint
 
@@ -11,7 +11,7 @@ sections explains how to use Ballerina GitHub4 connector. You can refer the [Git
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
-| 1.1.0             | v4                 |
+| 1.2.X             | v4                 |
 
 ![Ballerina GitHub Endpoint Overview](./docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
 
@@ -22,7 +22,7 @@ Download the ballerina [distribution](https://ballerinalang.org/downloads/).
 
 * Clone the repository by running the following command
 ```shell
-git clone https://github.com/wso2-ballerina/module-github
+git clone https://github.com/ballerina-platform/module-github
 ```
 
 * Initialize the ballerina project.
@@ -41,7 +41,7 @@ All the actions return a `record` or an `object`, or an `error`. If the action w
 import ballerina/config;
 import ballerina/http;
 import ballerina/io;
-import wso2/github4;
+import ballerinax/github4;
 
 github4:GitHubConfiguration gitHubConfig = {
     accessToken: "access_token"
@@ -50,9 +50,9 @@ github4:GitHubConfiguration gitHubConfig = {
 github4:Client githubClient = new (gitHubConfig);
 
 public function main() {
-    github4:Repository|error result = githubClient->getRepository("wso2-ballerina/module-github");
+    github4:Repository|error result = githubClient->getRepository("ballerina-platform/module-github");
     if (result is github4:Repository) {
-        io:println("Repository wso2-ballerina/module-github: ", result);
+        io:println("Repository ballerina-platform/module-github: ", result);
     } else {
         io:println("Error occurred on getRepository(): ", result);
     }
@@ -95,14 +95,14 @@ notifications on the occurrence of events, and starts up a callback service, whi
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
-| 1.1.0             | v3                 |
+| 1.2.x             | v3                 |
 
 ```ballerina
 import ballerina/http;
 import ballerina/io;
 import ballerina/oauth2;
 import ballerina/websub;
-import wso2/githubwebhook3;
+import ballerinax/githubwebhook3;
 
 listener githubwebhook3:Listener githubListener = new (8080);
 
