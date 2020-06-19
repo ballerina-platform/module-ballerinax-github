@@ -6,12 +6,12 @@
 
 GitHub connector provides a Ballerina API to access the GitHub GraphQL API. 
 The connector has built-in support to handle OAuth2.0, provides auto completion and type conversions. The following 
-sections explains how to use Ballerina GitHub4 connector. You can refer the [GitHub GraphQL API v4.0]
+sections explains how to use Ballerina GitHub connector. You can refer the [GitHub GraphQL API v4.0]
 (https://developer.github.com/v4/) to learn more about the API. 
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
-| 1.2.X             | v4                 |
+| Swan Lake Preview1| v4                 |
 
 ![Ballerina GitHub Endpoint Overview](./docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
 
@@ -41,17 +41,17 @@ All the actions return a `record` or an `object`, or an `error`. If the action w
 import ballerina/config;
 import ballerina/http;
 import ballerina/io;
-import ballerinax/github4;
+import ballerinax/github;
 
-github4:GitHubConfiguration gitHubConfig = {
+github:GitHubConfiguration gitHubConfig = {
     accessToken: "access_token"
 };
  
-github4:Client githubClient = new (gitHubConfig);
+github:Client githubClient = new (gitHubConfig);
 
 public function main() {
-    github4:Repository|error result = githubClient->getRepository("ballerina-platform/module-github");
-    if (result is github4:Repository) {
+    github:Repository|error result = githubClient->getRepository("ballerina-platform/module-github");
+    if (result is github:Repository) {
         io:println("Repository ballerina-platform/module-github: ", result);
     } else {
         io:println("Error occurred on getRepository(): ", result);
@@ -95,7 +95,7 @@ notifications on the occurrence of events, and starts up a callback service, whi
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
-| 1.2.x             | v3                 |
+| Swan Lake Preview1| v3                 |
 
 ```ballerina
 import ballerina/http;
