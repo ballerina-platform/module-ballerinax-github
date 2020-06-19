@@ -316,7 +316,7 @@ function testGetRepositoryProjectListNextPage() {
     if (responseRepoProjectList is ProjectList) {
         repoProjectList = responseRepoProjectList;
     } else {
-        test:assertFail(msg = <string>responseRepoProjectList.detail()["message"] + "--------++++++++++======>");
+        test:assertFail(msg = <string>responseRepoProjectList.detail()["message"]);
     }
     boolean lengthEqualsRecords = repoProjectList.getAllProjects().length() == recordCount;
 
