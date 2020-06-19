@@ -27,7 +27,7 @@ public type Client client object {
     http:Client githubRestClient;
     http:Client githubGraphQlClient;
 
-    public function __init(GitHubConfiguration gitHubConfig) {
+    public function init(GitHubConfiguration gitHubConfig) {
         self.accessToken = gitHubConfig.accessToken;
         self.githubRestClient = new(GIT_REST_API_URL, gitHubConfig.clientConfig);
         self.githubGraphQlClient = new(GIT_GRAPHQL_API_URL, gitHubConfig.clientConfig);
@@ -602,7 +602,6 @@ public type Client client object {
     # + projectList - Project list object
     # + return - Project list object of next page or Connector error
     public remote function getProjectListNextPage(ProjectList projectList) returns @tainted ProjectList|error {
-
         if (projectList.hasNextPage()) {
 
             http:Request request = new;
@@ -805,7 +804,7 @@ public type Client client object {
     # + return - Repository list object of next page or Connector error
     public remote function getRepositoryListNextPage(RepositoryList repositoryList) returns @tainted
     RepositoryList|error {
-
+        
         if (repositoryList.hasNextPage()) {
 
             http:Request request = new;

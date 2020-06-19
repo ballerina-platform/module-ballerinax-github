@@ -52,8 +52,8 @@ function jsonToProject(json sourceJson) returns Project | error {
     project.number = check parseInt(check sourceJson.number);
     project.createdAt = <string>sourceJson.createdAt;
     project.closed = (sourceJson.closed is boolean) ? sourceJson.closed.toString() : "";
-    project.closedAt = (sourceJson.closedAt is string) ? <string>sourceJson.closedAt : "";
-    project.updatedAt = (sourceJson.updatedAt is string) ? <string>sourceJson.updatedAt : "";
+    project.closedAt = (sourceJson.closedAt is string) ? (<string>sourceJson.closedAt) : "";
+    project.updatedAt = (sourceJson.updatedAt is string) ? (<string>sourceJson.updatedAt) : "";
     project.resourcePath = <string>sourceJson.resourcePath;
     project.state = <string>sourceJson.state;
     project.url = <string>sourceJson.url;
@@ -79,12 +79,15 @@ function jsonToProjectList(json source_json, string listOwner, string stringQuer
     ProjectList target_projectList = new;
     target_projectList.listOwner = listOwner;
     target_projectList.projectListQuery = stringQuery;
-    var value = PageInfo.constructFrom(<json>source_json.pageInfo);
+    json pageInfoJSON = <json>source_json.pageInfo;
+    var value = pageInfoJSON.cloneWithType(PageInfo);
     if (value is PageInfo) {
         target_projectList.pageInfo = value;
     }
     json[] nodes = [];
-    var result = json[].constructFrom(<json>source_json.nodes);
+    json nodes_filtered = <json>source_json.nodes;
+    var result = nodes_filtered.cloneWithType(JsonArray);
+
     if (result is json[]) {
         nodes = result;
     }
@@ -108,18 +111,21 @@ function jsonToCardList(json source_json, string columnId, string listOwner, str
     target_cardList.columnId = columnId;
     target_cardList.cardListQuery = stringQuery;
     target_cardList.listOwner = listOwner;
-    var value = PageInfo.constructFrom(<json>source_json.pageInfo);
+    json nodes_filtered = <json>source_json.pageInfo;
+    var value = nodes_filtered.cloneWithType(PageInfo);
     if (value is PageInfo) {
         target_cardList.pageInfo = value;
     }
-    var result = json[].constructFrom(<json>source_json.nodes);
+    nodes_filtered = <json>source_json.nodes;
+    var result = nodes_filtered.cloneWithType(JsonArray);
     json[] nodes = [];
     if (result is json[]) {
         nodes = result;
     }
     int i = 0;
     foreach var node in nodes {
-        var card = Card.constructFrom(<json>node);
+        var json_node = <json>node;
+        var card = json_node.cloneWithType(Card);
         if (card is Card) {
             target_cardList.nodes[i] = card;
         }
@@ -149,12 +155,14 @@ function jsonToColumnList(json source_json, string listOwner, string stringQuery
     ColumnList target_columnList = new;
     target_columnList.listOwner = listOwner;
     target_columnList.columnListQuery = stringQuery;
-    var value = PageInfo.constructFrom(<json>source_json.pageInfo);
+    json nodes_filtered = <json>source_json.pageInfo;
+    var value = nodes_filtered.cloneWithType(PageInfo);
     json[] nodes = [];
     if (value is PageInfo) {
         target_columnList.pageInfo = value;
     }
-    var result = json[].constructFrom(<json>source_json.nodes);
+    nodes_filtered = <json>source_json.nodes;
+    var result = nodes_filtered.cloneWithType(JsonArray);
     if (result is json[]) {
         nodes = result;
     }
@@ -174,12 +182,14 @@ function jsonToColumnList(json source_json, string listOwner, string stringQuery
 function jsonToRepositoryList(json source_json, string stringQuery) returns (RepositoryList) {
     RepositoryList target_repositoryList = new;
     target_repositoryList.repositoryListQuery = stringQuery;
-    var value = PageInfo.constructFrom(<json>source_json.pageInfo);
+    json nodes_filtered = <json>source_json.pageInfo;
+    var value = nodes_filtered.cloneWithType(PageInfo);
     if (value is PageInfo) {
         target_repositoryList.pageInfo = value;
     }
     json[] nodes = [];
-    var result = json[].constructFrom(<json>source_json.nodes);
+    nodes_filtered = <json>source_json.nodes;
+    var result = nodes_filtered.cloneWithType(JsonArray);
     if (result is json[]) {
         nodes = result;
     }
@@ -199,18 +209,21 @@ function jsonToRepositoryList(json source_json, string stringQuery) returns (Rep
 function jsonToPullRequestList(json source_json, string stringQuery) returns (PullRequestList) {
     PullRequestList target_pullRequestList = new;
     target_pullRequestList.pullRequestListQuery = stringQuery;
-    var value = PageInfo.constructFrom(<json>source_json.pageInfo);
+    json nodes_filtered = <json>source_json.pageInfo;
+    var value = nodes_filtered.cloneWithType(PageInfo);
     if (value is PageInfo) {
         target_pullRequestList.pageInfo = value;
     }
-    var result = json[].constructFrom(<json>source_json.nodes);
+    nodes_filtered = <json>source_json.nodes;
+    var result = nodes_filtered.cloneWithType(JsonArray);
     json[] nodes = [];
     if (result is json[]) {
         nodes = result;
     }
     int i = 0;
     foreach var node in nodes {
-        var pullRequest = PullRequest.constructFrom(<json>node);
+        var json_node = <json>node;
+        var pullRequest = json_node.cloneWithType(PullRequest);
         if (pullRequest is PullRequest) {
             target_pullRequestList.nodes[i] = pullRequest;
         }
@@ -226,11 +239,13 @@ function jsonToPullRequestList(json source_json, string stringQuery) returns (Pu
 function jsonToBranchList(json source_json, string stringQuery) returns (BranchList) {
     BranchList target_branchList = new;
     target_branchList.branchListQuery = stringQuery;
-    var pageInfo = PageInfo.constructFrom(<json>source_json.pageInfo);
+    json nodes_filtered = <json>source_json.pageInfo;
+    var pageInfo = nodes_filtered.cloneWithType(PageInfo);
     if (pageInfo is PageInfo) {
         target_branchList.pageInfo = pageInfo;
     }
-    var result = json[].constructFrom(<json>source_json.nodes);
+    nodes_filtered = <json>source_json.nodes;
+    var result = nodes_filtered.cloneWithType(JsonArray);
     json[] nodes = [];
     if (result is json[]) {
         nodes = result;
@@ -259,11 +274,13 @@ function jsonToBranch(json source_json) returns (Branch) {
 function jsonToIssueList(json source_json, string stringQuery) returns (IssueList) {
     IssueList target_issueList = new;
     target_issueList.issueListQuery = stringQuery;
-    var pageInfo = PageInfo.constructFrom(<json>source_json.pageInfo);
+    json nodes_filtered = <json>source_json.pageInfo;
+    var pageInfo = nodes_filtered.cloneWithType(PageInfo);
     if (pageInfo is PageInfo) {
         target_issueList.pageInfo = pageInfo;
     }
-    var result = json[].constructFrom(<json>source_json.nodes);
+    nodes_filtered = <json>source_json.nodes;
+    var result = nodes_filtered.cloneWithType(JsonArray);
     json[] nodes = [];
     if (result is json[]) {
         nodes = result;
@@ -297,7 +314,8 @@ function restResponseJsonToIssue(json source_json) returns (Issue) {
             target_issue.number = num;
         }
     }
-    var result = json[].constructFrom(<json>source_json.labels);
+    json nodes_filtered = <json>source_json.labels;
+    var result = nodes_filtered.cloneWithType(JsonArray);
     json[] labelList = [];
     if (result is json[]) {
         labelList = result;
@@ -312,7 +330,8 @@ function restResponseJsonToIssue(json source_json) returns (Issue) {
         target_issue.labels[i] = singleLabel;
         i = i + 1;
     }
-    var jsonValue = json[].constructFrom(<json>source_json.assignees);
+    nodes_filtered = <json>source_json.assignees;
+    var jsonValue = nodes_filtered.cloneWithType(JsonArray);
     json[] assigneeList = [];
     if (jsonValue is json[]) {
         assigneeList = jsonValue;
@@ -341,7 +360,8 @@ function jsonToIssue(json source_json) returns (Issue) {
     target_issue.closed = source_json.closed.toString();
     target_issue.closedAt = source_json.closedAt.toString();
     target_issue.createdAt = source_json.createdAt.toString();
-    var value = Creator.constructFrom(<json>source_json.author);
+    json nodes_filtered = <json>source_json.author;
+    var value = nodes_filtered.cloneWithType(Creator);
     if (value is Creator) {
         target_issue.author = value;
     }
@@ -355,13 +375,15 @@ function jsonToIssue(json source_json) returns (Issue) {
     }
 
     json[] labelList = [];
-    var jsonValue = json[].constructFrom(<json>source_json.labels.nodes);
+    nodes_filtered = <json>source_json.labels.nodes;
+    var jsonValue = nodes_filtered.cloneWithType(JsonArray);
     if (jsonValue is json[]) {
         labelList = jsonValue;
     }
     int i = 0;
     foreach var label in labelList {
-        var labelValue = Label.constructFrom(<json>label);
+        json json_filtered = <json>label;
+        var labelValue = json_filtered.cloneWithType(Label);
         if (labelValue is Label) {
             target_issue.labels[i] = labelValue;
         }
@@ -372,13 +394,15 @@ function jsonToIssue(json source_json) returns (Issue) {
     target_issue.url = source_json.url.toString();
 
     json[] assigneeList = [];
-    var jsonVal = json[].constructFrom(<json>source_json.assignees.nodes);
+    nodes_filtered = <json>source_json.assignees.nodes;
+    var jsonVal = nodes_filtered.cloneWithType(JsonArray);
     if (jsonVal is json[]) {
         assigneeList = jsonVal;
     }
     int j = 0;
     foreach var assignee in assigneeList {
-        var assigneeValue = Assignee.constructFrom(<json>assignee);
+        nodes_filtered = <json>assignee;
+        var assigneeValue = nodes_filtered.cloneWithType(Assignee);
         if (assigneeValue is Assignee) {
             target_issue.assignees[j] = assigneeValue;
         }
@@ -472,7 +496,7 @@ function jsonToRepository(json source_json) returns (Repository) {
     } else {
         var owner = source_json.owner;
         if (owner is json) {
-            var result = RepositoryOwner.constructFrom(owner);
+            var result = owner.cloneWithType(RepositoryOwner);
             if (result is RepositoryOwner) {
                 target_repository.owner = result;
             }
@@ -481,7 +505,8 @@ function jsonToRepository(json source_json) returns (Repository) {
     if (source_json.primaryLanguage == null) {
         target_repository.primaryLanguage = {};
     } else {
-        var result = Language.constructFrom(<json>source_json.primaryLanguage);
+        json nodes_filtered = <json>source_json.primaryLanguage;
+        var result = nodes_filtered.cloneWithType(Language);
         if (result is Language) {
             target_repository.primaryLanguage = result;
         }
