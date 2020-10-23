@@ -168,7 +168,9 @@ function split(string receiver, string delimeter, int index) returns string {
     string[] resultArray = stringutils:split(receiver, delimeter);
     return resultArray[index];
 }
+
 function java_split(handle receiver, handle delimeter) returns handle = @java:Method {
     name: "split",
-    class: "java.lang.String"
+    'class: "java.lang.String"
 } external;
+

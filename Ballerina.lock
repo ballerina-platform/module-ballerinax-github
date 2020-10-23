@@ -1,7 +1,7 @@
 org_name = "ballerinax"
-version = "0.99.0"
+version = "0.99.1"
 lockfile_version = "1.0.0"
-ballerina_version = "slp1"
+ballerina_version = "slp4"
 
 [[imports."ballerina/log:1.0.0"]]
 org_name = "ballerina"

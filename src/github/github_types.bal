@@ -106,7 +106,7 @@ public type Repository record {|
 //                                              RepositoryList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # Represents a list of repositories.
-public type RepositoryList object {
+public class RepositoryList {
     string repositoryListQuery = "";
     PageInfo pageInfo = {};
     Repository[] nodes = [];
@@ -114,21 +114,21 @@ public type RepositoryList object {
     # Check if repository list next page is available.
     #
     # + return - Return true or false
-    public function hasNextPage() returns boolean {
+    isolated function hasNextPage() returns boolean {
         return self.pageInfo.hasNextPage;
     }
 
     # Check if repository list previous page is available.
     #
     # + return - Return true or false
-    public function hasPreviousPage() returns boolean {
+    isolated function hasPreviousPage() returns boolean {
         return self.pageInfo.hasPreviousPage;
     }
 
     # Get all the repositories in the repository list.
     #
     # + return - Array of Repository objects
-    public function getAllRepositories() returns Repository[] {
+    isolated function getAllRepositories() returns Repository[] {
         return self.nodes;
     }
 };
@@ -180,7 +180,7 @@ public type Project record {|
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 # Represents a list of projects.
-public type ProjectList object {
+public class ProjectList {
     string listOwner = "";
     string projectListQuery = "";
     PageInfo pageInfo = {};
@@ -189,21 +189,21 @@ public type ProjectList object {
     # Check if project list next page is available.
     #
     # + return - Return true or false
-    public function hasNextPage() returns boolean {
+    isolated function hasNextPage() returns boolean {
         return self.pageInfo.hasNextPage;
     }
 
     # Check if project list previous page is available.
     #
     # + return - Return true or false
-    public function hasPreviousPage() returns boolean {
+    isolated function hasPreviousPage() returns boolean {
         return self.pageInfo.hasPreviousPage;
     }
 
     # Get all the projects in the project list.
     #
     # + return - Array of Project objects
-    public function getAllProjects() returns Project[] {
+    isolated function getAllProjects() returns Project[] {
         return self.nodes;
     }
 };
@@ -217,7 +217,7 @@ public type ProjectList object {
 # Represents a github Column.
 # + id - Column identification number
 # + name - Column name
-public type Column object {
+class Column {
     public string id = "";
     public string name = "";
     string columnQuery = "";
@@ -227,7 +227,7 @@ public type Column object {
     # Get a list of cards of a column.
     #
     # + return - Card list object
-    public function getCardList() returns CardList {
+    isolated function getCardList() returns CardList {
         return self.cards;
     }
 };
@@ -239,7 +239,7 @@ public type Column object {
 //                                              ColumnList object                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #Represents a list of columns of a project.
-public type ColumnList object {
+public class ColumnList {
     string listOwner = "";
     string columnListQuery = "";
     PageInfo pageInfo = {};
@@ -248,21 +248,21 @@ public type ColumnList object {
     # Check if column list next page is available.
     #
     # + return - Return true or false
-    public function hasNextPage() returns boolean {
+    isolated function hasNextPage() returns boolean {
         return self.pageInfo.hasNextPage;
     }
 
     # Check if column list previosu page is available.
     #
     # + return - Return true or false
-    public function hasPreviousPage() returns boolean {
+    isolated function hasPreviousPage() returns boolean {
         return self.pageInfo.hasPreviousPage;
     }
 
     # Get all the columns in the column list.
     #
     # + return - Array of column objects
-    public function getAllColumns() returns Column[] {
+    isolated function getAllColumns() returns Column[] {
         return self.nodes;
     }
 };
@@ -372,7 +372,7 @@ public type PullRequest record {|
 //                                             PullRequestList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # Represents a list of github pull requests.
-public type PullRequestList object {
+public class PullRequestList {
     string pullRequestListQuery = "";
     PageInfo pageInfo = {};
     PullRequest[] nodes = [];
@@ -418,7 +418,7 @@ public type Branch record {|
 //                                                IssueList object                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # Represents a list of github branches.
-public type BranchList object {
+class BranchList {
     string branchListQuery = "";
     PageInfo pageInfo = {};
     Branch[] nodes = [];
@@ -488,7 +488,7 @@ public type Issue record {|
 //                                                IssueList object                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 # Represents a list of github issues.
-public type IssueList object {
+public class IssueList {
     string issueListQuery = "";
     PageInfo pageInfo = {};
     Issue[] nodes = [];
