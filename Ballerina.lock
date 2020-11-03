@@ -1,149 +1,149 @@
 org_name = "ballerinax"
 version = "0.99.1"
 lockfile_version = "1.0.0"
-ballerina_version = "slp4"
-
-[[imports."ballerina/cache:2.0.0"]]
-org_name = "ballerina"
-name = "task"
-version = "1.1.0"
-
-[[imports."ballerina/cache:2.0.0"]]
-org_name = "ballerina"
-name = "time"
-version = "1.0.1"
-
-[[imports."ballerina/cache:2.0.0"]]
-org_name = "ballerina"
-name = "log"
-version = "1.0.0"
+ballerina_version = "slp5"
 
 [[imports."ballerinax/github:0.99.1"]]
 org_name = "ballerina"
 name = "http"
-version = "1.0.0"
-
-[[imports."ballerinax/github:0.99.1"]]
-org_name = "ballerina"
-name = "io"
-version = "0.5.0"
-
-[[imports."ballerinax/github:0.99.1"]]
-org_name = "ballerina"
-name = "stringutils"
-version = "0.5.0"
-
-[[imports."ballerina/http:1.0.0"]]
-org_name = "ballerina"
-name = "auth"
-version = "1.0.0"
-
-[[imports."ballerina/http:1.0.0"]]
-org_name = "ballerina"
-name = "cache"
-version = "2.0.0"
-
-[[imports."ballerina/http:1.0.0"]]
-org_name = "ballerina"
-name = "log"
-version = "1.0.0"
-
-[[imports."ballerina/http:1.0.0"]]
-org_name = "ballerina"
-name = "runtime"
-version = "0.5.0"
-
-[[imports."ballerina/http:1.0.0"]]
-org_name = "ballerina"
-name = "reflect"
-version = "0.5.0"
-
-[[imports."ballerina/http:1.0.0"]]
-org_name = "ballerina"
-name = "stringutils"
-version = "0.5.0"
-
-[[imports."ballerina/http:1.0.0"]]
-org_name = "ballerina"
-name = "time"
 version = "1.0.1"
 
-[[imports."ballerina/http:1.0.0"]]
+[[imports."ballerinax/github:0.99.1"]]
 org_name = "ballerina"
 name = "io"
-version = "0.5.0"
-
-[[imports."ballerina/http:1.0.0"]]
-org_name = "ballerina"
-name = "crypto"
-version = "1.0.0"
-
-[[imports."ballerina/http:1.0.0"]]
-org_name = "ballerina"
-name = "file"
 version = "0.5.1"
 
-[[imports."ballerina/http:1.0.0"]]
+[[imports."ballerinax/github:0.99.1"]]
 org_name = "ballerina"
-name = "config"
-version = "1.0.0"
+name = "stringutils"
+version = "0.5.1"
 
-[[imports."ballerina/http:1.0.0"]]
-org_name = "ballerina"
-name = "mime"
-version = "1.0.0"
-
-[[imports."ballerina/system:0.6.0"]]
-org_name = "ballerina"
-name = "io"
-version = "0.5.0"
-
-[[imports."ballerina/auth:1.0.0"]]
+[[imports."ballerina/auth:1.0.1"]]
 org_name = "ballerina"
 name = "log"
-version = "1.0.0"
+version = "1.0.1"
 
-[[imports."ballerina/auth:1.0.0"]]
+[[imports."ballerina/auth:1.0.1"]]
 org_name = "ballerina"
 name = "config"
-version = "1.0.0"
+version = "1.0.1"
 
-[[imports."ballerina/auth:1.0.0"]]
+[[imports."ballerina/auth:1.0.1"]]
 org_name = "ballerina"
 name = "crypto"
-version = "1.0.0"
+version = "1.0.1"
 
-[[imports."ballerina/auth:1.0.0"]]
+[[imports."ballerina/auth:1.0.1"]]
 org_name = "ballerina"
 name = "stringutils"
-version = "0.5.0"
+version = "0.5.1"
 
-[[imports."ballerina/auth:1.0.0"]]
+[[imports."ballerina/auth:1.0.1"]]
 org_name = "ballerina"
 name = "cache"
-version = "2.0.0"
+version = "2.0.1"
 
-[[imports."ballerina/mime:1.0.0"]]
+[[imports."ballerina/system:0.6.1"]]
 org_name = "ballerina"
 name = "io"
-version = "0.5.0"
+version = "0.5.1"
 
-[[imports."ballerina/crypto:1.0.0"]]
+[[imports."ballerina/http:1.0.1"]]
 org_name = "ballerina"
-name = "time"
+name = "auth"
 version = "1.0.1"
 
-[[imports."ballerina/file:0.5.1"]]
+[[imports."ballerina/http:1.0.1"]]
 org_name = "ballerina"
-name = "time"
+name = "cache"
+version = "2.0.1"
+
+[[imports."ballerina/http:1.0.1"]]
+org_name = "ballerina"
+name = "log"
 version = "1.0.1"
 
-[[imports."ballerina/config:1.0.0"]]
+[[imports."ballerina/http:1.0.1"]]
+org_name = "ballerina"
+name = "runtime"
+version = "0.5.1"
+
+[[imports."ballerina/http:1.0.1"]]
+org_name = "ballerina"
+name = "reflect"
+version = "0.5.1"
+
+[[imports."ballerina/http:1.0.1"]]
 org_name = "ballerina"
 name = "stringutils"
-version = "0.5.0"
+version = "0.5.1"
 
-[[imports."ballerina/config:1.0.0"]]
+[[imports."ballerina/http:1.0.1"]]
+org_name = "ballerina"
+name = "time"
+version = "1.0.2"
+
+[[imports."ballerina/http:1.0.1"]]
+org_name = "ballerina"
+name = "io"
+version = "0.5.1"
+
+[[imports."ballerina/http:1.0.1"]]
+org_name = "ballerina"
+name = "crypto"
+version = "1.0.1"
+
+[[imports."ballerina/http:1.0.1"]]
+org_name = "ballerina"
+name = "file"
+version = "0.5.2"
+
+[[imports."ballerina/http:1.0.1"]]
+org_name = "ballerina"
+name = "config"
+version = "1.0.1"
+
+[[imports."ballerina/http:1.0.1"]]
+org_name = "ballerina"
+name = "mime"
+version = "1.0.1"
+
+[[imports."ballerina/mime:1.0.1"]]
+org_name = "ballerina"
+name = "io"
+version = "0.5.1"
+
+[[imports."ballerina/file:0.5.2"]]
+org_name = "ballerina"
+name = "time"
+version = "1.0.2"
+
+[[imports."ballerina/config:1.0.1"]]
+org_name = "ballerina"
+name = "stringutils"
+version = "0.5.1"
+
+[[imports."ballerina/config:1.0.1"]]
 org_name = "ballerina"
 name = "system"
-version = "0.6.0"
+version = "0.6.1"
+
+[[imports."ballerina/crypto:1.0.1"]]
+org_name = "ballerina"
+name = "time"
+version = "1.0.2"
+
+[[imports."ballerina/cache:2.0.1"]]
+org_name = "ballerina"
+name = "task"
+version = "1.1.1"
+
+[[imports."ballerina/cache:2.0.1"]]
+org_name = "ballerina"
+name = "time"
+version = "1.0.2"
+
+[[imports."ballerina/cache:2.0.1"]]
+org_name = "ballerina"
+name = "log"
+version = "1.0.1"
