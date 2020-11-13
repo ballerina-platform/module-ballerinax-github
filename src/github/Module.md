@@ -20,7 +20,7 @@ The `ballerinax/github` module has support for creating and listing issues.
 ## Compatibility
 |                             |       Version               |
 |:---------------------------:|:---------------------------:|
-| Ballerina Language          | Swan Lake Preview1          |
+| Ballerina Language          | Swan Lake Preview5          |
 | GitHub API                  | V4                          |
 
 ## Sample

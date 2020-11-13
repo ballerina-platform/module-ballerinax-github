@@ -21,7 +21,7 @@ import ballerina/io;
 # + accessToken - The access token of the github account
 # + githubRestClient - HTTP client endpoint
 # + githubGraphQlClient - HTTP client endpoint
-public type Client client object {
+public client class Client {
 
     string accessToken;
     http:Client githubRestClient;
