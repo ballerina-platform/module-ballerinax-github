@@ -1,7 +1,11 @@
-[project]
-org-name = "ballerinax"
-version = "0.99.1"
+[package]
+org = "ballerinax"
+name = "github"
+version = "0.99.2"
 authors = ["Ballerina"]
 keywords = ["github", "endpoint", "API"]
 repository = "https://github.com/ballerina-platform/module-github"
 license = ["Apache-2.0"]
+
+[build-options]
+observabilityIncluded = true
