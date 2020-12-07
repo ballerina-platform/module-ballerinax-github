@@ -10,10 +10,10 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - name: Ballerina Build
-              uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
+              uses: SanduDS/ballerina-action/@swan-lake-connector-release
               with:
                   args:
-                      build -a -c 
+                      build -c --skip-tests
               env:
                   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                   ORG_NAME: ${{ secrets.ORG_NAME }}
