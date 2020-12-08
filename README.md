@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ballerina-platform/module-github.svg?branch=master)](https://travis-ci.org/ballerina-platform/module-github)
+[![Build Status](https://travis-ci.org/ballerina-platform/module-ballerinax-github.svg?branch=master)](https://travis-ci.org/ballerina-platform/module-ballerinax-github)
 
 # Ballerina GitHub Endpoint
 
