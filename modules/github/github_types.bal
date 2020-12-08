@@ -131,7 +131,7 @@ public class RepositoryList {
     isolated function getAllRepositories() returns Repository[] {
         return self.nodes;
     }
-};
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                         End of RepositoryList object                                              //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -206,7 +206,7 @@ public class ProjectList {
     isolated function getAllProjects() returns Project[] {
         return self.nodes;
     }
-};
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             End of ProjectList object                                             //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -230,7 +230,7 @@ class Column {
     isolated function getCardList() returns CardList {
         return self.cards;
     }
-};
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                              End of Column object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -265,7 +265,7 @@ public class ColumnList {
     isolated function getAllColumns() returns Column[] {
         return self.nodes;
     }
-};
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          End of ColumnList object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -380,24 +380,24 @@ public class PullRequestList {
     # Check if pull request list next page is available.
     #
     # + return - Return true or false
-    public function hasNextPage() returns boolean {
+    isolated function hasNextPage() returns boolean {
         return self.pageInfo.hasNextPage;
     }
 
     # Check if pull request list previous page is avaiable.
     #
     # + return - Return true or false
-    public function hasPreviousPage() returns boolean {
+    isolated function hasPreviousPage() returns boolean {
         return self.pageInfo.hasPreviousPage;
     }
 
     # Get all the pull requests in the pull request list.
     #
     # + return - Array of pull request objects
-    public function getAllPullRequests() returns PullRequest[] {
+    isolated function getAllPullRequests() returns PullRequest[] {
         return self.nodes;
     }
-};
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          End of PullRequestList object                                            //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -426,24 +426,24 @@ class BranchList {
     # Check if issue list next page is available.
     #
     # + return - Return true or false
-    public function hasNextPage() returns boolean {
+    isolated function hasNextPage() returns boolean {
         return self.pageInfo.hasNextPage;
     }
 
     # Check if issue list previous page is avaiable.
     #
     # + return - Return true or false
-    public function hasPreviousPage() returns boolean {
+    isolated function hasPreviousPage() returns boolean {
         return self.pageInfo.hasPreviousPage;
     }
 
     # Get all the issues in the issue list.
     #
     # + return - Array of issue objects
-    public function getAllBranches() returns Branch[] {
+    isolated  function getAllBranches() returns Branch[] {
         return self.nodes;
     }
-};
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of IssueList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -496,24 +496,24 @@ public class IssueList {
     # Check if issue list next page is available.
     #
     # + return - Return true or false
-    public function hasNextPage() returns boolean {
+    isolated function hasNextPage() returns boolean {
         return self.pageInfo.hasNextPage;
     }
 
     # Check if issue list previous page is avaiable.
     #
     # + return - Return true or false
-    public function hasPreviousPage() returns boolean {
+    isolated  function hasPreviousPage() returns boolean {
         return self.pageInfo.hasPreviousPage;
     }
 
     # Get all the issues in the issue list.
     #
     # + return - Array of issue objects
-    public function getAllIssues() returns Issue[] {
+    isolated function getAllIssues() returns Issue[] {
         return self.nodes;
     }
-};
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of IssueList object                                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

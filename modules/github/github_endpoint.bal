@@ -954,7 +954,7 @@ public client class Client {
         error err = error(GITHUB_ERROR_CODE, message = "Cannot parse json response.");
         return err;
     }
-};
+}
 
 # Represents the Github Client Connector Endpoint configuration.
 # + clientConfig - HTTP client endpoint configuration
