@@ -4,7 +4,7 @@ name = "github"
 version = "0.99.2"
 authors = ["Ballerina"]
 keywords = ["github", "endpoint", "API"]
-repository = "https://github.com/ballerina-platform/module-github"
+repository = "https://github.com/ballerina-platform/module-ballerinax-github"
 license = ["Apache-2.0"]
 
 [build-options]
