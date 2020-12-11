@@ -21,12 +21,12 @@ import ballerina/system;
 import ballerina/test;
 
 string testOrganizationName = getConfigValue("ORG_NAME");
-string testRepositoryName = getConfigValue("REPO_NAME");
+string testRepositoryName = getConfigValue("REPO_NAME_GITHUB");
 string testResourcePath = getConfigValue("RESOURCE_PATH");
 string testIssueAssignee = getConfigValue("ASSIGNEE");
 
 GitHubConfiguration gitHubConfig = {
-    accessToken: getConfigValue("ACCESS_TOKEN")
+    accessToken: getConfigValue("GITHUB_TOKEN")
 };
 
 Client githubClient = new (gitHubConfig);

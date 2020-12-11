@@ -1,0 +1,1 @@
+{"ballerinax/github.client:0.99.2:PageInfo":{"hasNextPage":"boolean","hasPreviousPage":"boolean","startCursor":"string?","endCursor":"string?"}}
