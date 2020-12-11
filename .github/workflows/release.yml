@@ -1,6 +1,8 @@
 name: Deployment
 
-on: [release]
+on:
+  release:
+    types: [published]
 
 jobs:
     build:
@@ -22,7 +24,7 @@ jobs:
                   RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
                   JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
             - name: Ballerina Push
-              uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
+              uses: ballerina-platform/ballerina-action/@slp7
               with:
                   args:
                       push
