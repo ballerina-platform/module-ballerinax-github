@@ -42,4 +42,4 @@ target/
 .ballerina
 
 # Ignore the conf
-
+.gitignore
