@@ -15,7 +15,7 @@ jobs:
               uses: ballerina-platform/ballerina-action/@slp7
               with:
                   args:
-                      build -c 
+                      build -c --skip-tests 
               env:
                   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                   ORG_NAME: ${{ secrets.ORG_NAME }}
