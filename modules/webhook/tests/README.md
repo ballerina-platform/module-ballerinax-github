@@ -15,12 +15,12 @@
 Specifies the obtained token, topic, callback URL and optionally the secret in a `ballerina.conf` file in the project. Also, include the username and repository name, which will be used for testing.
 
 ```.conf
-GITHUB_TOKEN="ACCESS_TOKEN"
+ACCESS_TOKEN="ACCESS_TOKEN"
 GITHUB_TOPIC="GITHUB_TOPIC"
 GITHUB_SECRET="GITHUB_SECRET"
 GITHUB_CALLBACK="GITHUB_CALLBACK"
 GITHUB_USERNAME="GITHUB_USERNAME"
-GITHUB_REPO_NAME="GITHUB_REPO_NAME"
+REPO_NAME="REPO_NAME"
 ```
 
 **Note:** Prior to running the tests, Webhooks that are already added with the same callback URL need to be removed, in order to trigger the `ping` notification.
@@ -28,7 +28,7 @@ GITHUB_REPO_NAME="GITHUB_REPO_NAME"
 Assign the values for the accessToken, topic, callback URL and secret inside the constructed endpoint in main_test.bal using either of the way following ways.
 ```ballerina
 oauth2:DirectTokenConfig oauth2Config = {
-    accessToken: config:getAsString("GITHUB_TOKEN")
+    accessToken: config:getAsString("ACCESS_TOKEN")
 };
 oauth2:OutboundOAuth2Provider oauth2Provider = new(oauth2Config);
 http:BearerAuthHandler bearerHandler = new(oauth2Provider);

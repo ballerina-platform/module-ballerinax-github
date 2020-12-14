@@ -40,7 +40,7 @@ Changes? issueChanges = ();
 listener Listener githubListener = new(8080);
 
 oauth2:DirectTokenConfig oauth2Config = {
-    accessToken: config:getAsString("GITHUB_TOKEN")
+    accessToken: config:getAsString("ACCESS_TOKEN")
 };
 oauth2:OutboundOAuth2Provider oauth2Provider = new(oauth2Config);
 http:BearerAuthHandler bearerHandler = new(oauth2Provider);
@@ -88,7 +88,9 @@ service githubWebhook on githubListener {
  }
 }
 
-@test:Config {}
+@test:Config {
+    enable:false
+}
 function testWebhookRegistration() {
     int counter = 10;
     while (!webhookRegistrationNotified && counter >= 0) {
@@ -107,11 +109,12 @@ string[] createdIssueLabelArray = ["bug", "critical"];
 string createdIssueAssignee = createdIssueUsername;
 
 @test:Config {
-    dependsOn: ["testWebhookRegistration"]
+    dependsOn: ["testWebhookRegistration"],
+    enable:false
 }
 function testWebhookNotificationOnIssueCreation() {
     github:GitHubConfiguration gitHubConfig = {
-        accessToken: config:getAsString("GITHUB_TOKEN")
+        accessToken: config:getAsString("ACCESS_TOKEN")
     };
 
     github:Client githubClient = new (gitHubConfig);
@@ -133,7 +136,8 @@ function testWebhookNotificationOnIssueCreation() {
 }
 
 @test:Config {
-    dependsOn: ["testWebhookNotificationOnIssueCreation"]
+    dependsOn: ["testWebhookNotificationOnIssueCreation"],
+    enable:false
 }
 function testWebhookNotificationOnIssueLabeling() {
     string createdIssueLabelString = "";
@@ -145,7 +149,8 @@ function testWebhookNotificationOnIssueLabeling() {
 }
 
 @test:Config {
-    dependsOn: ["testWebhookNotificationOnIssueCreation"]
+    dependsOn: ["testWebhookNotificationOnIssueCreation"],
+    enable:false
 }
 function testWebhookNotificationOnIssueAssignment() {
     test:assertTrue(issueAssignedNotified, msg = "expected an issue assigned notification");
