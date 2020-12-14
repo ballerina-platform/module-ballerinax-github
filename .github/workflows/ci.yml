@@ -21,9 +21,9 @@ jobs:
                   ASSIGNEE: ${{ secrets.ASSIGNEE }}
                   RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
                   JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
-                  GITHUB_TOPIC: ${{ secrets.GITHUB_TOPIC}}
-                  GITHUB_SECRET: ${{ secrets.GITHUB_SECRET}}
-                  GITHUB_CALLBACK: ${{ secrets.GITHUB_CALLBACK}}
-                  GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME}}
-                  GITHUB_REPO_NAME: ${{ secrets.GITHUB_REPO_NAME}}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOPIC: ${{ secrets.GITHUB_TOPIC }}
+                  GITHUB_SECRET: ${{ secrets.GITHUB_SECRET }}
+                  GITHUB_CALLBACK: ${{ secrets.GITHUB_CALLBACK }}
+                  GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
+                  GITHUB_REPO_NAME: ${{ secrets.GITHUB_REPO_NAME }}
