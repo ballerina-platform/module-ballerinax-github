@@ -19,7 +19,6 @@ import ballerina/http;
 import ballerina/log;
 import ballerina/system;
 import ballerina/test;
-import ballerina/io;
 
 string testOrganizationName = getConfigValue("ORG_NAME");
 string testRepositoryName = getConfigValue("REPO_NAME");
@@ -379,9 +378,6 @@ function testGetIssueList() {
     //Get a list of issues of a repository
     log:printInfo("githubClient -> getIssueList()");
     int recordCount = 1;
-
-    io:println("repository name: ",testRepositoryName);
-    io:println("organization name: ",testOrganizationName);
 
     Repository issueRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
     IssueList issueList = new;
