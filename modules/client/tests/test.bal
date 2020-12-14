@@ -26,7 +26,7 @@ string testResourcePath = getConfigValue("RESOURCE_PATH");
 string testIssueAssignee = getConfigValue("ASSIGNEE");
 
 GitHubConfiguration gitHubConfig = {
-    accessToken: getConfigValue("GITHUB_TOKEN")
+    accessToken: getConfigValue("ACCESS_TOKEN")
 };
 
 Client githubClient = new (gitHubConfig);
