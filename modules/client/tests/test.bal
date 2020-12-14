@@ -22,7 +22,7 @@ import ballerina/test;
 import ballerina/io;
 
 string testOrganizationName = getConfigValue("ORG_NAME");
-string testRepositoryName = getConfigValue("REPO_NAME_GITHUB");
+string testRepositoryName = getConfigValue("REPO_NAME");
 string testResourcePath = getConfigValue("RESOURCE_PATH");
 string testIssueAssignee = getConfigValue("ASSIGNEE");
 

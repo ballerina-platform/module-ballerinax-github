@@ -101,7 +101,7 @@ function testWebhookRegistration() {
 }
 
 string createdIssueUsername = config:getAsString("USERNAME_GITHUB");
-string createdIssueRepoName = config:getAsString("REPO_NAME_GITHUB");
+string createdIssueRepoName = config:getAsString("REPO_NAME");
 string createdIssueTitle = "This is a test issue";
 string[] createdIssueLabelArray = ["bug", "critical"];
 string createdIssueAssignee = createdIssueUsername;
