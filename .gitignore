@@ -41,5 +41,3 @@ temp.bal
 target/
 .ballerina
 
-# Ignore the conf
-.gitignore
