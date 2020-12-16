@@ -44,8 +44,8 @@ oauth2:DirectTokenConfig oauth2Config = {
 };
 oauth2:OutboundOAuth2Provider oauth2Provider = new(oauth2Config);
 http:BearerAuthHandler bearerHandler = new(oauth2Provider);
+
 @websub:SubscriberServiceConfig {
-    path: "/github",
     subscribeOnStartUp: true,
     target: [HUB, config:getAsString("TOPIC_GITHUB")],
     secret: config:getAsString("SECRET_GITHUB"),
@@ -56,18 +56,18 @@ http:BearerAuthHandler bearerHandler = new(oauth2Provider);
         }
     }
 }
-service githubWebhook on githubListener {
- resource function onPing(websub:Notification notification, PingEvent event) {
+service websub:SubscriberService /github on githubListener {
+ remote function onPing(websub:Notification notification, PingEvent event) {
      webhookRegistrationNotified = true;
      webhookHookType = <@untainted> event.hook.'type;
  }
 
- resource function onIssuesOpened(websub:Notification notification, IssuesEvent event) {
+ remote function onIssuesOpened(websub:Notification notification, IssuesEvent event) {
      issueCreationNotified = true;
      issueTitle = <@untainted> event.issue.title;
  }
 
- resource function onIssuesLabeled(websub:Notification notification, IssuesEvent event) {
+ remote function onIssuesLabeled(websub:Notification notification, IssuesEvent event) {
      issueLabeledNotified = true;
      string receivedIssueLabels = "";
      foreach Label label in event.issue.labels {
@@ -76,17 +76,18 @@ service githubWebhook on githubListener {
      issueLabels = <@untainted> receivedIssueLabels;
  }
 
- resource function onIssuesAssigned(websub:Notification notification, IssuesEvent event) {
+ remote function onIssuesAssigned(websub:Notification notification, IssuesEvent event) {
      issueAssignedNotified = true;
      User assignee = <User> event.issue.assignee;
      issueAssignee = <@untainted> assignee.login;
  }
 
- resource function onIssuesEdited(websub:Notification notification, IssuesEvent event) {
+ remote function onIssuesEdited(websub:Notification notification, IssuesEvent event) {
      issueEditedNotified = true;
      issueChanges = <@untainted> event["changes"];
  }
 }
+
 
 @test:Config {
     enable:false
@@ -119,8 +120,8 @@ function testWebhookNotificationOnIssueCreation() {
 
     github:Client githubClient = new (gitHubConfig);
 
-    var issueCreationStatus = githubClient->createIssue(createdIssueUsername, createdIssueRepoName, createdIssueTitle,
-                                         "This is the body of the test issue", createdIssueLabelArray,
+    var issueCreationStatus = githubClient->createIssue(createdIssueUsername, "github-connector", createdIssueTitle,
+                                         "This is the body of the test issue: webhook", createdIssueLabelArray,
                                          [createdIssueAssignee]);
     if (issueCreationStatus is error) {
         test:assertFail(msg = "Issue creation failed: " + issueCreationStatus.message());

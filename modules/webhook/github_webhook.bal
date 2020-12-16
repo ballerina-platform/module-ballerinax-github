@@ -14,7 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 import ballerina/http;
-import ballerina/lang.'object as lang;
 import ballerina/websub;
 
 # The WebSub Hub URL for GitHub.
@@ -29,8 +28,6 @@ const string TOPIC_HEADER = "X-GitHub-Event";
 #
 # + webhookListenerConfig - The configuration for the listener
 public class Listener {
-
-    *lang:Listener;
 
     public WebhookListenerConfiguration? webhookListenerConfig = ();
 
@@ -57,24 +54,24 @@ public class Listener {
         self.websubListener = new (port, slConfig);
     }
 
-    public function __attach(service s, string? name = ()) returns error? {
-        return self.websubListener.__attach(s, name);
+    public function attach(service object {} s, string[]|string? name = ()) returns error? {
+        return self.websubListener.attach(s, name);
     }
 
-    public function __detach(service s) returns error? {
-        return self.websubListener.__detach(s);
+    public function detach(service object {} s) returns error? {
+        return self.websubListener.detach(s);
     }
 
-    public function __start() returns error? {
-        return self.websubListener.__start();
+    public function 'start() returns error? {
+        return self.websubListener.'start();
     }
 
-    public function __gracefulStop() returns error? {
-        return self.websubListener.__gracefulStop();
+    public function gracefulStop() returns error? {
+        return self.websubListener.gracefulStop();
     }
 
-    public function __immediateStop() returns error? {
-        return self.websubListener.__immediateStop();
+    public function immediateStop() returns error? {
+        return self.websubListener.immediateStop();
     }
 }
 

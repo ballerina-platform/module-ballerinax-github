@@ -10,7 +10,8 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - name: Ballerina Build
-              uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
+            #   uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
+              uses: SanduDS/ballerina-action/@slp8ss
               with:
                   args:
                       build -c 
@@ -22,7 +23,8 @@ jobs:
                   RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
                   JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
             - name: Ballerina Push
-              uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
+            #   uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
+              uses: SanduDS/ballerina-action/@slp8ss
               with:
                   args:
                       push
