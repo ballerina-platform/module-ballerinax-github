@@ -11,7 +11,7 @@ sections explains how to use Ballerina GitHub connector. You can refer the [GitH
 
 | Ballerina Version | GitHub API Version |
 |-------------------|--------------------|
-| Swan Lake Preview7| v4                 |
+| Swan Lake Preview8| v4                 |
 
 ![Ballerina GitHub Endpoint Overview](./docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
 
