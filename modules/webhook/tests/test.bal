@@ -20,7 +20,7 @@ import ballerina/oauth2;
 import ballerina/runtime;
 import ballerina/test;
 import ballerina/websub;
-import github.'client as github;
+import ballerinax/github;
 
 boolean webhookRegistrationNotified = false;
 string webhookHookType = "";
@@ -90,7 +90,7 @@ service websub:SubscriberService /github on githubListener {
 
 
 @test:Config {
-    enable:false
+    enable:true
 }
 function testWebhookRegistration() {
     int counter = 10;
@@ -111,7 +111,7 @@ string createdIssueAssignee = createdIssueUsername;
 
 @test:Config {
     dependsOn: ["testWebhookRegistration"],
-    enable:false
+    enable:true
 }
 function testWebhookNotificationOnIssueCreation() {
     github:GitHubConfiguration gitHubConfig = {
@@ -138,7 +138,7 @@ function testWebhookNotificationOnIssueCreation() {
 
 @test:Config {
     dependsOn: ["testWebhookNotificationOnIssueCreation"],
-    enable:false
+    enable:true
 }
 function testWebhookNotificationOnIssueLabeling() {
     string createdIssueLabelString = "";
@@ -151,7 +151,7 @@ function testWebhookNotificationOnIssueLabeling() {
 
 @test:Config {
     dependsOn: ["testWebhookNotificationOnIssueCreation"],
-    enable:false
+    enable:true
 }
 function testWebhookNotificationOnIssueAssignment() {
     test:assertTrue(issueAssignedNotified, msg = "expected an issue assigned notification");
