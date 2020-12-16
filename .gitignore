@@ -42,4 +42,4 @@ target/
 .ballerina
 
 # Ignore resource .json files
-resources/*.json
+**/resources/*.json

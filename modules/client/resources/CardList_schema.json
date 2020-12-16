@@ -1,1 +1,0 @@
-{"ballerinax/github.client:0.99.4:CardList":{"columnId":"string","cardListQuery":"string","listOwner":"string","pageInfo":"ballerinax/github.client:0.99.4:PageInfo","nodes":"ballerinax/github.client:0.99.4:Card[]"}}
