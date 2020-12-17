@@ -4,365 +4,372 @@
         "displayName": "GitHub",
         "module": "ballerinax-github",
         "icon": "github.png",
-        "operations": [
+        "clients":[
             {
-                "name": "createIssue",
-                "displayName": "Create An Issue",
-                "parameters" : [
+                 
+               "name": "Client",
+               "displayName" : "Google Sheet Client",
+               "operations": [
                     {
-                        "name":"repositoryOwner",
-                        "displayName":"Repository Owner"
+                        "name": "createIssue",
+                        "displayName": "Create An Issue",
+                        "parameters" : [
+                            {
+                                "name":"repositoryOwner",
+                                "displayName":"Repository Owner"
+                            },
+                            {
+                                "name":"repositoryName",
+                                "displayName":"Repository Name"
+                            },
+                            {
+                                "name":"issueTitle",
+                                "displayName":"Issue Title"
+                            },
+                            {
+                                "name":"issueContent",
+                                "displayName":"Issue Content"
+                            },
+                            {
+                                "name":"labelList",
+                                "displayName":"Label List"
+                            },
+                            {
+                                "name":"assigneeList",
+                                "displayName":"Assignee List"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "Issue",
+                            "displayName": "Issue Palyload"
+                        }
+        
                     },
                     {
-                        "name":"repositoryName",
-                        "displayName":"Repository Name"
+                        "name": "getCardListNextPage",
+                        "displayName": "Get the next page of the card list.",
+                        "parameters" : [
+                            {
+                                "name": "cardList",
+                                "displayName": "Card List"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "CardList",
+                            "displayName": "Card list object of next page"
+                        }
+        
+                    },            {
+                        "name": "getColumnListNextPage",
+                        "displayName": "Get the next page of column list",
+                        "parameters" : [
+                            {
+                                "name": "columnList",
+                                "displayName": "Column List"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "ColumnList",
+                            "displayName": "Column list object of next page"
+                        }
+        
+                    },            {
+                        "name": "getBranchList",
+                        "displayName": "Get a list of branches of a repository",
+                        "parameters" : [
+                            {
+                                "name":"repository",
+                                "displayName":"Repository object or tuple (`repository owner`, `repository name`)"
+                            },
+                            {
+                                "name":"recordCount",
+                                "displayName":"Specify number of records in the list"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "BranchList",
+                            "displayName": "Branch list object"
+                        }
+        
+                    },            
+                    {
+                        "name": "getIssueList",
+                        "displayName": "Get a list of issues of a repository",
+                        "parameters" : [
+                            {
+                                "name": "repository",
+                                "displayName": "Repository object or tuple (`repository owner`, `repository name`)"
+                            },
+                            {
+                                "name":"state",
+                                "displayName":"State of the issue (`STATE_OPEN`, `STATE_CLOSED`, `STATE_ALL`)"
+                            },
+                            {
+                                "name":"recordCount",
+                                "displayName":"Specify number of records in the list"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "IssueList",
+                            "displayName": "Issue list object"
+                        }
+        
+                    },            
+                    {
+                        "name": "getIssueListNextPage",
+                        "displayName": "Create Record",
+                        "parameters" : [
+                            {
+                                "name": "issueList",
+                                "displayName": "Issue list object"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "IssueList",
+                            "displayName": " Issue list object of next page"
+                        }
+        
+                    },            
+                    {
+                        "name": "getOrganization",
+                        "displayName": "Get an organization",
+                        "parameters" : [
+                            {
+                                "name": "name",
+                                "displayName": "Name of the organization"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "Organization",
+                            "displayName": "Organization object"
+                        }
+        
+                    },            
+                    {
+                        "name": "getOrganizationProject",
+                        "displayName": "Get a single project of an organization",
+                        "parameters" : [
+                            {
+                                "name": "organization",
+                                "displayName": "Organization object or organization name"
+                            },
+                            {
+                                "name": "projectNumber",
+                                "displayName": "The number of the project"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "Project",
+                            "displayName": "Project object"
+                        }
+        
                     },
                     {
-                        "name":"issueTitle",
-                        "displayName":"Issue Title"
+                        "name": "getOrganizationProjectList",
+                        "displayName": "Get all projects of an organization",
+                        "parameters" : [
+                            {
+                                "name": "organization",
+                                "displayName": "Organization object"
+                            },
+                            {
+                                "name": "state",
+                                "displayName": "State of the project (`STATE_OPEN`, `STATE_CLOSED`, `STATE_ALL`)"
+                            },
+                            {
+                                "name": "recordCount",
+                                "displayName": "Specify number of records in the list"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "ProjectList",
+                            "displayName": "Project list object"
+                        }
+        
                     },
                     {
-                        "name":"issueContent",
-                        "displayName":"Issue Content"
+                        "name": "getUserRepositoryList",
+                        "displayName": "Get a list of repositories of an user",
+                        "parameters" : [
+                            {
+                                "name": "user",
+                                "displayName": "User object or user name"
+                            },
+                            {
+                                "name": "recordCount",
+                                "displayName": "Specify number of records in the list"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "RepositoryList",
+                            "displayName": "Repository list object"
+                        }
+        
                     },
                     {
-                        "name":"labelList",
-                        "displayName":"Label List"
+                        "name": "getOrganizationRepositoryList",
+                        "displayName": "Get a list of repositories of an organization",
+                        "parameters" : [
+                            {
+                                "name": "organization",
+                                "displayName": "Organization object or organization name"
+                            },
+                            {
+                                "name": "recordCount",
+                                "displayName": "Specify number of records in the list"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "RepositoryList",
+                            "displayName": "Repository list object"
+                        }
+        
                     },
                     {
-                        "name":"assigneeList",
-                        "displayName":"Assignee List"
-                    }
-                ],
-                "returnValue": {
-                    "name": "Issue",
-                    "displayName": "Issue Palyload"
-                }
-
-            },
-            {
-                "name": "getCardListNextPage",
-                "displayName": "Get the next page of the card list.",
-                "parameters" : [
-                    {
-                        "name": "cardList",
-                        "displayName": "Card List"
-                    }
-                ],
-                "returnValue": {
-                    "name": "CardList",
-                    "displayName": "Card list object of next page"
-                }
-
-            },            {
-                "name": "getColumnListNextPage",
-                "displayName": "Get the next page of column list",
-                "parameters" : [
-                    {
-                        "name": "columnList",
-                        "displayName": "Column List"
-                    }
-                ],
-                "returnValue": {
-                    "name": "ColumnList",
-                    "displayName": "Column list object of next page"
-                }
-
-            },            {
-                "name": "getBranchList",
-                "displayName": "Get a list of branches of a repository",
-                "parameters" : [
-                    {
-                        "name":"repository",
-                        "displayName":"Repository object or tuple (`repository owner`, `repository name`)"
+                        "name": "getProjectColumnList",
+                        "displayName": "Get all columns of a project board",
+                        "parameters" : [
+                            {
+                                "name": "project",
+                                "displayName": "Project object"
+                            },
+                            {
+                                "name":"recordCount",
+                                "displayName":"Specify number of records in the list"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "ColumnList",
+                            "displayName": "Column list object"
+                        }
+        
                     },
                     {
-                        "name":"recordCount",
-                        "displayName":"Specify number of records in the list"
-                    }
-                ],
-                "returnValue": {
-                    "name": "BranchList",
-                    "displayName": "Branch list object"
-                }
-
-            },            
-            {
-                "name": "getIssueList",
-                "displayName": "Get a list of issues of a repository",
-                "parameters" : [
-                    {
-                        "name": "repository",
-                        "displayName": "Repository object or tuple (`repository owner`, `repository name`)"
+                        "name": "getProjectListNextPage",
+                        "displayName": "Gets the next page of a project list",
+                        "parameters" : [
+                            {
+                                "name": "projectList",
+                                "displayName": "Project list object"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "ProjectList",
+                            "displayName": "Project list object of next page"
+                        }
+        
                     },
                     {
-                        "name":"state",
-                        "displayName":"State of the issue (`STATE_OPEN`, `STATE_CLOSED`, `STATE_ALL`)"
+                        "name": "getPullRequestList",
+                        "displayName": "Get all pull requests of a repository",
+                        "parameters" : [
+                            {
+                                "name": "repository",
+                                "displayName": "Repository object or tuple `(\"repository owner\", \"repository name\")`"
+                            },
+                            {
+                                "name": "state",
+                                "displayName": "State of the pull request (STATE_OPEN, STATE_CLOSED, STATE_MERGED, STATE_ALL)"
+                            },
+                            {
+                                "name":"recordCount",
+                                "displayName":"Specify number of records in the list"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "PullRequestList",
+                            "displayName": "Pull request list object"
+                        }
+        
                     },
                     {
-                        "name":"recordCount",
-                        "displayName":"Specify number of records in the list"
-                    }
-                ],
-                "returnValue": {
-                    "name": "IssueList",
-                    "displayName": "Issue list object"
-                }
-
-            },            
-            {
-                "name": "getIssueListNextPage",
-                "displayName": "Create Record",
-                "parameters" : [
-                    {
-                        "name": "issueList",
-                        "displayName": "Issue list object"
-                    }
-                ],
-                "returnValue": {
-                    "name": "IssueList",
-                    "displayName": " Issue list object of next page"
-                }
-
-            },            
-            {
-                "name": "getOrganization",
-                "displayName": "Get an organization",
-                "parameters" : [
-                    {
-                        "name": "name",
-                        "displayName": "Name of the organization"
-                    }
-                ],
-                "returnValue": {
-                    "name": "Organization",
-                    "displayName": "Organization object"
-                }
-
-            },            
-            {
-                "name": "getOrganizationProject",
-                "displayName": "Get a single project of an organization",
-                "parameters" : [
-                    {
-                        "name": "organization",
-                        "displayName": "Organization object or organization name"
+                        "name": "getPullRequestListNextPage",
+                        "displayName": "Get the next page of the pull request list",
+                        "parameters" : [
+                            {
+                                "name": "pullRequestList",
+                                "displayName": "Pull request list object"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "PullRequestList",
+                            "displayName": "Pull request list object of next page"
+                        }
+        
                     },
                     {
-                        "name": "projectNumber",
-                        "displayName": "The number of the project"
-                    }
-                ],
-                "returnValue": {
-                    "name": "Project",
-                    "displayName": "Project object"
-                }
-
-            },
-            {
-                "name": "getOrganizationProjectList",
-                "displayName": "Get all projects of an organization",
-                "parameters" : [
-                    {
-                        "name": "organization",
-                        "displayName": "Organization object"
+                        "name": "getRepository",
+                        "displayName": "Get a repository of an owner",
+                        "parameters" : [
+                            {
+                                "name": "repoIdentifier",
+                                "displayName": "Name of the repository and its owner Format: (\"owner/repository\")"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "Repository",
+                            "displayName": "Repository object"
+                        }
+        
                     },
                     {
-                        "name": "state",
-                        "displayName": "State of the project (`STATE_OPEN`, `STATE_CLOSED`, `STATE_ALL`)"
+                        "name": "getRepositoryListNextPage",
+                        "displayName": "Get the next page of a repository list",
+                        "parameters" : [
+                            {
+                                "name": "repositoryList",
+                                "displayName": "Repository list object"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "RepositoryList",
+                            "displayName": "Repository list object of next page"
+                        }
+        
                     },
                     {
-                        "name": "recordCount",
-                        "displayName": "Specify number of records in the list"
-                    }
-                ],
-                "returnValue": {
-                    "name": "ProjectList",
-                    "displayName": "Project list object"
-                }
-
-            },
-            {
-                "name": "getUserRepositoryList",
-                "displayName": "Get a list of repositories of an user",
-                "parameters" : [
-                    {
-                        "name": "user",
-                        "displayName": "User object or user name"
+                        "name": "getRepositoryProject",
+                        "displayName": "Get a single project of a repository",
+                        "parameters" : [
+                            {
+                                "name": "repository",
+                                "displayName": "Repository object or tuple `(\"repository owner\", \"repository name\")`"
+                            },
+                            {
+                                "name": "projectNumber",
+                                "displayName": "Project identification number"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "Project",
+                            "displayName": "Project object"
+                        }
+        
                     },
                     {
-                        "name": "recordCount",
-                        "displayName": "Specify number of records in the list"
+                        "name": "getRepositoryProjectList",
+                        "displayName": "Get all projects of a repository",
+                        "parameters" : [
+                            {
+                                "name": "repository",
+                                "displayName": "Repository object or tuple `(\"repository owner\", \"repository name\")`"
+                            },
+                            {
+                                "name": "state",
+                                "displayName": "State of the project (STATE_OPEN, STATE_CLOSED, STATE_ALL)"
+                            },
+                            {
+                                "name":"recordCount",
+                                "displayName":"Specify number of records in the list"
+                            }
+                        ],
+                        "returnValue": {
+                            "name": "ProjectList",
+                            "displayName": "Project list object"
+                        }
+        
                     }
-                ],
-                "returnValue": {
-                    "name": "RepositoryList",
-                    "displayName": "Repository list object"
-                }
-
-            },
-            {
-                "name": "getOrganizationRepositoryList",
-                "displayName": "Get a list of repositories of an organization",
-                "parameters" : [
-                    {
-                        "name": "organization",
-                        "displayName": "Organization object or organization name"
-                    },
-                    {
-                        "name": "recordCount",
-                        "displayName": "Specify number of records in the list"
-                    }
-                ],
-                "returnValue": {
-                    "name": "RepositoryList",
-                    "displayName": "Repository list object"
-                }
-
-            },
-            {
-                "name": "getProjectColumnList",
-                "displayName": "Get all columns of a project board",
-                "parameters" : [
-                    {
-                        "name": "project",
-                        "displayName": "Project object"
-                    },
-                    {
-                        "name":"recordCount",
-                        "displayName":"Specify number of records in the list"
-                    }
-                ],
-                "returnValue": {
-                    "name": "ColumnList",
-                    "displayName": "Column list object"
-                }
-
-            },
-            {
-                "name": "getProjectListNextPage",
-                "displayName": "Gets the next page of a project list",
-                "parameters" : [
-                    {
-                        "name": "projectList",
-                        "displayName": "Project list object"
-                    }
-                ],
-                "returnValue": {
-                    "name": "ProjectList",
-                    "displayName": "Project list object of next page"
-                }
-
-            },
-            {
-                "name": "getPullRequestList",
-                "displayName": "Get all pull requests of a repository",
-                "parameters" : [
-                    {
-                        "name": "repository",
-                        "displayName": "Repository object or tuple `(\"repository owner\", \"repository name\")`"
-                    },
-                    {
-                        "name": "state",
-                        "displayName": "State of the pull request (STATE_OPEN, STATE_CLOSED, STATE_MERGED, STATE_ALL)"
-                    },
-                    {
-                        "name":"recordCount",
-                        "displayName":"Specify number of records in the list"
-                    }
-                ],
-                "returnValue": {
-                    "name": "PullRequestList",
-                    "displayName": "Pull request list object"
-                }
-
-            },
-            {
-                "name": "getPullRequestListNextPage",
-                "displayName": "Get the next page of the pull request list",
-                "parameters" : [
-                    {
-                        "name": "pullRequestList",
-                        "displayName": "Pull request list object"
-                    }
-                ],
-                "returnValue": {
-                    "name": "PullRequestList",
-                    "displayName": "Pull request list object of next page"
-                }
-
-            },
-            {
-                "name": "getRepository",
-                "displayName": "Get a repository of an owner",
-                "parameters" : [
-                    {
-                        "name": "repoIdentifier",
-                        "displayName": "Name of the repository and its owner Format: (\"owner/repository\")"
-                    }
-                ],
-                "returnValue": {
-                    "name": "Repository",
-                    "displayName": "Repository object"
-                }
-
-            },
-            {
-                "name": "getRepositoryListNextPage",
-                "displayName": "Get the next page of a repository list",
-                "parameters" : [
-                    {
-                        "name": "repositoryList",
-                        "displayName": "Repository list object"
-                    }
-                ],
-                "returnValue": {
-                    "name": "RepositoryList",
-                    "displayName": "Repository list object of next page"
-                }
-
-            },
-            {
-                "name": "getRepositoryProject",
-                "displayName": "Get a single project of a repository",
-                "parameters" : [
-                    {
-                        "name": "repository",
-                        "displayName": "Repository object or tuple `(\"repository owner\", \"repository name\")`"
-                    },
-                    {
-                        "name": "projectNumber",
-                        "displayName": "Project identification number"
-                    }
-                ],
-                "returnValue": {
-                    "name": "Project",
-                    "displayName": "Project object"
-                }
-
-            },
-            {
-                "name": "getRepositoryProjectList",
-                "displayName": "Get all projects of a repository",
-                "parameters" : [
-                    {
-                        "name": "repository",
-                        "displayName": "Repository object or tuple `(\"repository owner\", \"repository name\")`"
-                    },
-                    {
-                        "name": "state",
-                        "displayName": "State of the project (STATE_OPEN, STATE_CLOSED, STATE_ALL)"
-                    },
-                    {
-                        "name":"recordCount",
-                        "displayName":"Specify number of records in the list"
-                    }
-                ],
-                "returnValue": {
-                    "name": "ProjectList",
-                    "displayName": "Project list object"
-                }
-
+                ]
             }
         ]
     }

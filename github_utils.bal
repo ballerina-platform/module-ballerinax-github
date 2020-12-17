@@ -29,7 +29,7 @@ function constructRequest(http:Request request, json stringQuery) {
 # + response - HTTP response object or HTTP Connector error
 # + validateComponent - Component to check in the response
 # + return - `json` payload of the response or Connector error
-function getValidatedResponse(http:Response|http:Payload|error response, string validateComponent) returns @tainted json | error {
+function getValidatedResponse(http:Response|http:PayloadType|error response, string validateComponent) returns @tainted json | error {
 
     if (response is http:Response) {
         var jsonPayload = response.getJsonPayload();
@@ -92,7 +92,7 @@ function getValidatedResponse(http:Response|http:Payload|error response, string 
 # Validate the REST HTTP response and return payload or error.
 # + response - HTTP response object or HTTP Connector error
 # + return - `json` payload of the response or Connector error
-function getValidatedRestResponse(http:Response|http:Payload|error response) returns json | error {
+function getValidatedRestResponse(http:Response|http:PayloadType|error response) returns json | error {
     if (response is http:Response) {
         var payload = response.getJsonPayload();
         if (payload is json) {
