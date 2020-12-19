@@ -144,15 +144,15 @@ oauth2:OutboundOAuth2Provider githubOAuth2Provider = new ({
 http:BearerAuthHandler githubOAuth2Handler = new (githubOAuth2Provider);
 
 @websub:SubscriberServiceConfig {
-    path: "/webhook",
     subscribeOnStartUp: true,
-    target: [webhook:HUB, "https://github.com/<GH_USERNAME>/<GH_REPO_NAME>/events/*.json"],
+    target: [webhook:HUB, config:getAsString("TOPIC_GITHUB")],
+    secret: config:getAsString("SECRET_GITHUB"),
+    callback: config:getAsString("CALLBACK_GITHUB"),
     hubClientConfig: {
         auth: {
             authHandler: githubOAuth2Handler
         }
-    },
-    callback: "<CALLBACK_URL>"
+    }
 }
 ```
 
@@ -177,27 +177,27 @@ oauth2:OutboundOAuth2Provider githubOAuth2Provider = new ({
 http:BearerAuthHandler githubOAuth2Handler = new (githubOAuth2Provider);
 
 @websub:SubscriberServiceConfig {
-    path: "/webhook",
     subscribeOnStartUp: true,
-    target: [webhook:HUB, "https://github.com/<GH_USERNAME>/<GH_REPO_NAME>/events/*.json"],
+    target: [webhook:HUB, config:getAsString("TOPIC_GITHUB")],
+    secret: config:getAsString("SECRET_GITHUB"),
+    callback: config:getAsString("CALLBACK_GITHUB"),
     hubClientConfig: {
         auth: {
             authHandler: githubOAuth2Handler
         }
-    },
-    callback: "<CALLBACK_URL>"
+    }
 }
-service githubWebhook on githubListener {
+service websub:SubscriberService /github on githubListener {
     
-    resource function onPing(websub:Notification notification, webhook:PingEvent event) {
+    remote function onPing(websub:Notification notification, webhook:PingEvent event) {
         io:println("[onPing] Webhook Registered: ", event);
     }
 
-    resource function onIssuesOpened(websub:Notification notification, webhook:IssuesEvent event) {
+    remote function onIssuesOpened(websub:Notification notification, webhook:IssuesEvent event) {
         io:println("[onIssuesOpened] Issue ID: ", event.issue.number);
     }
 
-    resource function onWatch(websub:Notification notification, webhook:WatchEvent event) {
+    remote function onWatch(websub:Notification notification, webhook:WatchEvent event) {
         io:println("[onWatch] Repository starred by: ", event.sender);
     }
 }
