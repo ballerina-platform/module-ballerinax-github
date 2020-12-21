@@ -90,7 +90,7 @@ service websub:SubscriberService /github on githubListener {
 
 
 @test:Config {
-    enable:true
+    enable:false
 }
 function testWebhookRegistration() {
     int counter = 10;
@@ -111,7 +111,7 @@ string createdIssueAssignee = createdIssueUsername;
 
 @test:Config {
     dependsOn: ["testWebhookRegistration"],
-    enable:true
+    enable:false
 }
 function testWebhookNotificationOnIssueCreation() {
     github:GitHubConfiguration gitHubConfig = {
@@ -138,7 +138,7 @@ function testWebhookNotificationOnIssueCreation() {
 
 @test:Config {
     dependsOn: ["testWebhookNotificationOnIssueCreation"],
-    enable:true
+    enable:false
 }
 function testWebhookNotificationOnIssueLabeling() {
     string createdIssueLabelString = "";
@@ -151,7 +151,7 @@ function testWebhookNotificationOnIssueLabeling() {
 
 @test:Config {
     dependsOn: ["testWebhookNotificationOnIssueCreation"],
-    enable:true
+    enable:false
 }
 function testWebhookNotificationOnIssueAssignment() {
     test:assertTrue(issueAssignedNotified, msg = "expected an issue assigned notification");
