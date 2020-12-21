@@ -21,7 +21,7 @@ import ballerina/stringutils;
 # Construct the request by adding the payload and authorization tokens.
 # + request - HTTP request object
 # + stringQuery - GraphQL API query
-function constructRequest(http:Request request, json stringQuery) {
+isolated function constructRequest(http:Request request, json stringQuery) {
     request.setJsonPayload(stringQuery);
 }
 
@@ -29,7 +29,7 @@ function constructRequest(http:Request request, json stringQuery) {
 # + response - HTTP response object or HTTP Connector error
 # + validateComponent - Component to check in the response
 # + return - `json` payload of the response or Connector error
-function getValidatedResponse(http:Response|http:PayloadType|error response, string validateComponent) returns @tainted json | error {
+isolated function getValidatedResponse(http:Response|http:PayloadType|error response, string validateComponent) returns @tainted json | error {
 
     if (response is http:Response) {
         var jsonPayload = response.getJsonPayload();
@@ -92,7 +92,7 @@ function getValidatedResponse(http:Response|http:PayloadType|error response, str
 # Validate the REST HTTP response and return payload or error.
 # + response - HTTP response object or HTTP Connector error
 # + return - `json` payload of the response or Connector error
-function getValidatedRestResponse(http:Response|http:PayloadType|error response) returns json | error {
+isolated function getValidatedRestResponse(http:Response|http:PayloadType|error response) returns json | error {
     if (response is http:Response) {
         var payload = response.getJsonPayload();
         if (payload is json) {
@@ -148,14 +148,14 @@ function getProjectColumns(string ownerType, string stringQuery, http:Client git
     return jsonToColumnList(projectColumnsJson, ownerType, stringQuery);
 }
 
-function setHeader(http:Request request, string accessToken){
+isolated function setHeader(http:Request request, string accessToken){
     request.setHeader("Authorization", "token " + accessToken);
 }
 
 # Convert string representation of JSON object to JSON object.
 # + src - String representation of the JSON object
 # + return - Converted `json` object or Connector error
-function stringToJson(string src) returns json | error {
+isolated function stringToJson(string src) returns json | error {
     return src.fromJsonString();
 }
 
@@ -164,7 +164,7 @@ function stringToJson(string src) returns json | error {
 # + delimeter - Delimeter used to split the string
 # + index - Index of the string component which should be returned
 # + return - String component
-function split(string receiver, string delimeter, int index) returns string {
+isolated function split(string receiver, string delimeter, int index) returns string {
     string[] resultArray = stringutils:split(receiver, delimeter);
     return resultArray[index];
 }

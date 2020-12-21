@@ -54,11 +54,11 @@ public class Listener {
         self.websubListener = new (port, slConfig);
     }
 
-    public function attach(service object {} s, string[]|string? name = ()) returns error? {
+    public isolated function attach(service object {} s, string[]|string? name = ()) returns error? {
         return self.websubListener.attach(s, name);
     }
 
-    public function detach(service object {} s) returns error? {
+    public isolated  function detach(service object {} s) returns error? {
         return self.websubListener.detach(s);
     }
 
@@ -66,11 +66,11 @@ public class Listener {
         return self.websubListener.'start();
     }
 
-    public function gracefulStop() returns error? {
+    public isolated  function gracefulStop() returns error? {
         return self.websubListener.gracefulStop();
     }
 
-    public function immediateStop() returns error? {
+    public isolated  function immediateStop() returns error? {
         return self.websubListener.immediateStop();
     }
 }
