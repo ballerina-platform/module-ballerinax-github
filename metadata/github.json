@@ -2,7 +2,8 @@
     "connector": {
         "name": "github",
         "displayName": "GitHub",
-        "module": "ballerinax-github",
+        "organization":"ballerinax",
+        "module": "github",
         "icon": "github.png",
         "clients":[
             {

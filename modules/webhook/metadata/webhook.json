@@ -1,13 +1,14 @@
 {
     "connector": {
         "name": "github",
-        "displayName": "GitHub Webhook",
-        "module": "ballerinax-github.webhook",
+        "displayName": "Github",
+        "organization":"ballerinax",
+        "module": "github.webhook",
         "icon": "webhook.png",
         "clients":[],
         "listener":{
-            "name":"webhook",
-            "displayName":"",
+            "name":"Listener",
+            "displayName":"Webhook Listener",
             "triggers":[
                 {
                     "name":"onIssueCommentCreated",
