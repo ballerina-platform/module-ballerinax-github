@@ -437,7 +437,7 @@ function testCreateIssue() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testRepositoryListHasNextPage() {
+public isolated function testRepositoryListHasNextPage() {
     log:print("RepositoryList -> hasNextPage()");
     RepositoryList repositoryList = new;
     test:assertFalse(repositoryList.hasNextPage(), msg = "Failed RepositoryList.hasNextPage()");
@@ -446,7 +446,7 @@ function testRepositoryListHasNextPage() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testRepositoryListHasPreviousPage() {
+public isolated function testRepositoryListHasPreviousPage() {
     log:print("RepositoryList -> hasPreviousPage()");
     RepositoryList repositoryList = new;
     test:assertFalse(repositoryList.hasPreviousPage(), msg = "Failed RepositoryList.hasPreviousPage()");
@@ -455,7 +455,7 @@ function testRepositoryListHasPreviousPage() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testRepositoryListGetAllRepositories() {
+public isolated function testRepositoryListGetAllRepositories() {
     log:print("RepositoryList -> getAllRepositories()");
     RepositoryList repositoryList = new;
     var repoArray = repositoryList.getAllRepositories();
@@ -466,7 +466,7 @@ function testRepositoryListGetAllRepositories() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testProjectListHasNextPage() {
+public isolated function testProjectListHasNextPage() {
     log:print("ProjectList -> hasNextPage()");
     ProjectList projectList = new;
     test:assertFalse(projectList.hasNextPage(), msg = "Failed ProjectList.hasNextPage()");
@@ -475,7 +475,7 @@ function testProjectListHasNextPage() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testProjectListHasPreviousPage() {
+public isolated function testProjectListHasPreviousPage() {
     log:print("ProjectList -> hasPreviousPage()");
     ProjectList projectList = new;
     test:assertFalse(projectList.hasPreviousPage(), msg = "Failed ProjectList.hasPreviousPage()");
@@ -484,7 +484,7 @@ function testProjectListHasPreviousPage() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testProjectListGetAllProjects() {
+public isolated function testProjectListGetAllProjects() {
     log:print("ProjectList -> getAllRepositories()");
     ProjectList projectList = new;
     var projectArray = projectList.getAllProjects();
@@ -495,7 +495,7 @@ function testProjectListGetAllProjects() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testColumnGetCardList() {
+public isolated function testColumnGetCardList() {
     log:print("Column.getCardList()");
     Column column = new;
     var cardList = column.getCardList();
@@ -506,7 +506,7 @@ function testColumnGetCardList() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testColumnListHasNextPage() {
+public isolated function testColumnListHasNextPage() {
     log:print("ColumnList -> hasNextPage()");
     ColumnList columnList = new;
     test:assertFalse(columnList.hasNextPage(), msg = "Failed ColumnList.hasNextPage()");
@@ -515,7 +515,7 @@ function testColumnListHasNextPage() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testColumnListHasPreviousPage() {
+public isolated function testColumnListHasPreviousPage() {
     log:print("ColumnList.hasPreviousPage()");
     ColumnList columnList = new;
     test:assertFalse(columnList.hasPreviousPage(), msg = "Failed ColumnList.hasPreviousPage()");
@@ -524,7 +524,7 @@ function testColumnListHasPreviousPage() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testColumnListGetAllColumns() {
+public isolated function testColumnListGetAllColumns() {
     log:print("ColumnList -> getAllColumns()");
     ColumnList columnList = new;
     var columnArray = columnList.getAllColumns();
@@ -535,7 +535,7 @@ function testColumnListGetAllColumns() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testCardListHasNextPage() {
+public isolated function testCardListHasNextPage() {
     log:print("CardList -> hasNextPage()");
     CardList cardList = {};
     test:assertFalse(cardList.pageInfo.hasNextPage, msg = "Failed CardList.hasNextPage()");
@@ -544,7 +544,7 @@ function testCardListHasNextPage() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testCardListHasPreviousPage() {
+public isolated function testCardListHasPreviousPage() {
     log:print("CardList -> hasPreviousPage()");
     CardList cardList = {};
     test:assertFalse(cardList.pageInfo.hasPreviousPage, msg = "Failed CardList.hasPreviousPage()");
@@ -553,7 +553,7 @@ function testCardListHasPreviousPage() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testCardListGetAllCards() {
+public isolated function testCardListGetAllCards() {
     log:print("CardList -> getAllCards()");
     CardList cardList = {};
     var cardArray = cardList.nodes;
@@ -564,7 +564,7 @@ function testCardListGetAllCards() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testPullRequestListHasNextPage() {
+public isolated function testPullRequestListHasNextPage() {
      log:print("PullRequestList -> hasNextPage()");
      PullRequestList pullRequestList = new;
      test:assertFalse(pullRequestList.hasNextPage(), msg = "Failed PullRequestList.hasNextPage()");
@@ -573,7 +573,7 @@ function testPullRequestListHasNextPage() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testPullRequestListHasPreviousPage() {
+public isolated function testPullRequestListHasPreviousPage() {
      log:print("PullRequestList -> hasPreviousPage()");
      PullRequestList pullRequestList = new;
      test:assertFalse(pullRequestList.hasPreviousPage(), msg = "Failed PullRequestList.hasPreviousPage()");
@@ -582,7 +582,7 @@ function testPullRequestListHasPreviousPage() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testPullRequestListGetAllPullRequests() {
+public isolated function testPullRequestListGetAllPullRequests() {
     log:print("PullRequestList -> getAllPullRequests()");
     PullRequestList pullRequestList = new;
     var pullRequestArray = pullRequestList.getAllPullRequests();
@@ -593,7 +593,7 @@ function testPullRequestListGetAllPullRequests() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testIssueListHasNextPage() {
+public isolated function testIssueListHasNextPage() {
     log:print("IssueList -> hasNextPage()");
     IssueList issueList = new;
     test:assertFalse(issueList.hasNextPage(), msg = "Failed IssueList.hasNextPage()");
@@ -602,7 +602,7 @@ function testIssueListHasNextPage() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testIssueListHasPreviousPage() {
+public isolated function testIssueListHasPreviousPage() {
      log:print("IssueList -> hasPreviousPage()");
      IssueList issueList = new;
      test:assertFalse(issueList.hasPreviousPage(), msg = "Failed IssueList.hasPreviousPage()");
@@ -611,7 +611,7 @@ function testIssueListHasPreviousPage() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testIssueListGetAllIssues() {
+public isolated function testIssueListGetAllIssues() {
      log:print("IssueList -> getAllIssues()");
      IssueList issueList = new;
      var issueArray = issueList.getAllIssues();
@@ -622,7 +622,7 @@ function testIssueListGetAllIssues() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testProjectOwnerGetOwnerType() {
+public isolated function testProjectOwnerGetOwnerType() {
      log:print("ProjectOwner -> getOwnerType()");
      ProjectOwner projectOwner = {};
      test:assertEquals(projectOwner["__typename"], "", msg = "Failed ProjectOwner.getOwnerType()");
@@ -631,7 +631,7 @@ function testProjectOwnerGetOwnerType() {
 @test:Config {
     groups: ["object-functions"]
 }
-function testProjectOwnerSetOwnerType() {
+public isolated function testProjectOwnerSetOwnerType() {
      log:print("ProjectOwner -> setOwnerType()");
      ProjectOwner projectOwner = {};
      projectOwner["__typename"] = "Organization";
@@ -642,7 +642,7 @@ function testProjectOwnerSetOwnerType() {
 @test:Config {
     groups: ["utility-functions"]
 }
-function testConstructRequest() {
+public isolated function testConstructRequest() {
     log:print("constructRequest()");
     http:Request request = new;
     json samplePayload = {"query": "query body"};
@@ -661,7 +661,7 @@ function testConstructRequest() {
 @test:Config {
     groups: ["utility-functions"]
 }
-function testGetValidatedResponseSuccess() {
+public isolated function testGetValidatedResponseSuccess() {
     log:print("getValidatedResponse() successful");
     http:Response sampleHttpResponse = new;
 
@@ -683,7 +683,7 @@ function testGetValidatedResponseSuccess() {
 @test:Config {
     groups: ["utility-functions"]
 }
-function testGetValidatedResponseError() {
+public isolated function testGetValidatedResponseError() {
     log:print("getValidatedResponse() error payload");
 
     http:Response sampleHttpResponse = new;
@@ -706,7 +706,7 @@ function testGetValidatedResponseError() {
 @test:Config {
     groups: ["utility-functions"]
 }
-function testGetValidatedResponseNoRequestedData() {
+public isolated function testGetValidatedResponseNoRequestedData() {
     log:print("getValidatedResponse() no requested data");
 
     http:Response sampleHttpResponse = new;
@@ -729,7 +729,7 @@ function testGetValidatedResponseNoRequestedData() {
 @test:Config {
     groups: ["utility-functions"]
 }
-function testGetValidatedResponseNoPayload() {
+public isolated function testGetValidatedResponseNoPayload() {
     log:print("getValidatedResponse() no payload");
 
     http:Response sampleHttpResponse = new;
@@ -750,7 +750,7 @@ function testGetValidatedResponseNoPayload() {
 @test:Config {
     groups: ["utility-functions"]
 }
-function testGetValidatedResponseHttpError() {
+public isolated function testGetValidatedResponseHttpError() {
     log:print("getValidatedResponse() HttpConnectorError");
 
     error sampleHttpError = error(GITHUB_ERROR_CODE, message = "HTTP Connector Error.");
@@ -770,7 +770,7 @@ function testGetValidatedResponseHttpError() {
 @test:Config {
     groups: ["utility-functions"]
 }
-function testGetValidatedRestResponseSuccess() {
+public isolated function testGetValidatedRestResponseSuccess() {
     log:print("getValidatedRestResponse() successful");
     http:Response sampleHttpResponse = new;
 
@@ -792,7 +792,7 @@ function testGetValidatedRestResponseSuccess() {
 @test:Config {
     groups: ["utility-functions"]
 }
-function testGetValidatedRestResponseError() {
+public isolated function testGetValidatedRestResponseError() {
     log:print("getValidatedRestResponse() error payload");
 
     http:Response sampleHttpResponse = new;
@@ -814,7 +814,7 @@ function testGetValidatedRestResponseError() {
 @test:Config {
     groups: ["utility-functions"]
 }
-function testGetValidatedRestResponseNoPayload() {
+public isolated function testGetValidatedRestResponseNoPayload() {
     log:print("getValidatedRestResponse() no payload");
 
     http:Response sampleHttpResponse = new;
@@ -835,7 +835,7 @@ function testGetValidatedRestResponseNoPayload() {
 @test:Config {
     groups: ["utility-functions"]
 }
-function testGetValidatedRestResponseHttpError() {
+public isolated function testGetValidatedRestResponseHttpError() {
     log:print("getValidatedRestResponse() HttpConnectorError");
 
     error sampleHttpError = error(GITHUB_ERROR_CODE, message = "HTTP Connector Error.");
@@ -855,7 +855,7 @@ function testGetValidatedRestResponseHttpError() {
 @test:Config {
     groups: ["utility-functions"]
 }
-function testStringToJsonError() {
+public isolated function testStringToJsonError() {
     log:print("stringToJson() error");
     string stringJson = "{\"title\":Sample title}";
 
@@ -871,7 +871,7 @@ function testStringToJsonError() {
 @test:Config {
     groups: ["utility-functions"]
 }
-function testStringToJsonSuccess() {
+public isolated function testStringToJsonSuccess() {
     log:print("stringToJson() success");
     string stringJson = "{\"title\":\"Sample title\", \"author\":{\"name\":\"Author1\"}}";
 
@@ -884,6 +884,7 @@ function testStringToJsonSuccess() {
     }
 }
 
-function getConfigValue(string key) returns string {
+public isolated function getConfigValue(string key) returns string {
     return (system:getEnv(key) != "") ? system:getEnv(key) : config:getAsString(key);
 }
+    
