@@ -109,6 +109,10 @@ public type Repository record {|
     boolean archived?;
     boolean disabled?;
     boolean has_projects?;
+    boolean allow_squash_merge?;
+    boolean allow_merge_commit?;
+    boolean allow_rebase_merge?;
+    boolean delete_branch_on_merge?;
 |};
 
 public type Page record {|
@@ -180,21 +184,21 @@ public type Milestone record {|
     string node_id;
     int number;
     string title;
-    string description;
+    string? description;
     User creator;
     int open_issues;
     int closed_issues;
     string state;
     string created_at;
     string updated_at;
-    string due_on;
+    string? due_on;
     string? closed_at;
 |};
 
 public type Changes record {|
     Name name?;
     Title title?;
-    Body body;
+    Body body?;
     Color color?;
     Permission permission?;
     Description description?;
@@ -283,15 +287,15 @@ public type Branch record {|
 |};
 
 public type Links record {|
-    SelfLink? selfLink; // issue here; needs to be self
-    HtmlLink? html;
-    IssueLink? issue;
-    CommentsLink? comments;
-    ReviewCommentsLink? review_comments;
-    ReviewCommentLink? review_comment;
-    CommitsLink? commits;
-    StatusesLink? statuses;
-    PullRequestLink? pull_request;
+    SelfLink 'self?; 
+    HtmlLink html?;
+    IssueLink issue?;
+    CommentsLink comments?;
+    ReviewCommentsLink review_comments?;
+    ReviewCommentLink review_comment?;
+    CommitsLink commits?;
+    StatusesLink statuses?;
+    PullRequestLink pull_request?;
 |};
 
 public type SelfLink record {|
@@ -355,6 +359,7 @@ public type PullRequest record {|
     Team[] requested_teams;
     Label[] labels;
     Milestone? milestone;
+    boolean draft;
     string commits_url;
     string review_comments_url;
     string review_comment_url;
@@ -364,18 +369,19 @@ public type PullRequest record {|
     Branch base;
     Links _links;
     string author_association;
-    boolean merged;
-    boolean? mergeable;
-    boolean? rebaseable;
-    string mergeable_state;
-    User? merged_by;
-    int comments;
-    int review_comments;
-    boolean maintainer_can_modify;
-    int commits;
-    int additions;
-    int deletions;
-    int changed_files;
+    boolean merged?;
+    boolean? mergeable?;
+    boolean? rebaseable?;
+    string mergeable_state?;
+    User? merged_by?;
+    int comments?;
+    int review_comments?;
+    boolean maintainer_can_modify?;
+    int commits?;
+    int additions?;
+    int deletions?;
+    int changed_files?;
+    string? active_lock_reason;
 |};
 
 public type Review record {|
@@ -411,6 +417,13 @@ public type PullRequestReviewComment record {|
     string pull_request_url;
     string author_association;
     Links _links;
+    string? start_line;
+    string? original_start_line;
+    string? start_side;
+    int line;
+    int original_line;
+    string side;
+    int in_reply_to_id?;
 |};
 
 public type Commit record {|
@@ -500,6 +513,7 @@ public type ForkEvent record {|
 public type IssueCommentEvent record {|
     string action;
     Issue issue;
+    Changes changes?;
     IssueComment comment;
     Repository repository;
     User sender;
@@ -511,6 +525,7 @@ public type IssuesEvent record {|
     Changes changes?;
     Label label?;
     User assignee?;
+    Milestone milestone?;
     Repository repository;
     User sender;
 |};
@@ -518,7 +533,7 @@ public type IssuesEvent record {|
 public type LabelEvent record {|
     string action;
     Label label;
-    Issue issue;
+    Issue issue?;
     Changes changes?;
     Repository repository;
     User sender;
@@ -527,7 +542,7 @@ public type LabelEvent record {|
 public type MilestoneEvent record {|
     string action;
     Milestone milestone;
-    Changes? changes;
+    Changes changes?;
     Repository repository;
     User sender;
 |};
@@ -537,6 +552,9 @@ public type PullRequestEvent record {|
     int number;
     Changes changes?;
     PullRequest pull_request;
+    User assignee?;
+    Label label?;
+    User requested_reviewer?;
     Repository repository;
     User sender;
 |};
@@ -545,6 +563,7 @@ public type PullRequestReviewEvent record {|
     string action;
     Review review;
     PullRequest pull_request;
+    Changes changes?;
     Repository repository;
     User sender;
 |};
