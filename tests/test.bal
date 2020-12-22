@@ -887,4 +887,3 @@ public isolated function testStringToJsonSuccess() {
 public isolated function getConfigValue(string key) returns string {
     return (system:getEnv(key) != "") ? system:getEnv(key) : config:getAsString(key);
 }
-    
