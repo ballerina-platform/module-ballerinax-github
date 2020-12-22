@@ -41,3 +41,5 @@ temp.bal
 target/
 .ballerina
 
+# Ignore resource .json files
+**/resources/*.json

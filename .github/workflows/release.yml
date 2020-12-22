@@ -12,10 +12,10 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - name: Ballerina Build
-              uses: ballerina-platform/ballerina-action/@slp7
+              uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
               with:
                   args:
-                      build -c --skip-tests 
+                      build -c 
               env:
                   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                   ORG_NAME: ${{ secrets.ORG_NAME }}
@@ -24,9 +24,14 @@ jobs:
                   RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
                   JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
             - name: Ballerina Push
-              uses: ballerina-platform/ballerina-action/@slp7
+              uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
               with:
                   args:
                       push
               env:
                   BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_ACCESS_TOKEN }}
+                  GITHUB_TOPIC: ${{ secrets.GITHUB_TOPIC }}
+                  GITHUB_SECRET: ${{ secrets.GITHUB_SECRET }}
+                  GITHUB_CALLBACK: ${{ secrets.GITHUB_CALLBACK }}
+                  GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
+                  REPO_NAME: ${{ secrets.REPO_NAME }}
