@@ -41,7 +41,7 @@ public client class Client {
     # + labelList - List of labels for the issue
     # + assigneeList - Users to be assigned to the issue
     # + return - Created issue object or Connector error
-    public remote function createIssue(string repositoryOwner, string repositoryName, string issueTitle,
+    remote function createIssue(string repositoryOwner, string repositoryName, string issueTitle,
                                    string issueContent, string[] labelList, string[] assigneeList)
                            returns Issue|error {
 
@@ -85,7 +85,7 @@ public client class Client {
     # Get the next page of the card list.
     # + cardList - Card list object
     # + return - Card list object of next page or Connector error
-    public remote function getCardListNextPage(CardList cardList) returns CardList|error {
+    remote function getCardListNextPage(CardList cardList) returns CardList|error {
         if (cardList.pageInfo.hasNextPage) {
             var cardListColumnId = cardList.columnId;
             json convertedQuery = check stringToJson(cardList.cardListQuery.toJsonString());
@@ -129,7 +129,7 @@ public client class Client {
     # Get the next page of column list.
     # + columnList - Column list object
     # + return - Column list object of next page or Connector error
-    public remote function getColumnListNextPage(ColumnList columnList) returns ColumnList|error {
+    remote function getColumnListNextPage(ColumnList columnList) returns ColumnList|error {
 
         if (columnList.hasNextPage()) {
             json jsonQuery = check stringToJson(columnList.columnListQuery);
@@ -164,7 +164,7 @@ public client class Client {
     # + repository - Repository object or tuple (`repository owner`, `repository name`)
     # + recordCount - Specify number of records in the list
     # + return - Branch list object or Connector error
-    public remote function getBranchList(Repository|[string, string] repository, int recordCount)
+    remote function getBranchList(Repository|[string, string] repository, int recordCount)
                            returns @tainted BranchList|error {
 
         string repositoryOwner = "";
@@ -221,7 +221,7 @@ public client class Client {
     # + state - State of the issue (`STATE_OPEN`, `STATE_CLOSED`, `STATE_ALL`)
     # + recordCount - Specify number of records in the list
     # + return - Issue list object or Connector error
-    public remote function getIssueList(Repository|[string, string] repository, string state, int recordCount)
+    remote function getIssueList(Repository|[string, string] repository, string state, int recordCount)
                            returns @tainted IssueList|error {
 
         string repositoryOwner = "";
@@ -276,7 +276,7 @@ public client class Client {
     # Get the next page of the issue list.
     # + issueList - Issue list object
     # + return - Issue list object of next page or Connector error
-    public remote function getIssueListNextPage(IssueList issueList) returns @tainted IssueList|error {
+    remote function getIssueListNextPage(IssueList issueList) returns @tainted IssueList|error {
 
         if (issueList.hasNextPage()) {
             http:Request request = new;
@@ -326,7 +326,7 @@ public client class Client {
     # Get an organization.
     # + name - Name of the organization
     # + return - Organization object or Connector error
-    public remote function getOrganization(string name) returns @tainted Organization|error {
+    remote function getOrganization(string name) returns @tainted Organization|error {
 
         if (name == EMPTY_STRING) {
             error err = error(GITHUB_ERROR_CODE, message = "Organization name should be specified.");
@@ -357,7 +357,7 @@ public client class Client {
     # + organization - Organization object or organization name
     # + projectNumber - The number of the project
     # + return - Project object or Connector error
-    public remote function getOrganizationProject(Organization|string organization, int projectNumber)
+    remote function getOrganizationProject(Organization|string organization, int projectNumber)
                            returns @tainted Project|error {
 
         string organizationName = "";
@@ -409,7 +409,7 @@ public client class Client {
     # + state - State of the project (`STATE_OPEN`, `STATE_CLOSED`, `STATE_ALL`)
     # + recordCount - Specify number of records in the list
     # + return - Project list object or Connector error
-    public remote function getOrganizationProjectList(Organization|string organization, string state,
+    remote function getOrganizationProjectList(Organization|string organization, string state,
                                                   int recordCount) returns @tainted ProjectList|error {
 
         http:Client gitHubEndpoint = self.githubGraphQlClient;
@@ -464,7 +464,7 @@ public client class Client {
     # + user - User object or user name
     # + recordCount - Specify number of records in the list
     # + return - Repository list object or Connector error
-    public remote function getUserRepositoryList(User|string user, int recordCount)
+    remote function getUserRepositoryList(User|string user, int recordCount)
                            returns @tainted RepositoryList|error {
 
         string userName = "";
@@ -516,7 +516,7 @@ public client class Client {
     # + organization - Organization object or organization name
     # + recordCount - Specify number of records in the list
     # + return - Repository list object or Connector error
-    public remote function getOrganizationRepositoryList(Organization|string organization, int recordCount)
+    remote function getOrganizationRepositoryList(Organization|string organization, int recordCount)
                            returns @tainted RepositoryList|error {
 
         string organizationName = "";
@@ -561,7 +561,7 @@ public client class Client {
     # + project - Project object
     # + recordCount - Specify number of records in the list
     # + return - Column list object or Connector error
-    public remote function getProjectColumnList(Project project, int recordCount) returns @tainted ColumnList|error {
+    remote function getProjectColumnList(Project project, int recordCount) returns @tainted ColumnList|error {
         if (project["owner"]["__typename"] == EMPTY_STRING || project.number <= INDEX_ZERO ||
                 project.resourcePath == EMPTY_STRING) {
             error err = error(GITHUB_ERROR_CODE, message = "Project owner, number and resource path should be specified");
@@ -601,7 +601,7 @@ public client class Client {
     # Gets the next page of a project list.
     # + projectList - Project list object
     # + return - Project list object of next page or Connector error
-    public remote function getProjectListNextPage(ProjectList projectList) returns @tainted ProjectList|error {
+    remote function getProjectListNextPage(ProjectList projectList) returns @tainted ProjectList|error {
         if (projectList.hasNextPage()) {
 
             http:Request request = new;
@@ -659,7 +659,7 @@ public client class Client {
     # + state - State of the pull request (STATE_OPEN, STATE_CLOSED, STATE_MERGED, STATE_ALL)
     # + recordCount - Specify number of records in the list
     # + return - Pull request list object or Connector error
-    public remote function getPullRequestList(Repository|[string, string] repository, string state, int recordCount)
+    remote function getPullRequestList(Repository|[string, string] repository, string state, int recordCount)
                            returns @tainted PullRequestList|error {
 
         string repositoryOwner;
@@ -710,7 +710,7 @@ public client class Client {
     # Get the next page of the pull request list.
     # + pullRequestList - Pull request list object
     # + return - Pull request list object of next page or Connector error
-    public remote function getPullRequestListNextPage(PullRequestList pullRequestList) returns @tainted
+    remote function getPullRequestListNextPage(PullRequestList pullRequestList) returns @tainted
     PullRequestList|error {
 
         if (pullRequestList.hasNextPage()) {
@@ -762,7 +762,7 @@ public client class Client {
     # Get a repository of an owner.
     # + repoIdentifier - Name of the repository and its owner Format: ("owner/repository")
     # + return - Repository object or Connector error
-    public remote function getRepository(string|[string, string] repoIdentifier) returns @tainted
+    remote function getRepository(string|[string, string] repoIdentifier) returns @tainted
     Repository|error {
 
         string repoOwner;
@@ -802,7 +802,7 @@ public client class Client {
     # Get the next page of a repository list.
     # + repositoryList - Repository list object
     # + return - Repository list object of next page or Connector error
-    public remote function getRepositoryListNextPage(RepositoryList repositoryList) returns @tainted
+    remote function getRepositoryListNextPage(RepositoryList repositoryList) returns @tainted
     RepositoryList|error {
         
         if (repositoryList.hasNextPage()) {
@@ -855,7 +855,7 @@ public client class Client {
     # + repository - Repository object or tuple `("repository owner", "repository name")`
     # + projectNumber - Project identification number
     # + return - Project object or Connector error
-    public remote function getRepositoryProject(Repository|[string, string] repository, int projectNumber)
+    remote function getRepositoryProject(Repository|[string, string] repository, int projectNumber)
                            returns @tainted Project|error {
 
         string repositoryOwner;
@@ -904,7 +904,7 @@ public client class Client {
     # + state - State of the project (STATE_OPEN, STATE_CLOSED, STATE_ALL)
     # + recordCount - Specify number of records in the list
     # + return - Project list object or Connector error
-    public remote function getRepositoryProjectList(Repository|[string, string] repository, string state,
+    remote function getRepositoryProjectList(Repository|[string, string] repository, string state,
                                                 int recordCount) returns @tainted ProjectList|error {
 
         string repositoryOwner;

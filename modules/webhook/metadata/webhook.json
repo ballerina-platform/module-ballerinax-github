@@ -1,0 +1,164 @@
+{
+    "connector": {
+        "name": "github",
+        "displayName": "Github",
+        "organization":"ballerinax",
+        "module": "github.webhook",
+        "icon": "webhook.png",
+        "clients":[],
+        "listener":{
+            "name":"Listener",
+            "displayName":"Webhook Listener",
+            "triggers":[
+                {
+                    "name":"onIssueCommentCreated",
+                    "displayName":"Issue Comment Created"
+                },
+                {
+                    "name":"onIssueCommentEdited",
+                    "displayName":"Issue Comment Edited"
+                },
+                {
+                    "name":"onIssueCommentDeleted",
+                    "displayName":"Issue Comment Deleted"
+                },
+                {
+                    "name":"onIssuesAssigned",
+                    "displayName":"Issues Assigned"
+                },
+                {
+                    "name":"onIssuesUnassigned",
+                    "displayName":"Issues Unassigned"
+                },
+                {
+                    "name":"onIssuesLabeled",
+                    "displayName":"Issues Labeled"
+                },
+                {
+                    "name":"onIssuesUnlabeled",
+                    "displayName":"Issues Unlabed"
+                },
+                {
+                    "name":"onIssuesOpened",
+                    "displayName":"Issues Opened"
+                },
+                {
+                    "name":"onIssuesEdited",
+                    "displayName":"Issues Edited"
+                },
+                {
+                    "name":"onIssuesMilestoned",
+                    "displayName":"Issues Milestoned"
+                },
+                {
+                    "name":"onIssuesDemilestoned",
+                    "displayName":"Issues Demilestoned"
+                },
+                {
+                    "name":"onIssuesClosed",
+                    "displayName":"Issues Closed"
+                },
+                {
+                    "name":"onIssuesReopened",
+                    "displayName":"Issues Re-Opened"
+                },
+                {
+                    "name":"onLabelCreated",
+                    "displayName":"Label Created"
+                },
+                {
+                    "name":"onLabelEdited",
+                    "displayName":"Label Edited"
+                },
+                {
+                    "name":"onLabelDeleted",
+                    "displayName":"Label Deleted"
+                },
+                {
+                    "name":"onMilestoneCreated",
+                    "displayName":"Milestone Created"
+                },
+                {
+                    "name":"onMilestoneClosed",
+                    "displayName":"Milestone Closed"
+                },
+                {
+                    "name":"onMilestoneOpened",
+                    "displayName":"Milestone Opened"
+                },
+                {
+                    "name":"onMilestoneEdited",
+                    "displayName":"Milestone Edited"
+                },
+                {
+                    "name":"onMilestoneDeleted",
+                    "displayName":"Milestone Deleted"
+                },
+                {
+                    "name":"onPullRequestAssigned",
+                    "displayName":"Pull Request Assigned"
+                },
+                {
+                    "name":"onPullRequestUnassigned",
+                    "displayName":"Pull Request Un-assigned"
+                },
+                {
+                    "name":"onPullRequestReviewRequested",
+                    "displayName":"Pull Request Review Requested"
+                },
+                {
+                    "name":"onPullRequestReviewRequestRemoved",
+                    "displayName":"Pull Request Review Requested Removed"
+                },
+                {
+                    "name":"onPullRequestLabeled",
+                    "displayName":"Pull Request Labeled"
+                },
+                {
+                    "name":"onPullRequestUnlabeled",
+                    "displayName":"Pull Request Unlabeled"
+                },
+                {
+                    "name":"onPullRequestOpened",
+                    "displayName":"Pull Request Opened"
+                },
+                {
+                    "name":"onPullRequestEdited",
+                    "displayName":"Pull Request Edited"
+                },
+                {
+                    "name":"onPullRequestClosed",
+                    "displayName":"Pull Request Closed"
+                },
+                {
+                    "name":"onPullRequestReopened",
+                    "displayName":"Pull Request Re-opened"
+                },
+                {
+                    "name":"onPullRequestReviewSubmitted",
+                    "displayName":"Pull Request Review Submitted"
+                },
+                {
+                    "name":"onPullRequestReviewEdited",
+                    "displayName":"Pull Request Review Edited"
+                },
+                {
+                    "name":"onPullRequestReviewDismissed",
+                    "displayName":"Pull Request Review Dismissed"
+                },
+                {
+                    "name":"onPullRequestReviewCommentCreated",
+                    "displayName":"Pull Request Review Comment Created"
+                },
+                {
+                    "name":"onPullRequestReviewCommentEdited",
+                    "displayName":"Pull Request Review Comment Edited"
+                },
+                {
+                    "name":"onPullRequestReviewCommentDeleted",
+                    "displayName":"Pull Request Review Comment Deleted"
+                }
+            ]
+        }
+    }
+}
