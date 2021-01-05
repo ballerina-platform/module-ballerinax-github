@@ -103,7 +103,7 @@ function testWebhookRegistration() {
     test:assertEquals(webhookHookType, "Repository", msg = "expected a repository hook to be added");
 }
 
-string createdIssueUsername = config:getAsString("USERNAME_GITHUB");
+string createdIssueUsername = config:getAsString("GITHUB_USERNAME");
 string createdIssueRepoName = config:getAsString("REPO_NAME");
 string createdIssueTitle = "This is a test issue";
 string[] createdIssueLabelArray = ["bug", "critical"];

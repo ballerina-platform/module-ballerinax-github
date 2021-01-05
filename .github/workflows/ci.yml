@@ -24,4 +24,4 @@ jobs:
                   GITHUB_TOPIC: ${{ secrets.GITHUB_TOPIC }}
                   GITHUB_SECRET: ${{ secrets.GITHUB_SECRET }}
                   GITHUB_CALLBACK: ${{ secrets.GITHUB_CALLBACK }}
-                  GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
+                  GITHUB_USERNAME: ${{ secrets.USERNAME }}
