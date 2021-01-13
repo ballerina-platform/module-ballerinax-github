@@ -695,7 +695,7 @@ public type User record {|
     string blog;
     string? location;
     string? email;
-    string? hireable;
+    boolean? hireable;
     string? bio;
     string? twitter_username;
     int public_repos;
