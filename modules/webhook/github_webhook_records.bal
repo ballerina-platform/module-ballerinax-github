@@ -33,6 +33,8 @@ public type User record {|
     string received_events_url;
     string 'type; //"type" in payload
     boolean site_admin;
+    string name?;
+    string email?;
 |};
 
 public type Repository record {|
@@ -81,9 +83,9 @@ public type Repository record {|
     string notifications_url;
     string labels_url;
     string releases_url;
-    string created_at;
+    string|int created_at;
     string updated_at;
-    string pushed_at;
+    string|int pushed_at;
     string git_url;
     string ssh_url;
     string clone_url;
@@ -113,6 +115,8 @@ public type Repository record {|
     boolean allow_merge_commit?;
     boolean allow_rebase_merge?;
     boolean delete_branch_on_merge?;
+    int stargazers?;
+    string master_branch?;
 |};
 
 public type Page record {|
@@ -427,16 +431,24 @@ public type PullRequestReviewComment record {|
 |};
 
 public type Commit record {|
-    string sha;
+    string id?;
+    string sha?;
     string message;
     CommitAuthor author;
     string url;
     boolean 'distinct;
+    CommitAuthor committer?;
+    string tree_id?;
+    string timestamp?;
+    string[] added?;
+    string[] removed?;
+    string[] modified?;
 |};
 
 public type CommitAuthor record {|
     string name;
     string email;
+    string username?;
 |};
 
 public type Release record {|
