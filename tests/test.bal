@@ -24,12 +24,26 @@ string testOrganizationName = getConfigValue("ORG_NAME");
 string testRepositoryName = getConfigValue("REPO_NAME");
 string testResourcePath = getConfigValue("RESOURCE_PATH");
 string testIssueAssignee = getConfigValue("ASSIGNEE");
+string testUserName = getConfigValue("GITHUB_USERNAME");
 
 GitHubConfiguration gitHubConfig = {
     accessToken: getConfigValue("ACCESS_TOKEN")
 };
 
 Client githubClient = new (gitHubConfig);
+
+@test:Config {
+    groups: ["network-calls"]
+}
+function testGetAuthenticatedUser() {
+    log:print("githubClient -> getAuthenticatedUser()");
+    var response = githubClient->getAuthenticatedUser();
+    if (response is User) {
+        test:assertEquals(response.login, testUserName, msg = "Failed getAuthenticatedUser()");
+    } else {
+        test:assertFail(msg = <string>response.detail()["message"]);
+    }
+}
 
 @test:Config {
     groups: ["network-calls"]

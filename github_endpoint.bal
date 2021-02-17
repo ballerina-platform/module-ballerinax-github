@@ -33,6 +33,18 @@ public client class Client {
         self.githubGraphQlClient = new(GIT_GRAPHQL_API_URL, gitHubConfig.clientConfig);
     }
 
+    # Get authenticated User
+    # 
+    # + return User object or Connector error
+    remote function getAuthenticatedUser() returns User|error {
+        string path = PATH_SEPARATOR + GIT_USER;
+        http:Request request = new;
+        setHeader(request, self.accessToken);
+        var response = self.githubRestClient->get(path,request);
+        json validatedResponse = check getValidatedRestResponse(response);
+        return restResponseJsonToUser(validatedResponse);
+    }
+
     # Creates a new issue in a repository.
     # + repositoryOwner - Repository owner name
     # + repositoryName - Repository name

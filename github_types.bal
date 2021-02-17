@@ -671,18 +671,53 @@ public type Assignee record {|
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            User object                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-# Represents a github user.
-# + id - User identification number
-# + login - Username of the user
-# + url - HTTP URL of the user
-# + avatarUrl - HTTP URL of the public avatar of the user
-# + resourcePath - HTTP path of the user recource
 public type User record {|
-    string id = "";
-    string login = "";
-    string url = "";
-    string? avatarUrl = "";
-    string? resourcePath = "";
+    int id ;
+    string login;
+    string url;
+    string avatar_url;
+    string node_id;
+    string gravatar_id;
+    string html_url;
+    string followers_url;
+    string following_url;
+    string gists_url;
+    string starred_url;
+    string subscriptions_url;
+    string organizations_url;
+    string repos_url;
+    string events_url;
+    string received_events_url;
+    string 'type;
+    boolean site_admin;
+    string? name;
+    string? company;
+    string blog;
+    string? location;
+    string? email;
+    boolean? hireable;
+    string? bio;
+    string? twitter_username;
+    int public_repos;
+    int public_gists;
+    int followers;
+    int following;
+    string created_at;
+    string updated_at;
+    int private_gists?;
+    int total_private_repos?;
+    int owned_private_repos?;
+    int disk_usage?;
+    int collaborators?;
+    boolean two_factor_authentication?;
+    Plan plan?;
+|};
+
+public type Plan record {|
+    string name;
+    int space;
+    int collaborators;
+    int private_repos;
 |};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          End User object                                               //

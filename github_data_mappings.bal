@@ -540,3 +540,16 @@ isolated function jsonToOrganization(map<json> response) returns Organization {
     organization.avatarUrl = response["avatarUrl"].toString();
     return organization;
 }
+
+# Convert json to User.
+# 
+# + response - Json response
+# + return - User record on success else an error
+isolated function restResponseJsonToUser(json response) returns User|error {
+    User|error res = response.cloneWithType(User);
+    if (res is User) {
+        return res;
+    } else {
+        return error(ERR_USER, res);
+    }
+}
