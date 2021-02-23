@@ -363,6 +363,7 @@ public type PullRequest record {|
     string? headRefName = "";
     string? baseRefName = "";
     Creator author = {};
+
 |};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           End of PullRequest object                                               //
@@ -526,12 +527,28 @@ public class IssueList {
 # + resourcePath - HTTP path of the creator
 # + url - HTTP URL of the creator
 # + avatarUrl - HTTP URL of the public avatar of the creator
-public type Creator record {|
+public type Creator record {
     string login = "";
     string? resourcePath = "";
     string? url = "";
     string? avatarUrl = "";
-|};
+    string? resource_path = "";
+    string? avatar_url = "";
+    int id?;
+    string node_id?;
+    string html_url?;
+    string followers_url?;
+    string following_url?;
+    string gists_url?;
+    string starred_url?;
+    string subscriptions_url?;
+    string organizations_url?;
+    string repos_url?;
+    string events_url?;
+    string received_events_url?;
+    string 'type?;
+    boolean site_admin?;
+};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            End of Creator object                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -724,3 +741,145 @@ public type Plan record {|
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 public type JsonArray json[];
+
+public type CreatePullRequest record {
+    string title?;
+    string head;
+    string base;
+    string body?;
+    boolean maintainer_can_modify?;
+    boolean draft?;
+    int issue?;
+};
+
+public type UpdatePullRequest record {
+    string title;
+    string body;
+    string base;
+    string state;
+    boolean maintainer_can_modify;
+};
+
+public type CreatePullRequestReviewComment record {
+    string body;
+    string commit_id?;
+    string path?;
+    int position;
+    string side?;
+    int line?;
+    int start_line?;
+    string start_side?;
+    int in_reply_to?;
+
+};
+
+public type PullRequestReviewComment record {
+    string url?;
+    int pull_request_review_id?;
+    int id?;
+    int position?;
+    int original_position?;
+    Creator user={};
+    string body?;
+    string created_at?;
+    string updated_at?;
+    string html_url?;
+    string pull_request_url?;
+    // int start_line?;
+    // int? original_start_line;
+    // string? start_side="";
+    int line?;
+    int original_line?;
+    string side?;
+};
+
+public type ReviewComment record {
+    string path;
+    string body;
+    int position?;
+    int line?;
+    string side?;
+    int start_line?;
+    string start_side?;
+};
+
+public type CreatePullRequestReview record {
+    string commit_id?;
+    string body;
+    string event;
+    ReviewComment[] comments?; 
+};
+
+public type PullRequestReview record {
+    int id=0;
+    string node_id="";
+    // Creator user={};
+    string body="";
+    string state="";
+    string html_url="";
+    string pull_request_url="";
+    string submitted_at="";
+    string commit_id="";
+    string author_association="";
+};
+
+public type PullRequestReviewSubmission record {
+    int id;
+    string node_id;
+    User user?;
+    string body?;
+    string state;
+    string html_url;
+    string pull_request_url;
+    string submitted_at;
+    string commit_id;
+    string author_association?;
+};
+
+public type GistFile record {|
+    string fileName;
+    string content;
+|};
+
+public type CreateGist record {|
+    string description?;
+    boolean 'public;
+    GistFile[] gistFiles;
+|};
+
+public type Gist record {
+    string url;
+    string forks_url;
+    string commits_url;
+    string id;
+    string node_id;
+    string git_pull_url;
+    string git_push_url;
+    string html_url;
+    string created_at;
+    string updated_at;
+    string description?;
+    int comments;
+    string comments_url;
+};
+
+public type OrganizationMembership record {
+    string url;
+    string state;
+    string role;
+    string organization_url;
+};
+
+public type FoundIssue record {
+    string id="";
+    string url="";
+    string repository_url="";
+    string labels_url="";
+    string comments_url="";
+    string events_url="";
+    string html_url="";
+    int number=0;
+    string state="";
+    string title="";
+    string body="";
+};

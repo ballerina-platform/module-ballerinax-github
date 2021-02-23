@@ -24,7 +24,7 @@ string testOrganizationName = getConfigValue("ORG_NAME");
 string testRepositoryName = getConfigValue("REPO_NAME");
 string testResourcePath = getConfigValue("RESOURCE_PATH");
 string testIssueAssignee = getConfigValue("ASSIGNEE");
-string testUserName = getConfigValue("GITHUB_USERNAME");
+string testUserName = getConfigValue("USERNAME_GITHUB");
 
 GitHubConfiguration gitHubConfig = {
     accessToken: getConfigValue("ACCESS_TOKEN")
@@ -444,7 +444,198 @@ function testCreateIssue() {
     if (createdIssue is Issue) {
         test:assertEquals(createdIssue.title, "This is a test issue", msg = "Failed createIssue()");
     } else {
-        test:assertFail(msg = <string>createdIssue.detail()["message"]);
+        test:assertFail(msg = createdIssue.message());
+    }
+}
+
+@test:Config {
+    groups: ["network-calls"]
+}
+function testCreatePullRequest() {
+    log:print("githubClient -> createPullRequest()");
+
+    CreatePullRequest createPullRequest = {
+        title:"This is a pull request made for testing from feature4 -> master",
+        head:"feature4",
+        base:"master",
+        body:"ksdfiusdhfs sdfbiusdhfus dfounsoud"
+    };
+
+    var response = githubClient->createPullRequest("MadhurangaWije", "github-connector",createPullRequest);
+    if (response is PullRequest) {
+        log:print(response.toBalString());
+        test:assertTrue(true);
+    } else {
+        log:printError(response.toBalString());
+        test:assertFail(msg = response.message());
+        
+    }
+}
+
+@test:Config {
+    groups: ["network-calls"]
+}
+function testCreatePullRequestReviewComment() {
+    log:print("githubClient -> createPullRequestReviewComment()");
+
+    CreatePullRequestReviewComment createPullRequestReviewComment = {
+        body:"This can be improved with better logic!",
+        position: 4,
+        path:"src/db/main.bal",
+        commit_id:"89c0f8fa665f1e55a7dccc70a1bf6ffe83df97e5"
+    };
+
+    var response = githubClient->createPullRequestReviewComment("MadhurangaWije", "github-connector", 206, createPullRequestReviewComment);
+
+    if (response is PullRequestReviewComment) {
+        log:print(response.toBalString());
+        test:assertTrue(true);
+    } else {
+        log:printError(response.toBalString());
+        test:assertFail(msg = response.message());
+    }
+}
+
+@test:Config {
+    groups: ["network-calls"]
+}
+function testDeleteBranch() {
+    log:print("githubClient -> deleteBranch()");
+
+    var response = githubClient->deleteBranch("MadhurangaWije", "github-connector", "feature3");
+    if (response is error) {
+        log:printError(response.detail().toBalString());
+        test:assertFail(msg = response.message());
+    } else {
+        test:assertTrue(true);
+    }
+}
+
+@test:Config {
+    groups: ["network-calls"]
+}
+function testCreateGist() {
+    log:print("githubClient -> createGist()");
+
+    CreateGist createGist = {
+        description: "Hello Gists",
+        'public: true,
+        gistFiles:[
+            {
+                fileName:"first_bal_gist.txt",
+                content:"Hello sdjf sidf isd fs dfs d fsjd fojsd fsod"
+            }
+        ]
+    };
+
+    var response = githubClient->createGist(createGist);
+    if (response is Gist) {
+        test:assertTrue(true);
+    } else {
+        test:assertFail(msg = response.message());
+    }
+}
+
+@test:Config {
+    groups: ["network-calls"]
+}
+function testGetOrganizationUserMembership() {
+    log:print("githubClient -> getOrganizationUserMembership()");
+
+
+    var response = githubClient->getOrganizationUserMembership("MyTestOrgBallerina", "MadhurangaWije");
+    if (response is OrganizationMembership) {
+        test:assertTrue(true);
+    } else {
+        test:assertFail(msg = response.message());
+    }
+}
+
+@test:Config {
+    groups: ["network-calls"]
+}
+function testGetUser() {
+    log:print("githubClient -> getUser()");
+
+
+    var response = githubClient->getUser("MadhurangaWije");
+    if (response is User) {
+        test:assertTrue(true);
+    } else {
+        test:assertFail(msg = response.message());
+    }
+}
+
+@test:Config {
+    groups: ["network-calls"]
+}
+function testGetIssue() {
+    log:print("githubClient -> getIssue()");
+
+    var response = githubClient->getIssue("MadhurangaWije","github-connector",158);
+    if (response is FoundIssue) {
+        test:assertTrue(true);
+    } else {
+        test:assertFail(msg = response.message());
+    }
+}
+
+@test:Config {
+    groups: ["network-calls"]
+}
+function testUpdateIssue() {
+    log:print("githubClient -> updateIssue()");
+    var createdIssue = githubClient->updateIssue(testIssueAssignee, "github-connector",198,
+    "This is a test issue", "This is the body of the test issue updated", ["bug", "critical"], [testIssueAssignee], "open");
+    if (createdIssue is Issue) {
+        test:assertEquals(createdIssue.title, "This is a test issue", msg = "Failed updateIssue()");
+    } else {
+        test:assertFail(msg = createdIssue.message());
+    }
+}
+
+@test:Config {
+    groups: ["network-calls"]
+}
+function testUpdatePullRequest() {
+    log:print("githubClient -> updatePullRequest()");
+
+    UpdatePullRequest pullRequestUpdate = {
+        title:"This is a pull request made for testing updated",
+        base:"master",
+        body:"ksdfiusdhfs sdfbiusdhfus dfounsoud",
+        state: "open",
+        maintainer_can_modify: false
+    };
+
+    var response = githubClient->updatePullRequest("MadhurangaWije", "github-connector", 165, pullRequestUpdate);
+    if (response is PullRequest) {
+        log:print(response.toBalString());
+        test:assertTrue(true);
+    } else {
+        log:printError(response.toBalString());
+        test:assertFail(msg = response.toBalString());
+    }
+}
+
+@test:Config {
+    groups: ["network-calls"]
+}
+function testCreatePullRequestReview() {
+    log:print("githubClient -> createPullRequestReview()");
+
+    CreatePullRequestReview createPullRequestReview = {
+        body:"this is create pr review body. blah blah blah3",
+        event:"COMMENT"
+    };
+
+    var response = githubClient->createPullRequestReview("MadhurangaWije", "github-connector", 206, createPullRequestReview);
+    if (response is error) {
+        log:printError(response.toBalString());
+        test:assertFail(msg = response.message());
+    } else {
+        log:print(response.toBalString());
+        test:assertTrue(true);
     }
 }
 

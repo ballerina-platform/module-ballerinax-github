@@ -30,6 +30,14 @@ final string GIT_ERRORS = "errors";
 final string GIT_HAS_NEXT_PAGE = "hasNextPage";
 final string GIT_REFS = "refs";
 final string GIT_ISSUES = "issues";
+final string GIT_PULLS = "pulls";
+final string GIT_COMMENTS = "comments";
+final string GIT_REVIEWS = "reviews";
+final string GIT_EVENTS = "events";
+final string GIT = "git";
+final string GIT_GISTS = "gists";
+final string GIT_ORGS = "orgs";
+final string GIT_MEMBERSHIPS = "memberships";
 final string GIT_MESSAGE = "message";
 final string GIT_NAME = "name";
 final string GIT_NODE = "node";
@@ -47,6 +55,8 @@ final string GIT_REPOSITORY = "repository";
 final string GIT_REPOSITORY_OWNER = "repositoryOwner";
 final string GIT_START_CURSOR = "startCursor";
 final string GIT_USER = "user";
+final string GIT_USERS = "users";
+final string GIT_BRANCH_REF_PREFIX = "refs/heads/";
 
 // Error Codes
 final string GITHUB_ERROR_CODE = "(ballerinax/github)GithubError";

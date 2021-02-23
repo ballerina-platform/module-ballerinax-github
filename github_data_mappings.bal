@@ -553,3 +553,56 @@ isolated function restResponseJsonToUser(json response) returns User|error {
         return error(ERR_USER, res);
     }
 }
+
+isolated function jsonToPullRequest(map<json> response) returns PullRequest {
+    PullRequest pullRequest = {};
+
+    pullRequest["id"] = response["id"].toString();
+    pullRequest["title"] = response["title"].toString();
+    pullRequest["createdAt"] = response["created_at"].toString();
+    pullRequest["updatedAt"] = response["updated_at"].toString();
+    pullRequest["closed"] = false;
+    pullRequest["closedAt"] = response["closed_at"].toString();
+    pullRequest["mergedAt"] = response["merged_at"].toString();
+    pullRequest["state"] = response["state"].toString();
+    pullRequest["number"] = <int>response["number"];
+    pullRequest["url"] = response["url"].toString();
+    pullRequest["body"] = response["body"].toString();
+    pullRequest["changedFiles"] = response["changed_files"] is ()? 0 : <int>response["changed_files"];
+    pullRequest["additions"] = response["additions"] is ()? 0 : <int>response["additions"];
+    pullRequest["deletions"] = response["deletions"] is ()? 0 : <int>response["deletions"];
+    pullRequest["resourcePath"] = "";
+    pullRequest["revertResourcePath"] = "";
+    pullRequest["revertUrl"] = "";
+    json|error pullRequestRef = response["head"].ref;
+    if (pullRequestRef is json) {
+        pullRequest["headRefName"] = pullRequestRef.toString();    
+    }
+    // pullRequest["headRefName"] = response["head"].ref.toString();
+    json|error pullRequestBaseRefName = response["base"].ref;
+    if (pullRequestBaseRefName is json) {
+        pullRequest["baseRefName"] = pullRequestBaseRefName.toString();    
+    }
+
+    pullRequest["author"] = {
+        login: response["user"].login.toString(),
+        id: <int>response["user"].id,
+        node_id: response["user"].node_id.toString(),
+        avatar_url: response["user"].avatar_url.toString(),
+        url: response["user"].url.toString(),
+        html_url: response["user"].html_url.toString(),
+        followers_url: response["user"].followers_url.toString(),
+        following_url: response["user"].following_url.toString(),
+        gists_url: response["user"].gists_url.toString(),
+        starred_url: response["user"].starred_url.toString(),
+        subscriptions_url: response["user"].subscriptions_url.toString(),
+        organizations_url: response["user"].organizations_url.toString(),
+        repos_url: response["user"].repos_url.toString(),
+        events_url: response["user"].events_url.toString(),
+        received_events_url: response["user"].received_events_url.toString(),
+        'type: response["user"].'type.toString(),
+        site_admin: <boolean>response["user"].site_admin
+    };
+
+    return pullRequest;
+}

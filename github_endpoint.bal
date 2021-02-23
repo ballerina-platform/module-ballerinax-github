@@ -966,6 +966,382 @@ public client class Client {
         error err = error(GITHUB_ERROR_CODE, message = "Cannot parse json response.");
         return err;
     }
+
+    # Creates a new Pull request .
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
+    # + pullRequest - Create pull request record
+    # + return - Created issue object or Connector error
+    remote function createPullRequest(string repositoryOwner, string repositoryName, CreatePullRequest pullRequest)
+                           returns PullRequest|error {
+
+        if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING) {
+            error connectorError = error(GITHUB_ERROR_CODE,
+            message = "Repository name, owner should be specified");
+            return connectorError;
+        }
+        
+        json createPullRequestPayload = check pullRequest.cloneWithType(json);
+
+        http:Request request = new;
+        setHeader(request, self.accessToken);
+        //Set headers and payload to the request
+        constructRequest(request, <@untainted> createPullRequestPayload);
+
+        string endpointResource = PATH_SEPARATOR + GIT_REPOS + PATH_SEPARATOR + repositoryOwner +
+            PATH_SEPARATOR + repositoryName + PATH_SEPARATOR + GIT_PULLS;
+        // Make an HTTP POST request
+        var response = self.githubRestClient->post(endpointResource, request);
+        //Check for empty payloads and errors
+        json validatedResponse = check getValidatedRestResponse(response);
+        io:println(validatedResponse);
+        return jsonToPullRequest(<map<json>>validatedResponse);
+        
+    }
+
+    # Creates a new Pull request .
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
+    # + pullNumber - Pull request number
+    # + pullRequestReviewComment - Pull request review comment create record
+    # + return - Created issue object or Connector error
+    remote function createPullRequestReviewComment(string repositoryOwner, string repositoryName, int pullNumber ,CreatePullRequestReviewComment pullRequestReviewComment)
+                           returns PullRequestReviewComment|error {
+
+        if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING) {
+            error connectorError = error(GITHUB_ERROR_CODE,
+            message = "Repository name, owner should be specified");
+            return connectorError;
+        }
+        
+        json createPullRequestReviewCommentPayload = check pullRequestReviewComment.cloneWithType(json);
+
+        http:Request request = new;
+        setHeader(request, self.accessToken);
+        //Set headers and payload to the request
+        constructRequest(request, <@untainted> createPullRequestReviewCommentPayload);
+
+        string endpointResource = string `${PATH_SEPARATOR}${GIT_REPOS}${PATH_SEPARATOR}${repositoryOwner}${PATH_SEPARATOR}${repositoryName}${PATH_SEPARATOR}${GIT_PULLS}${PATH_SEPARATOR}${pullNumber}${PATH_SEPARATOR}${GIT_COMMENTS}`;
+        // Make an HTTP POST request
+        var response = self.githubRestClient->post(endpointResource, request);
+        //Check for empty payloads and errors
+        json validatedResponse = check getValidatedRestResponse(response);
+        io:println(validatedResponse);
+        // return jsonToPullRequestReviewComment(<map<json>>validatedResponse);
+        return check validatedResponse.cloneWithType(PullRequestReviewComment);
+        
+    }
+
+    # Create a review for a pull request
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
+    # + pullNumber - Pull request number
+    # + reviewId - Pull request review ID
+    # + pullRequestReviewComment - Pull request review comment create record
+    # + return - Created issue object or Connector error
+    remote function createPullRequestReview(string repositoryOwner, string repositoryName, int pullNumber , CreatePullRequestReview pullRequestReview)
+                           returns error? {
+
+        if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING) {
+            error connectorError = error(GITHUB_ERROR_CODE,
+            message = "Repository name, owner should be specified");
+            return connectorError;
+        }
+
+        json createPullRequestReviewPayload = check pullRequestReview.cloneWithType(json);
+        
+
+        http:Request request = new;
+        setHeader(request, self.accessToken);
+        //Set headers and payload to the request
+        constructRequest(request, <@untainted> createPullRequestReviewPayload);
+
+        string endpointResource = string `${PATH_SEPARATOR}${GIT_REPOS}${PATH_SEPARATOR}${repositoryOwner}${PATH_SEPARATOR}${repositoryName}${PATH_SEPARATOR}${GIT_PULLS}${PATH_SEPARATOR}${pullNumber}${PATH_SEPARATOR}${GIT_REVIEWS}`;
+        // Make an HTTP POST request
+        var response = self.githubRestClient->post(endpointResource, request);
+        //Check for empty payloads and errors
+        json validatedResponse = check getValidatedRestResponse(response);
+        io:println(validatedResponse);
+
+        PullRequestReview prr = validatedResponse.cloneWithType(PullRequestReview);
+        io:println("");
+        io:println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        io:println(validatedResponse);
+        // io:println(prr);
+        io:println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        io:println("");
+        
+        // return mapJsonToPullRequestReviewSubmission(validatedResponse);
+    }
+
+
+
+    # Delete a brach
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
+    # + ref - Reference to the branch to delete
+    # + return - Created issue object or Connector error
+    remote function deleteBranch(string repositoryOwner, string repositoryName, string branchName)
+                           returns error? {
+
+        if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING) {
+            error connectorError = error(GITHUB_ERROR_CODE,
+            message = "Repository name, owner should be specified");
+            return connectorError;
+        }
+
+        http:Request request = new;
+        setHeader(request, self.accessToken);
+
+        string endpointResource = string `${PATH_SEPARATOR}${GIT_REPOS}${PATH_SEPARATOR}${repositoryOwner}${PATH_SEPARATOR}${repositoryName}${PATH_SEPARATOR}${GIT}${PATH_SEPARATOR}${GIT_BRANCH_REF_PREFIX}${branchName}`;
+        io:println(endpointResource);
+        // Make an HTTP DELETE request
+        var response = self.githubRestClient->delete(endpointResource, request);
+        
+        if(response is http:Response){
+            if(response.statusCode == 422) {
+                error err = error(GITHUB_ERROR_CODE, message = "Unprocessable Entity - Validation failed");
+                return err;
+            }
+        } else {
+            error err = error(GITHUB_ERROR_CODE, message = "HTTP Connector Error");
+            return err;
+        }
+        
+    }
+
+    # Delete a brach
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
+    # + ref - Reference to the branch to delete
+    # + return - Created issue object or Connector error
+    remote function createGist(CreateGist createGist)
+                           returns Gist|error {
+
+        if (createGist.gistFiles.length()<=0) {
+            error connectorError = error(GITHUB_ERROR_CODE,
+            message = "Required. names and content for the files that make up gist");
+            return connectorError;
+        }
+
+        http:Request request = new;
+        setHeader(request, self.accessToken);
+
+        map<json> files = {};
+
+        foreach var file in createGist.gistFiles {
+            files[file.fileName] = {
+                "content": file.content
+            };
+        }
+
+        map<json> payload = {
+            description: createGist?.description,
+            'public: createGist?.'public,
+            files:files
+        };
+
+        constructRequest(request, <@untainted> payload);
+
+        string endpointResource = string `${PATH_SEPARATOR}${GIT_GISTS}`;
+        // Make an HTTP POST request
+        var response = self.githubRestClient->post(endpointResource, request);
+        //Check for empty payloads and errors
+        json|error validatedResponse =  getValidatedRestResponse(response);
+        
+        if(validatedResponse is error){
+            io:println(validatedResponse);
+            return validatedResponse;
+        }else{
+            Gist gist = check validatedResponse.cloneWithType(Gist);
+            io:println(gist);
+            return gist;
+        }
+        
+        
+    }
+
+    # Check Organization Membership
+    # + organization - Name of the organization
+    # + username - GitHub username of the member
+    # + return - Created issue object or Connector error
+    remote function getOrganizationUserMembership(string organization ,string username)
+                           returns OrganizationMembership|error {
+
+        if (organization == EMPTY_STRING || username == EMPTY_STRING) {
+            error connectorError = error(GITHUB_ERROR_CODE,
+            message = "Organization name, username should be specified");
+            return connectorError;
+        }
+
+        http:Request request = new;
+        setHeader(request, self.accessToken);
+
+        string endpointResource = string `${PATH_SEPARATOR}${GIT_ORGS}${PATH_SEPARATOR}${organization}${PATH_SEPARATOR}${GIT_MEMBERSHIPS}${PATH_SEPARATOR}${username}`;
+        // Make an HTTP POST request
+        var response = self.githubRestClient->get(endpointResource, request);
+        //Check for empty payloads and errors
+        json|error validatedResponse =  getValidatedRestResponse(response);
+        
+        if(validatedResponse is error){
+            return validatedResponse;
+        }else{
+            OrganizationMembership organizationMembership = check validatedResponse.cloneWithType(OrganizationMembership);
+            return organizationMembership;
+        }
+        
+    }
+
+    # Find a user
+    # + organization - Name of the organization
+    # + username - GitHub username of the member
+    # + return - Created issue object or Connector error
+    remote function getUser(string username)
+                           returns User|error {
+
+        if (username == EMPTY_STRING) {
+            error connectorError = error(GITHUB_ERROR_CODE,
+            message = "Username should be specified");
+            return connectorError;
+        }
+
+        http:Request request = new;
+        setHeader(request, self.accessToken);
+
+        string endpointResource = string `${PATH_SEPARATOR}${GIT_USERS}${PATH_SEPARATOR}${username}`;
+        // Make an HTTP GET request
+        var response = self.githubRestClient->get(endpointResource, request);
+        //Check for empty payloads and errors
+        json|error validatedResponse =  getValidatedRestResponse(response);
+        
+        if(validatedResponse is error){
+            return validatedResponse;
+        }else{
+            User user = check validatedResponse.cloneWithType(User);
+            return user;
+        }
+        
+    }
+
+    # Find a Issue
+    # + username - GitHub username of the member
+    # + repositoryName - Name of the repository
+    # + issueNumber - Number of the issue which needs to retrieved
+    # + return - Issue object or Connector error
+    remote function getIssue(string username, string repositoryName, int issueNumber)
+                           returns FoundIssue|error {
+
+        if (username == EMPTY_STRING || repositoryName == EMPTY_STRING) {
+            error connectorError = error(GITHUB_ERROR_CODE,
+            message = "Username and repository name should be specified");
+            return connectorError;
+        }
+
+        http:Request request = new;
+        setHeader(request, self.accessToken);
+
+        string endpointResource = string `${PATH_SEPARATOR}${GIT_REPOS}${PATH_SEPARATOR}${username}${PATH_SEPARATOR}${repositoryName}${PATH_SEPARATOR}${GIT_ISSUES}${PATH_SEPARATOR}${issueNumber}`;
+        // Make an HTTP GET request
+        var response = self.githubRestClient->get(endpointResource, request);
+        // Check for empty payloads and errors
+        json|error validatedResponse =  getValidatedRestResponse(response);
+        
+        if(validatedResponse is error){
+            return validatedResponse;
+        }
+        else{
+            io:println(validatedResponse);
+
+            // FoundIssue issue = checkpanic validatedResponse.cloneWithType(FoundIssue);
+            FoundIssue issue = {};
+            return issue;
+        }
+        
+    }
+
+    # Update an issue in a repository.
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
+    # + issueNumber - Issue number
+    # + issueTitle - Title of the issue
+    # + issueContent - Details of the issue
+    # + labelList - List of labels for the issue
+    # + assigneeList - Users to be assigned to the issue
+    # + state - State of the issue. Either open or closed.
+    # + return - Created issue object or Connector error
+    remote function updateIssue(string repositoryOwner, string repositoryName, int issueNumber, string issueTitle,
+                                   string issueContent, string[] labelList, string[] assigneeList, string state)
+                           returns Issue|error {
+
+        if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING || issueTitle == EMPTY_STRING) {
+            error connectorError = error(GITHUB_ERROR_CODE,
+            message = "Repository name, owner and issue title should be specified");
+            return connectorError;
+        }
+
+        json[] jsonLabelList = [];
+        int i = 0;
+        foreach var label in labelList {
+            jsonLabelList[i] = label;
+            i = i + 1;
+        }
+
+        json[] jsonAssigneeList = [];
+        int j = 0;
+        foreach var assignee in assigneeList {
+            jsonAssigneeList[j] = assignee;
+            j = j + 1;
+        }
+
+        json issueJsonPayload = { "title": issueTitle, "body": issueContent, "labels": jsonLabelList,
+            "assignees": jsonAssigneeList, "state": state };
+
+        http:Request request = new;
+        setHeader(request, self.accessToken);
+        //Set headers and payload to the request
+        constructRequest(request, <@untainted> issueJsonPayload);
+
+        string endpointResource = string `${PATH_SEPARATOR}${GIT_REPOS}${PATH_SEPARATOR}${repositoryOwner}${PATH_SEPARATOR}${repositoryName}${PATH_SEPARATOR}${GIT_ISSUES}${PATH_SEPARATOR}${issueNumber}`;
+        // Make an HTTP POST request
+        var response = self.githubRestClient->patch(endpointResource, request);
+        
+        //Check for empty payloads and errors
+        json validatedResponse = check getValidatedRestResponse(response);
+        return restResponseJsonToIssue(validatedResponse);
+    }
+
+    # Updates a Pull request .
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
+    # + pullNumber - Pull request number
+    # + pullRequest - Update pull request record
+    # + return - Created issue object or Connector error
+    remote function updatePullRequest(string repositoryOwner, string repositoryName, int pullNumber, UpdatePullRequest pullRequest)
+                           returns PullRequest|error {
+
+        if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING) {
+            error connectorError = error(GITHUB_ERROR_CODE,
+            message = "Repository name, owner should be specified");
+            return connectorError;
+        }
+        
+        json updatePullRequestPayload = check pullRequest.cloneWithType(json);
+
+        http:Request request = new;
+        setHeader(request, self.accessToken);
+        //Set headers and payload to the request
+        constructRequest(request, <@untainted> updatePullRequestPayload);
+
+        string endpointResource = string `${PATH_SEPARATOR}${GIT_REPOS}${PATH_SEPARATOR}${repositoryOwner}${PATH_SEPARATOR}${repositoryName}${PATH_SEPARATOR}${GIT_PULLS}${PATH_SEPARATOR}${pullNumber}`;
+        // Make an HTTP POST request
+        var response = self.githubRestClient->patch(endpointResource, request);
+        //Check for empty payloads and errors
+        json validatedResponse = check getValidatedRestResponse(response);
+        io:println(validatedResponse);
+        return jsonToPullRequest(<map<json>>validatedResponse);
+        
+    }
+
 }
 
 # Represents the Github Client Connector Endpoint configuration.
