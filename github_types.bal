@@ -813,7 +813,6 @@ public type CreatePullRequestReview record {
 public type PullRequestReview record {
     int id=0;
     string node_id="";
-    // Creator user={};
     string body="";
     string state="";
     string html_url="";
@@ -821,6 +820,7 @@ public type PullRequestReview record {
     string submitted_at="";
     string commit_id="";
     string author_association="";
+    Creator user?;
 };
 
 public type PullRequestReviewSubmission record {
@@ -870,7 +870,7 @@ public type OrganizationMembership record {
     string organization_url;
 };
 
-public type FoundIssue record {
+public type IssueFound record {
     string id="";
     string url="";
     string repository_url="";

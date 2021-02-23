@@ -14,6 +14,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
+// import ballerina/io;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           GitHub Connector Transformers                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -583,26 +585,64 @@ isolated function jsonToPullRequest(map<json> response) returns PullRequest {
     if (pullRequestBaseRefName is json) {
         pullRequest["baseRefName"] = pullRequestBaseRefName.toString();    
     }
-
-    pullRequest["author"] = {
-        login: response["user"].login.toString(),
-        id: <int>response["user"].id,
-        node_id: response["user"].node_id.toString(),
-        avatar_url: response["user"].avatar_url.toString(),
-        url: response["user"].url.toString(),
-        html_url: response["user"].html_url.toString(),
-        followers_url: response["user"].followers_url.toString(),
-        following_url: response["user"].following_url.toString(),
-        gists_url: response["user"].gists_url.toString(),
-        starred_url: response["user"].starred_url.toString(),
-        subscriptions_url: response["user"].subscriptions_url.toString(),
-        organizations_url: response["user"].organizations_url.toString(),
-        repos_url: response["user"].repos_url.toString(),
-        events_url: response["user"].events_url.toString(),
-        received_events_url: response["user"].received_events_url.toString(),
-        'type: response["user"].'type.toString(),
-        site_admin: <boolean>response["user"].site_admin
-    };
+    pullRequest["author"] = jsonToUser(<map<json>>response["user"]);
 
     return pullRequest;
+}
+
+isolated function jsonToPullRequestReview(map<json> response) returns PullRequestReview {
+    PullRequestReview pullRequestReview = {};
+
+    pullRequestReview["id"] = <int>response["id"];
+    pullRequestReview["node_id"] = response["node_id"].toString();
+    pullRequestReview["body"] = response["body"].toString();
+    pullRequestReview["state"] = response["state"].toString();
+    pullRequestReview["html_url"] = response["html_url"].toString();
+    pullRequestReview["pull_request_url"] = response["pull_request_url"].toString();
+    pullRequestReview["submitted_at"] = response["submitted_at"].toString();
+    pullRequestReview["commit_id"] = response["commit_id"].toString();
+    pullRequestReview["author_association"] = response["author_association"].toString();
+    pullRequestReview["user"] = jsonToUser(<map<json>>response["user"]);
+
+    return pullRequestReview;
+}
+
+isolated function jsonToUser(map<json> response) returns Creator {
+    Creator user = {
+        login: response["login"].toString(),
+        id: <int>response["id"],
+        node_id: response["node_id"].toString(),
+        avatar_url: response["avatar_url"].toString(),
+        url: response["url"].toString(),
+        html_url: response["html_url"].toString(),
+        followers_url: response["followers_url"].toString(),
+        following_url: response["following_url"].toString(),
+        gists_url: response["gists_url"].toString(),
+        starred_url: response["starred_url"].toString(),
+        subscriptions_url: response["subscriptions_url"].toString(),
+        organizations_url: response["organizations_url"].toString(),
+        repos_url: response["repos_url"].toString(),
+        events_url: response["events_url"].toString(),
+        received_events_url: response["received_events_url"].toString(),
+        'type: response["type"].toString(),
+        site_admin: <boolean>response["site_admin"]
+    };
+
+    return user;
+}
+
+isolated function jsonToIssueFound(map<json> response) returns IssueFound {
+    return {
+        id: response["id"].toString(),
+        url: response["url"].toString(),
+        repository_url: response["repository_url"].toString(),
+        labels_url: response["labels_url"].toString(),
+        comments_url: response["comments_url"].toString(),
+        events_url: response["events_url"].toString(),
+        html_url: response["html_url"].toString(),
+        number: <int>response["number"],
+        state: response["state"].toString(),
+        title: response["title"].toString(),
+        body: response["body"].toString()
+    };
 }

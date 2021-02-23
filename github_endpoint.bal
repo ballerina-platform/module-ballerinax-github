@@ -1040,7 +1040,7 @@ public client class Client {
     # + pullRequestReviewComment - Pull request review comment create record
     # + return - Created issue object or Connector error
     remote function createPullRequestReview(string repositoryOwner, string repositoryName, int pullNumber , CreatePullRequestReview pullRequestReview)
-                           returns error? {
+                           returns PullRequestReview|error {
 
         if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING) {
             error connectorError = error(GITHUB_ERROR_CODE,
@@ -1061,17 +1061,8 @@ public client class Client {
         var response = self.githubRestClient->post(endpointResource, request);
         //Check for empty payloads and errors
         json validatedResponse = check getValidatedRestResponse(response);
-        io:println(validatedResponse);
 
-        PullRequestReview prr = validatedResponse.cloneWithType(PullRequestReview);
-        io:println("");
-        io:println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-        io:println(validatedResponse);
-        // io:println(prr);
-        io:println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-        io:println("");
-        
-        // return mapJsonToPullRequestReviewSubmission(validatedResponse);
+        return jsonToPullRequestReview(<map<json>>validatedResponse);
     }
 
 
@@ -1147,16 +1138,9 @@ public client class Client {
         // Make an HTTP POST request
         var response = self.githubRestClient->post(endpointResource, request);
         //Check for empty payloads and errors
-        json|error validatedResponse =  getValidatedRestResponse(response);
+        json validatedResponse = check getValidatedRestResponse(response);
         
-        if(validatedResponse is error){
-            io:println(validatedResponse);
-            return validatedResponse;
-        }else{
-            Gist gist = check validatedResponse.cloneWithType(Gist);
-            io:println(gist);
-            return gist;
-        }
+        return check validatedResponse.cloneWithType(Gist);
         
         
     }
@@ -1181,14 +1165,9 @@ public client class Client {
         // Make an HTTP POST request
         var response = self.githubRestClient->get(endpointResource, request);
         //Check for empty payloads and errors
-        json|error validatedResponse =  getValidatedRestResponse(response);
+        json validatedResponse = check getValidatedRestResponse(response);
         
-        if(validatedResponse is error){
-            return validatedResponse;
-        }else{
-            OrganizationMembership organizationMembership = check validatedResponse.cloneWithType(OrganizationMembership);
-            return organizationMembership;
-        }
+        return check validatedResponse.cloneWithType(OrganizationMembership);
         
     }
 
@@ -1212,15 +1191,10 @@ public client class Client {
         // Make an HTTP GET request
         var response = self.githubRestClient->get(endpointResource, request);
         //Check for empty payloads and errors
-        json|error validatedResponse =  getValidatedRestResponse(response);
+        json validatedResponse = check getValidatedRestResponse(response);
         
-        if(validatedResponse is error){
-            return validatedResponse;
-        }else{
-            User user = check validatedResponse.cloneWithType(User);
-            return user;
-        }
-        
+        return check validatedResponse.cloneWithType(User);
+            
     }
 
     # Find a Issue
@@ -1229,7 +1203,7 @@ public client class Client {
     # + issueNumber - Number of the issue which needs to retrieved
     # + return - Issue object or Connector error
     remote function getIssue(string username, string repositoryName, int issueNumber)
-                           returns FoundIssue|error {
+                           returns IssueFound|error {
 
         if (username == EMPTY_STRING || repositoryName == EMPTY_STRING) {
             error connectorError = error(GITHUB_ERROR_CODE,
@@ -1244,18 +1218,9 @@ public client class Client {
         // Make an HTTP GET request
         var response = self.githubRestClient->get(endpointResource, request);
         // Check for empty payloads and errors
-        json|error validatedResponse =  getValidatedRestResponse(response);
+        json validatedResponse = check getValidatedRestResponse(response);
         
-        if(validatedResponse is error){
-            return validatedResponse;
-        }
-        else{
-            io:println(validatedResponse);
-
-            // FoundIssue issue = checkpanic validatedResponse.cloneWithType(FoundIssue);
-            FoundIssue issue = {};
-            return issue;
-        }
+        return jsonToIssueFound(<map<json>>validatedResponse);
         
     }
 

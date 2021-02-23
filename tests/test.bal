@@ -573,7 +573,7 @@ function testGetIssue() {
     log:print("githubClient -> getIssue()");
 
     var response = githubClient->getIssue("MadhurangaWije","github-connector",158);
-    if (response is FoundIssue) {
+    if (response is IssueFound) {
         test:assertTrue(true);
     } else {
         test:assertFail(msg = response.message());
@@ -630,12 +630,12 @@ function testCreatePullRequestReview() {
     };
 
     var response = githubClient->createPullRequestReview("MadhurangaWije", "github-connector", 206, createPullRequestReview);
-    if (response is error) {
-        log:printError(response.toBalString());
-        test:assertFail(msg = response.message());
-    } else {
+    if (response is PullRequestReview) {
         log:print(response.toBalString());
         test:assertTrue(true);
+    } else {
+        log:printError(response.toBalString());
+        test:assertFail(msg = response.message());
     }
 }
 
