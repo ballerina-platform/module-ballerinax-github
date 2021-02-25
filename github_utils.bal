@@ -15,8 +15,8 @@
 // under the License.
 
 import ballerina/http;
-import ballerina/java;
-import ballerina/stringutils;
+import ballerina/regex;
+import ballerina/lang.'string as strings;
 
 # Construct the request by adding the payload and authorization tokens.
 # + request - HTTP request object
@@ -39,7 +39,7 @@ isolated function getValidatedResponse(http:Response|http:PayloadType|error resp
             payLoadKeys = mapJsonPayload.keys();
             //Check all the keys in the payload to see if an error is returned.
             foreach var key in payLoadKeys {
-                if (stringutils:equalsIgnoreCase(GIT_ERRORS, key)) {
+                if (strings:equalsIgnoreCaseAscii(GIT_ERRORS, key)) {
                     var errorList = mapJsonPayload[GIT_ERRORS];
                     if (errorList is json[]) {
                         int i = 0;
@@ -56,7 +56,7 @@ isolated function getValidatedResponse(http:Response|http:PayloadType|error resp
                     }
                 }
 
-                if (stringutils:equalsIgnoreCase(GIT_MESSAGE, key)) {
+                if (strings:equalsIgnoreCaseAscii(GIT_MESSAGE, key)) {
 
                     error err = error(GITHUB_ERROR_CODE, message = mapJsonPayload[GIT_MESSAGE].toString());
                     return err;
@@ -165,12 +165,11 @@ isolated function stringToJson(string src) returns json | error {
 # + index - Index of the string component which should be returned
 # + return - String component
 isolated function split(string receiver, string delimeter, int index) returns string {
-    string[] resultArray = stringutils:split(receiver, delimeter);
+    string[] resultArray = regex:split(receiver, delimeter);
     return resultArray[index];
 }
 
-function java_split(handle receiver, handle delimeter) returns handle = @java:Method {
-    name: "split",
-    'class: "java.lang.String"
-} external;
-
+// function java_split(handle receiver, handle delimeter) returns handle = @java:Method {
+//     name: "split",
+//     'class: "java.lang.String"
+// } external;

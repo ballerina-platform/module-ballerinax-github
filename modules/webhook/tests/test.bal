@@ -14,13 +14,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/config;
-import ballerina/http;
-import ballerina/oauth2;
-import ballerina/runtime;
+import ballerina/lang.runtime;
 import ballerina/test;
 import ballerina/websub;
 import ballerinax/github;
+import ballerina/io;
 
 boolean webhookRegistrationNotified = false;
 string webhookHookType = "";
@@ -37,60 +35,56 @@ string issueAssignee = "";
 boolean issueEditedNotified = false;
 Changes? issueChanges = ();
 
-listener Listener githubListener = new(8080);
+// listener Listener githubListener = new(8080);
+listener websub:Listener githubListener = new(8080);
 
-oauth2:DirectTokenConfig oauth2Config = {
-    accessToken: config:getAsString("ACCESS_TOKEN")
-};
-oauth2:OutboundOAuth2Provider oauth2Provider = new(oauth2Config);
-http:BearerAuthHandler bearerHandler = new(oauth2Provider);
+configurable string & readonly githubTopic = ?;
+configurable string & readonly githubSecret = ?;
+configurable string & readonly githubCallback = ?;
+configurable string & readonly testIssueAssignee = ?;
+configurable string & readonly testUserName = ?;
+configurable string & readonly accessToken = ?;
+
 
 @websub:SubscriberServiceConfig {
-    subscribeOnStartUp: true,
-    target: [HUB, config:getAsString("TOPIC_GITHUB")],
-    secret: config:getAsString("SECRET_GITHUB"),
-    callback: config:getAsString("CALLBACK_GITHUB"),
-    hubClientConfig: {
+    target: [HUB, githubTopic],
+    secret: githubSecret,
+    callback: githubCallback,
+    httpConfig: {
         auth: {
-            authHandler: bearerHandler
+            token: accessToken
         }
     }
 }
-service websub:SubscriberService /github on githubListener {
- remote function onPing(websub:Notification notification, PingEvent event) {
-     webhookRegistrationNotified = true;
-     webhookHookType = <@untainted> event.hook.'type;
- }
+service /github on githubListener {
 
- remote function onIssuesOpened(websub:Notification notification, IssuesEvent event) {
-     issueCreationNotified = true;
-     issueTitle = <@untainted> event.issue.title;
- }
+    isolated remote function onSubscriptionVerification(websub:SubscriptionVerification msg) returns websub:SubscriptionVerificationSuccess|websub:SubscriptionVerificationError {
+      // execute subscription verification action
+        io:println("on subscription verification");
+        io:println(msg);
+        websub:SubscriptionVerificationSuccess svs = {
+            headers: {
+                "Content-Encoding": "application/json"
+            },
+            body: {
+                "message": "Successfully processed request"
+            }
+        };
+        return svs;
+    }
 
- remote function onIssuesLabeled(websub:Notification notification, IssuesEvent event) {
-     issueLabeledNotified = true;
-     string receivedIssueLabels = "";
-     foreach Label label in event.issue.labels {
-         receivedIssueLabels += label.name;
-     }
-     issueLabels = <@untainted> receivedIssueLabels;
- }
+    remote function onEventNotification(websub:ContentDistributionMessage event) {
+      // execute event notification received action
+      io:println("on Event Notification");
+      io:println(event);
+      webhookRegistrationNotified = true;
+    }
 
- remote function onIssuesAssigned(websub:Notification notification, IssuesEvent event) {
-     issueAssignedNotified = true;
-     User assignee = <User> event.issue.assignee;
-     issueAssignee = <@untainted> assignee.login;
- }
-
- remote function onIssuesEdited(websub:Notification notification, IssuesEvent event) {
-     issueEditedNotified = true;
-     issueChanges = <@untainted> event["changes"];
- }
 }
 
 
 @test:Config {
-    enable:false
+    enable:true
 }
 function testWebhookRegistration() {
     int counter = 10;
@@ -103,24 +97,23 @@ function testWebhookRegistration() {
     test:assertEquals(webhookHookType, "Repository", msg = "expected a repository hook to be added");
 }
 
-string createdIssueUsername = config:getAsString("GITHUB_USERNAME");
-string createdIssueRepoName = config:getAsString("REPO_NAME");
+
 string createdIssueTitle = "This is a test issue";
 string[] createdIssueLabelArray = ["bug", "critical"];
-string createdIssueAssignee = createdIssueUsername;
+string createdIssueAssignee = testIssueAssignee;
 
 @test:Config {
-    dependsOn: ["testWebhookRegistration"],
+    dependsOn: [testWebhookRegistration],
     enable:false
 }
 function testWebhookNotificationOnIssueCreation() {
     github:GitHubConfiguration gitHubConfig = {
-        accessToken: config:getAsString("ACCESS_TOKEN")
+        accessToken: accessToken
     };
 
     github:Client githubClient = new (gitHubConfig);
 
-    var issueCreationStatus = githubClient->createIssue(createdIssueUsername, "github-connector", createdIssueTitle,
+    var issueCreationStatus = githubClient->createIssue(testUserName, "github-connector", createdIssueTitle,
                                          "This is the body of the test issue: webhook", createdIssueLabelArray,
                                          [createdIssueAssignee]);
     if (issueCreationStatus is error) {
@@ -137,7 +130,7 @@ function testWebhookNotificationOnIssueCreation() {
 }
 
 @test:Config {
-    dependsOn: ["testWebhookNotificationOnIssueCreation"],
+    dependsOn: [testWebhookNotificationOnIssueCreation],
     enable:false
 }
 function testWebhookNotificationOnIssueLabeling() {
@@ -150,7 +143,7 @@ function testWebhookNotificationOnIssueLabeling() {
 }
 
 @test:Config {
-    dependsOn: ["testWebhookNotificationOnIssueCreation"],
+    dependsOn: [testWebhookNotificationOnIssueCreation],
     enable:false
 }
 function testWebhookNotificationOnIssueAssignment() {
@@ -159,7 +152,7 @@ function testWebhookNotificationOnIssueAssignment() {
 }
 
 @test:Config {
-    dependsOn: ["testWebhookNotificationOnIssueCreation"],
+    dependsOn: [testWebhookNotificationOnIssueCreation],
     enable: false // Disable the test as ballerinax/github module hasn't any function to edit the issue
 }
 function testWebhookNotificationOnIssueEdited() {

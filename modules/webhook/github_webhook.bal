@@ -35,30 +35,24 @@ public class Listener {
 
     public function init(int port, WebhookListenerConfiguration? config = ()) {
         self.webhookListenerConfig = config;
-        websub:ExtensionConfig extensionConfig = {
-            topicIdentifier: websub: TOPIC_ID_HEADER_AND_PAYLOAD,
-            topicHeader: TOPIC_HEADER,
-            headerResourceMap: GITHUB_TOPIC_HEADER_RESOURCE_MAP,
-            headerAndPayloadKeyResourceMap: GITHUB_TOPIC_HEADER_AND_PAYLOAD_KEY_RESOURCE_MAP
-        };
-        websub:SubscriberListenerConfiguration slConfig = {
-            extensionConfig: extensionConfig
-        };
+
+        http:ListenerConfiguration listenerConfig = {};
+
         if (config is WebhookListenerConfiguration) {
-            string? specHost = config["host"];
+            string? specHost = listenerConfig["host"];
             if (specHost is string) {
-                slConfig.host = specHost;
+                listenerConfig.host = specHost;
             }
-            slConfig.httpServiceSecureSocket = config["httpServiceSecureSocket"];
+            listenerConfig.secureSocket = config["secureSocket"];
         }
-        self.websubListener = new (port, slConfig);
+        self.websubListener = checkpanic new (port, listenerConfig);
     }
 
-    public isolated function attach(service object {} s, string[]|string? name = ()) returns error? {
+    public function attach(service object {} s, string[]|string? name = ()) returns error? {
         return self.websubListener.attach(s, name);
     }
 
-    public isolated  function detach(service object {} s) returns error? {
+    public  function detach(service object {} s) returns error? {
         return self.websubListener.detach(s);
     }
 
@@ -66,11 +60,11 @@ public class Listener {
         return self.websubListener.'start();
     }
 
-    public isolated  function gracefulStop() returns error? {
+    public function gracefulStop() returns error? {
         return self.websubListener.gracefulStop();
     }
 
-    public isolated  function immediateStop() returns error? {
+    public function immediateStop() returns error? {
         return self.websubListener.immediateStop();
     }
 }
@@ -81,7 +75,7 @@ public class Listener {
 # + httpServiceSecureSocket - The SSL configurations for the listener
 public type WebhookListenerConfiguration record {|
     string host?;
-    http:ListenerSecureSocket httpServiceSecureSocket?;
+    http:ListenerSecureSocket secureSocket?;
 |};
 
 final map<[string,typedesc<record {}>]> GITHUB_TOPIC_HEADER_RESOURCE_MAP = {

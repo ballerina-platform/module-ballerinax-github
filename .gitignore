@@ -43,3 +43,5 @@ target/
 
 # Ignore resource .json files
 **/resources/*.json
+
+Config.toml
