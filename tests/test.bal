@@ -482,7 +482,6 @@ function testCreatePullRequest() {
 
     var response = githubClient->createPullRequest("MadhurangaWije", "github-connector",createPullRequest);
     if (response is PullRequest) {
-        log:print(response.toBalString());
         test:assertTrue(true);
     } else {
         log:printError(response.toBalString());
@@ -508,7 +507,6 @@ function testCreatePullRequestReviewComment() {
     var response = githubClient->createPullRequestReviewComment("MadhurangaWije", "github-connector", 206, createPullRequestReviewComment);
 
     if (response is PullRequestReviewComment) {
-        log:print(response.toBalString());
         test:assertTrue(true);
     } else {
         log:printError(response.toBalString());
@@ -637,7 +635,6 @@ function testUpdatePullRequest() {
 
     var response = githubClient->updatePullRequest("MadhurangaWije", "github-connector", 165, pullRequestUpdate);
     if (response is PullRequest) {
-        log:print(response.toBalString());
         test:assertTrue(true);
     } else {
         log:printError(response.toBalString());
@@ -659,7 +656,6 @@ function testCreatePullRequestReview() {
 
     var response = githubClient->createPullRequestReview("MadhurangaWije", "github-connector", 206, createPullRequestReview);
     if (response is PullRequestReview) {
-        log:print(response.toBalString());
         test:assertTrue(true);
     } else {
         log:printError(response.toBalString());
