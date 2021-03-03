@@ -526,7 +526,23 @@ public class IssueList {
 # + login - Username of the creator
 # + resourcePath - HTTP path of the creator
 # + url - HTTP URL of the creator
-# + avatarUrl - HTTP URL of the public avatar of the creator
+# + avatarUrl - Url of the user avatar
+# + resource_path - HTTP path of the creator
+# + id - creator ID
+# + node_id - Node ID
+# + html_url - HTML URL for the creator
+# + followers_url - Followers URL
+# + following_url - Following URL
+# + gists_url - URL for Gists
+# + starred_url - Starred URL
+# + subscriptions_url - Subscription URL
+# + organizations_url - Organizations URl
+# + repos_url - Repositories URL
+# + events_url - Events URL
+# + received_events_url - Received events URL
+# + type - Type of the creator
+# + site_admin - Whether the creator is a site admin
+# + avatar_url - HTTP URL of the public avatar of the creator
 public type Creator record {
     string login = "";
     string? resourcePath = "";

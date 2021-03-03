@@ -695,24 +695,27 @@ isolated function jsonToRepository(json source_json) returns (Repository) {
         target_repository.sshUrl = repositorySshUrl.toString();
     }
     // target_repository.sshUrl = source_json.sshUrl.toString();
-    if (source_json.owner == null) {
-        target_repository.owner = {};
-    } else {
-        var owner = source_json.owner;
-        if (owner is json) {
+    var owner = source_json.owner;
+    if (owner is json) {
+        if (owner == null) {
+            target_repository.owner = {};
+        } else {
             var result = owner.cloneWithType(RepositoryOwner);
             if (result is RepositoryOwner) {
                 target_repository.owner = result;
             }
         }
     }
-    if (source_json.primaryLanguage == null) {
-        target_repository.primaryLanguage = {};
-    } else {
-        json nodes_filtered = checkpanic source_json.primaryLanguage;
-        var result = nodes_filtered.cloneWithType(Language);
-        if (result is Language) {
-            target_repository.primaryLanguage = result;
+    var primaryLanguage = source_json.primaryLanguage;
+    if (primaryLanguage is json) {
+        if (primaryLanguage == null) {
+            target_repository.primaryLanguage = {};
+        } else {
+            // json nodes_filtered = checkpanic source_json.primaryLanguage;
+            var result = primaryLanguage.cloneWithType(Language);
+            if (result is Language) {
+                target_repository.primaryLanguage = result;
+            }
         }
     }
     var count = source_json.stargazers.totalCount;

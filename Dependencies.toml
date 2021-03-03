@@ -1,0 +1,36 @@
+[[dependency]]
+org = "ballerina"
+name = "observe"
+version = "0.9.0"
+
+[[dependency]]
+org = "ballerina"
+name = "io"
+version = "0.6.0-alpha5"
+
+[[dependency]]
+org = "ballerina"
+name = "regex"
+version = "0.7.0-alpha5"
+
+[[dependency]]
+org = "ballerinai"
+name = "observe"
+version = "0.9.0"
+
+[[dependency]]
+org = "ballerina"
+name = "lang.string"
+version = "1.1.0"
+
+[[dependency]]
+org = "ballerina"
+name = "websub"
+version = "1.2.0-alpha5"
+
+[[dependency]]
+org = "ballerina"
+name = "http"
+version = "1.1.0-alpha5"
+
+

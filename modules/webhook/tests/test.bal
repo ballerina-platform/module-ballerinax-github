@@ -18,7 +18,7 @@ import ballerina/lang.runtime;
 import ballerina/test;
 import ballerina/websub;
 import ballerinax/github;
-import ballerina/io;
+import ballerina/log;
 
 boolean webhookRegistrationNotified = false;
 string webhookHookType = "";
@@ -35,8 +35,9 @@ string issueAssignee = "";
 boolean issueEditedNotified = false;
 Changes? issueChanges = ();
 
-// listener Listener githubListener = new(8080);
-listener websub:Listener githubListener = new(8080);
+int createdIssueNumber = -1;
+
+listener Listener githubListener = new(8080);
 
 configurable string & readonly githubTopic = ?;
 configurable string & readonly githubSecret = ?;
@@ -44,7 +45,6 @@ configurable string & readonly githubCallback = ?;
 configurable string & readonly testIssueAssignee = ?;
 configurable string & readonly testUserName = ?;
 configurable string & readonly accessToken = ?;
-
 
 @websub:SubscriberServiceConfig {
     target: [HUB, githubTopic],
@@ -56,29 +56,42 @@ configurable string & readonly accessToken = ?;
         }
     }
 }
-service /github on githubListener {
-
-    isolated remote function onSubscriptionVerification(websub:SubscriptionVerification msg) returns websub:SubscriptionVerificationSuccess|websub:SubscriptionVerificationError {
-      // execute subscription verification action
-        io:println("on subscription verification");
-        io:println(msg);
-        websub:SubscriptionVerificationSuccess svs = {
-            headers: {
-                "Content-Encoding": "application/json"
-            },
-            body: {
-                "message": "Successfully processed request"
+service /subscriber on githubListener {
+      remote function onEventNotification(websub:ContentDistributionMessage event) {
+            var payload = githubListener.getEventType(event);
+            if(payload is PingEvent) {
+                webhookRegistrationNotified = true;
+                webhookHookType = <@untainted> payload.hook.'type;
+            }else if (payload is IssuesEvent) {
+                if (payload.action == ISSUE_OPENED) {
+                    log:print("Issue opened");
+                    issueCreationNotified = true;
+                    issueTitle = <@untainted> payload.issue.title;
+                }else if (payload.action == ISSUE_LABELED) {
+                    log:print("Issue labeled");
+                    issueLabeledNotified = true;
+                    string receivedIssueLabels = "";
+                    foreach Label label in payload.issue.labels {
+                        receivedIssueLabels += label.name;
+                    }
+                    issueLabels = <@untainted> receivedIssueLabels;
+                }else if (payload.action == ISSUE_ASSIGNED) {
+                    log:print("Issue assigned");
+                    issueAssignedNotified = true;
+                    User assignee = <User> payload.issue.assignee;
+                    issueAssignee = <@untainted> assignee.login;
+                }else if (payload.action == ISSUE_EDITED) {
+                    log:print("Issue edited");
+                    issueEditedNotified = true;
+                    issueChanges = <@untainted> payload["changes"];
+                }
+            }else if (payload is PushEvent) {
+                log:print("Push Event Received");
+                log:print("Commits: ", commits = payload.commits);
             }
-        };
-        return svs;
-    }
+      }
 
-    remote function onEventNotification(websub:ContentDistributionMessage event) {
-      // execute event notification received action
-      io:println("on Event Notification");
-      io:println(event);
-      webhookRegistrationNotified = true;
-    }
+      
 
 }
 
@@ -89,7 +102,7 @@ service /github on githubListener {
 function testWebhookRegistration() {
     int counter = 10;
     while (!webhookRegistrationNotified && counter >= 0) {
-        runtime:sleep(1000);
+        runtime:sleep(1);
         counter -= 1;
     }
     test:assertTrue(webhookRegistrationNotified,
@@ -99,12 +112,13 @@ function testWebhookRegistration() {
 
 
 string createdIssueTitle = "This is a test issue";
+string updatedIssueTitle = "Updated Issue Title";
 string[] createdIssueLabelArray = ["bug", "critical"];
 string createdIssueAssignee = testIssueAssignee;
 
 @test:Config {
     dependsOn: [testWebhookRegistration],
-    enable:false
+    enable: true
 }
 function testWebhookNotificationOnIssueCreation() {
     github:GitHubConfiguration gitHubConfig = {
@@ -113,16 +127,18 @@ function testWebhookNotificationOnIssueCreation() {
 
     github:Client githubClient = new (gitHubConfig);
 
-    var issueCreationStatus = githubClient->createIssue(testUserName, "github-connector", createdIssueTitle,
+    var issueCreationPayload = githubClient->createIssue(testUserName, "github-connector", createdIssueTitle,
                                          "This is the body of the test issue: webhook", createdIssueLabelArray,
                                          [createdIssueAssignee]);
-    if (issueCreationStatus is error) {
-        test:assertFail(msg = "Issue creation failed: " + issueCreationStatus.message());
+    if (issueCreationPayload is error) {
+        test:assertFail(msg = "Issue creation failed: " + issueCreationPayload.message());
+    }else {
+        createdIssueNumber = issueCreationPayload.number;
     }
 
     int counter = 10;
     while (!issueCreationNotified && counter >= 0) {
-        runtime:sleep(1000);
+        runtime:sleep(1);
         counter -= 1;
     }
     test:assertTrue(issueCreationNotified, msg = "expected an issue creation notification");
@@ -131,7 +147,7 @@ function testWebhookNotificationOnIssueCreation() {
 
 @test:Config {
     dependsOn: [testWebhookNotificationOnIssueCreation],
-    enable:false
+    enable: false
 }
 function testWebhookNotificationOnIssueLabeling() {
     string createdIssueLabelString = "";
@@ -144,7 +160,7 @@ function testWebhookNotificationOnIssueLabeling() {
 
 @test:Config {
     dependsOn: [testWebhookNotificationOnIssueCreation],
-    enable:false
+    enable: true
 }
 function testWebhookNotificationOnIssueAssignment() {
     test:assertTrue(issueAssignedNotified, msg = "expected an issue assigned notification");
@@ -153,11 +169,27 @@ function testWebhookNotificationOnIssueAssignment() {
 
 @test:Config {
     dependsOn: [testWebhookNotificationOnIssueCreation],
-    enable: false // Disable the test as ballerinax/github module hasn't any function to edit the issue
+    enable: true 
 }
-function testWebhookNotificationOnIssueEdited() {
-    test:assertTrue(issueEditedNotified, msg = "expected an issue edited notification");
-    if (issueChanges is ()) {
-        test:assertFail(msg = "expected `issueChanges` to not be `()`");
+function testWebhookNotificationOnIssueEdited() returns error? {
+
+    github:GitHubConfiguration gitHubConfig = {
+        accessToken: accessToken
+    };
+
+    github:Client githubClient = new (gitHubConfig);
+
+    var updatedIssue = githubClient->updateIssue(testIssueAssignee, "github-connector", createdIssueNumber,
+    updatedIssueTitle, "This is the body of the test issue updated", ["bug", "critical"], [testIssueAssignee], "open");
+    if (updatedIssue is error) {
+        test:assertFail(msg = "Issue edit failed: "+updatedIssue.message());
     }
+
+    int counter = 10;
+    while (!issueEditedNotified && counter >= 0) {
+        runtime:sleep(1);
+        counter -= 1;
+    }
+    test:assertTrue(issueEditedNotified, msg = "expected an issue edited notification");
+
 }

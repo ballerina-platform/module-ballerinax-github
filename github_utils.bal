@@ -168,8 +168,3 @@ isolated function split(string receiver, string delimeter, int index) returns st
     string[] resultArray = regex:split(receiver, delimeter);
     return resultArray[index];
 }
-
-// function java_split(handle receiver, handle delimeter) returns handle = @java:Method {
-//     name: "split",
-//     'class: "java.lang.String"
-// } external;

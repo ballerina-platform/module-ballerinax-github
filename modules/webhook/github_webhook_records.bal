@@ -532,7 +532,7 @@ public type IssueCommentEvent record {|
 |};
 
 public type IssuesEvent record {|
-    string action;
+    IssuesActions action;
     Issue issue;
     Changes changes?;
     Label label?;
@@ -626,3 +626,63 @@ public type PingEvent record {|
     Repository repository;
     User sender;
 |};
+
+public type GitHubEvent PingEvent|WatchEvent|ReleaseEvent|PushEvent|PullRequestReviewCommentEvent|PullRequestReviewEvent|PullRequestEvent|ForkEvent|IssueCommentEvent|IssuesEvent|LabelEvent|MilestoneEvent;
+
+public enum IssuesActions {
+    ISSUE_OPENED = "opened",
+    ISSUE_ASSIGNED = "assigned",
+    ISSUE_UNASSIGNED = "unassigned",
+    ISSUE_LABELED = "labeled",
+    ISSUE_UNLABELED = "unlabeled",
+    ISSUE_EDITED = "edited",
+    ISSUE_MILESTONED = "milestoned",
+    ISSUE_DEMILESTONED = "demilestoned",
+    ISSUE_CLOSED = "closed",
+    ISSUE_REOPENED = "reopened"
+}
+
+public enum LabelActions {
+    LABEL_CREATED = "created",
+    LABEL_EDITED = "edited",
+    LABEL_DELETED = "deleted"
+}
+
+public enum IssueCommentActions {
+    ISSUE_COMMENT_CREATED = "created",
+    ISSUE_COMMENT_EDITED = "edited",
+    ISSUE_COMMENT_DELETED = "deleted"
+}
+
+public enum MilestoneActions {
+    MILESTONE_CREATED = "created",
+    MILESTONE_CLOSED = "closed",
+    MILESTONE_OPENED = "opened",
+    MILESTONE_EDITED = "edited",
+    MILESTONE_DELETED = "deleted"
+}
+
+public enum PullRequestActions {
+    PULL_REQUEST_ASSIGNED = "assigned",
+    PULL_REQUEST_UNASSIGNED = "unassigned",
+    PULL_REQUEST_REVIEW_REQUESTED = "review_requested",
+    PULL_REQUEST_REVIEW_REQUEST_REMOVED = "review_request_removed",
+    PULL_REQUEST_LABELED = "labeled",
+    PULL_REQUEST_UNLABELED = "unlabeled",
+    PULL_REQUEST_OPENED = "opened",
+    PULL_REQUEST_EDITED = "edited",
+    PULL_REQUEST_CLOSED = "closed",
+    PULL_REQUEST_REOPENED = "reopened"
+}
+
+public enum PullRequestReviewActions {
+    PULL_REQUEST_REVIEW_SUBMITTED = "submitted",
+    PULL_REQUEST_REVIEW_EDITED = "edited",
+    PULL_REQUEST_REVIEW_DISMISSED = "dismissed"
+}
+
+public enum PullRequestReviewCommentActions {
+    PULL_REQUEST_REVIEW_COMMENT_CREATED = "created",
+    PULL_REQUEST_REVIEW_COMMENT_EDITED = "edited",
+    PULL_REQUEST_REVIEW_COMMENT_DELETED = "deleted"
+}

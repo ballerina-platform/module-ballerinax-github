@@ -35,7 +35,7 @@ public client class Client {
 
     # Get authenticated User
     # 
-    # + return User object or Connector error
+    # + return - User object or Connector error
     remote function getAuthenticatedUser() returns User|error {
         string path = PATH_SEPARATOR + GIT_USER;
         http:Request request = new;
@@ -1036,9 +1036,7 @@ public client class Client {
     # + repositoryOwner - Repository owner name
     # + repositoryName - Repository name
     # + pullNumber - Pull request number
-    # + reviewId - Pull request review ID
-    # + pullRequestReviewComment - Pull request review comment create record
-    # + return - Created issue object or Connector error
+    # + return - Created PullRequestReview object or Connector error
     remote function createPullRequestReview(string repositoryOwner, string repositoryName, int pullNumber , CreatePullRequestReview pullRequestReview)
                            returns PullRequestReview|error {
 
@@ -1070,8 +1068,8 @@ public client class Client {
     # Delete a brach
     # + repositoryOwner - Repository owner name
     # + repositoryName - Repository name
-    # + ref - Reference to the branch to delete
-    # + return - Created issue object or Connector error
+    # + branchName - Name of the branch to delete
+    # + return - An error if operation failed.
     remote function deleteBranch(string repositoryOwner, string repositoryName, string branchName)
                            returns error? {
 
@@ -1101,11 +1099,9 @@ public client class Client {
         
     }
 
-    # Delete a brach
-    # + repositoryOwner - Repository owner name
-    # + repositoryName - Repository name
-    # + ref - Reference to the branch to delete
-    # + return - Created issue object or Connector error
+    # Create a Gist
+    # + createGist - Gist create request payload
+    # + return - Created Gist object or Connector error
     remote function createGist(CreateGist createGist)
                            returns Gist|error {
 
@@ -1148,7 +1144,7 @@ public client class Client {
     # Check Organization Membership
     # + organization - Name of the organization
     # + username - GitHub username of the member
-    # + return - Created issue object or Connector error
+    # + return - OrganizationMembership object or Connector error
     remote function getOrganizationUserMembership(string organization ,string username)
                            returns OrganizationMembership|error {
 
@@ -1172,9 +1168,8 @@ public client class Client {
     }
 
     # Find a user
-    # + organization - Name of the organization
     # + username - GitHub username of the member
-    # + return - Created issue object or Connector error
+    # + return - User object or Connector error
     remote function getUser(string username)
                            returns User|error {
 
