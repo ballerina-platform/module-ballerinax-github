@@ -994,7 +994,6 @@ public client class Client {
         var response = self.githubRestClient->post(endpointResource, request);
         //Check for empty payloads and errors
         json validatedResponse = check getValidatedRestResponse(response);
-        io:println(validatedResponse);
         return jsonToPullRequest(<map<json>>validatedResponse);
         
     }
@@ -1026,7 +1025,6 @@ public client class Client {
         var response = self.githubRestClient->post(endpointResource, request);
         //Check for empty payloads and errors
         json validatedResponse = check getValidatedRestResponse(response);
-        io:println(validatedResponse);
         // return jsonToPullRequestReviewComment(<map<json>>validatedResponse);
         return check validatedResponse.cloneWithType(PullRequestReviewComment);
         
@@ -1083,7 +1081,6 @@ public client class Client {
         setHeader(request, self.accessToken);
 
         string endpointResource = string `${PATH_SEPARATOR}${GIT_REPOS}${PATH_SEPARATOR}${repositoryOwner}${PATH_SEPARATOR}${repositoryName}${PATH_SEPARATOR}${GIT}${PATH_SEPARATOR}${GIT_BRANCH_REF_PREFIX}${branchName}`;
-        io:println(endpointResource);
         // Make an HTTP DELETE request
         var response = self.githubRestClient->delete(endpointResource, request);
         
@@ -1297,7 +1294,6 @@ public client class Client {
         var response = self.githubRestClient->patch(endpointResource, request);
         //Check for empty payloads and errors
         json validatedResponse = check getValidatedRestResponse(response);
-        io:println(validatedResponse);
         return jsonToPullRequest(<map<json>>validatedResponse);
         
     }
