@@ -31,19 +31,19 @@ jobs:
                 GITHUB_USERNAME: ${{ secrets.USERNAME }}
               run: |
                  ./gradlew build
-#            - name: Ballerina Build
-#              uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
-#              with:
-#                  args:
-#                      build -c
-#              env:
-#                  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-#                  ORG_NAME: ${{ secrets.ORG_NAME }}
-#                  REPO_NAME: ${{ secrets.REPO_NAME }}
-#                  ASSIGNEE: ${{ secrets.ASSIGNEE }}
-#                  RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
-#                  JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
-#                  GITHUB_TOPIC: ${{ secrets.TOPIC }}
-#                  GITHUB_SECRET: ${{ secrets.SECRET }}
-#                  GITHUB_CALLBACK: ${{ secrets.CALLBACK }}
-#                  GITHUB_USERNAME: ${{ secrets.USERNAME }}
+            - name: Ballerina Build
+              uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
+              with:
+                  args:
+                      build -c
+              env:
+                  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+                  ORG_NAME: ${{ secrets.ORG_NAME }}
+                  REPO_NAME: ${{ secrets.REPO_NAME }}
+                  ASSIGNEE: ${{ secrets.ASSIGNEE }}
+                  RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
+                  JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
+                  GITHUB_TOPIC: ${{ secrets.TOPIC }}
+                  GITHUB_SECRET: ${{ secrets.SECRET }}
+                  GITHUB_CALLBACK: ${{ secrets.CALLBACK }}
+                  GITHUB_USERNAME: ${{ secrets.USERNAME }}

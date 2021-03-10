@@ -130,59 +130,59 @@ task revertTomlFile {
 
 
 
-task ballerinaBuild {
-    inputs.dir file(project.projectDir)
-
-    doLast {
-        // Build and populate caches
-        exec {
-            workingDir project.projectDir
-            environment "JAVA_OPTS", "-DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true"
-            if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-                commandLine 'cmd', '/c', "$balJavaDebugParam $distributionBinPath/bal.bat build ${debugParams} && exit %%ERRORLEVEL%%"
-            } else {
-//                commandLine 'sh', '-c', "bal build ${debugParams}"
-                commandLine 'sh', '-c', "$balJavaDebugParam $distributionBinPath/bal build ${debugParams}"
-            }
-        }
-        copy {
-            from file("$project.projectDir/target/bala")
-            into file("$artifactCacheParent/bala/${packageOrg}/${packageName}/${tomlVersion}")
-        }
-        copy {
-            from file("$project.projectDir/target/cache")
-            exclude '**/*-testable.jar'
-            exclude '**/tests_cache/'
-            into file("$artifactCacheParent/cache/")
-        }
-
-        // Doc creation and packing
-        exec {
-            workingDir project.projectDir
-            environment "JAVA_OPTS", "-DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true"
-            if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-                commandLine 'cmd', '/c', "$distributionBinPath/bal.bat doc && exit %%ERRORLEVEL%%"
-            } else {
-                commandLine 'sh', '-c', "$distributionBinPath/bal doc"
-            }
-        }
-        copy {
-            from file("$project.projectDir/target/apidocs/${packageName}")
-            into file("$project.projectDir/build/docs_parent/docs/${packageName}")
-        }
-    }
-
-    outputs.dir artifactCacheParent
-    outputs.dir artifactBallerinaDocs
-    outputs.dir artifactLibParent
-}
+//task ballerinaBuild {
+//    inputs.dir file(project.projectDir)
+//
+//    doLast {
+//        // Build and populate caches
+//        exec {
+//            workingDir project.projectDir
+//            environment "JAVA_OPTS", "-DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true"
+//            if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+//                commandLine 'cmd', '/c', "$balJavaDebugParam $distributionBinPath/bal.bat build ${debugParams} && exit %%ERRORLEVEL%%"
+//            } else {
+////                commandLine 'sh', '-c', "bal build ${debugParams}"
+//                commandLine 'sh', '-c', "$balJavaDebugParam $distributionBinPath/bal build ${debugParams}"
+//            }
+//        }
+//        copy {
+//            from file("$project.projectDir/target/bala")
+//            into file("$artifactCacheParent/bala/${packageOrg}/${packageName}/${tomlVersion}")
+//        }
+//        copy {
+//            from file("$project.projectDir/target/cache")
+//            exclude '**/*-testable.jar'
+//            exclude '**/tests_cache/'
+//            into file("$artifactCacheParent/cache/")
+//        }
+//
+//        // Doc creation and packing
+//        exec {
+//            workingDir project.projectDir
+//            environment "JAVA_OPTS", "-DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true"
+//            if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+//                commandLine 'cmd', '/c', "$distributionBinPath/bal.bat doc && exit %%ERRORLEVEL%%"
+//            } else {
+//                commandLine 'sh', '-c', "$distributionBinPath/bal doc"
+//            }
+//        }
+//        copy {
+//            from file("$project.projectDir/target/apidocs/${packageName}")
+//            into file("$project.projectDir/build/docs_parent/docs/${packageName}")
+//        }
+//    }
+//
+//    outputs.dir artifactCacheParent
+//    outputs.dir artifactBallerinaDocs
+//    outputs.dir artifactLibParent
+//}
 
 
 unpackJballerinaTools.dependsOn copyToLib
 unpackStdLibs.dependsOn unpackJballerinaTools
 
-ballerinaBuild.dependsOn ":java-wrapper:build"
-ballerinaBuild.dependsOn updateTomlFile
-ballerinaBuild.dependsOn initializeVariables
-ballerinaBuild.finalizedBy revertTomlFile
-build.dependsOn ballerinaBuild
+//ballerinaBuild.dependsOn ":java-wrapper:build"
+//ballerinaBuild.dependsOn updateTomlFile
+//ballerinaBuild.dependsOn initializeVariables
+//ballerinaBuild.finalizedBy revertTomlFile
+//build.dependsOn ballerinaBuild
