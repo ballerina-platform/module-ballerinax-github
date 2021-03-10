@@ -141,7 +141,8 @@ task ballerinaBuild {
             if (Os.isFamily(Os.FAMILY_WINDOWS)) {
                 commandLine 'cmd', '/c', "$balJavaDebugParam $distributionBinPath/bal.bat build ${debugParams} && exit %%ERRORLEVEL%%"
             } else {
-                commandLine 'sh', '-c', "/home/kanishka/ballerina/ballerina-swan-lake-alpha2/bin/bal build ${debugParams}"
+//                commandLine 'sh', '-c', "bal build ${debugParams}"
+                commandLine 'sh', '-c', "$balJavaDebugParam $distributionBinPath/bal build ${debugParams}"
             }
         }
         copy {
@@ -162,7 +163,7 @@ task ballerinaBuild {
             if (Os.isFamily(Os.FAMILY_WINDOWS)) {
                 commandLine 'cmd', '/c', "$distributionBinPath/bal.bat doc && exit %%ERRORLEVEL%%"
             } else {
-                commandLine 'sh', '-c', "/home/kanishka/ballerina/ballerina-swan-lake-alpha2/bin/bal doc"
+                commandLine 'sh', '-c', "$distributionBinPath/bal doc"
             }
         }
         copy {
