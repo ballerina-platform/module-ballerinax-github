@@ -34,8 +34,7 @@ sections explains how to use Ballerina GitHub connector. You can refer the [GitH
 
 * GitHub Account
 
-* Ballerina SL Alpha2 Installed
-  Ballerina Swan Lake Alpha2 Version is required.
+* Ballerina Swan Lake Alpha2 Installed
 
 * [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) or [GitHub OAuth App token](https://docs.github.com/en/developers/apps/creating-an-oauth-app).
 
@@ -66,11 +65,11 @@ This file should have following configurations. Add the tokens obtained in the p
 ```
 [ballerinax.github]
 accessToken = "<access_token>"
-testUserName = "<>"
-testRepositoryName = "<>"
-testIssueAssignee = "<>"
-testResourcePath = "<>"
-testOrganizationName = "<>"
+testUserName = "<github_username>"
+testRepositoryName = "<github_repository>"
+testIssueAssignee = "<github_issue_assignee>"
+testResourcePath = "<github_resource_path>"
+testOrganizationName = "<github_organization_name>"
 ```
 
 #### For listener operations
@@ -87,12 +86,12 @@ testResourcePath = "<github_resource_path>"
 testOrganizationName = "<github_organization_name>"
 ```
 
-## Get Issue List.
+## Client Side Operation Example: Get Issue List.
 
-In an occation when we need to obtain the list of isssues associated with a repository, we can use the `getIssues`
+In an occasion when we need to obtain the list of isssues associated with a repository, we can use the `getIssues`
 
 ### Step 1: Import the GitHub ballerina library.
-First, import the ballerinax/github module into a ballerina project.
+First, import the `ballerinax/github` module into a ballerina project.
 ```ballerina
     import ballerinax/github;
 ```
@@ -142,6 +141,52 @@ Initialize variables with suitable values which needs to be passed as arguments 
 ```
 
 
+## Listener Side Operation Example: On one or more commits are pushed to a repository branch or tag.
+
+### Step 1: Import the GitHub Webhook ballerina library.
+First, import the `ballerinax/github.webhook` module and `ballerina/websub` module into a ballerina project.
+```ballerina
+    import ballerina/websub;
+    import ballerinax/github.webhook as github;
+```
+
+### Step 2: Initialize the GitHub Webhook Listener.
+Initialize the Webhook Listener by providing the port number.
+
+```ballerina
+    listener github:Listener webhookListener = new (9090);
+```
+
+### Step 3: Annotate the service with websub:SubscriberServiceConfig.
+Annotate the service with `websub:SubscriberServiceConfig` providing necessary properties.
+
+```ballerina
+@websub:SubscriberServiceConfig {
+    target: [github:HUB, githubTopic],
+    secret: githubSecret,
+    callback: githubCallback,
+    httpConfig: {
+        auth: {
+            token: accessToken
+        }
+    }
+}
+service /subscriber on webhookListener {
+   
+}
+```
+
+### Step 4: Provide remote functions corresponding to the events which you are interested on.
+
+```ballerina
+    remote function onPush(github:PushEvent event) returns github:Acknowledgement? {
+        log:print("Received push-event-message ", eventPayload = event);
+    }
+```
+
+
+
+
 # Samples
 
 Samples are available at : https://github.com/ballerina-platform/module-ballerinax-github/samples
@@ -181,11 +226,54 @@ Samples are available at : https://github.com/ballerina-platform/module-ballerin
 
 ## GitHub Webhook Operations
 
-
-
-
-
-
-
+* ### [Successful webhook setup]() - onPing
+* ### [A user forks a repository]() - onFork
+* ### [One or more commits are pushed to a repository branch or tag]() - onPush
+* ### [A Git branch or tag is created]() - onCreate
+* ### [A release, pre-release, or draft of a release is published]() - onReleasePublished
+* ### [A release or pre-release is deleted]() - onReleaseUnpublished
+* ### [A draft is saved, or a release or pre-release is published without previously being saved as a draft]() - onReleaseCreated
+* ### [A release, pre-release, or draft release is edited]() - onReleaseEdited
+* ### [A release, pre-release, or draft release is deleted]() - onReleaseDeleted
+* ### [A pre-release is created]() - onPreReleased
+* ### [A release or draft of a release is published, or a pre-release is changed to a release]() - onReleased
+* ### [When someone stars a repository.]() - onWatchStarted
+* ### [An issue comment created]() - onIssueCommentCreated
+* ### [An issue comment edited]() - onIssueCommentEdited
+* ### [An issue comment deleted]() - onIssueCommentDeleted
+* ### [An issue assigned to user]() - onIssuesAssigned
+* ### [An issue unassigned from a user]() - onIssuesUnassigned
+* ### [An issue was labeled]() - onIssuesLabeled
+* ### [An issue label was removed]() - onIssuesUnlabeled
+* ### [An issue state becomes open]() - onIssuesOpened
+* ### [An issue edited]() - onIssuesEdited
+* ### [An issue milestone added]() - onIssuesMilestoned
+* ### [An issue milestone removed]() - onIssuesDemilestoned
+* ### [An issue  closed]() - onIssuesClosed
+* ### [An issue re-opened]() - onIssuesReopened
+* ### [A label created]() - onLabelCreated
+* ### [A label edited]() - onLabelEdited
+* ### [A label deleted]() - onLabelDeleted
+* ### [A milestone created]() - onMilestoneCreated
+* ### [A milestone closed]() - onMilestoneClosed
+* ### [A milestone opened]() - onMilestoneOpened
+* ### [A milestone edited]() - onMilestoneEdited
+* ### [A milestone deleted]() - onMilestoneDeleted
+* ### [An assignee added to a pull request]() - onPullRequestAssigned
+* ### [An assignee removed from a pull request]() - onPullRequestUnassigned
+* ### [A pull request review request sent]() - onPullRequestReviewRequested
+* ### [A pull request review request removed]() - onPullRequestReviewRequestRemoved
+* ### [A label added to a pull request]() - onPullRequestLabeled
+* ### [A label removed from a pull request]() - onPullRequestUnlabeled
+* ### [A pull request opened]() - onPullRequestOpened
+* ### [A pull request edited]() - onPullRequestEdited
+* ### [A pull request closed]() - onPullRequestClosed
+* ### [A pull request re-opened]() - onPullRequestReopened
+* ### [A pull request review submitted]() - onPullRequestReviewSubmitted
+* ### [A pull request review edited]() - onPullRequestReviewEdited
+* ### [A pull request review dismissed]() - onPullRequestReviewDismissed
+* ### [A pull request review comment created]() - onPullRequestReviewCommentCreated
+* ### [A pull request review comment edited]() - onPullRequestReviewCommentEdited
+* ### [A pull request review comment deleted]() - onPullRequestReviewCommentDeleted
 
 ***
