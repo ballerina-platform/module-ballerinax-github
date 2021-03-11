@@ -227,7 +227,7 @@ Samples are available at : https://github.com/ballerina-platform/module-ballerin
 ## GitHub Webhook Operations
 
 * ### [Successful webhook setup]() - onPing(PingEvent event)
-* ### [A user forks a repository]() - onFork
+* ### [A user forks a repository]() - onFork(ForkEvent event)
 * ### [One or more commits are pushed to a repository branch or tag]() - onPush(PushEvent event)
 * ### [A Git branch or tag is created]() - onCreate(CreateEvent event)
 * ### [A release, pre-release, or draft of a release is published]() - onReleasePublished(ReleaseEvent event)
