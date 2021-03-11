@@ -35,7 +35,7 @@ jobs:
               uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
               with:
                   args:
-                      build ./github/
+                      build -c ./github/
               env:
                   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                   ORG_NAME: ${{ secrets.ORG_NAME }}
@@ -47,3 +47,4 @@ jobs:
                   GITHUB_SECRET: ${{ secrets.SECRET }}
                   GITHUB_CALLBACK: ${{ secrets.CALLBACK }}
                   GITHUB_USERNAME: ${{ secrets.USERNAME }}
+                  JAVA_HOME: /usr/lib/jvm/default-jvm
