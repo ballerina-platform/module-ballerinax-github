@@ -219,7 +219,6 @@ service class WebSubService {
 
     remote isolated function onEventNotification(websub:ContentDistributionMessage event)
                         returns websub:Acknowledgement|websub:SubscriptionDeletedError? {
-        log:print("onEventNotification invoked ", contentDistributionMessage = event);
         GitHubEvent|error eventPayload = event.content.cloneWithType(GitHubEvent);
         if((eventPayload is PingEvent) ) {
             if (self.isOnPingAvailable) {
