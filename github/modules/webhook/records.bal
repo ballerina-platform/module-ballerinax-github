@@ -340,7 +340,7 @@ public type PullRequestLink record {|
     string href;
 |};
 
-public type PullRequest record {|
+public type PullRequest record {
     string url;
     int id;
     string node_id;
@@ -388,7 +388,7 @@ public type PullRequest record {|
     int deletions?;
     int changed_files?;
     string? active_lock_reason;
-|};
+};
 
 public type Review record {|
     int id;
@@ -561,7 +561,7 @@ public type MilestoneEvent record {|
     User sender;
 |};
 
-public type PullRequestEvent record {|
+public type PullRequestEvent record {
     PullRequestActions action;
     int number;
     Changes changes?;
@@ -571,7 +571,7 @@ public type PullRequestEvent record {|
     User requested_reviewer?;
     Repository repository;
     User sender;
-|};
+};
 
 public type PullRequestReviewEvent record {|
     PullRequestReviewActions action;
