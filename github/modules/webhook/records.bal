@@ -533,7 +533,7 @@ public type IssueCommentEvent record {|
     User sender;
 |};
 
-public type IssuesEvent record {
+public type IssuesEvent record {|
     IssuesActions action;
     Issue issue;
     Changes changes?;
@@ -542,7 +542,7 @@ public type IssuesEvent record {
     Milestone milestone?;
     Repository repository;
     User sender;
-};
+|};
 
 public type LabelEvent record {|
     LabelActions action;
