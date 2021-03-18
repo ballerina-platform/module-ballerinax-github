@@ -80,7 +80,7 @@ service /subscriber on webhookListener {
 }
 
 @test:Config {
-    enable: false
+    enable: true
 }
 function testWebhookRegistration() {
     int counter = 10;
@@ -100,7 +100,7 @@ string createdIssueAssignee = testIssueAssignee;
 
 @test:Config {
     dependsOn: [testWebhookRegistration],
-    enable: false
+    enable: true
 }
 function testWebhookNotificationOnIssueCreation() {
     github:GitHubConfiguration gitHubConfig = {
@@ -129,7 +129,7 @@ function testWebhookNotificationOnIssueCreation() {
 
 @test:Config {
     dependsOn: [testWebhookNotificationOnIssueCreation],
-    enable: false
+    enable: true
 }
 function testWebhookNotificationOnIssueLabeling() {
     string createdIssueLabelString = "";
@@ -142,7 +142,7 @@ function testWebhookNotificationOnIssueLabeling() {
 
 @test:Config {
     dependsOn: [testWebhookNotificationOnIssueCreation],
-    enable: false
+    enable: true
 }
 function testWebhookNotificationOnIssueAssignment() {
     test:assertTrue(issueAssignedNotified, msg = "expected an issue assigned notification");
@@ -151,7 +151,7 @@ function testWebhookNotificationOnIssueAssignment() {
 
 @test:Config {
     dependsOn: [testWebhookNotificationOnIssueCreation],
-    enable: false
+    enable: true
 }
 function testWebhookNotificationOnIssueEdited() returns error? {
 

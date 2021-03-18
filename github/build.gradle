@@ -13,12 +13,12 @@ def packageOrg = "ayeshalm"
 def snapshotVersion = "-SNAPSHOT"
 def tomlVersion = project.version.replace("${snapshotVersion}", "")
 def ballerinaConfigFile = new File("$project.projectDir/Ballerina.toml")
-def ballerinaDependencyFile = new File("$project.projectDir/Dependencies.toml")
+//def ballerinaDependencyFile = new File("$project.projectDir/Dependencies.toml")
 def artifactBallerinaDocs = file("$project.projectDir/build/docs_parent/")
 def artifactCacheParent = file("$project.projectDir/build/cache_parent/")
 def artifactLibParent = file("$project.projectDir/build/lib_parent/")
 def distributionPath =  project.projectDir.absolutePath + "/build/target/extracted-distributions/jballerina-tools-zip/jballerina-tools-${ballerinaLangVersion}"
-def originalDependencies = ballerinaDependencyFile.text
+//def originalDependencies = ballerinaDependencyFile.text
 def distributionBinPath = distributionPath + "/bin"
 def originalConfig = ballerinaConfigFile.text
 
@@ -124,7 +124,7 @@ task updateTomlFile {
 task revertTomlFile {
     doLast {
         ballerinaConfigFile.text = originalConfig
-        ballerinaDependencyFile.text = originalDependencies
+//        ballerinaDependencyFile.text = originalDependencies
     }
 }
 
