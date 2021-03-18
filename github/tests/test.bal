@@ -663,6 +663,38 @@ function testCreatePullRequestReview() {
 }
 
 @test:Config {
+    groups: ["network-calls"],
+    enable: true
+}
+function testGetBranchList() {
+    log:print("githubClient -> getBranchList()");
+
+    var response = githubClient->getBranchList("MadhurangaWije", "github-connector", 10);
+    if (response is BranchList) {
+        test:assertTrue(true);
+    } else {
+        log:printError(response.toBalString());
+        test:assertFail(msg = response.message());
+    }
+}
+
+//@test:Config {
+//    groups: ["network-calls"],
+//    enabel: true
+//}
+//function testGetBranchList() {
+    //log:print("githubClient -> getBranchList()");
+    //
+    //var response = githubClient->getBranchList("MadhurangaWije", "github-connector", 10);
+    //if (response is BranchList) {
+    //    test:assertTrue(true);
+    //}else {
+    //    //log:printError(response.toBalString());
+    //    test:assertFail(msg = response.message());
+    //}
+//}
+
+@test:Config {
     groups: ["object-functions"],
     enable: true
 }
