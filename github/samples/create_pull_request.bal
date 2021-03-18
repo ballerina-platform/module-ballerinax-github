@@ -28,7 +28,7 @@ public function main() {
     // Create a pull request
     log:print("githubClient -> createPullRequest()");
 
-    github:CreatePullRequest createPullRequestPayload = {
+    github:PullRequestCreate createPullRequestPayload = {
         title:"Feature4 Implementation",
         head:"feature4",
         base:"master",

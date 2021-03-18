@@ -28,7 +28,7 @@ public function main() {
     // Update a pull request
     log:print("githubClient -> updatePullRequest()");
 
-    github:UpdatePullRequest pullRequestUpdatePayload = {
+    github:PullRequestUpdate pullRequestUpdatePayload = {
         title:"This is a pull request made for testing updated",
         base:"master",
         body:"updated pull request body",

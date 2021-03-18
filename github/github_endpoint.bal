@@ -21,6 +21,7 @@ import ballerina/io;
 # + accessToken - The access token of the github account
 # + githubRestClient - HTTP client endpoint
 # + githubGraphQlClient - HTTP client endpoint
+@display {label: "GitHub Client"}
 public client class Client {
 
     string accessToken;
@@ -36,7 +37,8 @@ public client class Client {
     # Get authenticated User
     # 
     # + return - User object or Connector error
-    remote function getAuthenticatedUser() returns User|error {
+    @display {label: "Get Authenticated User"}
+    remote function getAuthenticatedUser() returns @display {label: "Authenticated user"} User|error {
         string path = PATH_SEPARATOR + GIT_USER;
         http:Request request = new;
         setHeader(request, self.accessToken);
@@ -53,9 +55,10 @@ public client class Client {
     # + labelList - List of labels for the issue
     # + assigneeList - Users to be assigned to the issue
     # + return - Created issue object or Connector error
-    remote function createIssue(string repositoryOwner, string repositoryName, string issueTitle,
-                                   string issueContent, string[] labelList, string[] assigneeList)
-                           returns Issue|error {
+    @display {label: "Create An Issue"}
+    remote function createIssue(@display {label: "Repository owner username"} string repositoryOwner, @display {label: "Repository name"} string repositoryName, @display {label: "Title of the issue"} string issueTitle,
+                                   @display {label: "Detail of the issue"} string issueContent, @display {label: "List of label names for the issue"} string[] labelList, @display {label: "Assignee's username list"} string[] assigneeList)
+                           returns @display {label: "Created issue object"} Issue|error {
 
         if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING || issueTitle == EMPTY_STRING) {
             error connectorError = error(GITHUB_ERROR_CODE,
@@ -97,7 +100,8 @@ public client class Client {
     # Get the next page of the card list.
     # + cardList - Card list object
     # + return - Card list object of next page or Connector error
-    remote function getCardListNextPage(CardList cardList) returns CardList|error {
+    @display {label: "Get project card list next page"}
+    remote function getCardListNextPage(@display {label: "Card list"} CardList cardList) returns @display {label: "Card list next page"} CardList|error {
         if (cardList.pageInfo.hasNextPage) {
             var cardListColumnId = cardList.columnId;
             json convertedQuery = check stringToJson(cardList.cardListQuery.toJsonString());
@@ -141,7 +145,8 @@ public client class Client {
     # Get the next page of column list.
     # + columnList - Column list object
     # + return - Column list object of next page or Connector error
-    remote function getColumnListNextPage(ColumnList columnList) returns ColumnList|error {
+    @display {label: "Get project column list next page"}
+    remote function getColumnListNextPage(@display {label: "Column list object"} ColumnList columnList) returns @display {label: "Column list next page"} ColumnList|error {
 
         if (columnList.hasNextPage()) {
             json jsonQuery = check stringToJson(columnList.columnListQuery);
@@ -173,20 +178,13 @@ public client class Client {
     }
 
     # Get a list of branches of a repository.
-    # + repository - Repository object or tuple (`repository owner`, `repository name`)
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
     # + recordCount - Specify number of records in the list
     # + return - Branch list object or Connector error
-    remote function getBranchList(Repository|[string, string] repository, int recordCount)
-                           returns @tainted BranchList|error {
-
-        string repositoryOwner = "";
-        string repositoryName = "";
-        if (repository is Repository) {
-            repositoryOwner = repository.owner.login;
-            repositoryName = repository.name;
-        } else {
-            [repositoryOwner, repositoryName] = repository;
-        }
+    @display {label: "Get branch list"}
+    remote function getBranchList(@display {label: "Repository owner username"} string repositoryOwner, @display {label: "Repository name"}  string repositoryName, @display {label: "Number of records per page"} int recordCount)
+                           returns @tainted @display {label: "Branch list"} BranchList|error {
 
         if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
             error err = error(GITHUB_ERROR_CODE, message = "Repository owner and name should be specified");
@@ -222,28 +220,22 @@ public client class Client {
                     var branchList = jsonToBranchList(gitBranches, stringQuery);
                     return branchList;
                 }
-            } 
+            }
         }
         error err = error(GITHUB_ERROR_CODE, message = "Error parsing git issue response");
         return err;
     }
 
     # Get a list of issues of a repository.
-    # + repository - Repository object or tuple (`repository owner`, `repository name`)
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
     # + state - State of the issue (`STATE_OPEN`, `STATE_CLOSED`, `STATE_ALL`)
     # + recordCount - Specify number of records in the list
     # + return - Issue list object or Connector error
-    remote function getIssueList(Repository|[string, string] repository, string state, int recordCount)
-                           returns @tainted IssueList|error {
+    @display {label: "Get a list of issues of a repository"}
+    remote function getIssueList(@display {label: "Repository owner username"} string repositoryOwner, @display {label: "Repository name"}  string repositoryName, @display {label: "State of the issue"} string state, @display {label: "Number of records per page"} int recordCount)
+                           returns @tainted @display {label: "Issue list"} IssueList|error {
 
-        string repositoryOwner = "";
-        string repositoryName = "";
-        if (repository is Repository) {
-            repositoryOwner = repository.owner.login;
-            repositoryName = repository.name;
-        } else {
-            [repositoryOwner, repositoryName] = repository;
-        }
 
         if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
             error err = error(GITHUB_ERROR_CODE, message = "Repository owner and name should be specified");
@@ -279,7 +271,7 @@ public client class Client {
                     var issueList = jsonToIssueList(githubIssuesJson, stringQuery);
                     return issueList;
                 }
-            } 
+            }
         }
         error err = error(GITHUB_ERROR_CODE, message = "Error parsing git issue response");
         return err;
@@ -288,7 +280,8 @@ public client class Client {
     # Get the next page of the issue list.
     # + issueList - Issue list object
     # + return - Issue list object of next page or Connector error
-    remote function getIssueListNextPage(IssueList issueList) returns @tainted IssueList|error {
+    @display {label: "Get issue list next page"}
+    remote function getIssueListNextPage(@display {label: "Issue list"} IssueList issueList) returns @tainted @display {label: "Issue list"} IssueList|error {
 
         if (issueList.hasNextPage()) {
             http:Request request = new;
@@ -328,7 +321,7 @@ public client class Client {
             } else {
                 error err = error(GITHUB_ERROR_CODE, message = "Cannot parse issueListQuery.");
                 return err;
-            }       
+            }
         } else {
             error err = error(GITHUB_ERROR_CODE, message = "Issue list has no next page.");
             return err;
@@ -336,17 +329,18 @@ public client class Client {
     }
 
     # Get an organization.
-    # + name - Name of the organization
+    # + organizationName - Name of the organization
     # + return - Organization object or Connector error
-    remote function getOrganization(string name) returns @tainted Organization|error {
+    @display {label: "Get an organization"}
+    remote function getOrganization(@display {label: "Organization name"} string organizationName) returns @tainted @display {label: "Organization"} Organization|error {
 
-        if (name == EMPTY_STRING) {
+        if (organizationName == EMPTY_STRING) {
             error err = error(GITHUB_ERROR_CODE, message = "Organization name should be specified.");
             return err;
         }
         Organization singleOrganization = {};
 
-        string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION, name);
+        string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION, organizationName);
 
         http:Request request = new;
         setHeader(request, self.accessToken);
@@ -366,19 +360,12 @@ public client class Client {
     }
 
     # Get a single project of an organization.
-    # + organization - Organization object or organization name
+    # + organizationName - Organization object or organization name
     # + projectNumber - The number of the project
     # + return - Project object or Connector error
-    remote function getOrganizationProject(Organization|string organization, int projectNumber)
-                           returns @tainted Project|error {
-
-        string organizationName = "";
-        var value = organization;
-        if (value is Organization) {
-            organizationName = value.login;
-        } else {
-            organizationName = value;
-        }
+    @display {label: "Get an organization's project"}
+    remote function getOrganizationProject(@display {label: "Organization name"} string organizationName, @display {label: "Project number"} int projectNumber)
+                           returns @tainted @display {label: "Project"} Project|error {
 
         if (organizationName == EMPTY_STRING || projectNumber <= INDEX_ZERO) {
             error err = error(GITHUB_ERROR_CODE,
@@ -417,20 +404,15 @@ public client class Client {
     }
 
     # Get all projects of an organization.
-    # + organization - Organization object or organization name
+    # + organizationName - Organization object or organization name
     # + state - State of the project (`STATE_OPEN`, `STATE_CLOSED`, `STATE_ALL`)
     # + recordCount - Specify number of records in the list
     # + return - Project list object or Connector error
-    remote function getOrganizationProjectList(Organization|string organization, string state,
-                                                  int recordCount) returns @tainted ProjectList|error {
+    @display {label: "Get an organization's project list"}
+    remote function getOrganizationProjectList(@display {label: "Organization name"} string organizationName, @display {label: "State of the project"} string state,
+                                                  @display {label: "Number of records per page"} int recordCount) returns @tainted @display {label: "Project list"} ProjectList|error {
 
         http:Client gitHubEndpoint = self.githubGraphQlClient;
-        string organizationName = "";
-        if (organization is Organization) {
-            organizationName = organization.login;
-        } else {
-            organizationName = organization;
-        }
 
         if (organizationName == EMPTY_STRING || state == EMPTY_STRING) {
             error err = error(GITHUB_ERROR_CODE,
@@ -466,28 +448,22 @@ public client class Client {
                     var projectList = jsonToProjectList(githubProjectsJson, GIT_ORGANIZATION, stringQuery);
                     return projectList;
                 }
-            }           
+            }
         }
         error err = error(GITHUB_ERROR_CODE, message = "Error occurred while converting the json into Project List.");
         return err;
     }
 
     # Get a list of repositories of an user.
-    # + user - User object or user name
+    # + userName - User object or user name
     # + recordCount - Specify number of records in the list
     # + return - Repository list object or Connector error
-    remote function getUserRepositoryList(User|string user, int recordCount)
-                           returns @tainted RepositoryList|error {
-
-        string userName = "";
-        if (user is User) {
-            userName = user.login;
-        } else {
-            userName = user;
-        }
+    @display {label: "Get an user's repository list"}
+    remote function getUserRepositoryList(@display {label: "Username"} string userName, @display {label: "Number of records per page"} int recordCount)
+                           returns @tainted @display {label: "Repository list"} RepositoryList|error {
 
         if (userName == EMPTY_STRING) {
-            error err = error(GITHUB_ERROR_CODE, message = "User should have a name");
+            error err = error(GITHUB_ERROR_CODE, message = "User name should be specified");
             return err;
         }
 
@@ -525,18 +501,12 @@ public client class Client {
     }
 
     # Get a list of repositories of an organization.
-    # + organization - Organization object or organization name
+    # + organizationName - Organization name
     # + recordCount - Specify number of records in the list
     # + return - Repository list object or Connector error
-    remote function getOrganizationRepositoryList(Organization|string organization, int recordCount)
-                           returns @tainted RepositoryList|error {
-
-        string organizationName = "";
-        if (organization is Organization) {
-            organizationName = organization.login;
-        } else {
-            organizationName = organization;
-        }
+    @display {label: "Get an organization's repository list"}
+    remote function getOrganizationRepositoryList(@display {label: "Organization name"} string organizationName, @display {label: "Number of records per page"} int recordCount)
+                           returns @tainted @display {label: "Repository list"} RepositoryList|error {
 
         if (organizationName == EMPTY_STRING) {
             error err = error(GITHUB_ERROR_CODE, message = "Organization should have a name");
@@ -573,7 +543,8 @@ public client class Client {
     # + project - Project object
     # + recordCount - Specify number of records in the list
     # + return - Column list object or Connector error
-    remote function getProjectColumnList(Project project, int recordCount) returns @tainted ColumnList|error {
+    @display {label: "Get a project's column list"}
+    remote function getProjectColumnList(@display {label: "Project"} Project project, @display {label: "Number of records per page"} int recordCount) returns @tainted @display {label: "Column list"} ColumnList|error {
         if (project["owner"]["__typename"] == EMPTY_STRING || project.number <= INDEX_ZERO ||
                 project.resourcePath == EMPTY_STRING) {
             error err = error(GITHUB_ERROR_CODE, message = "Project owner, number and resource path should be specified");
@@ -589,7 +560,7 @@ public client class Client {
         string resourcePath = "";
         if (project.resourcePath is string) {
             resourcePath = <string>project.resourcePath;
-        } else {        
+        } else {
             resourcePath = EMPTY_STRING;
         }
         if (projectOwnerType == GIT_ORGANIZATION) {
@@ -613,7 +584,8 @@ public client class Client {
     # Gets the next page of a project list.
     # + projectList - Project list object
     # + return - Project list object of next page or Connector error
-    remote function getProjectListNextPage(ProjectList projectList) returns @tainted ProjectList|error {
+    @display {label: "Get project list next page"}
+    remote function getProjectListNextPage(@display {label: "Project list"} ProjectList projectList) returns @tainted @display {label: "Next page of the project list"} ProjectList|error {
         if (projectList.hasNextPage()) {
 
             http:Request request = new;
@@ -667,21 +639,15 @@ public client class Client {
     }
 
     # Get all pull requests of a repository.
-    # + repository - Repository object or tuple `("repository owner", "repository name")`
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
     # + state - State of the pull request (STATE_OPEN, STATE_CLOSED, STATE_MERGED, STATE_ALL)
     # + recordCount - Specify number of records in the list
     # + return - Pull request list object or Connector error
-    remote function getPullRequestList(Repository|[string, string] repository, string state, int recordCount)
-                           returns @tainted PullRequestList|error {
+    @display {label: "Get pull request list"}
+    remote function getPullRequestList(@display {label: "Repository owner username"} string repositoryOwner, @display {label: "Repository name"} string repositoryName, @display {label: "State of the pull request"} string state, @display {label: "Number of records per page"} int recordCount)
+                           returns @tainted @display {label: "Pull request list"} PullRequestList|error {
 
-        string repositoryOwner;
-        string repositoryName;
-        if (repository is Repository) {
-            repositoryOwner = repository.owner.login;
-            repositoryName = repository.name;
-        } else {
-            [repositoryOwner, repositoryName] = repository;
-        }
         if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
             error err = error(GITHUB_ERROR_CODE, message = "Repository owner and name should be specified");
             return err;
@@ -722,8 +688,9 @@ public client class Client {
     # Get the next page of the pull request list.
     # + pullRequestList - Pull request list object
     # + return - Pull request list object of next page or Connector error
-    remote function getPullRequestListNextPage(PullRequestList pullRequestList) returns @tainted
-    PullRequestList|error {
+    @display {label: "Get pull request list next page"}
+    remote function getPullRequestListNextPage(@display {label: "Pull request list"} PullRequestList pullRequestList) returns @tainted
+    @display {label: "Next page of pull request list"} PullRequestList|error {
 
         if (pullRequestList.hasNextPage()) {
 
@@ -764,7 +731,7 @@ public client class Client {
             } else {
                 error err = error(GITHUB_ERROR_CODE, message = "Cannot parse pullRequestListQuery.");
                 return err;
-            }     
+            }
         } else {
             error err = error(GITHUB_ERROR_CODE, message = "Pull request list has no next page.");
             return err;
@@ -772,28 +739,21 @@ public client class Client {
     }
 
     # Get a repository of an owner.
-    # + repoIdentifier - Name of the repository and its owner Format: ("owner/repository")
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
     # + return - Repository object or Connector error
-    remote function getRepository(string|[string, string] repoIdentifier) returns @tainted
-    Repository|error {
+    @display {label: "Get a repository"}
+    remote function getRepository(@display {label: "Repository owner username"} string repositoryOwner, @display {label: "Repository name"} string repositoryName) returns @tainted
+    @display {label: "Repository"} Repository|error {
 
-        string repoOwner;
-        string repoName;
-        if (repoIdentifier is string) {
-            repoOwner = split(repoIdentifier, PATH_SEPARATOR, INDEX_ZERO);
-            repoName = split(repoIdentifier, PATH_SEPARATOR, INDEX_ONE);
-        } else {
-            [repoOwner, repoName] = repoIdentifier;
-        }
-        
-        if (repoOwner == EMPTY_STRING || repoName == EMPTY_STRING) {
+        if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
             error err = error(GITHUB_ERROR_CODE, message = "Repository owner and name should be specified.");
             return err;
         }
 
         Repository singleRepository = {};
 
-        string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY, repoOwner, repoName);
+        string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY, repositoryOwner, repositoryName);
 
         http:Request request = new;
         setHeader(request, self.accessToken);
@@ -814,9 +774,10 @@ public client class Client {
     # Get the next page of a repository list.
     # + repositoryList - Repository list object
     # + return - Repository list object of next page or Connector error
-    remote function getRepositoryListNextPage(RepositoryList repositoryList) returns @tainted
-    RepositoryList|error {
-        
+    @display {label: "Get repository list next page"}
+    remote function getRepositoryListNextPage(@display {label: "Repository list"} RepositoryList repositoryList) returns @tainted
+    @display {label: "Next page of repository list"} RepositoryList|error {
+
         if (repositoryList.hasNextPage()) {
 
             http:Request request = new;
@@ -856,7 +817,7 @@ public client class Client {
             } else {
                 error err = error(GITHUB_ERROR_CODE, message = "Cannot parse repositoryListQuery.");
                 return err;
-            }      
+            }
         } else {
             error err = error(GITHUB_ERROR_CODE, message = "Repository list has no next page.");
             return err;
@@ -864,20 +825,13 @@ public client class Client {
     }
 
     # Get a single project of a repository.
-    # + repository - Repository object or tuple `("repository owner", "repository name")`
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
     # + projectNumber - Project identification number
     # + return - Project object or Connector error
-    remote function getRepositoryProject(Repository|[string, string] repository, int projectNumber)
-                           returns @tainted Project|error {
-
-        string repositoryOwner;
-        string repositoryName;
-        if (repository is Repository) {
-            repositoryOwner = repository.owner.login;
-            repositoryName = repository.name;
-        } else {
-            [repositoryOwner, repositoryName] = repository;
-        }
+    @display {label: "Get repository project"}
+    remote function getRepositoryProject(@display {label: "Repository owner username"} string repositoryOwner, @display {label: "Repository name"} string repositoryName, @display {label: "Project number"} int projectNumber)
+                           returns @tainted @display {label: "Project"} Project|error {
 
         if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
             error err = error(GITHUB_ERROR_CODE, message = "Repository owner and name should be specified");
@@ -912,21 +866,14 @@ public client class Client {
     }
 
     # Get all projects of a repository.
-    # + repository - Repository object or tuple `("repository owner", "repository name")`
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
     # + state - State of the project (STATE_OPEN, STATE_CLOSED, STATE_ALL)
     # + recordCount - Specify number of records in the list
     # + return - Project list object or Connector error
-    remote function getRepositoryProjectList(Repository|[string, string] repository, string state,
-                                                int recordCount) returns @tainted ProjectList|error {
-
-        string repositoryOwner;
-        string repositoryName;
-        if (repository is Repository) {
-            repositoryOwner = repository.owner.login;
-            repositoryName = repository.name;
-        } else {
-            [repositoryOwner, repositoryName] = repository;
-        }
+    @display {label: "Get repository project list"}
+    remote function getRepositoryProjectList(@display {label: "Repository owner username"} string repositoryOwner, @display {label: "Repository name"} string repositoryName, @display {label: "State of the project"} string state,
+                                                @display {label: "Number of records per page"} int recordCount) returns @tainted @display {label: "Project list"} ProjectList|error {
 
         if (repositoryOwner == EMPTY_STRING || repositoryName == EMPTY_STRING) {
             error err = error(GITHUB_ERROR_CODE, message = "Repository owner and name should be specified");
@@ -970,9 +917,10 @@ public client class Client {
     # Creates a new Pull request .
     # + repositoryOwner - Repository owner name
     # + repositoryName - Repository name
-    # + pullRequest - Create pull request record
+    # + pullRequest -  Pull request create record
     # + return - Created issue object or Connector error
-    remote function createPullRequest(string repositoryOwner, string repositoryName, CreatePullRequest pullRequest)
+    @display {label: "Create a pull request"}
+    remote function createPullRequest(@display {label: "Repository owner username"} string repositoryOwner, @display {label: "Repository name"} string repositoryName, @display {label: "Pull request creation"} PullRequestCreate pullRequest)
                            returns PullRequest|error {
 
         if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING) {
@@ -980,7 +928,7 @@ public client class Client {
             message = "Repository name, owner should be specified");
             return connectorError;
         }
-        
+
         json createPullRequestPayload = check pullRequest.cloneWithType(json);
 
         http:Request request = new;
@@ -995,24 +943,25 @@ public client class Client {
         //Check for empty payloads and errors
         json validatedResponse = check getValidatedRestResponse(response);
         return jsonToPullRequest(<map<json>>validatedResponse);
-        
+
     }
 
-    # Creates a new Pull request .
+    # Creates a review comment for a pull request .
     # + repositoryOwner - Repository owner name
     # + repositoryName - Repository name
     # + pullNumber - Pull request number
     # + pullRequestReviewComment - Pull request review comment create record
-    # + return - Created issue object or Connector error
-    remote function createPullRequestReviewComment(string repositoryOwner, string repositoryName, int pullNumber ,CreatePullRequestReviewComment pullRequestReviewComment)
-                           returns PullRequestReviewComment|error {
+    # + return - Created PullRequestReviewComment object or Connector error
+    @display {label: "Create a pull request review comment"}
+    remote function createPullRequestReviewComment(@display {label: "Repository owner username"} string repositoryOwner, @display {label: "Repository name"} string repositoryName, @display {label: "Pull request number"} int pullNumber, @display {label: "Pull request review comment create record"} PullRequestReviewCommentCreate pullRequestReviewComment)
+                           returns @display {label: "Pull request review comment"} PullRequestReviewComment|error {
 
         if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING) {
             error connectorError = error(GITHUB_ERROR_CODE,
             message = "Repository name, owner should be specified");
             return connectorError;
         }
-        
+
         json createPullRequestReviewCommentPayload = check pullRequestReviewComment.cloneWithType(json);
 
         http:Request request = new;
@@ -1027,16 +976,18 @@ public client class Client {
         json validatedResponse = check getValidatedRestResponse(response);
         // return jsonToPullRequestReviewComment(<map<json>>validatedResponse);
         return check validatedResponse.cloneWithType(PullRequestReviewComment);
-        
+
     }
 
     # Create a review for a pull request
     # + repositoryOwner - Repository owner name
     # + repositoryName - Repository name
     # + pullNumber - Pull request number
+    # + pullRequestReview - PullRequestReviewCreate record
     # + return - Created PullRequestReview object or Connector error
-    remote function createPullRequestReview(string repositoryOwner, string repositoryName, int pullNumber , CreatePullRequestReview pullRequestReview)
-                           returns PullRequestReview|error {
+    @display {label: "Create a review for a pull request"}
+    remote function createPullRequestReview(@display {label: "Repository owner username"} string repositoryOwner, @display {label: "Repository name"} string repositoryName, @display {label: "Pull request number"} int pullNumber , @display {label: "Pull request review create"} PullRequestReviewCreate pullRequestReview)
+                           returns @display {label: "Pull request review"} PullRequestReview|error {
 
         if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING) {
             error connectorError = error(GITHUB_ERROR_CODE,
@@ -1045,7 +996,7 @@ public client class Client {
         }
 
         json createPullRequestReviewPayload = check pullRequestReview.cloneWithType(json);
-        
+
 
         http:Request request = new;
         setHeader(request, self.accessToken);
@@ -1068,7 +1019,8 @@ public client class Client {
     # + repositoryName - Repository name
     # + branchName - Name of the branch to delete
     # + return - An error if operation failed.
-    remote function deleteBranch(string repositoryOwner, string repositoryName, string branchName)
+    @display {label: "Delete a branch"}
+    remote function deleteBranch(@display {label: "Repository owner username"} string repositoryOwner, @display {label: "Repository name"} string repositoryName, @display {label: "Name of the branch"} string branchName)
                            returns error? {
 
         if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING) {
@@ -1083,7 +1035,7 @@ public client class Client {
         string endpointResource = string `${PATH_SEPARATOR}${GIT_REPOS}${PATH_SEPARATOR}${repositoryOwner}${PATH_SEPARATOR}${repositoryName}${PATH_SEPARATOR}${GIT}${PATH_SEPARATOR}${GIT_BRANCH_REF_PREFIX}${branchName}`;
         // Make an HTTP DELETE request
         var response = self.githubRestClient->delete(endpointResource, request);
-        
+
         if(response is http:Response){
             if(response.statusCode == 422) {
                 error err = error(GITHUB_ERROR_CODE, message = "Unprocessable Entity - Validation failed");
@@ -1093,14 +1045,15 @@ public client class Client {
             error err = error(GITHUB_ERROR_CODE, message = "HTTP Connector Error");
             return err;
         }
-        
+
     }
 
     # Create a Gist
     # + createGist - Gist create request payload
     # + return - Created Gist object or Connector error
-    remote function createGist(CreateGist createGist)
-                           returns Gist|error {
+    @display {label: "Create a gist"}
+    remote function createGist(@display {label: "Gist Create"} GistCreate createGist)
+                           returns @display {label: "Gist"} Gist|error {
 
         if (createGist.gistFiles.length()<=0) {
             error connectorError = error(GITHUB_ERROR_CODE,
@@ -1132,18 +1085,17 @@ public client class Client {
         var response = self.githubRestClient->post(endpointResource, request);
         //Check for empty payloads and errors
         json validatedResponse = check getValidatedRestResponse(response);
-        
+
         return check validatedResponse.cloneWithType(Gist);
-        
-        
     }
 
     # Check Organization Membership
     # + organization - Name of the organization
     # + username - GitHub username of the member
     # + return - OrganizationMembership object or Connector error
-    remote function getOrganizationUserMembership(string organization ,string username)
-                           returns OrganizationMembership|error {
+    @display {label: "Check organization membership"}
+    remote function getOrganizationUserMembership(@display {label: "Organization name"} string organization, @display {label: "GitHub username of the member"} string username)
+                           returns @display {label: "Organization membership"} OrganizationMembership|error {
 
         if (organization == EMPTY_STRING || username == EMPTY_STRING) {
             error connectorError = error(GITHUB_ERROR_CODE,
@@ -1159,16 +1111,17 @@ public client class Client {
         var response = self.githubRestClient->get(endpointResource, request);
         //Check for empty payloads and errors
         json validatedResponse = check getValidatedRestResponse(response);
-        
+
         return check validatedResponse.cloneWithType(OrganizationMembership);
-        
+
     }
 
     # Find a user
     # + username - GitHub username of the member
     # + return - User object or Connector error
-    remote function getUser(string username)
-                           returns User|error {
+    @display {label: "Find a user"}
+    remote function getUser(@display {label: "GitHub username of the user"} string username)
+                           returns @display {label: "User"} User|error {
 
         if (username == EMPTY_STRING) {
             error connectorError = error(GITHUB_ERROR_CODE,
@@ -1184,9 +1137,9 @@ public client class Client {
         var response = self.githubRestClient->get(endpointResource, request);
         //Check for empty payloads and errors
         json validatedResponse = check getValidatedRestResponse(response);
-        
+
         return check validatedResponse.cloneWithType(User);
-            
+
     }
 
     # Find a Issue
@@ -1194,8 +1147,9 @@ public client class Client {
     # + repositoryName - Name of the repository
     # + issueNumber - Number of the issue which needs to retrieved
     # + return - Issue object or Connector error
-    remote function getIssue(string username, string repositoryName, int issueNumber)
-                           returns IssueFound|error {
+    @display {label: "Find an issue"}
+    remote function getIssue(@display {label: "Github username"} string username, @display {label: "Repository name"} string repositoryName, @display {label: "Number of the issue"} int issueNumber)
+                           returns @display {label: "Issue"} IssueFound|error {
 
         if (username == EMPTY_STRING || repositoryName == EMPTY_STRING) {
             error connectorError = error(GITHUB_ERROR_CODE,
@@ -1211,9 +1165,9 @@ public client class Client {
         var response = self.githubRestClient->get(endpointResource, request);
         // Check for empty payloads and errors
         json validatedResponse = check getValidatedRestResponse(response);
-        
+
         return jsonToIssueFound(<map<json>>validatedResponse);
-        
+
     }
 
     # Update an issue in a repository.
@@ -1226,9 +1180,10 @@ public client class Client {
     # + assigneeList - Users to be assigned to the issue
     # + state - State of the issue. Either open or closed.
     # + return - Created issue object or Connector error
-    remote function updateIssue(string repositoryOwner, string repositoryName, int issueNumber, string issueTitle,
-                                   string issueContent, string[] labelList, string[] assigneeList, string state)
-                           returns Issue|error {
+    @display {label: "Update an issue in a repository"}
+    remote function updateIssue(@display {label: "Repository owner username"} string repositoryOwner, @display {label: "Repository name"} string repositoryName, @display {label: "Issue number"} int issueNumber, @display {label: "Issue title"} string issueTitle,
+                                   @display {label: "Details of the issue"} string issueContent, @display {label: "List of label names for the issue"} string[] labelList, @display {label: "Users to be assigned to the issue"} string[] assigneeList, @display {label: "State of the issue"} string state)
+                           returns @display {label: "Issue"} Issue|error {
 
         if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING || issueTitle == EMPTY_STRING) {
             error connectorError = error(GITHUB_ERROR_CODE,
@@ -1261,7 +1216,7 @@ public client class Client {
         string endpointResource = string `${PATH_SEPARATOR}${GIT_REPOS}${PATH_SEPARATOR}${repositoryOwner}${PATH_SEPARATOR}${repositoryName}${PATH_SEPARATOR}${GIT_ISSUES}${PATH_SEPARATOR}${issueNumber}`;
         // Make an HTTP POST request
         var response = self.githubRestClient->patch(endpointResource, request);
-        
+
         //Check for empty payloads and errors
         json validatedResponse = check getValidatedRestResponse(response);
         return restResponseJsonToIssue(validatedResponse);
@@ -1271,17 +1226,18 @@ public client class Client {
     # + repositoryOwner - Repository owner name
     # + repositoryName - Repository name
     # + pullNumber - Pull request number
-    # + pullRequest - Update pull request record
-    # + return - Created issue object or Connector error
-    remote function updatePullRequest(string repositoryOwner, string repositoryName, int pullNumber, UpdatePullRequest pullRequest)
-                           returns PullRequest|error {
+    # + pullRequest - Pull request update record
+    # + return - Updated pull request object or Connector error
+    @display {label: "Update a pull request"}
+    remote function updatePullRequest(@display {label: "Repository owner username"} string repositoryOwner, @display {label: "Repository name"} string repositoryName, @display {label: "Pull request number"} int pullNumber, @display {label: "Pull request update"} PullRequestUpdate pullRequest)
+                           returns @display {label: "Pull request"} PullRequest|error {
 
         if (repositoryName == EMPTY_STRING || repositoryOwner == EMPTY_STRING) {
             error connectorError = error(GITHUB_ERROR_CODE,
             message = "Repository name, owner should be specified");
             return connectorError;
         }
-        
+
         json updatePullRequestPayload = check pullRequest.cloneWithType(json);
 
         http:Request request = new;
@@ -1295,7 +1251,7 @@ public client class Client {
         //Check for empty payloads and errors
         json validatedResponse = check getValidatedRestResponse(response);
         return jsonToPullRequest(<map<json>>validatedResponse);
-        
+
     }
 
 }

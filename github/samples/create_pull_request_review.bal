@@ -28,7 +28,7 @@ public function main() {
     // Create a review for a pull request
     log:print("githubClient -> createPullRequestReview()");
 
-    github:CreatePullRequestReview pullRequestReviewRequestPayload = {
+    github:PullRequestReviewCreate pullRequestReviewRequestPayload = {
         body:"This is the PR review content.",
         event:"COMMENT"
     };

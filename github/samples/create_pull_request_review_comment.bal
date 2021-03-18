@@ -28,7 +28,7 @@ public function main() {
     // Create a review comment for a pull request
     log:print("githubClient -> createPullRequestReviewComment()");
 
-    github:CreatePullRequestReviewComment pullRequestReviewCommentRequestPayload = {
+    github:PullRequestReviewCommentCreate pullRequestReviewCommentRequestPayload = {
         body:"This can be improved with better logic!",
         position: 4,
         path:"src/db/main.bal",

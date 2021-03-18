@@ -33,7 +33,7 @@ Client githubClient = new (gitHubConfig);
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetAuthenticatedUser() {
     log:print("githubClient -> getAuthenticatedUser()");
@@ -47,7 +47,7 @@ function testGetAuthenticatedUser() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetOrganization() {
     //Get a single organization
@@ -63,14 +63,14 @@ function testGetOrganization() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetOrganizationProject() {
     // Get an organization project
     log:print("githubClient -> getOrganizationProject()");
     Project orgProject = {};
-    Organization projectOrganization = {login: testOrganizationName};
-    var projectData = githubClient->getOrganizationProject(projectOrganization, 26);
+    //Organization projectOrganization = {login: testOrganizationName};
+    var projectData = githubClient->getOrganizationProject(testOrganizationName, 26);
     if (projectData is Project) {
         orgProject = projectData;
     } else {
@@ -81,16 +81,16 @@ function testGetOrganizationProject() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetOrganizationProjectList() {
     //Get a list of projects of an organization
     log:print("githubClient -> getOrganizationProjectList()");
     int recordCount = 1;
     ProjectList projectList = new;
-    Organization projectListOrganization = {login: testOrganizationName};
+    //Organization projectListOrganization = {login: testOrganizationName};
     var responseProjectList = githubClient->
-    getOrganizationProjectList(projectListOrganization, STATE_OPEN, recordCount);
+    getOrganizationProjectList(testOrganizationName, STATE_OPEN, recordCount);
     if (responseProjectList is ProjectList) {
         projectList = responseProjectList;
     } else {
@@ -105,16 +105,16 @@ function testGetOrganizationProjectList() {
 @test:Config {
     dependsOn: [testGetOrganizationProjectList],
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetOrganizationProjectListNextPage() {
     //Get a list of projects of an organization
     log:print("githubClient -> getOrganizationProjectListNextPage()");
     int recordCount = 1;
     ProjectList projectList = new;
-    Organization projectListOrganization = {login: testOrganizationName};
+    //Organization projectListOrganization = {login: testOrganizationName};
     var responseProjectList = githubClient->
-    getOrganizationProjectList(projectListOrganization, STATE_OPEN, 1);
+    getOrganizationProjectList(testOrganizationName, STATE_OPEN, 1);
     if (responseProjectList is ProjectList) {
         projectList = responseProjectList;
     } else {
@@ -134,7 +134,7 @@ function testGetOrganizationProjectListNextPage() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetProjectColumnList() {
     //Get project column list
@@ -157,7 +157,7 @@ function testGetProjectColumnList() {
 @test:Config {
     dependsOn: [testGetProjectColumnList],
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetCardListOfColumn() {
     //Get column card list
@@ -182,7 +182,7 @@ function testGetCardListOfColumn() {
 @test:Config {
     dependsOn: [testGetCardListOfColumn],
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetCardListNextPage() {
     //Get card list next page
@@ -212,15 +212,15 @@ function testGetCardListNextPage() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetOrganizationRepositoryList() {
     //Get a all the repositories of Organization
     log:print("githubClient -> getOrganizationRepositoryList()");
     int recordCount = 1;
-    Organization repositoryListOrganization = {login: testOrganizationName};
+    //Organization repositoryListOrganization = {login: testOrganizationName};
     RepositoryList repositoryList = new;
-    var repoList = githubClient->getOrganizationRepositoryList(repositoryListOrganization, recordCount);
+    var repoList = githubClient->getOrganizationRepositoryList(testOrganizationName, recordCount);
     if (repoList is RepositoryList) {
         repositoryList = repoList;
     } else {
@@ -234,15 +234,15 @@ function testGetOrganizationRepositoryList() {
 @test:Config {
     dependsOn: [testGetOrganizationRepositoryList],
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetOrganizationRepositoryListNextPage() {
     //Get a all the repositories of Organization
     log:print("githubClient -> getRepositoryListNextPage()");
     int recordCount = 1;
-    Organization repositoryListOrganization = {login: testOrganizationName};
+    //Organization repositoryListOrganization = {login: testOrganizationName};
     RepositoryList repositoryList = new;
-    var repoList = githubClient->getOrganizationRepositoryList(repositoryListOrganization, recordCount);
+    var repoList = githubClient->getOrganizationRepositoryList(testOrganizationName, recordCount);
     if (repoList is RepositoryList) {
         repositoryList = repoList;
     } else {
@@ -262,13 +262,13 @@ function testGetOrganizationRepositoryListNextPage() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetRepository() {
     //Get a single repository
     log:print("githubClient -> getRepository()");
     Repository repository = {};
-    var repo = githubClient->getRepository("wso2/product-apim");
+    var repo = githubClient->getRepository("wso2", "product-apim");
     if (repo is Repository) {
         repository = repo;
     } else {
@@ -280,14 +280,14 @@ function testGetRepository() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetRepositoryProject() {
     //Get a Repository Project
     log:print("githubClient -> getRepositoryProject()");
-    Repository projectRepository = {owner: {login: testIssueAssignee}, name: "github-connector"};
+    //Repository projectRepository = {owner: {login: testIssueAssignee}, name: "github-connector"};
     Project repositoryProject = {};
-    var singleRepoProject = githubClient->getRepositoryProject(projectRepository, 1);
+    var singleRepoProject = githubClient->getRepositoryProject(testIssueAssignee, "github-connector", 1);
     if (singleRepoProject is Project) {
         repositoryProject = singleRepoProject;
     } else {
@@ -299,16 +299,15 @@ function testGetRepositoryProject() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetRepositoryProjectList() {
     //Get a list of projects of a repository
     log:print("githubClient -> getRepositoryProjectList()");
     int recordCount = 1;
-    Repository projectRepositoryList = {owner: {login: testIssueAssignee}, name: "github-connector"};
     ProjectList repoProjectList = new;
     var responseRepoProjectList = githubClient->
-    getRepositoryProjectList(projectRepositoryList, STATE_OPEN, recordCount);
+    getRepositoryProjectList(testIssueAssignee, "github-connector",STATE_OPEN, recordCount);
     if (responseRepoProjectList is ProjectList) {
         repoProjectList = responseRepoProjectList;
     } else {
@@ -323,16 +322,16 @@ function testGetRepositoryProjectList() {
 @test:Config {
     dependsOn: [testGetRepositoryProjectList],
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetRepositoryProjectListNextPage() {
     //Get a list of projects of a repository
     log:print("githubClient -> getProjectListNextPage()");
     int recordCount = 1;
-    Repository projectRepository = {owner: {login: testIssueAssignee}, name: "github-connector"};
+    //Repository projectRepository = {owner: {login: testIssueAssignee}, name: "github-connector"};
     ProjectList repoProjectList = new;
     var responseRepoProjectList = githubClient->
-    getRepositoryProjectList(projectRepository, STATE_OPEN, 1);
+    getRepositoryProjectList(testIssueAssignee, "github-connector", STATE_OPEN, 1);
     if (responseRepoProjectList is ProjectList) {
         repoProjectList = responseRepoProjectList;
     } else {
@@ -352,15 +351,15 @@ function testGetRepositoryProjectListNextPage() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetPullRequestList() {
     //Get a list of pull requests in a repository
     log:print("githubClient -> getPullRequestList()");
     int recordCount = 1;
-    Repository pullRequestRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
+    //Repository pullRequestRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
     PullRequestList pullRequestList = new;
-    var prList = githubClient->getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
+    var prList = githubClient->getPullRequestList(testOrganizationName, testRepositoryName, STATE_CLOSED, recordCount);
     if (prList is PullRequestList) {
         pullRequestList = prList;
     } else {
@@ -374,15 +373,15 @@ function testGetPullRequestList() {
 @test:Config {
     dependsOn: [testGetPullRequestList],
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetPullRequestListNextPage() {
     //Get a list of pull requests in a repository
     log:print("githubClient -> getPullRequestListNextPage()");
     int recordCount = 1;
-    Repository pullRequestRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
+    //Repository pullRequestRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
     PullRequestList pullRequestList = new;
-    var prList = githubClient->getPullRequestList(pullRequestRepository, STATE_CLOSED, recordCount);
+    var prList = githubClient->getPullRequestList(testOrganizationName, testRepositoryName, STATE_CLOSED, recordCount);
     if (prList is PullRequestList) {
         pullRequestList = prList;
     } else {
@@ -402,16 +401,16 @@ function testGetPullRequestListNextPage() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetIssueList() {
     //Get a list of issues of a repository
     log:print("githubClient -> getIssueList()");
     int recordCount = 1;
 
-    Repository issueRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
+    //Repository issueRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
     IssueList issueList = new;
-    var issues = githubClient->getIssueList(issueRepository, STATE_CLOSED, recordCount);
+    var issues = githubClient->getIssueList(testOrganizationName, testRepositoryName, STATE_CLOSED, recordCount);
     if (issues is IssueList) {
         issueList = issues;
     } else {
@@ -425,15 +424,15 @@ function testGetIssueList() {
 @test:Config {
     dependsOn: [testGetIssueList],
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetIssueListNextPage() {
     //Get a list of issues of a repository
     log:print("githubClient -> getIssueListNextPage()");
     int recordCount = 1;
-    Repository issueRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
+    //Repository issueRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
     IssueList issueList = new;
-    var issues = githubClient->getIssueList(issueRepository, STATE_CLOSED, recordCount);
+    var issues = githubClient->getIssueList(testOrganizationName, testRepositoryName, STATE_CLOSED, recordCount);
     if (issues is IssueList) {
         issueList = issues;
     } else {
@@ -453,7 +452,7 @@ function testGetIssueListNextPage() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testCreateIssue() {
     log:print("githubClient -> createIssue()");
@@ -473,7 +472,7 @@ function testCreateIssue() {
 function testCreatePullRequest() {
     log:print("githubClient -> createPullRequest()");
 
-    CreatePullRequest createPullRequest = {
+    PullRequestCreate createPullRequest = {
         title:"This is a pull request made for testing from feature4 -> master",
         head:"feature4",
         base:"master",
@@ -492,12 +491,12 @@ function testCreatePullRequest() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testCreatePullRequestReviewComment() {
     log:print("githubClient -> createPullRequestReviewComment()");
 
-    CreatePullRequestReviewComment createPullRequestReviewComment = {
+    PullRequestReviewCommentCreate createPullRequestReviewComment = {
         body:"This can be improved with better logic!",
         position: 4,
         path:"src/db/main.bal",
@@ -532,12 +531,12 @@ function testDeleteBranch() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testCreateGist() {
     log:print("githubClient -> createGist()");
 
-    CreateGist createGist = {
+    GistCreate createGist = {
         description: "Hello Gists",
         'public: true,
         gistFiles:[
@@ -558,7 +557,7 @@ function testCreateGist() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetOrganizationUserMembership() {
     log:print("githubClient -> getOrganizationUserMembership()");
@@ -574,7 +573,7 @@ function testGetOrganizationUserMembership() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetUser() {
     log:print("githubClient -> getUser()");
@@ -590,7 +589,7 @@ function testGetUser() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testGetIssue() {
     log:print("githubClient -> getIssue()");
@@ -605,7 +604,7 @@ function testGetIssue() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testUpdateIssue() {
     log:print("githubClient -> updateIssue()");
@@ -620,12 +619,12 @@ function testUpdateIssue() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testUpdatePullRequest() {
     log:print("githubClient -> updatePullRequest()");
 
-    UpdatePullRequest pullRequestUpdate = {
+    PullRequestUpdate pullRequestUpdate = {
         title:"This is a pull request made for testing updated",
         base:"master",
         body:"ksdfiusdhfs sdfbiusdhfus dfounsoud",
@@ -644,12 +643,12 @@ function testUpdatePullRequest() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: true
 }
 function testCreatePullRequestReview() {
     log:print("githubClient -> createPullRequestReview()");
 
-    CreatePullRequestReview createPullRequestReview = {
+    PullRequestReviewCreate createPullRequestReview = {
         body:"this is create pr review body. blah blah blah3",
         event:"COMMENT"
     };
@@ -665,7 +664,7 @@ function testCreatePullRequestReview() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testRepositoryListHasNextPage() {
     log:print("RepositoryList -> hasNextPage()");
@@ -675,7 +674,7 @@ public isolated function testRepositoryListHasNextPage() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testRepositoryListHasPreviousPage() {
     log:print("RepositoryList -> hasPreviousPage()");
@@ -685,7 +684,7 @@ public isolated function testRepositoryListHasPreviousPage() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testRepositoryListGetAllRepositories() {
     log:print("RepositoryList -> getAllRepositories()");
@@ -697,7 +696,7 @@ public isolated function testRepositoryListGetAllRepositories() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testProjectListHasNextPage() {
     log:print("ProjectList -> hasNextPage()");
@@ -707,7 +706,7 @@ public isolated function testProjectListHasNextPage() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testProjectListHasPreviousPage() {
     log:print("ProjectList -> hasPreviousPage()");
@@ -717,7 +716,7 @@ public isolated function testProjectListHasPreviousPage() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testProjectListGetAllProjects() {
     log:print("ProjectList -> getAllRepositories()");
@@ -729,7 +728,7 @@ public isolated function testProjectListGetAllProjects() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testColumnGetCardList() {
     log:print("Column.getCardList()");
@@ -741,7 +740,7 @@ public isolated function testColumnGetCardList() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testColumnListHasNextPage() {
     log:print("ColumnList -> hasNextPage()");
@@ -751,7 +750,7 @@ public isolated function testColumnListHasNextPage() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testColumnListHasPreviousPage() {
     log:print("ColumnList.hasPreviousPage()");
@@ -761,7 +760,7 @@ public isolated function testColumnListHasPreviousPage() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testColumnListGetAllColumns() {
     log:print("ColumnList -> getAllColumns()");
@@ -773,7 +772,7 @@ public isolated function testColumnListGetAllColumns() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testCardListHasNextPage() {
     log:print("CardList -> hasNextPage()");
@@ -783,7 +782,7 @@ public isolated function testCardListHasNextPage() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testCardListHasPreviousPage() {
     log:print("CardList -> hasPreviousPage()");
@@ -793,7 +792,7 @@ public isolated function testCardListHasPreviousPage() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testCardListGetAllCards() {
     log:print("CardList -> getAllCards()");
@@ -805,7 +804,7 @@ public isolated function testCardListGetAllCards() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testPullRequestListHasNextPage() {
      log:print("PullRequestList -> hasNextPage()");
@@ -815,7 +814,7 @@ public isolated function testPullRequestListHasNextPage() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testPullRequestListHasPreviousPage() {
      log:print("PullRequestList -> hasPreviousPage()");
@@ -825,7 +824,7 @@ public isolated function testPullRequestListHasPreviousPage() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testPullRequestListGetAllPullRequests() {
     log:print("PullRequestList -> getAllPullRequests()");
@@ -837,7 +836,7 @@ public isolated function testPullRequestListGetAllPullRequests() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testIssueListHasNextPage() {
     log:print("IssueList -> hasNextPage()");
@@ -847,7 +846,7 @@ public isolated function testIssueListHasNextPage() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testIssueListHasPreviousPage() {
      log:print("IssueList -> hasPreviousPage()");
@@ -857,7 +856,7 @@ public isolated function testIssueListHasPreviousPage() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testIssueListGetAllIssues() {
      log:print("IssueList -> getAllIssues()");
@@ -869,7 +868,7 @@ public isolated function testIssueListGetAllIssues() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testProjectOwnerGetOwnerType() {
      log:print("ProjectOwner -> getOwnerType()");
@@ -879,7 +878,7 @@ public isolated function testProjectOwnerGetOwnerType() {
 
 @test:Config {
     groups: ["object-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testProjectOwnerSetOwnerType() {
      log:print("ProjectOwner -> setOwnerType()");
@@ -891,7 +890,7 @@ public isolated function testProjectOwnerSetOwnerType() {
 
 @test:Config {
     groups: ["utility-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testConstructRequest() {
     log:print("constructRequest()");
@@ -911,7 +910,7 @@ public isolated function testConstructRequest() {
 
 @test:Config {
     groups: ["utility-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testGetValidatedResponseSuccess() {
     log:print("getValidatedResponse() successful");
@@ -937,7 +936,7 @@ public isolated function testGetValidatedResponseSuccess() {
 
 @test:Config {
     groups: ["utility-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testGetValidatedResponseError() {
     log:print("getValidatedResponse() error payload");
@@ -961,7 +960,7 @@ public isolated function testGetValidatedResponseError() {
 
 @test:Config {
     groups: ["utility-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testGetValidatedResponseNoRequestedData() {
     log:print("getValidatedResponse() no requested data");
@@ -985,7 +984,7 @@ public isolated function testGetValidatedResponseNoRequestedData() {
 
 @test:Config {
     groups: ["utility-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testGetValidatedResponseNoPayload() {
     log:print("getValidatedResponse() no payload");
@@ -1007,7 +1006,7 @@ public isolated function testGetValidatedResponseNoPayload() {
 
 @test:Config {
     groups: ["utility-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testGetValidatedResponseHttpError() {
     log:print("getValidatedResponse() HttpConnectorError");
@@ -1028,7 +1027,7 @@ public isolated function testGetValidatedResponseHttpError() {
 
 @test:Config {
     groups: ["utility-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testGetValidatedRestResponseSuccess() {
     log:print("getValidatedRestResponse() successful");
@@ -1054,7 +1053,7 @@ public isolated function testGetValidatedRestResponseSuccess() {
 
 @test:Config {
     groups: ["utility-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testGetValidatedRestResponseError() {
     log:print("getValidatedRestResponse() error payload");
@@ -1077,7 +1076,7 @@ public isolated function testGetValidatedRestResponseError() {
 
 @test:Config {
     groups: ["utility-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testGetValidatedRestResponseNoPayload() {
     log:print("getValidatedRestResponse() no payload");
@@ -1099,7 +1098,7 @@ public isolated function testGetValidatedRestResponseNoPayload() {
 
 @test:Config {
     groups: ["utility-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testGetValidatedRestResponseHttpError() {
     log:print("getValidatedRestResponse() HttpConnectorError");
@@ -1120,7 +1119,7 @@ public isolated function testGetValidatedRestResponseHttpError() {
 
 @test:Config {
     groups: ["utility-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testStringToJsonError() {
     log:print("stringToJson() error");
@@ -1137,7 +1136,7 @@ public isolated function testStringToJsonError() {
 
 @test:Config {
     groups: ["utility-functions"],
-    enable: false
+    enable: true
 }
 public isolated function testStringToJsonSuccess() {
     log:print("stringToJson() success");

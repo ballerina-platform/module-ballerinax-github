@@ -758,7 +758,7 @@ public type Plan record {|
 
 public type JsonArray json[];
 
-public type CreatePullRequest record {
+public type PullRequestCreate record {
     string title?;
     string head;
     string base;
@@ -768,7 +768,7 @@ public type CreatePullRequest record {
     int issue?;
 };
 
-public type UpdatePullRequest record {
+public type PullRequestUpdate record {
     string title;
     string body;
     string base;
@@ -776,7 +776,7 @@ public type UpdatePullRequest record {
     boolean maintainer_can_modify;
 };
 
-public type CreatePullRequestReviewComment record {
+public type PullRequestReviewCommentCreate record {
     string body;
     string commit_id?;
     string path?;
@@ -819,7 +819,7 @@ public type ReviewComment record {
     string start_side?;
 };
 
-public type CreatePullRequestReview record {
+public type PullRequestReviewCreate record {
     string commit_id?;
     string body;
     string event;
@@ -857,7 +857,7 @@ public type GistFile record {|
     string content;
 |};
 
-public type CreateGist record {|
+public type GistCreate record {|
     string description?;
     boolean 'public;
     GistFile[] gistFiles;

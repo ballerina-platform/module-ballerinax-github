@@ -28,7 +28,7 @@ public function main() {
     // Create a Gist
     log:print("githubClient -> createGist()");
 
-    github:CreateGist createGist = {
+    github:GistCreate createGist = {
         description: "Hello Gists",
         'public: true,
         gistFiles:[
