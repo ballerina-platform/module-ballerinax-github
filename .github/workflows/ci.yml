@@ -37,7 +37,7 @@ jobs:
               uses: MadhurangaWije/ballerina-action/@master
               with:
                   args:
-                      build .
+                      build
               env:
                   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                   ORG_NAME: ${{ secrets.ORG_NAME }}
