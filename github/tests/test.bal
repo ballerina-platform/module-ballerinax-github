@@ -17,13 +17,14 @@
 import ballerina/http;
 import ballerina/log;
 import ballerina/test;
+import ballerina/os;
 
-configurable string testOrganizationName = ?;
-configurable string testRepositoryName = ?;
-configurable string testResourcePath = ?;
-configurable string testIssueAssignee = ?;
-configurable string testUserName = ?;
-configurable string accessToken = ?;
+configurable string testOrganizationName = os:getEnv("ORG_NAME");
+configurable string testRepositoryName = os.getEnv("REPO_NAME");
+configurable string testResourcePath = os.getEnv("RESOURCE_PATH");
+configurable string testIssueAssignee = os.getEnv("ASSIGNEE");
+configurable string testUserName = os.getEnv("GITHUB_USERNAME");
+configurable string accessToken = os.getEnv("ACCESS_TOKEN");
 
 GitHubConfiguration gitHubConfig = {
     accessToken: accessToken
