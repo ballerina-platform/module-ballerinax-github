@@ -31,9 +31,10 @@ jobs:
                 GITHUB_USERNAME: ${{ secrets.USERNAME }}
               run: |
                  ./gradlew build
+            - name: Moving in to ballerina project of the github connector
+              run: cd github
             - name: Ballerina Build
               uses: MadhurangaWije/ballerina-action/@master
-              run: cd github
               with:
                   args:
                       build .
