@@ -32,7 +32,7 @@ jobs:
               run: |
                  ./gradlew build
             - name: Ballerina Build
-              uses: MadhurangaWije/ballerina-action
+              uses: MadhurangaWije/ballerina-action/@master
               with:
                   args:
                       build ./github/
