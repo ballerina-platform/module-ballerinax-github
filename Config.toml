@@ -1,0 +1,18 @@
+[ballerinax.github]
+accessToken = "44b90face06c9390099b13933459c4d576e01349"
+testUserName = "MadhurangaWije"
+testRepositoryName = "product-is"
+testIssueAssignee = "MadhurangaWije"
+testResourcePath = "Github/MadhurangaWije/github-connector"
+testOrganizationName="Wso2"
+
+[ballerinax.github.webhook]
+accessToken = "44b90face06c9390099b13933459c4d576e01349"
+githubTopic = "https://github.com/MadhurangaWije/github-connector/events/*.json"
+githubSecret = "GITHUB_SECRET"
+githubCallback = "https://2265b195c948.ngrok.io/subscriber"
+testUserName = "MadhurangaWije"
+testRepositoryName = "product-is"
+testIssueAssignee = "MadhurangaWije"
+testResourcePath = "Github/MadhurangaWije/github-connector"
+testOrganizationName="Wso2"
