@@ -33,9 +33,10 @@ jobs:
                  ./gradlew build
             - name: Ballerina Build
               uses: MadhurangaWije/ballerina-action/@master
+              run: cd github
               with:
                   args:
-                      build ./github/
+                      build .
               env:
                   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                   ORG_NAME: ${{ secrets.ORG_NAME }}
