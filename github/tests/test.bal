@@ -37,7 +37,7 @@ Client githubClient = new (gitHubConfig);
     enable: true
 }
 function testGetAuthenticatedUser() {
-    log:print("githubClient -> getAuthenticatedUser()");
+    log:printInfo("githubClient -> getAuthenticatedUser()");
     var response = githubClient->getAuthenticatedUser();
     if (response is User) {
         test:assertEquals(response.login, testUserName, msg = "Failed getAuthenticatedUser()");
@@ -52,7 +52,7 @@ function testGetAuthenticatedUser() {
 }
 function testGetOrganization() {
     //Get a single organization
-    log:print("githubClient -> getOrganization()");
+    log:printInfo("githubClient -> getOrganization()");
     var organizationData = githubClient->getOrganization("wso2");
     if (organizationData is Organization) {
         test:assertEquals(organizationData.name, "WSO2", msg = "Failed getOrganization()");
@@ -68,7 +68,7 @@ function testGetOrganization() {
 }
 function testGetOrganizationProject() {
     // Get an organization project
-    log:print("githubClient -> getOrganizationProject()");
+    log:printInfo("githubClient -> getOrganizationProject()");
     Project orgProject = {};
     //Organization projectOrganization = {login: testOrganizationName};
     var projectData = githubClient->getOrganizationProject(testOrganizationName, 26);
@@ -86,7 +86,7 @@ function testGetOrganizationProject() {
 }
 function testGetOrganizationProjectList() {
     //Get a list of projects of an organization
-    log:print("githubClient -> getOrganizationProjectList()");
+    log:printInfo("githubClient -> getOrganizationProjectList()");
     int recordCount = 1;
     ProjectList projectList = new;
     //Organization projectListOrganization = {login: testOrganizationName};
@@ -110,7 +110,7 @@ function testGetOrganizationProjectList() {
 }
 function testGetOrganizationProjectListNextPage() {
     //Get a list of projects of an organization
-    log:print("githubClient -> getOrganizationProjectListNextPage()");
+    log:printInfo("githubClient -> getOrganizationProjectListNextPage()");
     int recordCount = 1;
     ProjectList projectList = new;
     //Organization projectListOrganization = {login: testOrganizationName};
@@ -139,7 +139,7 @@ function testGetOrganizationProjectListNextPage() {
 }
 function testGetProjectColumnList() {
     //Get project column list
-    log:print("githubClient -> getProjectColumnList()");
+    log:printInfo("githubClient -> getProjectColumnList()");
     int recordCount = 1;
     Project columnListProject = {number: 1, resourcePath: testResourcePath};
     columnListProject["owner"]["__typename"] = "repository";
@@ -162,7 +162,7 @@ function testGetProjectColumnList() {
 }
 function testGetCardListOfColumn() {
     //Get column card list
-    log:print("Column -> getCardList()");
+    log:printInfo("Column -> getCardList()");
     int recordCount = 1;
     Project columnListProject = {number: 1, resourcePath: testResourcePath};
     columnListProject["owner"]["__typename"] = "repository";
@@ -187,7 +187,7 @@ function testGetCardListOfColumn() {
 }
 function testGetCardListNextPage() {
     //Get card list next page
-    log:print("githubClient -> getCardListNextPage()");
+    log:printInfo("githubClient -> getCardListNextPage()");
     int recordCount = 1;
     Project columnListProject = {number: 1, resourcePath: testResourcePath};
     columnListProject.owner.__typename = "repository";
@@ -217,7 +217,7 @@ function testGetCardListNextPage() {
 }
 function testGetOrganizationRepositoryList() {
     //Get a all the repositories of Organization
-    log:print("githubClient -> getOrganizationRepositoryList()");
+    log:printInfo("githubClient -> getOrganizationRepositoryList()");
     int recordCount = 1;
     //Organization repositoryListOrganization = {login: testOrganizationName};
     RepositoryList repositoryList = new;
@@ -239,7 +239,7 @@ function testGetOrganizationRepositoryList() {
 }
 function testGetOrganizationRepositoryListNextPage() {
     //Get a all the repositories of Organization
-    log:print("githubClient -> getRepositoryListNextPage()");
+    log:printInfo("githubClient -> getRepositoryListNextPage()");
     int recordCount = 1;
     //Organization repositoryListOrganization = {login: testOrganizationName};
     RepositoryList repositoryList = new;
@@ -267,7 +267,7 @@ function testGetOrganizationRepositoryListNextPage() {
 }
 function testGetRepository() {
     //Get a single repository
-    log:print("githubClient -> getRepository()");
+    log:printInfo("githubClient -> getRepository()");
     Repository repository = {};
     var repo = githubClient->getRepository("wso2", "product-apim");
     if (repo is Repository) {
@@ -285,7 +285,7 @@ function testGetRepository() {
 }
 function testGetRepositoryProject() {
     //Get a Repository Project
-    log:print("githubClient -> getRepositoryProject()");
+    log:printInfo("githubClient -> getRepositoryProject()");
     //Repository projectRepository = {owner: {login: testIssueAssignee}, name: "github-connector"};
     Project repositoryProject = {};
     var singleRepoProject = githubClient->getRepositoryProject(testIssueAssignee, "github-connector", 1);
@@ -304,7 +304,7 @@ function testGetRepositoryProject() {
 }
 function testGetRepositoryProjectList() {
     //Get a list of projects of a repository
-    log:print("githubClient -> getRepositoryProjectList()");
+    log:printInfo("githubClient -> getRepositoryProjectList()");
     int recordCount = 1;
     ProjectList repoProjectList = new;
     var responseRepoProjectList = githubClient->
@@ -327,7 +327,7 @@ function testGetRepositoryProjectList() {
 }
 function testGetRepositoryProjectListNextPage() {
     //Get a list of projects of a repository
-    log:print("githubClient -> getProjectListNextPage()");
+    log:printInfo("githubClient -> getProjectListNextPage()");
     int recordCount = 1;
     //Repository projectRepository = {owner: {login: testIssueAssignee}, name: "github-connector"};
     ProjectList repoProjectList = new;
@@ -356,7 +356,7 @@ function testGetRepositoryProjectListNextPage() {
 }
 function testGetPullRequestList() {
     //Get a list of pull requests in a repository
-    log:print("githubClient -> getPullRequestList()");
+    log:printInfo("githubClient -> getPullRequestList()");
     int recordCount = 1;
     //Repository pullRequestRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
     PullRequestList pullRequestList = new;
@@ -378,7 +378,7 @@ function testGetPullRequestList() {
 }
 function testGetPullRequestListNextPage() {
     //Get a list of pull requests in a repository
-    log:print("githubClient -> getPullRequestListNextPage()");
+    log:printInfo("githubClient -> getPullRequestListNextPage()");
     int recordCount = 1;
     //Repository pullRequestRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
     PullRequestList pullRequestList = new;
@@ -406,7 +406,7 @@ function testGetPullRequestListNextPage() {
 }
 function testGetIssueList() {
     //Get a list of issues of a repository
-    log:print("githubClient -> getIssueList()");
+    log:printInfo("githubClient -> getIssueList()");
     int recordCount = 1;
 
     //Repository issueRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
@@ -429,7 +429,7 @@ function testGetIssueList() {
 }
 function testGetIssueListNextPage() {
     //Get a list of issues of a repository
-    log:print("githubClient -> getIssueListNextPage()");
+    log:printInfo("githubClient -> getIssueListNextPage()");
     int recordCount = 1;
     //Repository issueRepository = {owner: {login: testOrganizationName}, name: testRepositoryName};
     IssueList issueList = new;
@@ -456,7 +456,7 @@ function testGetIssueListNextPage() {
     enable: true
 }
 function testCreateIssue() {
-    log:print("githubClient -> createIssue()");
+    log:printInfo("githubClient -> createIssue()");
     var createdIssue = githubClient->createIssue(testIssueAssignee, "github-connector",
     "This is a test issue", "This is the body of the test issue", ["bug", "critical"], [testIssueAssignee]);
     if (createdIssue is Issue) {
@@ -471,7 +471,7 @@ function testCreateIssue() {
     enable: false
 }
 function testCreatePullRequest() {
-    log:print("githubClient -> createPullRequest()");
+    log:printInfo("githubClient -> createPullRequest()");
 
     PullRequestCreate createPullRequest = {
         title:"This is a pull request made for testing from feature4 -> master",
@@ -495,7 +495,7 @@ function testCreatePullRequest() {
     enable: true
 }
 function testCreatePullRequestReviewComment() {
-    log:print("githubClient -> createPullRequestReviewComment()");
+    log:printInfo("githubClient -> createPullRequestReviewComment()");
 
     PullRequestReviewCommentCreate createPullRequestReviewComment = {
         body:"This can be improved with better logic!",
@@ -519,7 +519,7 @@ function testCreatePullRequestReviewComment() {
     enable: false
 }
 function testDeleteBranch() {
-    log:print("githubClient -> deleteBranch()");
+    log:printInfo("githubClient -> deleteBranch()");
 
     var response = githubClient->deleteBranch("MadhurangaWije", "github-connector", "feature3");
     if (response is error) {
@@ -535,7 +535,7 @@ function testDeleteBranch() {
     enable: true
 }
 function testCreateGist() {
-    log:print("githubClient -> createGist()");
+    log:printInfo("githubClient -> createGist()");
 
     GistCreate createGist = {
         description: "Hello Gists",
@@ -561,7 +561,7 @@ function testCreateGist() {
     enable: true
 }
 function testGetOrganizationUserMembership() {
-    log:print("githubClient -> getOrganizationUserMembership()");
+    log:printInfo("githubClient -> getOrganizationUserMembership()");
 
 
     var response = githubClient->getOrganizationUserMembership("MyTestOrgBallerina", "MadhurangaWije");
@@ -577,7 +577,7 @@ function testGetOrganizationUserMembership() {
     enable: true
 }
 function testGetUser() {
-    log:print("githubClient -> getUser()");
+    log:printInfo("githubClient -> getUser()");
 
 
     var response = githubClient->getUser("MadhurangaWije");
@@ -593,7 +593,7 @@ function testGetUser() {
     enable: true
 }
 function testGetIssue() {
-    log:print("githubClient -> getIssue()");
+    log:printInfo("githubClient -> getIssue()");
 
     var response = githubClient->getIssue("MadhurangaWije","github-connector",158);
     if (response is IssueFound) {
@@ -608,7 +608,7 @@ function testGetIssue() {
     enable: true
 }
 function testUpdateIssue() {
-    log:print("githubClient -> updateIssue()");
+    log:printInfo("githubClient -> updateIssue()");
     var createdIssue = githubClient->updateIssue(testIssueAssignee, "github-connector",198,
     "This is a test issue", "This is the body of the test issue updated", ["bug", "critical"], [testIssueAssignee], "open");
     if (createdIssue is Issue) {
@@ -623,7 +623,7 @@ function testUpdateIssue() {
     enable: true
 }
 function testUpdatePullRequest() {
-    log:print("githubClient -> updatePullRequest()");
+    log:printInfo("githubClient -> updatePullRequest()");
 
     PullRequestUpdate pullRequestUpdate = {
         title:"This is a pull request made for testing updated",
@@ -647,7 +647,7 @@ function testUpdatePullRequest() {
     enable: true
 }
 function testCreatePullRequestReview() {
-    log:print("githubClient -> createPullRequestReview()");
+    log:printInfo("githubClient -> createPullRequestReview()");
 
     PullRequestReviewCreate createPullRequestReview = {
         body:"this is create pr review body. blah blah blah3",
@@ -668,7 +668,7 @@ function testCreatePullRequestReview() {
     enable: true
 }
 function testGetBranchList() {
-    log:print("githubClient -> getBranchList()");
+    log:printInfo("githubClient -> getBranchList()");
 
     var response = githubClient->getBranchList("MadhurangaWije", "github-connector", 10);
     if (response is BranchList) {
@@ -684,7 +684,7 @@ function testGetBranchList() {
 //    enabel: true
 //}
 //function testGetBranchList() {
-    //log:print("githubClient -> getBranchList()");
+    //log:printInfo("githubClient -> getBranchList()");
     //
     //var response = githubClient->getBranchList("MadhurangaWije", "github-connector", 10);
     //if (response is BranchList) {
@@ -700,7 +700,7 @@ function testGetBranchList() {
     enable: true
 }
 public isolated function testRepositoryListHasNextPage() {
-    log:print("RepositoryList -> hasNextPage()");
+    log:printInfo("RepositoryList -> hasNextPage()");
     RepositoryList repositoryList = new;
     test:assertFalse(repositoryList.hasNextPage(), msg = "Failed RepositoryList.hasNextPage()");
 }
@@ -710,7 +710,7 @@ public isolated function testRepositoryListHasNextPage() {
     enable: true
 }
 public isolated function testRepositoryListHasPreviousPage() {
-    log:print("RepositoryList -> hasPreviousPage()");
+    log:printInfo("RepositoryList -> hasPreviousPage()");
     RepositoryList repositoryList = new;
     test:assertFalse(repositoryList.hasPreviousPage(), msg = "Failed RepositoryList.hasPreviousPage()");
 }
@@ -720,7 +720,7 @@ public isolated function testRepositoryListHasPreviousPage() {
     enable: true
 }
 public isolated function testRepositoryListGetAllRepositories() {
-    log:print("RepositoryList -> getAllRepositories()");
+    log:printInfo("RepositoryList -> getAllRepositories()");
     RepositoryList repositoryList = new;
     var repoArray = repositoryList.getAllRepositories();
     Repository[] sampleRepoArray = [];
@@ -732,7 +732,7 @@ public isolated function testRepositoryListGetAllRepositories() {
     enable: true
 }
 public isolated function testProjectListHasNextPage() {
-    log:print("ProjectList -> hasNextPage()");
+    log:printInfo("ProjectList -> hasNextPage()");
     ProjectList projectList = new;
     test:assertFalse(projectList.hasNextPage(), msg = "Failed ProjectList.hasNextPage()");
 }
@@ -742,7 +742,7 @@ public isolated function testProjectListHasNextPage() {
     enable: true
 }
 public isolated function testProjectListHasPreviousPage() {
-    log:print("ProjectList -> hasPreviousPage()");
+    log:printInfo("ProjectList -> hasPreviousPage()");
     ProjectList projectList = new;
     test:assertFalse(projectList.hasPreviousPage(), msg = "Failed ProjectList.hasPreviousPage()");
 }
@@ -752,7 +752,7 @@ public isolated function testProjectListHasPreviousPage() {
     enable: true
 }
 public isolated function testProjectListGetAllProjects() {
-    log:print("ProjectList -> getAllRepositories()");
+    log:printInfo("ProjectList -> getAllRepositories()");
     ProjectList projectList = new;
     var projectArray = projectList.getAllProjects();
     Project[] sampleProjectArray = [];
@@ -764,7 +764,7 @@ public isolated function testProjectListGetAllProjects() {
     enable: true
 }
 public isolated function testColumnGetCardList() {
-    log:print("Column.getCardList()");
+    log:printInfo("Column.getCardList()");
     Column column = new;
     var cardList = column.getCardList();
     CardList sampleCardList = {};
@@ -776,7 +776,7 @@ public isolated function testColumnGetCardList() {
     enable: true
 }
 public isolated function testColumnListHasNextPage() {
-    log:print("ColumnList -> hasNextPage()");
+    log:printInfo("ColumnList -> hasNextPage()");
     ColumnList columnList = new;
     test:assertFalse(columnList.hasNextPage(), msg = "Failed ColumnList.hasNextPage()");
 }
@@ -786,7 +786,7 @@ public isolated function testColumnListHasNextPage() {
     enable: true
 }
 public isolated function testColumnListHasPreviousPage() {
-    log:print("ColumnList.hasPreviousPage()");
+    log:printInfo("ColumnList.hasPreviousPage()");
     ColumnList columnList = new;
     test:assertFalse(columnList.hasPreviousPage(), msg = "Failed ColumnList.hasPreviousPage()");
 }
@@ -796,7 +796,7 @@ public isolated function testColumnListHasPreviousPage() {
     enable: true
 }
 public isolated function testColumnListGetAllColumns() {
-    log:print("ColumnList -> getAllColumns()");
+    log:printInfo("ColumnList -> getAllColumns()");
     ColumnList columnList = new;
     var columnArray = columnList.getAllColumns();
     Column[] sampleColumnArray = [];
@@ -808,7 +808,7 @@ public isolated function testColumnListGetAllColumns() {
     enable: true
 }
 public isolated function testCardListHasNextPage() {
-    log:print("CardList -> hasNextPage()");
+    log:printInfo("CardList -> hasNextPage()");
     CardList cardList = {};
     test:assertFalse(cardList.pageInfo.hasNextPage, msg = "Failed CardList.hasNextPage()");
 }
@@ -818,7 +818,7 @@ public isolated function testCardListHasNextPage() {
     enable: true
 }
 public isolated function testCardListHasPreviousPage() {
-    log:print("CardList -> hasPreviousPage()");
+    log:printInfo("CardList -> hasPreviousPage()");
     CardList cardList = {};
     test:assertFalse(cardList.pageInfo.hasPreviousPage, msg = "Failed CardList.hasPreviousPage()");
 }
@@ -828,7 +828,7 @@ public isolated function testCardListHasPreviousPage() {
     enable: true
 }
 public isolated function testCardListGetAllCards() {
-    log:print("CardList -> getAllCards()");
+    log:printInfo("CardList -> getAllCards()");
     CardList cardList = {};
     var cardArray = cardList.nodes;
     Card[] sampleCardArray = [];
@@ -840,7 +840,7 @@ public isolated function testCardListGetAllCards() {
     enable: true
 }
 public isolated function testPullRequestListHasNextPage() {
-     log:print("PullRequestList -> hasNextPage()");
+     log:printInfo("PullRequestList -> hasNextPage()");
      PullRequestList pullRequestList = new;
      test:assertFalse(pullRequestList.hasNextPage(), msg = "Failed PullRequestList.hasNextPage()");
 }
@@ -850,7 +850,7 @@ public isolated function testPullRequestListHasNextPage() {
     enable: true
 }
 public isolated function testPullRequestListHasPreviousPage() {
-     log:print("PullRequestList -> hasPreviousPage()");
+     log:printInfo("PullRequestList -> hasPreviousPage()");
      PullRequestList pullRequestList = new;
      test:assertFalse(pullRequestList.hasPreviousPage(), msg = "Failed PullRequestList.hasPreviousPage()");
 }
@@ -860,7 +860,7 @@ public isolated function testPullRequestListHasPreviousPage() {
     enable: true
 }
 public isolated function testPullRequestListGetAllPullRequests() {
-    log:print("PullRequestList -> getAllPullRequests()");
+    log:printInfo("PullRequestList -> getAllPullRequests()");
     PullRequestList pullRequestList = new;
     var pullRequestArray = pullRequestList.getAllPullRequests();
     PullRequest[] samplePullRequestArray = [];
@@ -872,7 +872,7 @@ public isolated function testPullRequestListGetAllPullRequests() {
     enable: true
 }
 public isolated function testIssueListHasNextPage() {
-    log:print("IssueList -> hasNextPage()");
+    log:printInfo("IssueList -> hasNextPage()");
     IssueList issueList = new;
     test:assertFalse(issueList.hasNextPage(), msg = "Failed IssueList.hasNextPage()");
 }
@@ -882,7 +882,7 @@ public isolated function testIssueListHasNextPage() {
     enable: true
 }
 public isolated function testIssueListHasPreviousPage() {
-     log:print("IssueList -> hasPreviousPage()");
+     log:printInfo("IssueList -> hasPreviousPage()");
      IssueList issueList = new;
      test:assertFalse(issueList.hasPreviousPage(), msg = "Failed IssueList.hasPreviousPage()");
 }
@@ -892,7 +892,7 @@ public isolated function testIssueListHasPreviousPage() {
     enable: true
 }
 public isolated function testIssueListGetAllIssues() {
-     log:print("IssueList -> getAllIssues()");
+     log:printInfo("IssueList -> getAllIssues()");
      IssueList issueList = new;
      var issueArray = issueList.getAllIssues();
      Issue[] sampleIssueArray = [];
@@ -904,7 +904,7 @@ public isolated function testIssueListGetAllIssues() {
     enable: true
 }
 public isolated function testProjectOwnerGetOwnerType() {
-     log:print("ProjectOwner -> getOwnerType()");
+     log:printInfo("ProjectOwner -> getOwnerType()");
      ProjectOwner projectOwner = {};
      test:assertEquals(projectOwner["__typename"], "", msg = "Failed ProjectOwner.getOwnerType()");
 }
@@ -914,7 +914,7 @@ public isolated function testProjectOwnerGetOwnerType() {
     enable: true
 }
 public isolated function testProjectOwnerSetOwnerType() {
-     log:print("ProjectOwner -> setOwnerType()");
+     log:printInfo("ProjectOwner -> setOwnerType()");
      ProjectOwner projectOwner = {};
      projectOwner["__typename"] = "Organization";
      string ownerType = <string>projectOwner["__typename"];
@@ -926,7 +926,7 @@ public isolated function testProjectOwnerSetOwnerType() {
     enable: true
 }
 public isolated function testConstructRequest() {
-    log:print("constructRequest()");
+    log:printInfo("constructRequest()");
     http:Request request = new;
     json samplePayload = {"query": "query body"};
     string sampleToken = "12345";
@@ -946,7 +946,7 @@ public isolated function testConstructRequest() {
     enable: true
 }
 public isolated function testGetValidatedResponseSuccess() {
-    log:print("getValidatedResponse() successful");
+    log:printInfo("getValidatedResponse() successful");
     http:Response sampleHttpResponse = new;
 
     json samplePayload = {"data": {"org": {"name": "WSO2"}}};
@@ -972,7 +972,7 @@ public isolated function testGetValidatedResponseSuccess() {
     enable: true
 }
 public isolated function testGetValidatedResponseError() {
-    log:print("getValidatedResponse() error payload");
+    log:printInfo("getValidatedResponse() error payload");
 
     http:Response sampleHttpResponse = new;
 
@@ -996,7 +996,7 @@ public isolated function testGetValidatedResponseError() {
     enable: true
 }
 public isolated function testGetValidatedResponseNoRequestedData() {
-    log:print("getValidatedResponse() no requested data");
+    log:printInfo("getValidatedResponse() no requested data");
 
     http:Response sampleHttpResponse = new;
 
@@ -1020,7 +1020,7 @@ public isolated function testGetValidatedResponseNoRequestedData() {
     enable: true
 }
 public isolated function testGetValidatedResponseNoPayload() {
-    log:print("getValidatedResponse() no payload");
+    log:printInfo("getValidatedResponse() no payload");
 
     http:Response sampleHttpResponse = new;
 
@@ -1042,7 +1042,7 @@ public isolated function testGetValidatedResponseNoPayload() {
     enable: true
 }
 public isolated function testGetValidatedResponseHttpError() {
-    log:print("getValidatedResponse() HttpConnectorError");
+    log:printInfo("getValidatedResponse() HttpConnectorError");
 
     error sampleHttpError = error(GITHUB_ERROR_CODE, message = "HTTP Connector Error.");
 
@@ -1063,7 +1063,7 @@ public isolated function testGetValidatedResponseHttpError() {
     enable: true
 }
 public isolated function testGetValidatedRestResponseSuccess() {
-    log:print("getValidatedRestResponse() successful");
+    log:printInfo("getValidatedRestResponse() successful");
     http:Response sampleHttpResponse = new;
 
     json samplePayload = {"title": "Sample title", "number": 150};
@@ -1089,7 +1089,7 @@ public isolated function testGetValidatedRestResponseSuccess() {
     enable: true
 }
 public isolated function testGetValidatedRestResponseError() {
-    log:print("getValidatedRestResponse() error payload");
+    log:printInfo("getValidatedRestResponse() error payload");
 
     http:Response sampleHttpResponse = new;
 
@@ -1112,7 +1112,7 @@ public isolated function testGetValidatedRestResponseError() {
     enable: true
 }
 public isolated function testGetValidatedRestResponseNoPayload() {
-    log:print("getValidatedRestResponse() no payload");
+    log:printInfo("getValidatedRestResponse() no payload");
 
     http:Response sampleHttpResponse = new;
 
@@ -1134,7 +1134,7 @@ public isolated function testGetValidatedRestResponseNoPayload() {
     enable: true
 }
 public isolated function testGetValidatedRestResponseHttpError() {
-    log:print("getValidatedRestResponse() HttpConnectorError");
+    log:printInfo("getValidatedRestResponse() HttpConnectorError");
 
     error sampleHttpError = error(GITHUB_ERROR_CODE, message = "HTTP Connector Error.");
 
@@ -1155,7 +1155,7 @@ public isolated function testGetValidatedRestResponseHttpError() {
     enable: true
 }
 public isolated function testStringToJsonError() {
-    log:print("stringToJson() error");
+    log:printInfo("stringToJson() error");
     string stringJson = "{\"title\":Sample title}";
 
     var convertedValue = stringToJson(stringJson);
@@ -1172,7 +1172,7 @@ public isolated function testStringToJsonError() {
     enable: true
 }
 public isolated function testStringToJsonSuccess() {
-    log:print("stringToJson() success");
+    log:printInfo("stringToJson() success");
     string stringJson = "{\"title\":\"Sample title\", \"author\":{\"name\":\"Author1\"}}";
 
     var convertedValue = stringToJson(stringJson);

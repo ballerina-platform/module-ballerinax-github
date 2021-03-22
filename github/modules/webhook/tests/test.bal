@@ -42,26 +42,26 @@ configurable string accessToken = ?;
 service /subscriber on webhookListener {
 
     remote function onPing(PingEvent event) returns Acknowledgement? {
-        log:print("Received ping-event-message ", notificationMsg = event);
+        log:printInfo("Received ping-event-message ", notificationMsg = event);
         webhookRegistrationNotified = true;
         webhookHookType = <@untainted> event.hook.'type;
         return {};
     }
 
     remote function onIssuesOpened(IssuesEvent event) returns Acknowledgement? {
-        log:print("Issue opened");
+        log:printInfo("Issue opened");
         issueCreationNotified = true;
         issueTitle = <@untainted> event.issue.title;
     }
 
     remote function onIssuesEdited(IssuesEvent event) returns Acknowledgement? {
-        log:print("Issue edited");
+        log:printInfo("Issue edited");
         issueEditedNotified = true;
         issueChanges = <@untainted> event["changes"];
     }
 
     remote function onIssuesLabeled(IssuesEvent event) returns Acknowledgement? {
-        log:print("Issue labeled");
+        log:printInfo("Issue labeled");
         issueLabeledNotified = true;
         string receivedIssueLabels = "";
         foreach Label label in event.issue.labels {
@@ -71,7 +71,7 @@ service /subscriber on webhookListener {
     }
 
     remote function onIssuesAssigned(IssuesEvent event) returns Acknowledgement? {
-       log:print("Issue assigned");
+       log:printInfo("Issue assigned");
        issueAssignedNotified = true;
        User assignee = <User> event.issue.assignee;
        issueAssignee = <@untainted> assignee.login;

@@ -196,8 +196,7 @@ public client class Client {
             return err;
         }
 
-        string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_BRANCHES,
-            repositoryOwner, repositoryName, recordCount);
+        string stringQuery = getTemplateStringForGetRepoBranches(repositoryOwner, repositoryName, recordCount);
 
         http:Request request = new;
         setHeader(request, self.accessToken);
@@ -247,8 +246,7 @@ public client class Client {
             return err;
         }
 
-        string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_ISSUES,
-            repositoryOwner, repositoryName, state, recordCount);
+        string stringQuery = getTemplateStringForGetRepoIssues(repositoryOwner, repositoryName, state, recordCount);
 
         http:Request request = new;
         setHeader(request, self.accessToken);
@@ -340,7 +338,7 @@ public client class Client {
         }
         Organization singleOrganization = {};
 
-        string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION, organizationName);
+        string stringQuery = getTemplateStringForGetOrganization(organizationName);
 
         http:Request request = new;
         setHeader(request, self.accessToken);
@@ -373,7 +371,7 @@ public client class Client {
             return err;
         }
 
-        string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT, organizationName, projectNumber);
+        string stringQuery = getTemplateStringForGetOrgProject(organizationName, projectNumber);
 
         http:Request request = new;
         setHeader(request, self.accessToken);
@@ -426,7 +424,7 @@ public client class Client {
             return err;
         }
 
-        string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECTS, organizationName, state, recordCount);
+        string stringQuery = getTemplateStringForGetOrgProjects(organizationName, state, recordCount);
 
         http:Request request = new;
         setHeader(request, self.accessToken);
@@ -472,7 +470,7 @@ public client class Client {
             return err;
         }
 
-        string stringQuery = io:sprintf(TEMPLATE_GET_USER_REPOSITORIES, userName, recordCount);
+        string stringQuery = getTemplateStringForGetUserRepositories(userName, recordCount);
 
         http:Request request = new;
         setHeader(request, self.accessToken);
@@ -519,7 +517,7 @@ public client class Client {
             return err;
         }
 
-        string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_REPOSITORIES, organizationName, recordCount);
+        string stringQuery = getTemplateStringForGetOrgRepositories(organizationName, recordCount);
 
         http:Request request = new;
         setHeader(request, self.accessToken);
@@ -565,15 +563,12 @@ public client class Client {
         }
         if (projectOwnerType == GIT_ORGANIZATION) {
             string organization = split(resourcePath, PATH_SEPARATOR, INDEX_TWO);
-            string stringQuery = io:sprintf(TEMPLATE_GET_ORGANIZATION_PROJECT_COLUMNS,
-                organization, project.number, recordCount);
+            string stringQuery = getTemplateStringForGetOrgProjectColumns(organization, project.number, recordCount);
             return getProjectColumns(GIT_ORGANIZATION, stringQuery, self.githubGraphQlClient, self.accessToken);
         } else if (projectOwnerType == GIT_REPOSITORY) {
-
             string ownerName = split(resourcePath, PATH_SEPARATOR, INDEX_ONE);
             string repositoryName = split(resourcePath, PATH_SEPARATOR, INDEX_TWO);
-            string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT_COLUMNS,
-                ownerName, repositoryName, project.number, recordCount);
+            string stringQuery = getTemplateStringForGetRepoProjectColumns(ownerName, repositoryName, project.number, recordCount);
             return getProjectColumns(GIT_REPOSITORY, stringQuery, self.githubGraphQlClient, self.accessToken);
         } else {
             error err = error(GITHUB_ERROR_CODE, message = "No records found.");
@@ -658,7 +653,7 @@ public client class Client {
             return err;
         }
 
-        string stringQuery = io:sprintf(TEMPLATE_GET_PULL_REQUESTS, repositoryOwner, repositoryName, state, recordCount);
+        string stringQuery = getTemplateStringForGetPullRequests(repositoryOwner, repositoryName, state, recordCount);
 
         http:Request request = new;
         setHeader(request, self.accessToken);
@@ -753,7 +748,7 @@ public client class Client {
 
         Repository singleRepository = {};
 
-        string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY, repositoryOwner, repositoryName);
+        string stringQuery = getTemplateStringForGetRepository(repositoryOwner, repositoryName);
 
         http:Request request = new;
         setHeader(request, self.accessToken);
@@ -838,7 +833,7 @@ public client class Client {
             return err;
         }
 
-        string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECT, repositoryOwner, repositoryName, projectNumber);
+        string stringQuery = getTemplateStringForGetRepoProject(repositoryOwner, repositoryName, projectNumber);
 
         http:Request request = new;
         setHeader(request, self.accessToken);
@@ -885,8 +880,7 @@ public client class Client {
             return err;
         }
 
-        string stringQuery = io:sprintf(TEMPLATE_GET_REPOSITORY_PROJECTS,
-            repositoryOwner, repositoryName, state, recordCount);
+        string stringQuery = getTemplateStringForGetRepoProjects(repositoryOwner, repositoryName, state, recordCount);
 
         http:Request request = new;
         setHeader(request, self.accessToken);

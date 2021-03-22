@@ -168,3 +168,64 @@ isolated function split(string receiver, string delimeter, int index) returns st
     string[] resultArray = regex:split(receiver, delimeter);
     return resultArray[index];
 }
+
+isolated function getTemplateStringForGetRepoBranches(string repositoryOwner, string repositoryName, int recordCount) returns string {
+    return string `{"variables":{"owner":"${repositoryOwner}","name":"${repositoryName}", ` +
+                                                               string `"recordCount":${recordCount}},"query":"${GET_REPOSITORY_BRANCHES}"}`;
+}
+
+isolated function getTemplateStringForGetRepository(string repositoryOwner, string repositoryName) returns string {
+    return string `{"variables":{"owner":"${repositoryOwner}","name":"${repositoryName}"},"query":`
+               + string `"${GET_REPOSITORY}"}`;
+}
+
+isolated function getTemplateStringForGetOrganization(string organizationName) returns string {
+    return string `{"variables":{"organization":"${organizationName}"},"query":"`
+                      + string `${GET_ORGANIZATION}"}`;
+}
+
+isolated function getTemplateStringForGetOrgProjectColumns(string organizationName, int projectNumber, int recordCount) returns string {
+    return string `{"variables":{"organization":"${organizationName}","number":${projectNumber},` +
+                                                          string `"recordCount":${recordCount}},"query":"${GET_ORGANIZATION_PROJECT_COLUMNS}"}`;
+}
+
+isolated function getTemplateStringForGetRepoProjectColumns(string repositoryOwner, string repositoryName, int projectNumber, int recordCount) returns string {
+    return string `{"variables":{"owner":"${repositoryOwner}","name":"${repositoryName}", ` +
+                                              string`"number":${projectNumber},"recordCount":${recordCount},"query":"${GET_REPOSITORY_PROJECT_COLUMNS}"}`;
+}
+
+isolated function getTemplateStringForGetOrgProject(string organizationName, int projectNumber) returns string {
+    return string `{"variables":{"organization":"${organizationName}","number":${projectNumber} },` + string`"query":" ${GET_ORGANIZATION_PROJECT}"}`;
+}
+
+isolated function getTemplateStringForGetPullRequests(string repositoryOwner, string repositoryName, string state, int recordCount) returns string {
+    return string `{"variables":{"owner":"${repositoryOwner}","name":"${repositoryName}","states":${state}, ` +
+                                                                           string `"recordCount":${recordCount}},"query":"${GET_PULL_REQUESTS}"}`;
+}
+
+isolated function getTemplateStringForGetRepoProjects(string repositoryOwner, string repositoryName, string state, int recordCount) returns string {
+    return string `{"variables":{"owner":"${repositoryOwner}","repository":"${repositoryName}",` +
+                                                       string `"states":${state},"recordCount":${recordCount}},"query":"${GET_REPOSITORY_PROJECTS}"}`;
+}
+
+isolated function getTemplateStringForGetRepoProject(string repositoryOwner, string repositoryName, int projectNumber) returns string {
+    return string `{"variables":{"owner":"${repositoryOwner}","repository":"${repositoryName}","number":${projectNumber}},"query":"${GET_REPOSITORY_PROJECT}"}`;
+}
+
+isolated function getTemplateStringForGetRepoIssues(string repositoryOwner, string repositoryName, string state, int recordCount) returns string {
+    return string `{"variables":{"owner":"${repositoryOwner}","name":"${repositoryName}","states":${state}, "recordCount":${recordCount}},"query":" ${GET_REPOSITORY_ISSUES}"}`;
+}
+
+isolated function getTemplateStringForGetOrgProjects(string organizationName, string state, int recordCount) returns string {
+    return string `{"variables":{"organization":"${organizationName}","states":${state},"recordCount":${recordCount}},"query":" ${GET_ORGANIZATION_PROJECTS} "}`;
+}
+
+isolated function getTemplateStringForGetOrgRepositories(string organizationName, int recordCount) returns string {
+    return string `{"variables":{"organization":"${organizationName}", ` +
+                                                              string `"recordCount":${recordCount}},"query":"${GET_ORGANIZATION_REPOSITORIES}"}`;
+}
+
+isolated function getTemplateStringForGetUserRepositories(string userName, int recordCount) returns string {
+    return string `{"variables":{"owner":"${userName}", "recordCount":${recordCount}},"query":"${GET_USER_REPOSITORIES}"}`;
+}
+
