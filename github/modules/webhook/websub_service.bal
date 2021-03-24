@@ -485,7 +485,7 @@ service class WebSubService {
                 }
             }
         }else {
-            log:printError("error:  ", errorPayload = eventPayload.detail()["message"]);
+            log:printError("error:  ", errorPayload = eventPayload.message());
         }
 
         return {};

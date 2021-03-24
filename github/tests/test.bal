@@ -18,6 +18,7 @@ import ballerina/http;
 import ballerina/log;
 import ballerina/test;
 import ballerina/os;
+//import ballerina/io;
 
 configurable string testOrganizationName = os:getEnv("ORG_NAME");
 configurable string testRepositoryName = os:getEnv("REPO_NAME");
@@ -144,11 +145,13 @@ function testGetProjectColumnList() {
     Project columnListProject = {number: 1, resourcePath: testResourcePath};
     columnListProject["owner"]["__typename"] = "repository";
     ColumnList columnList = new;
+    log:printInfo("*******************************testGetProjectColumnList()*********************************************");
     var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
     if (columns is ColumnList) {
         columnList = columns;
     } else {
-        test:assertFail(msg = <string>columns.message());
+        log:printInfo("njnjnjnjnjn");
+        test:assertFail(msg = columns.message());
     }
     boolean lengthEqualsRecords = columnList.getAllColumns().length() >= recordCount;
 
@@ -971,7 +974,7 @@ public isolated function testGetValidatedResponseSuccess() {
     groups: ["utility-functions"],
     enable: true
 }
-public isolated function testGetValidatedResponseError() {
+public isolated function testGetValidatedResponseError() returns error? {
     log:printInfo("getValidatedResponse() error payload");
 
     http:Response sampleHttpResponse = new;
@@ -986,7 +989,7 @@ public isolated function testGetValidatedResponseError() {
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
     } else {
-        test:assertEquals(validatedResponse.detail()["message"], "API error",
+        test:assertEquals(<string>(check validatedResponse.detail()["message"]), "API error",
         msg = "Validated response error mismatch");
     }
 }
@@ -995,7 +998,7 @@ public isolated function testGetValidatedResponseError() {
     groups: ["utility-functions"],
     enable: true
 }
-public isolated function testGetValidatedResponseNoRequestedData() {
+public isolated function testGetValidatedResponseNoRequestedData() returns error? {
     log:printInfo("getValidatedResponse() no requested data");
 
     http:Response sampleHttpResponse = new;
@@ -1010,7 +1013,7 @@ public isolated function testGetValidatedResponseNoRequestedData() {
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
     } else {
-        test:assertEquals(validatedResponse.detail()["message"], "name is not available in the response",
+        test:assertEquals(<string>(check validatedResponse.detail()["message"]), "name is not available in the response",
         msg = "Validated response error mismatch");
     }
 }
@@ -1019,7 +1022,7 @@ public isolated function testGetValidatedResponseNoRequestedData() {
     groups: ["utility-functions"],
     enable: true
 }
-public isolated function testGetValidatedResponseNoPayload() {
+public isolated function testGetValidatedResponseNoPayload() returns error? {
     log:printInfo("getValidatedResponse() no payload");
 
     http:Response sampleHttpResponse = new;
@@ -1031,7 +1034,7 @@ public isolated function testGetValidatedResponseNoPayload() {
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
     } else {
-        test:assertEquals(validatedResponse.detail()["message"],
+        test:assertEquals(<string>(check validatedResponse.detail()["message"]),
         "Entity body is not json compatible since the received content-type is : null",
         msg = "Validated response error mismatch");
     }
@@ -1041,7 +1044,7 @@ public isolated function testGetValidatedResponseNoPayload() {
     groups: ["utility-functions"],
     enable: true
 }
-public isolated function testGetValidatedResponseHttpError() {
+public isolated function testGetValidatedResponseHttpError() returns error? {
     log:printInfo("getValidatedResponse() HttpConnectorError");
 
     error sampleHttpError = error(GITHUB_ERROR_CODE, message = "HTTP Connector Error.");
@@ -1053,7 +1056,8 @@ public isolated function testGetValidatedResponseHttpError() {
     if (validatedResponse is json) {
         test:assertFail(msg = "HttpConnector error should be handled");
     } else {
-        test:assertEquals(validatedResponse.detail()["message"], "HTTP Connector Error",
+        //io:println(validatedResponse.toBalString());
+        test:assertEquals(<string>(check validatedResponse.detail()["message"]), "HTTP Connector Error",
         msg = "Validated response error mismatch");
     }
 }
@@ -1088,7 +1092,7 @@ public isolated function testGetValidatedRestResponseSuccess() {
     groups: ["utility-functions"],
     enable: true
 }
-public isolated function testGetValidatedRestResponseError() {
+public isolated function testGetValidatedRestResponseError() returns error? {
     log:printInfo("getValidatedRestResponse() error payload");
 
     http:Response sampleHttpResponse = new;
@@ -1102,7 +1106,7 @@ public isolated function testGetValidatedRestResponseError() {
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
     } else {
-        test:assertEquals(validatedResponse.detail()["message"], "API error",
+        test:assertEquals(<string>(check validatedResponse.detail()["message"]), "API error",
         msg = "Validated response error mismatch");
     }
 }
@@ -1111,7 +1115,7 @@ public isolated function testGetValidatedRestResponseError() {
     groups: ["utility-functions"],
     enable: true
 }
-public isolated function testGetValidatedRestResponseNoPayload() {
+public isolated function testGetValidatedRestResponseNoPayload() returns error? {
     log:printInfo("getValidatedRestResponse() no payload");
 
     http:Response sampleHttpResponse = new;
@@ -1123,7 +1127,7 @@ public isolated function testGetValidatedRestResponseNoPayload() {
     if (validatedResponse is json) {
         test:assertFail(msg = "Payload error should be handled");
     } else {
-        test:assertEquals(validatedResponse.detail()["message"],
+        test:assertEquals(<string>(check validatedResponse.detail()["message"]),
         "Entity body is not json compatible since the received content-type is : null",
         msg = "Validated response error mismatch");
     }
@@ -1133,7 +1137,7 @@ public isolated function testGetValidatedRestResponseNoPayload() {
     groups: ["utility-functions"],
     enable: true
 }
-public isolated function testGetValidatedRestResponseHttpError() {
+public isolated function testGetValidatedRestResponseHttpError() returns error? {
     log:printInfo("getValidatedRestResponse() HttpConnectorError");
 
     error sampleHttpError = error(GITHUB_ERROR_CODE, message = "HTTP Connector Error.");
@@ -1145,7 +1149,7 @@ public isolated function testGetValidatedRestResponseHttpError() {
     if (validatedResponse is json) {
         test:assertFail(msg = "HttpConnector error should be handled");
     } else {
-        test:assertEquals(validatedResponse.detail()["message"], "HTTP Connector Error",
+        test:assertEquals(<string>(check validatedResponse.detail()["message"]), "HTTP Connector Error",
         msg = "Validated response error mismatch");
     }
 }
@@ -1154,7 +1158,7 @@ public isolated function testGetValidatedRestResponseHttpError() {
     groups: ["utility-functions"],
     enable: true
 }
-public isolated function testStringToJsonError() {
+public isolated function testStringToJsonError() returns error? {
     log:printInfo("stringToJson() error");
     string stringJson = "{\"title\":Sample title}";
 
@@ -1162,7 +1166,7 @@ public isolated function testStringToJsonError() {
     if (convertedValue is json) {
         test:assertFail(msg = "Invalid string json. Expected failure");
     } else {
-        test:assertEquals(convertedValue.detail()["message"],
+        test:assertEquals(<string>(check convertedValue.detail()["message"]),
         "unrecognized token 'Sample' at line: 1 column: 17", msg = "Error message mismatch");
     }
 }

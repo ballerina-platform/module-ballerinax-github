@@ -119,7 +119,7 @@ isolated function getValidatedRestResponse(http:Response|http:PayloadType|error 
 # + stringQuery - GraphQL API query to get the project board columns
 # + githubClient - GitHub client object
 # + return - Column list object or Connector error
-function getProjectColumns(string ownerType, string stringQuery, http:Client githubClient, string accessToken) returns
+isolated function getProjectColumns(string ownerType, string stringQuery, http:Client githubClient, string accessToken) returns
 @tainted ColumnList | error {
 
     http:Client gitHubEndpoint = githubClient;
@@ -191,7 +191,7 @@ isolated function getTemplateStringForGetOrgProjectColumns(string organizationNa
 
 isolated function getTemplateStringForGetRepoProjectColumns(string repositoryOwner, string repositoryName, int projectNumber, int recordCount) returns string {
     return string `{"variables":{"owner":"${repositoryOwner}","name":"${repositoryName}", ` +
-                                              string`"number":${projectNumber},"recordCount":${recordCount},"query":"${GET_REPOSITORY_PROJECT_COLUMNS}"}`;
+                                              string`"number":${projectNumber},"recordCount":${recordCount}},"query":"${GET_REPOSITORY_PROJECT_COLUMNS}"}`;
 }
 
 isolated function getTemplateStringForGetOrgProject(string organizationName, int projectNumber) returns string {

@@ -17,7 +17,7 @@ public class Listener {
         var configuration = retrieveSubscriberServiceAnnotations(s);
         if (configuration is websub:SubscriberServiceConfiguration) {
             self.subscriberService = new WebSubService(s);
-            check self.subscriberListener.initialize(<websub:SubscriberService>self.subscriberService, configuration, name);
+            check self.subscriberListener.attachWithConfig(<websub:SubscriberService>self.subscriberService, configuration, name);
         } else {
             return error ListenerError("Could not find the required service-configurations");
         }
