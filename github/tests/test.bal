@@ -18,7 +18,6 @@ import ballerina/http;
 import ballerina/log;
 import ballerina/test;
 import ballerina/os;
-//import ballerina/io;
 
 configurable string testOrganizationName = os:getEnv("ORG_NAME");
 configurable string testRepositoryName = os:getEnv("REPO_NAME");
@@ -60,7 +59,6 @@ function testGetOrganization() {
     } else {
         test:assertFail(msg = organizationData.message());
     }
-
 }
 
 @test:Config {
@@ -145,7 +143,6 @@ function testGetProjectColumnList() {
     Project columnListProject = {number: 1, resourcePath: testResourcePath};
     columnListProject["owner"]["__typename"] = "repository";
     ColumnList columnList = new;
-    log:printInfo("*******************************testGetProjectColumnList()*********************************************");
     var columns = githubClient->getProjectColumnList(columnListProject, recordCount);
     if (columns is ColumnList) {
         columnList = columns;
@@ -681,22 +678,6 @@ function testGetBranchList() {
         test:assertFail(msg = response.message());
     }
 }
-
-//@test:Config {
-//    groups: ["network-calls"],
-//    enabel: true
-//}
-//function testGetBranchList() {
-    //log:printInfo("githubClient -> getBranchList()");
-    //
-    //var response = githubClient->getBranchList("MadhurangaWije", "github-connector", 10);
-    //if (response is BranchList) {
-    //    test:assertTrue(true);
-    //}else {
-    //    //log:printError(response.toBalString());
-    //    test:assertFail(msg = response.message());
-    //}
-//}
 
 @test:Config {
     groups: ["object-functions"],
