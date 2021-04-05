@@ -8,8 +8,12 @@ public class Listener {
     private websub:Listener subscriberListener;
     private websub:SubscriberService? subscriberService;
 
-    public isolated function init(int|http:Listener listenTo, http:ListenerConfiguration? config = ()) returns error? {
-        self.subscriberListener = check new(listenTo, config);
+    public isolated function init(int|http:Listener listenTo, websub:ListenerConfiguration? config = ()) returns error? {
+        websub:ListenerConfiguration subscriberListenerConfig = {};
+        if (config is  websub:ListenerConfiguration) {
+            subscriberListenerConfig = config;
+        }
+        self.subscriberListener = check new(listenTo, subscriberListenerConfig);
         self.subscriberService = ();
     }
 
