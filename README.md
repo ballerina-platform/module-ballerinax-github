@@ -25,7 +25,7 @@ Connects to GitHub using Ballerina.
 
 ## Connector Overview
 
-Github Ballerina Connector is used to connect with the GithHub to perform operations exposed by GitHub GraphQL and REST API. Also it provides easy integration with GitHub webhooks
+Github Ballerina Connector is used to connect with the GitHub to perform operations exposed by GitHub GraphQL and REST API. Also, it provides easy integration with GitHub webhooks
 
 The connector has built-in support to handle OAuth2.0, provides auto completion and type conversions. The following
 sections explains how to use Ballerina GitHub connector. You can refer the [GitHub GraphQL API v4.0](https://developer.github.com/v4/), [GitHub REST API v3.0](https://docs.github.com/en/rest) and [GitHub Webhooks](https://developer.github.com/webhooks/) to learn more about the APIs.
@@ -46,13 +46,8 @@ sections explains how to use Ballerina GitHub connector. You can refer the [GitH
 |:---------------------------------:|:---------------------:|
 | GitHub REST API                   | v3                    |
 | GitHub GraphQL API                | v4                    |
-| Ballerina Language                | Swan Lake Alpha 2     |
+| Ballerina Language                | Swan Lake Alpha 3     |
 | Java Development Kit (JDK)        | 11                    |
-
-## Limitations
---
-
-
 
 # Quickstart(s)
 
@@ -88,7 +83,7 @@ testOrganizationName = "<github_organization_name>"
 
 ## Client Side Operation Example: Get Issue List.
 
-In an occasion when we need to obtain the list of isssues associated with a repository, we can use the `getIssues`
+In an occasion when we need to obtain the list of issues associated with a repository, we can use the `getIssues`
 
 ### Step 1: Import the GitHub ballerina library.
 First, import the `ballerinax/github` module into a ballerina project.
@@ -97,7 +92,7 @@ First, import the `ballerinax/github` module into a ballerina project.
 ```
 
 ### Step 2: Initialize the GitHub client.
-You can now make the connection configuration using the personal access token or the obtained oAuth app token.
+You can now make the connection configuration using the personal access token, or the obtained oAuth app token.
 
 ```ballerina
     configurable string accessToken = ?;
@@ -108,19 +103,9 @@ You can now make the connection configuration using the personal access token or
 
     github:Client githubClient = new (config);
 
-    int recordCount = 10;
-    string repositoryOwner = "";
-    string repositoryName = "";
-    
-    var issueList = githubClient->getIssueList([repositoryOwner, repositoryName], github:STATE_OPEN, recordCount);
-    if (issueList is github:IssueList) {
-        log:print(string `Issue List: ${issueList.getAllIssues().length()} Issues found`);
-    } else {
-        log:printError("Error: "+ issueList.toString());
-    }
 ```
 
-### Step 3: Initializa the required parameters
+### Step 3: Initialize the required parameters
 Initialize variables with suitable values which needs to be passed as arguments to the client remote function.
 
 ```ballerina
@@ -134,7 +119,7 @@ Initialize variables with suitable values which needs to be passed as arguments 
 ```ballerina
     var issueList = githubClient->getIssueList([repositoryOwner, repositoryName], github:STATE_OPEN, recordCount);
     if (issueList is github:IssueList) {
-        log:print(string `Issue List: ${issueList.getAllIssues().length()} Issues found`);
+        log:printInfo(string `Issue List: ${issueList.getAllIssues().length()} Issues found`);
     } else {
         log:printError("Error: "+ issueList.toString());
     }
@@ -180,7 +165,7 @@ service /subscriber on webhookListener {
 
 ```ballerina
     remote function onPush(github:PushEvent event) returns github:Acknowledgement? {
-        log:print("Received push-event-message ", eventPayload = event);
+        log:printInfo("Received push-event-message ", eventPayload = event);
     }
 ```
 
@@ -226,54 +211,58 @@ Samples are available at : https://github.com/ballerina-platform/module-ballerin
 
 ## GitHub Webhook Operations
 
-* ### [Successful webhook setup]() - onPing(PingEvent event)
-* ### [A user forks a repository]() - onFork(ForkEvent event)
-* ### [One or more commits are pushed to a repository branch or tag]() - onPush(PushEvent event)
-* ### [A Git branch or tag is created]() - onCreate(CreateEvent event)
-* ### [A release, pre-release, or draft of a release is published]() - onReleasePublished(ReleaseEvent event)
-* ### [A release or pre-release is deleted]() - onReleaseUnpublished(ReleaseEvent event)
-* ### [A draft is saved, or a release or pre-release is published without previously being saved as a draft]() - onReleaseCreated(ReleaseEvent event)
-* ### [A release, pre-release, or draft release is edited]() - onReleaseEdited(ReleaseEvent event)
-* ### [A release, pre-release, or draft release is deleted]() - onReleaseDeleted(ReleaseEvent event)
-* ### [A pre-release is created]() - onPreReleased(ReleaseEvent event)
-* ### [A release or draft of a release is published, or a pre-release is changed to a release]() - onReleased(ReleaseEvent event)
-* ### [When someone stars a repository.]() - onWatchStarted(WatchEvent event)
-* ### [An issue comment created]() - onIssueCommentCreated(IssuesEvent event)
-* ### [An issue comment edited]() - onIssueCommentEdited(IssuesEvent event)
-* ### [An issue comment deleted]() - onIssueCommentDeleted(IssuesEvent event)
-* ### [An issue assigned to user]() - onIssuesAssigned(IssuesEvent event)
-* ### [An issue unassigned from a user]() - onIssuesUnassigned(IssuesEvent event)
-* ### [An issue was labeled]() - onIssuesLabeled(IssuesEvent event)
-* ### [An issue label was removed]() - onIssuesUnlabeled(IssuesEvent event)
-* ### [An issue state becomes open]() - onIssuesOpened(IssuesEvent event)
-* ### [An issue edited]() - onIssuesEdited(IssuesEvent event)
-* ### [An issue milestone added]() - onIssuesMilestoned(IssuesEvent event)
-* ### [An issue milestone removed]() - onIssuesDemilestoned(IssuesEvent event)
-* ### [An issue  closed]() - onIssuesClosed(IssuesEvent event)
-* ### [An issue re-opened]() - onIssuesReopened(IssuesEvent event)
-* ### [A label created]() - onLabelCreated(LabelEvent event)
-* ### [A label edited]() - onLabelEdited(LabelEvent event)
-* ### [A label deleted]() - onLabelDeleted(LabelEvent event)
-* ### [A milestone created]() - onMilestoneCreated(MilestoneEvent event)
-* ### [A milestone closed]() - onMilestoneClosed(MilestoneEvent event)
-* ### [A milestone opened]() - onMilestoneOpened(MilestoneEvent event)
-* ### [A milestone edited]() - onMilestoneEdited(MilestoneEvent event)
-* ### [A milestone deleted]() - onMilestoneDeleted(MilestoneEvent event)
-* ### [An assignee added to a pull request]() - onPullRequestAssigned(PullRequestEvent event)
-* ### [An assignee removed from a pull request]() - onPullRequestUnassigned(PullRequestEvent event)
-* ### [A pull request review request sent]() - onPullRequestReviewRequested(PullRequestEvent event)
-* ### [A pull request review request removed]() - onPullRequestReviewRequestRemoved(PullRequestEvent event)
-* ### [A label added to a pull request]() - onPullRequestLabeled(PullRequestEvent event)
-* ### [A label removed from a pull request]() - onPullRequestUnlabeled(PullRequestEvent event)
-* ### [A pull request opened]() - onPullRequestOpened(PullRequestEvent event)
-* ### [A pull request edited]() - onPullRequestEdited(PullRequestEvent event)
-* ### [A pull request closed]() - onPullRequestClosed(PullRequestEvent event)
-* ### [A pull request re-opened]() - onPullRequestReopened(PullRequestEvent event)
-* ### [A pull request review submitted]() - onPullRequestReviewSubmitted(PullRequestReviewEvent event)
-* ### [A pull request review edited]() - onPullRequestReviewEdited(PullRequestReviewEvent event)
-* ### [A pull request review dismissed]() - onPullRequestReviewDismissed(PullRequestReviewEvent event)
-* ### [A pull request review comment created]() - onPullRequestReviewCommentCreated(PullRequestReviewCommentEvent event)
-* ### [A pull request review comment edited]() - onPullRequestReviewCommentEdited(PullRequestReviewCommentEvent event)
-* ### [A pull request review comment deleted]() - onPullRequestReviewCommentDeleted(PullRequestReviewCommentEvent event)
+### Supported Events
+
+|          Event                                                                                            |                        Corresponding Remote Function                     |
+|:----------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------|
+| [Successful webhook setup]()                                                                              |   onPing(PingEvent event)                                                |
+| [A user forks a repository]()                                                                             |   onFork(ForkEvent event)                                                |
+| [One or more commits are pushed to a repository branch or tag]()                                          |   onPush(PushEvent event)                                                |
+| [A Git branch or tag is created]()                                                                        |   onCreate(CreateEvent event)                                            |
+| [A release, pre-release, or draft of a release is published]()                                            |   onReleasePublished(ReleaseEvent event)                                 |
+| [A release or pre-release is deleted]()                                                                   |   onReleaseUnpublished(ReleaseEvent event)                               |
+| [A draft is saved, or a release or pre-release is published without previously being saved as a draft]()  |   onReleaseCreated(ReleaseEvent event)                                   |
+| [A release, pre-release, or draft release is edited]()                                                    |   onReleaseEdited(ReleaseEvent event)                                    |
+| [A release, pre-release, or draft release is deleted]()                                                   |   onReleaseDeleted(ReleaseEvent event)                                   |
+| [A pre-release is created]()                                                                              |   onPreReleased(ReleaseEvent event)                                      |
+| [A release or draft of a release is published, or a pre-release is changed to a release]()                |   onReleased(ReleaseEvent event)                                         |
+| [When someone stars a repository.]()                                                                      |   onWatchStarted(WatchEvent event)                                       |
+| [An issue comment created]()                                                                              |   onIssueCommentCreated(IssuesEvent event)                               |
+| [An issue comment edited]()                                                                               |   onIssueCommentEdited(IssuesEvent event)                                |
+| [An issue comment deleted]()                                                                              |   onIssueCommentDeleted(IssuesEvent event)                               |
+| [An issue assigned to user]()                                                                             |   onIssuesAssigned(IssuesEvent event)                                    |
+| [An issue unassigned from a user]()                                                                       |   onIssuesUnassigned(IssuesEvent event)                                  |
+| [An issue was labeled]()                                                                                  |   onIssuesLabeled(IssuesEvent event)                                     |
+| [An issue label was removed]()                                                                            |   onIssuesUnlabeled(IssuesEvent event)                                   |
+| [An issue state becomes open]()                                                                           |   onIssuesOpened(IssuesEvent event)                                      |
+| [An issue edited]()                                                                                       |   onIssuesEdited(IssuesEvent event)                                      |
+| [An issue milestone added]()                                                                              |   onIssuesMilestoned(IssuesEvent event)                                  |
+| [An issue milestone removed]()                                                                            |   onIssuesDemilestoned(IssuesEvent event)                                |
+| [An issue  closed]()                                                                                      |   onIssuesClosed(IssuesEvent event)                                      |
+| [An issue re-opened]()                                                                                    |   onIssuesReopened(IssuesEvent event)                                    |
+| [A label created]()                                                                                       |   onLabelCreated(LabelEvent event)                                       |
+| [A label edited]()                                                                                        |   onLabelEdited(LabelEvent event)                                        |
+| [A label deleted]()                                                                                       |   onLabelDeleted(LabelEvent event)                                       |
+| [A milestone created]()                                                                                   |   onMilestoneCreated(MilestoneEvent event)                               |
+| [A milestone closed]()                                                                                    |   onMilestoneClosed(MilestoneEvent event)                                |
+| [A milestone opened]()                                                                                    |   onMilestoneOpened(MilestoneEvent event)                                |
+| [A milestone edited]()                                                                                    |   onMilestoneEdited(MilestoneEvent event)                                |
+| [A milestone deleted]()                                                                                   |   onMilestoneDeleted(MilestoneEvent event)                               |
+| [An assignee added to a pull request]()                                                                   |   onPullRequestAssigned(PullRequestEvent event)                          |
+| [An assignee removed from a pull request]()                                                               |   onPullRequestUnassigned(PullRequestEvent event)                        |
+| [A pull request review request sent]()                                                                    |   onPullRequestReviewRequested(PullRequestEvent event)                   |
+| [A pull request review request removed]()                                                                 |   onPullRequestReviewRequestRemoved(PullRequestEvent event)              |
+| [A label added to a pull request]()                                                                       |   onPullRequestLabeled(PullRequestEvent event)                           |
+| [A label removed from a pull request]()                                                                   |   onPullRequestUnlabeled(PullRequestEvent event)                         |
+| [A pull request opened]()                                                                                 |   onPullRequestOpened(PullRequestEvent event)                            |
+| [A pull request edited]()                                                                                 |   onPullRequestEdited(PullRequestEvent event)                            |
+| [A pull request closed]()                                                                                 |   onPullRequestClosed(PullRequestEvent event)                            |
+| [A pull request re-opened]()                                                                              |   onPullRequestReopened(PullRequestEvent event)                          |
+| [A pull request review submitted]()                                                                       |   onPullRequestReviewSubmitted(PullRequestReviewEvent event)             |
+| [A pull request review edited]()                                                                          |   onPullRequestReviewEdited(PullRequestReviewEvent event)                |
+| [A pull request review dismissed]()                                                                       |   onPullRequestReviewDismissed(PullRequestReviewEvent event)             |
+| [A pull request review comment created]()                                                                 |   onPullRequestReviewCommentCreated(PullRequestReviewCommentEvent event) |
+| [A pull request review comment edited]()                                                                  |   onPullRequestReviewCommentEdited(PullRequestReviewCommentEvent event)  |
+| [A pull request review comment deleted]()                                                                 |   onPullRequestReviewCommentDeleted(PullRequestReviewCommentEvent event) |
 
 ***
