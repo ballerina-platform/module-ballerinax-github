@@ -1,7 +1,0 @@
-[ballerinax.github]
-testUserRepositoryName = "github-connector"
-testOrganizationName="wso2"
-testResourcePath= "Github/MadhurangaWije/github-connector"
-testIssueAssignee= "MadhurangaWije"
-testUserName="MadhurangaWije"
-accessToken= "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"
