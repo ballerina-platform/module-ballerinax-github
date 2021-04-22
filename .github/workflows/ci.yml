@@ -26,12 +26,21 @@ jobs:
               uses: ballerina-platform/ballerina-action@master
               with:
                   args:
+<<<<<<< HEAD
                       build -c ./github
               env:
                   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                   ORG_NAME: ${{ secrets.ORG_NAME }}
                   USER_REPO_NAME: ${{ secrets.REPO_NAME }}
                   ISSUE_ASSIGNEE: ${{ secrets.ASSIGNEE }}
+=======
+                      build ./github
+              env:
+                  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+                  ORG_NAME: ${{ secrets.ORG_NAME }}
+                  REPO_NAME: ${{ secrets.REPO_NAME }}
+                  ASSIGNEE: ${{ secrets.ASSIGNEE }}
+>>>>>>> de3bf7208f092f0c3b0ba71c859b19f3eb94ccee
                   RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
                   JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
                   GITHUB_TOPIC: ${{ secrets.TOPIC }}
