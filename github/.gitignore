@@ -43,8 +43,8 @@ target/
 # Ignore resource .json files
 **/resources/*.json
 
-github/tests/Config.toml
-github/modules/webhook/tests/Config.toml
+tests/Config.toml
+modules/webhook/tests/Config.toml
 
 Config.toml
 
@@ -60,4 +60,5 @@ Ballerina.lock
 
 # Log file
 *.log
+
 
