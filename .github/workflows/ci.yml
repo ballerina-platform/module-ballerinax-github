@@ -24,11 +24,9 @@ jobs:
                  ./gradlew build
             - name: Ballerina Build
               uses: ballerina-platform/ballerina-action@master
-              run: |
-                cd github
               with:
                   args:
-                      build -c
+                      build -c ./github
               env:
                   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                   ORG_NAME: ${{ secrets.ORG_NAME }}
