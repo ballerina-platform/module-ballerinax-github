@@ -103,15 +103,18 @@ string createdIssueAssignee = testIssueAssignee;
     enable: false
 }
 function testWebhookNotificationOnIssueCreation() {
-    github:GitHubConfiguration gitHubConfig = {
+    github:Configuration gitHubConfig = {
         accessToken: accessToken
     };
 
     github:Client githubClient = new (gitHubConfig);
 
-    var issueCreationPayload = githubClient->createIssue(testUserName, "github-connector", createdIssueTitle,
-                                         "This is the body of the test issue: webhook", createdIssueLabelArray,
-                                         [createdIssueAssignee]);
+    github:CreateIssueInput createIssueInput = {
+        title: createdIssueTitle
+    };
+
+    var issueCreationPayload = githubClient->createIssue(createIssueInput, testUserName, "github-connector");
+
     if (issueCreationPayload is error) {
         test:assertFail(msg = "Issue creation failed: " + issueCreationPayload.message());
     }else {
@@ -155,14 +158,18 @@ function testWebhookNotificationOnIssueAssignment() {
 }
 function testWebhookNotificationOnIssueEdited() returns error? {
 
-    github:GitHubConfiguration gitHubConfig = {
+    github:Configuration gitHubConfig = {
         accessToken: accessToken
     };
 
     github:Client githubClient = new (gitHubConfig);
 
-    var updatedIssue = githubClient->updateIssue(testIssueAssignee, "github-connector", createdIssueNumber,
-    updatedIssueTitle, "This is the body of the test issue updated", ["bug", "critical"], [testIssueAssignee], "open");
+    github:UpdateIssueInput updateRepositoryInput = {
+        title: updatedIssueTitle
+    };
+
+    var updatedIssue = githubClient->updateIssue(updateRepositoryInput, testUserName, "github-connector", createdIssueNumber);
+
     if (updatedIssue is error) {
         test:assertFail(msg = "Issue edit failed: "+updatedIssue.message());
     }

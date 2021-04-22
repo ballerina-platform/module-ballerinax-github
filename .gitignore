@@ -43,7 +43,8 @@ target/
 # Ignore resource .json files
 **/resources/*.json
 
-github/Config.toml
+github/tests/Config.toml
+github/modules/webhook/tests/Config.toml
 
 # Java and Idea related ignores
 build/

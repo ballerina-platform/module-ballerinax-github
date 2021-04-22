@@ -44,9 +44,8 @@ sections explains how to use Ballerina GitHub connector. You can refer the [GitH
 
 |                                   | Version               |
 |:---------------------------------:|:---------------------:|
-| GitHub REST API                   | v3                    |
 | GitHub GraphQL API                | v4                    |
-| Ballerina Language                | Swan Lake Alpha 3     |
+| Ballerina Language                | Swan Lake Alpha 4     |
 | Java Development Kit (JDK)        | 11                    |
 
 # Quickstart(s)
@@ -97,7 +96,7 @@ You can now make the connection configuration using the personal access token, o
 ```ballerina
     configurable string accessToken = ?;
 
-    github:GitHubConfiguration config = {
+    github:Configuration config = {
         token: accessToken
     };
 
@@ -117,11 +116,11 @@ Initialize variables with suitable values which needs to be passed as arguments 
 ### Step 4: Invoke the client remote function and obtain the results.
 
 ```ballerina
-    var issueList = githubClient->getIssueList([repositoryOwner, repositoryName], github:STATE_OPEN, recordCount);
+    var response = githubClient->getRepositoryIssueList(repositoryOwner, repositoryName, [ISSUE_OPEN], perPageCount);
     if (issueList is github:IssueList) {
-        log:printInfo(string `Issue List: ${issueList.getAllIssues().length()} Issues found`);
+        log:printInfo(string `Issue List: ${issueList.nodes.length()} Issues found`);
     } else {
-        log:printError("Error: "+ issueList.toString());
+        log:printError("Error: "+ issueList.message());
     }
 ```
 
@@ -176,37 +175,65 @@ service /subscriber on webhookListener {
 
 Samples are available at : https://github.com/ballerina-platform/module-ballerinax-github/samples
 
-## GitHub Client Operations
+[comment]: <> (## GitHub Client Operations)
 
-* ### [Create Gist](https://github.com/ballerina-platform/module-ballerinax-github/samples/create_gist.bal)
-* ### [Create Issue](https://github.com/ballerina-platform/module-ballerinax-github/samples/create_issue.bal)
-* ### [Create Pull Request Review](https://github.com/ballerina-platform/module-ballerinax-github/samples/create_pull_request_review.bal)
-* ### [Create Pull Request Review Comment](https://github.com/ballerina-platform/module-ballerinax-github/samples/create_pull_request_review_comment.bal)
-* ### [Create Pull Request](https://github.com/ballerina-platform/module-ballerinax-github/samples/create_pull_request.bal)
-* ### [Delete Branch](https://github.com/ballerina-platform/module-ballerinax-github/samples/delete_branch.bal)
-* ### [Get Branch List](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_branch_list.bal)
-* ### [Get Project Card List Next Page](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_cardlist_nextpage.bal)
-* ### [Get Project Column List](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_project_column_list.bal)
-* ### [Get Project Column List Next Page](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_columnlist_nextpage.bal)
-* ### [Get Issue List](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_issue_list.bal)
-* ### [Get An Issue](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_issue.bal)
-* ### [Get Issue List Next Page](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_issuelist_nextpage.bal)
-* ### [Get Organization Project](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_organization_project.bal)
-* ### [Get Organization Project List](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_organization_projectlist.bal)
-* ### [Get Organization Repository List](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_organization_repository_list.bal)
-* ### [Get Organization Repository List Next Page](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_repository_list_next_page.bal)
-* ### [Get Organization User Membership](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_organization_user_membership.bal)
-* ### [Get an Organization](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_organization.bal)
-* ### [Get Project List Next Page](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_project_list_next_page.bal)
-* ### [Get Pull Request List](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_pull_request_list.bal)
-* ### [Get Pull Request List Next Page](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_pull_request_list_next_page.bal)
-* ### [Get Repository Project List](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_repository_project_list.bal)
-* ### [Get A Repository Project](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_repository_project.bal)
-* ### [Get Repository](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_repository.bal)
-* ### [Get User Repository List](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_user_repository_list.bal)
-* ### [Get An User](https://github.com/ballerina-platform/module-ballerinax-github/samples/get_user.bal)
-* ### [Update An Issue](https://github.com/ballerina-platform/module-ballerinax-github/samples/update_issue.bal)
-* ### [Update A Pull Request](https://github.com/ballerina-platform/module-ballerinax-github/samples/update_pull_request.bal)
+[comment]: <> (* ### [Create Gist]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/create_gist.bal&#41;)
+
+[comment]: <> (* ### [Create Issue]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/create_issue.bal&#41;)
+
+[comment]: <> (* ### [Create Pull Request Review]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/create_pull_request_review.bal&#41;)
+
+[comment]: <> (* ### [Create Pull Request Review Comment]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/create_pull_request_review_comment.bal&#41;)
+
+[comment]: <> (* ### [Create Pull Request]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/create_pull_request.bal&#41;)
+
+[comment]: <> (* ### [Delete Branch]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/delete_branch.bal&#41;)
+
+[comment]: <> (* ### [Get Branch List]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_branch_list.bal&#41;)
+
+[comment]: <> (* ### [Get Project Card List Next Page]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_cardlist_nextpage.bal&#41;)
+
+[comment]: <> (* ### [Get Project Column List]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_project_column_list.bal&#41;)
+
+[comment]: <> (* ### [Get Project Column List Next Page]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_columnlist_nextpage.bal&#41;)
+
+[comment]: <> (* ### [Get Issue List]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_issue_list.bal&#41;)
+
+[comment]: <> (* ### [Get An Issue]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_issue.bal&#41;)
+
+[comment]: <> (* ### [Get Issue List Next Page]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_issuelist_nextpage.bal&#41;)
+
+[comment]: <> (* ### [Get Organization Project]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_organization_project.bal&#41;)
+
+[comment]: <> (* ### [Get Organization Project List]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_organization_projectlist.bal&#41;)
+
+[comment]: <> (* ### [Get Organization Repository List]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_organization_repository_list.bal&#41;)
+
+[comment]: <> (* ### [Get Organization Repository List Next Page]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_repository_list_next_page.bal&#41;)
+
+[comment]: <> (* ### [Get Organization User Membership]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_organization_user_membership.bal&#41;)
+
+[comment]: <> (* ### [Get an Organization]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_organization.bal&#41;)
+
+[comment]: <> (* ### [Get Project List Next Page]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_project_list_next_page.bal&#41;)
+
+[comment]: <> (* ### [Get Pull Request List]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_pull_request_list.bal&#41;)
+
+[comment]: <> (* ### [Get Pull Request List Next Page]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_pull_request_list_next_page.bal&#41;)
+
+[comment]: <> (* ### [Get Repository Project List]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_repository_project_list.bal&#41;)
+
+[comment]: <> (* ### [Get A Repository Project]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_repository_project.bal&#41;)
+
+[comment]: <> (* ### [Get Repository]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_repository.bal&#41;)
+
+[comment]: <> (* ### [Get User Repository List]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_user_repository_list.bal&#41;)
+
+[comment]: <> (* ### [Get An User]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/get_user.bal&#41;)
+
+[comment]: <> (* ### [Update An Issue]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/update_issue.bal&#41;)
+
+[comment]: <> (* ### [Update A Pull Request]&#40;https://github.com/ballerina-platform/module-ballerinax-github/samples/update_pull_request.bal&#41;)
 
 
 ## GitHub Webhook Operations
