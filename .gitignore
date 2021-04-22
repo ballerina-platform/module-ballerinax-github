@@ -46,6 +46,8 @@ target/
 github/tests/Config.toml
 github/modules/webhook/tests/Config.toml
 
+Config.toml
+
 # Java and Idea related ignores
 build/
 .gradle/
