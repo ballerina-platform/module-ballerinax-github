@@ -1,0 +1,17 @@
+[package]
+org = "ballerinax"
+name = "github"
+version = "0.99.13"
+authors = ["Ballerina"]
+keywords = ["github", "endpoint", "API"]
+repository = "https://github.com/ballerina-platform/module-ballerinax-github"
+license = ["Apache-2.0"]
+
+[build-options]
+observabilityIncluded = true
+
+[[platform.java11.dependency]]
+path = "../java-wrapper/build/libs/java-wrapper-0.0.1-SNAPSHOT.jar"
+groupId = "io.ballerinax.webhook"
+artifactId = "java-wrapper"
+version = "0.0.1-SNAPSHOT"

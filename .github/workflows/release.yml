@@ -1,0 +1,37 @@
+name: Deployment
+
+on:
+  release:
+    types: [published]
+
+jobs:
+    build:
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Ballerina Build
+              uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
+              with:
+                  args:
+                      build -c --skip-tests
+              env:
+                  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+                  ORG_NAME: ${{ secrets.ORG_NAME }}
+                  REPO_NAME: ${{ secrets.REPO_NAME }}
+                  ASSIGNEE: ${{ secrets.ASSIGNEE }}
+                  RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
+                  JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
+            - name: Ballerina Push
+              uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
+              with:
+                  args:
+                      push
+              env:
+                  BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_ACCESS_TOKEN }}
+                  GITHUB_TOPIC: ${{ secrets.TOPIC }}
+                  GITHUB_SECRET: ${{ secrets.SECRET }}
+                  GITHUB_CALLBACK: ${{ secrets.CALLBACK }}
+                  GITHUB_USERNAME: ${{ secrets.USERNAME }}
+                  REPO_NAME: ${{ secrets.REPO_NAME }}
