@@ -25,19 +25,19 @@ jobs:
         run: |
           ./gradlew build
       - name: Ballerina Build
-          uses: ballerina-platform/ballerina-action@master
-          with:
-            args:
-              build -c --skip-tests ./github
-          env:
-            ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-            ORG_NAME: ${{ secrets.ORG_NAME }}
-            USER_REPO_NAME: ${{ secrets.REPO_NAME }}
-            ISSUE_ASSIGNEE: ${{ secrets.ASSIGNEE }}
-            RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
-            JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
-            GITHUB_USERNAME: ${{ secrets.USERNAME }}
-            JAVA_HOME: /usr/lib/jvm/default-jvm
+        uses: ballerina-platform/ballerina-action@master
+        with:
+          args:
+            build -c --skip-tests ./github
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          ORG_NAME: ${{ secrets.ORG_NAME }}
+          USER_REPO_NAME: ${{ secrets.REPO_NAME }}
+          ISSUE_ASSIGNEE: ${{ secrets.ASSIGNEE }}
+          RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
+          JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
+          GITHUB_USERNAME: ${{ secrets.USERNAME }}
+          JAVA_HOME: /usr/lib/jvm/default-jvm
 
       - name: Ballerina Push
         uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
