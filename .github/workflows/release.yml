@@ -12,39 +12,39 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-          - name: Grant execute permission for gradlew
-            run: chmod +x gradlew
-          - name: Build with Gradle
-            env:
-              packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
-              packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
-              JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
-            run: |
-              ./gradlew build
-          - name: Ballerina Build
-              uses: ballerina-platform/ballerina-action@master
-              with:
-                args:
-                  build -c --skip-tests ./github
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+            - name: Grant execute permission for gradlew
+              run: chmod +x gradlew
+            - name: Build with Gradle
               env:
-                ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-                ORG_NAME: ${{ secrets.ORG_NAME }}
-                USER_REPO_NAME: ${{ secrets.REPO_NAME }}
-                ISSUE_ASSIGNEE: ${{ secrets.ASSIGNEE }}
-                RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
+                packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
+                packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
                 JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
-                GITHUB_USERNAME: ${{ secrets.USERNAME }}
-                JAVA_HOME: /usr/lib/jvm/default-jvm
+              run: |
+                ./gradlew build
+      - name: Ballerina Build
+          uses: ballerina-platform/ballerina-action@master
+          with:
+            args:
+              build -c --skip-tests ./github
+          env:
+            ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+            ORG_NAME: ${{ secrets.ORG_NAME }}
+            USER_REPO_NAME: ${{ secrets.REPO_NAME }}
+            ISSUE_ASSIGNEE: ${{ secrets.ASSIGNEE }}
+            RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
+            JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
+            GITHUB_USERNAME: ${{ secrets.USERNAME }}
+            JAVA_HOME: /usr/lib/jvm/default-jvm
 
-          - name: Ballerina Push
-            uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
-            with:
-              args:
-                push
-            env:
-              WORKING_DIR: ./calendar
-              BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_ACCESS_TOKEN }}
+      - name: Ballerina Push
+        uses: ballerina-platform/ballerina-action/@swan-lake-connector-release
+        with:
+          args:
+            push
+        env:
+          WORKING_DIR: ./calendar
+          BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_ACCESS_TOKEN }}
 
