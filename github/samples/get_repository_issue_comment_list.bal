@@ -8,20 +8,18 @@ github:Configuration gitHubConfig = {
 github:Client githubClient = new (gitHubConfig);
 
 public function main() {
-    log:printInfo("githubClient -> getUserRepositoryList()");
+    log:printInfo("githubClient -> getRepositoryIssueCommentList()");
 
     string repositoryOwnerName = "";
     string repositoryName = "";
+    int issueNumber = 102;
     int perPageCount = 10;
 
-    var response = githubClient->getUserRepositoryList(repositoryOwnerName, repositoryName, perPageCount);
-    if(response is github:RepositoryList){
+    var response = githubClient->getRepositoryIssueCommentList(repositoryOwnerName, repositoryName, issueNumber, perPageCount);
+    if(response is github:IssueCommentList){
         log:printInfo(response.toBalString());
     }else {
-        log:printInfo(response.message());
+        log:printError(response.message());
     }
 }
-
-
-
 

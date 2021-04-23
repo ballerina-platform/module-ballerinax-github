@@ -8,19 +8,22 @@ github:Configuration gitHubConfig = {
 github:Client githubClient = new (gitHubConfig);
 
 public function main() {
-    log:printInfo("githubClient -> getUserRepositoryList()");
+    log:printInfo("githubClient -> getRepositoryCollobaratorList()");
 
+    int perPageCount = 10;
     string repositoryOwnerName = "";
     string repositoryName = "";
-    int perPageCount = 10;
 
-    var response = githubClient->getUserRepositoryList(repositoryOwnerName, repositoryName, perPageCount);
-    if(response is github:RepositoryList){
+    var response = githubClient->getRepositoryCollobaratorList(repositoryOwnerName, repositoryName, perPageCount);
+    if(response is github:CollaboratorList){
         log:printInfo(response.toBalString());
     }else {
         log:printInfo(response.message());
     }
 }
+
+
+
 
 
 

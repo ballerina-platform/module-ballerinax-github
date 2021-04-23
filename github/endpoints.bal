@@ -16,6 +16,11 @@
 
 import ballerina/http;
 
+# GitHub Client.
+# + accessToken - The access token of the github account
+# + githubGraphQlClient - HTTP client endpoint
+# + headers - Request Header map
+@display {label: "GitHub Client"}
 public client class Client {
     string accessToken;
     http:Client githubGraphQlClient;
@@ -29,7 +34,8 @@ public client class Client {
         };
     }
 
-    remote isolated function getAuthenticatedUser()  returns User|error {
+    @display {label: "Get Authenticated User"}
+    remote isolated function getAuthenticatedUser()  returns @display {label: "Authenticated User"} User|error {
 
         string stringQuery = getFormulatedStringQueryForGetAuthenticatedUser();
         http:Request request = new;
@@ -57,112 +63,106 @@ public client class Client {
         return err;
     }
 
-    isolated function getUserId(string userName) returns string|error {
-        string stringQuery = getFormulatedStringQueryForGetUserOwnerId(userName);
-        http:Request request = new;
-        setHeader(request, self.accessToken);
-        json convertedQuery = check stringToJson(stringQuery);
-        //Set headers and payload to the request
-        constructRequest(request, <@untainted> convertedQuery);
 
-        var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
-
-        //Check for empty payloads and errors
-        json validatedResponse = check getValidatedResponse(response);
-
-        if (validatedResponse is map<json>) {
-            var gitData = validatedResponse[GIT_DATA];
-            if(gitData is map<json>){
-                var user = gitData[GIT_USER];
-                if(user is map<json>){
-                    json userId = user[GIT_ID];
-                    return userId.toBalString();
-                }
-
-            }
-
-        }
-        error err = error(GITHUB_ERROR_CODE, message = "Error parsing user response");
-        return err;
+    @display {label: "Get User Id"}
+    remote isolated function getUserId(@display {label: "User name"} string userName) returns @display {label: "User Id"} string|error {
+        return getUserId(userName, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function getUserRepository(string username, string repositoryName) returns Repository|error {
+    @display {label: "Get User Repository"}
+    remote isolated function getUserRepository(@display {label: "Repository Owner Name"} string username, @display {label: "Repository Name"} string repositoryName) returns @display {label: "Repository"} Repository|error {
         return getUserRepository(username, repositoryName, self.accessToken, self.githubGraphQlClient);
     }
 
 
     // Repositories
 
-    remote isolated function getAuthenticatedUserRepositoryList(int perPageCount, string? nextPageCursor=()) returns RepositoryList|error {
+    @display {label: "Get Authenticated User Repository List"}
+    remote isolated function getAuthenticatedUserRepositoryList(@display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor=()) returns @display {label: "Repository List"} RepositoryList|error {
         return getAuthenticatedUserRepositoryList(perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor=());
 
     }
 
-    remote isolated function getUserRepositoryList(string username, int perPageCount, string? nextPageCursor = ()) returns RepositoryList|error {
+    @display {label: "Get User Repository List"}
+    remote isolated function getUserRepositoryList(@display {label: "Repository Owner Name"} string username, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor = ()) returns @display {label: "Repository List"} RepositoryList|error {
         return getUserRepositoryList(username, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
     }
 
-    remote isolated function getOrganizationRepositoryList(string organizationName, int perPageCount, string? nextPageCursor = ()) returns RepositoryList|error {
+    @display {label: "Get Organization Repository List"}
+    remote isolated function getOrganizationRepositoryList(@display {label: "Organization Name"} string organizationName, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor = ()) returns @display {label: "Repository List"} RepositoryList|error {
         return getOrganizationRepositoryList(organizationName, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
     }
 
-    remote isolated function getRepositoryCollobaratorList(string ownerName, string repositoryName, int perPageCount, string? nextPageCursor = ()) returns CollaboratorList|error {
+    @display {label: "Get Repository Collobarator List"}
+    remote isolated function getRepositoryCollobaratorList(@display {label: "Repository Owner Name"} string ownerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor = ()) returns @display {label: "Collaborator List"} CollaboratorList|error {
         return getRepositoryCollobaratorList(ownerName, repositoryName, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
 
     }
 
-    remote isolated function getRepositoryBranchList(string ownerName, string repositoryName, int perPageCount, string? nextPageCursor = ()) returns BranchList|error {
+    @display {label: "Get Repository Branch List"}
+    remote isolated function getRepositoryBranchList(@display {label: "Repository Owner Name"} string ownerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor = ()) returns @display {label: "Branch List"} BranchList|error {
         return getRepositoryBranchList(ownerName, repositoryName, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
     }
 
-    remote isolated function updateRepository(UpdateRepositoryInput updateRepositoryInput, string repositoryOwnerName, string repositoryName) returns error? {
+    @display {label: "Update Repository"}
+    remote isolated function updateRepository(@display {label: "Update Repository Input"} UpdateRepositoryInput updateRepositoryInput, @display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName) returns error? {
         return  updateRepository(updateRepositoryInput, repositoryOwnerName, repositoryName, self.accessToken, self.githubGraphQlClient);
     }
 
 
     // Issues
 
-    remote isolated function getRepositoryIssueListAssignedToUser(string repositoryOwnerName, string repositoryName, string assignee, int perPageCount, string? nextPageCursor = ()) returns IssueList|error {
+    @display {label: "Get Repository Issue List Assigned To User"}
+    remote isolated function getRepositoryIssueListAssignedToUser(@display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Assignee User Name"} string assignee, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor = ()) returns @display {label: "Issue List"} IssueList|error {
         return getRepositoryIssueListAssignedToUser(repositoryOwnerName, repositoryName, assignee, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
 
     }
 
-    remote isolated function getRepositoryIssueList(string repositoryOwnerName, string repositoryName, IssueState[] states, int perPageCount, string? nextPageCursor = ()) returns IssueList|error {
+    @display {label: "Get Repository Issue List"}
+    remote isolated function getRepositoryIssueList(@display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Issue States"} IssueState[] states, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor = ()) returns @display {label: "Issue List"} IssueList|error {
         return getRepositoryIssueList(repositoryOwnerName, repositoryName, states, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
     }
 
-    remote isolated function createIssue(CreateIssueInput createIssueInput, string repositoryOwnerName, string repositoryName) returns Issue|error {
+    @display {label: "Create Issue"}
+    remote isolated function createIssue(@display {label: "Create Issue Input"} CreateIssueInput createIssueInput, @display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName) returns @display {label: "Issue"} Issue|error {
         return createIssue(createIssueInput, repositoryOwnerName, repositoryName, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function updateIssue(UpdateIssueInput updateIssueInput, string repositoryOwnerName, string repositoryName, int issueNumber) returns Issue|error {
+    @display {label: "Update Issue"}
+    remote isolated function updateIssue(@display {label: "Update Issue Input"} UpdateIssueInput updateIssueInput, @display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Issue Number"} int issueNumber) returns @display {label: "Issue"} Issue|error {
         return  updateIssue(updateIssueInput, repositoryOwnerName, repositoryName, issueNumber, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function getRepositoryIssue(string repositoryOwnerName, string repositoryName, int issueNumber) returns Issue|error {
+    @display {label: "Get Repository Issue"}
+    remote isolated function getRepositoryIssue(@display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Issue Number"} int issueNumber) returns @display {label: "Issue"} Issue|error {
         return getRepositoryIssue(repositoryOwnerName, repositoryName, issueNumber, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function getRepositoryIssueCommentList(string repositoryOwnerName, string repositoryName, int issueNumber, int perPageCount, string? nextPageCursor=()) returns IssueCommentList|error {
+    @display {label: "Get Repository Issue Comment List"}
+    remote isolated function getRepositoryIssueCommentList(@display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Issue Number"} int issueNumber, @display {label: "Per Page Count"}int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor=()) returns @display {label: "Issue Comment List"} IssueCommentList|error {
         return getRepositoryIssueCommentList(repositoryOwnerName, repositoryName, issueNumber, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
     }
 
-    remote isolated function getIssuesWithLabel(string repositoryOwnerName, string repositoryName, string labelName, int perPageCount, string? nextPageCursor=()) returns IssueList|error {
+    @display {label: "Get Issues WIth Label"}
+    remote isolated function getIssuesWithLabel(@display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Label Name"} string labelName, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor=()) returns @display {label: "Issue List"} IssueList|error {
         return getIssuesWithLabel(repositoryOwnerName, repositoryName, labelName, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
     }
 
 
     // Comments
 
-    remote isolated function addComment(AddCommentInput addCommentInput) returns IssueComment|error {
+    @display {label: "Add Issue Comment"}
+    remote isolated function addComment(@display {label: "Add Comment Input"} AddCommentInput addCommentInput) returns @display {label: "Issue Comment"} IssueComment|error {
         return addComment(addCommentInput, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function updateComment(UpdateIssueCommentInput updateCommentInput) returns error? {
+    @display {label: "Update Issue Comment"}
+    remote isolated function updateComment(@display {label: "Update Comment Input"} UpdateIssueCommentInput updateCommentInput) returns error? {
         return updateComment(updateCommentInput, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function deleteComment(DeleteIssueCommentInput deleteCommentInput) returns error? {
+    @display {label: "Delete Issue Comment"}
+    remote isolated function deleteComment(@display {label: "Delete Comment Input"} DeleteIssueCommentInput deleteCommentInput) returns error? {
         return deleteComment(deleteCommentInput, self.accessToken, self.githubGraphQlClient);
     }
 
@@ -170,120 +170,145 @@ public client class Client {
     //Labels
 
     // mutation is in preview state
-    remote isolated function createLabel(CreateLabelInput createLabelInput) returns error? {
-        return createLabel(createLabelInput, self.accessToken, self.githubGraphQlClient);
-    }
+    // remote isolated function createLabel(CreateLabelInput createLabelInput) returns error? {
+    //     return createLabel(createLabelInput, self.accessToken, self.githubGraphQlClient);
+    // }
 
-    remote isolated function getRepositoryLabel(string repositoryOwnerName, string repositoryName, string labelName) returns Label|error {
+    @display {label: "Get Repository Label"}
+    remote isolated function getRepositoryLabel(@display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Label Name"} string labelName) returns @display {label: "Label"} Label|error {
         return getRepositoryLabel(repositoryOwnerName, repositoryName, labelName, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function getLabelsInIssue(string repositoryOwnerName, string repositoryName, int issueNumber, int perPageCount, string? nextPageToken=()) returns LabelList|error {
+    @display {label: "Get Labels In An Issue"}
+    remote isolated function getLabelsInIssue(@display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Issue Number"} int issueNumber, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageToken=()) returns @display {label: "Label List"} LabelList|error {
         return getLabelsInIssue(repositoryOwnerName, repositoryName, issueNumber, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageToken);
     }
 
-    remote isolated function addLabelsToLabelable(AddLabelsToLabelableInput addLabelsToLabelableInput) returns LabelList|error {
+    @display {label: "Add Labels To Labelable"}
+    remote isolated function addLabelsToLabelable(@display {label: "Add Labels To Labelable Input"} AddLabelsToLabelableInput addLabelsToLabelableInput) returns @display {label: "Label List"} LabelList|error {
         return addLabelsToLabelable(addLabelsToLabelableInput, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function removeLabelFromLabelable(RemoveLabelsFromLabelableInput removeLabelsFromLabelable) returns error? {
+    @display {label: "Remove Labels From Labelable"}
+    remote isolated function removeLabelFromLabelable(@display {label: "Remove Labels From Labelable Input"} RemoveLabelsFromLabelableInput removeLabelsFromLabelable) returns error? {
         return removeLabelFromLabelable(removeLabelsFromLabelable, self.accessToken, self.githubGraphQlClient);
     }
 
 
     // Milestones
 
-    remote isolated function getRepositoryMilestoneList(string repositoryOwnerName, string repositoryName, int perPageCount, string? nextPageCursor=()) returns MilestoneList|error {
+    @display {label: "Get Repository Milestone List"}
+    remote isolated function getRepositoryMilestoneList(@display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor=()) returns @display {label: "Milestone List"} MilestoneList|error {
         return getRepositoryMilestoneList(repositoryOwnerName, repositoryName, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
     }
 
-    remote isolated function getRepositoryMilestone(string repositoryOwnerName, string repositoryName, int milestoneNumber) returns Milestone|error {
+    @display {label: "Get Repository Milestone"}
+    remote isolated function getRepositoryMilestone(@display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Milestone Number"} int milestoneNumber) returns @display {label: "Milestone"} Milestone|error {
         return getRepositoryMilestone(repositoryOwnerName, repositoryName, milestoneNumber, self.accessToken, self.githubGraphQlClient);
     }
 
 
     //Pul Requests
 
-    remote isolated function getPullRequest(string repositoryOwnerName, string repositoryName, int pullRequestNumber) returns PullRequest|error {
+    @display {label: "Get Pull Request"}
+    remote isolated function getPullRequest(@display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Pull Request Number"} int pullRequestNumber) returns @display {label: "Pull Request"} PullRequest|error {
         return getPullRequest(repositoryOwnerName, repositoryName, pullRequestNumber, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function getRepositoryPullRequestList(string repositoryOwnerName, string repositoryName, PullRequestState state, int perPageCount, string? nextPageCursor=()) returns PullRequestList|error {
+    @display {label: "Get Repository Pull Request List"}
+    remote isolated function getRepositoryPullRequestList(@display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Pull Request State"} PullRequestState state, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor=()) returns @display {label: "Pull Request List"} PullRequestList|error {
         return getRepositoryPullRequestList(repositoryOwnerName, repositoryName, state, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
     }
 
-    remote isolated function createPullRequest(CreatePullRequestInput createPullRequestInput, string repositoryOwnerName, string repositoryName) returns PullRequest|error {
+    @display {label: "Create Pull Request"}
+    remote isolated function createPullRequest(@display {label: "Create Pull Request Input"} CreatePullRequestInput createPullRequestInput, @display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName) returns @display {label: "Pull Request"} PullRequest|error {
         return createPullRequest(createPullRequestInput, repositoryOwnerName, repositoryName, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function updatePullRequest(UpdatePullRequestInput updatePullRequestInput, string repositoryOwnerName, string repositoryName, int pullRequestNumber) returns PullRequest|error {
+    @display {label: "Update Pull Request"}
+    remote isolated function updatePullRequest(@display {label: "Update Pull Request Input"} UpdatePullRequestInput updatePullRequestInput, @display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Pull Request Number"} int pullRequestNumber) returns @display {label: "Pull Request"} PullRequest|error {
         return updatePullRequest(updatePullRequestInput, repositoryOwnerName, repositoryName, pullRequestNumber, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function getPullRequestReviewCommentList(string repositoryOwnerName, string repositoryName, int pullRequestNumber, int perPageCount, string? nextPageCursor=()) returns PullRequestReviewList|error {
+    @display {label: "Get Pull Request Review Comment List"}
+    remote isolated function getPullRequestReviewCommentList(@display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName, @display {label: "Pull Request Number"} int pullRequestNumber, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor=()) returns @display {label: "Pull Request Review List"} PullRequestReviewList|error {
         return getPullRequestReviewCommentList(repositoryOwnerName, repositoryName, pullRequestNumber, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
 
     }
 
-     remote isolated function createPullRequestReview(AddPullRequestReviewInput addPullRequestReviewInput, string repositoryOwnerName, string repositoryName,  int pullRequestNumber) returns PullRequestReview|error {
+    @display {label: "Create Pull Request Review"}
+    remote isolated function createPullRequestReview(@display {label: "Add Pull Request Review Input"} AddPullRequestReviewInput addPullRequestReviewInput, @display {label: "Repository Owner Name"} string repositoryOwnerName, @display {label: "Repository Name"} string repositoryName,  @display {label: "Pull Request Number"} int pullRequestNumber) returns @display {label: "Pull Request Review"} PullRequestReview|error {
          return createPullRequestReview(addPullRequestReviewInput, repositoryOwnerName, repositoryName, pullRequestNumber, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePullRequestReviewInput) returns error? {
+    @display {label: "Update Pull Request Review"}
+    remote isolated function updatePullRequestReview(@display {label: "Update Pull Request Review"} UpdatePullRequestReviewInput updatePullRequestReviewInput) returns error? {
         return updatePullRequestReview(updatePullRequestReviewInput, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function deletePendingPullRequestReview(DeletePullRequestReviewInput deletePullRequestReview) returns error? {
+    @display {label: "Delete Pending Pull Request Review"}
+    remote isolated function deletePendingPullRequestReview(@display {label: "Delete Pull Request Review Input"} DeletePullRequestReviewInput deletePullRequestReview) returns error? {
         return deletePendingPullRequestReview(deletePullRequestReview, self.accessToken, self.githubGraphQlClient);
     }
 
 
     // Projects
 
-    remote isolated function getOrganizationProjectList(string organizationName, ProjectState state, int perPageCount, string? nextPageCursor=()) returns ProjectList|error {
+    @display {label: "Get Organization Project List"}
+    remote isolated function getOrganizationProjectList(@display {label: "Organization Name"} string organizationName, @display {label: "Project State"} ProjectState state, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor=()) returns @display {label: "Project List"} ProjectList|error {
         return getOrganizationProjectList(organizationName, state, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
     }
 
-    remote isolated function createProject(CreateProjectInput createProjectInput) returns Project|error {
+    @display {label: "Create Project"}
+    remote isolated function createProject(@display {label: "Create Project Input"} CreateProjectInput createProjectInput) returns @display {label: "Project"} Project|error {
         return createProject(createProjectInput, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function getUserProject(string username, int projectNumber) returns Project|error {
+    @display {label: "Get User Project"}
+    remote isolated function getUserProject(@display {label: "Project Owner Name"} string username, @display {label: "Project Number"} int projectNumber) returns @display {label: "Project"} Project|error {
         return getUserProject(username, projectNumber, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function updateProject(UpdateProjectInput updateProjectInput) returns Project|error {
+    @display {label: "Update Project"}
+    remote isolated function updateProject(@display {label: "Update Project Input"} UpdateProjectInput updateProjectInput) returns @display {label: "Project"} Project|error {
         return updateProject(updateProjectInput, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function deleteProject(DeleteProjectInput deleteProjectInput) returns error? {
+    @display {label: "Delete Project"}
+    remote isolated function deleteProject(@display {label: "Delete Project Input"} DeleteProjectInput deleteProjectInput) returns error? {
         return deleteProject(deleteProjectInput, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function getRepositoryProjectList(string repositoryOwner, string repositoryName, ProjectState state, int perPageCount, string? nextPageCursor=()) returns ProjectList|error {
+    @display {label: "Get Repository Project List"}
+    remote isolated function getRepositoryProjectList(@display {label: "Repository Owner Name"} string repositoryOwner, @display {label: "Repository Name"} string repositoryName, @display {label: "Project State"} ProjectState state, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor=()) returns @display {label: "Project List"} ProjectList|error {
         return getRepositoryProjectList(repositoryOwner, repositoryName, state, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
     }
 
-    remote isolated function getUserProjectList(string username, int perPageCount, string? nextPageCursor=()) returns ProjectList|error {
+    @display {label: "Get User Project List"}
+    remote isolated function getUserProjectList(@display {label: "Project Owner Name"} string username, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor=()) returns @display {label: "Project List"} ProjectList|error {
         return getUserProjectList(username, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
     }
 
 
     // Organizations
 
-    remote isolated function getOrganization(string organizationName) returns Organization|error {
+    @display {label: "Get An Organization"}
+    remote isolated function getOrganization(@display {label: "Organization Name"} string organizationName) returns @display {label: "Organization"} Organization|error {
         return getOrganization(organizationName, self.accessToken, self.githubGraphQlClient);
     }
 
-    remote isolated function getUserOrganizationList(string username, int perPageCount, string? lastPageCursor=()) returns OrganizationList|error {
+    @display {label: "Get User Organization List"}
+    remote isolated function getUserOrganizationList(@display {label: "User Name"} string username, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? lastPageCursor=()) returns @display {label: "Organization List"} OrganizationList|error {
         return getUserOrganizationList(username, perPageCount, self.accessToken, self.githubGraphQlClient, lastPageCursor);
     }
 
-    remote isolated function getOrganizationMemberList(string organizationName, int perPageCount, string? nextPageCursor=()) returns UserList|error {
+    @display {label: "Get Organization Member List"}
+    remote isolated function getOrganizationMemberList(@display {label: "Organization Name"} string organizationName, @display {label: "Per Page Count"} int perPageCount, @display {label: "Next Page Cursor"} string? nextPageCursor=()) returns @display {label: "User List"} UserList|error {
         return getOrganizationMemberList(organizationName, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
     }
 
-    remote isolated function getOrganizationOwnerId(string organizationName) returns string|error {
+    @display {label: "Get Organization Id"}
+    remote isolated function getOrganizationOwnerId(@display {label: "Organization Name"} string organizationName) returns @display {label: "Organization Id"} string|error {
         return getOrganizationOwnerId(organizationName, self.accessToken, self.githubGraphQlClient);
     }
 }

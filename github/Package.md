@@ -21,14 +21,14 @@ Connects to GitHub using Ballerina.
 - Track and assign tasks
 - Propose changes
 
-![Ballerina GitHub Endpoint Overview](./docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
+![Ballerina GitHub Endpoint Overview](../docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
 
 ## Connector Overview
 
-Github Ballerina Connector is used to connect with the GitHub to perform operations exposed by GitHub GraphQL and REST API. Also, it provides easy integration with GitHub webhooks
+Github Ballerina Connector is used to connect with the GitHub to perform operations exposed by GitHub GraphQL. Also, it provides easy integration with GitHub webhooks
 
-The connector has built-in support to handle OAuth2.0, provides auto completion and type conversions. The following
-sections explains how to use Ballerina GitHub connector. You can refer the [GitHub GraphQL API v4.0](https://developer.github.com/v4/), [GitHub REST API v3.0](https://docs.github.com/en/rest) and [GitHub Webhooks](https://developer.github.com/webhooks/) to learn more about the APIs.
+The connector provides auto completion and type conversions. The following
+sections explains how to use Ballerina GitHub connector. You can refer the [GitHub GraphQL API v4.0](https://developer.github.com/v4/) and [GitHub Webhooks](https://developer.github.com/webhooks/) to learn more about the APIs.
 
 # Prerequisites
 
@@ -50,36 +50,6 @@ sections explains how to use Ballerina GitHub connector. You can refer the [GitH
 
 # Quickstart(s)
 
-**Add project configurations file**
-
-Add the project configuration file by creating a `Config.toml` file under the root path of the project structure.
-This file should have following configurations. Add the tokens obtained in the previous step to the `Config.toml` file.
-
-#### For client operations
-```
-[ballerinax.github]
-accessToken = "<access_token>"
-testUserName = "<github_username>"
-testRepositoryName = "<github_repository>"
-testIssueAssignee = "<github_issue_assignee>"
-testResourcePath = "<github_resource_path>"
-testOrganizationName = "<github_organization_name>"
-```
-
-#### For listener operations
-```
-[ballerinax.github.webhook]
-accessToken = "<access_token>"
-githubTopic = "<topic_to_subscribe>"
-githubSecret = "<github_secret>"
-githubCallback = "<webhook_callback_url>"
-testUserName = "<github_username>"
-testRepositoryName = "<github_repository>"
-testIssueAssignee = "<github_issue_assignee>"
-testResourcePath = "<github_resource_path>"
-testOrganizationName = "<github_organization_name>"
-```
-
 ## Client Side Operation Example: Get Issue List.
 
 In an occasion when we need to obtain the list of issues associated with a repository, we can use the `getIssues`
@@ -96,7 +66,7 @@ You can now make the connection configuration using the personal access token, o
 ```ballerina
     configurable string accessToken = ?;
 
-    github:GitHubConfiguration config = {
+    github:Configuration config = {
         token: accessToken
     };
 
@@ -116,9 +86,9 @@ Initialize variables with suitable values which needs to be passed as arguments 
 ### Step 4: Invoke the client remote function and obtain the results.
 
 ```ballerina
-    var issueList = githubClient->getIssueList([repositoryOwner, repositoryName], github:STATE_OPEN, recordCount);
+    var issueList = githubClient->getRepositoryIssueList(repositoryOwner, repositoryName, [github:ISSUE_OPEN], recordCount);
     if (issueList is github:IssueList) {
-        log:printInfo(string `Issue List: ${issueList.getAllIssues().length()} Issues found`);
+        log:printInfo(string `Issue List: ${issueList.nodes.length()} Issues found`);
     } else {
         log:printError("Error: "+ issueList.toString());
     }

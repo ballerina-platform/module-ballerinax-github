@@ -530,6 +530,34 @@ isolated function getPullRequestId(string repositoryOwnerName, string repository
     return err;
 }
 
+isolated function getUserId(string userName, string accessToken, http:Client graphQlClient) returns string|error {
+    string stringQuery = getFormulatedStringQueryForGetUserOwnerId(userName);
+    http:Request request = new;
+    setHeader(request, accessToken);
+    json convertedQuery = check stringToJson(stringQuery);
+    //Set headers and payload to the request
+    constructRequest(request, <@untainted> convertedQuery);
+
+    var response = graphQlClient->post(EMPTY_STRING, request);
+
+    //Check for empty payloads and errors
+    json validatedResponse = check getValidatedResponse(response);
+
+    if (validatedResponse is map<json>) {
+        var gitData = validatedResponse[GIT_DATA];
+        if(gitData is map<json>){
+            var user = gitData[GIT_USER];
+            if(user is map<json>){
+                json userId = user[GIT_ID];
+                return userId.toBalString();
+            }
+
+        }
+
+    }
+    error err = error(GITHUB_ERROR_CODE, message = "Error parsing user response");
+    return err;
+} 
 
 
 //isolated function getProjectId(string repositoryOwnerName, string repositoryName, int projectNumber, string accessToken, http:Client graphQlClient) returns string|error {

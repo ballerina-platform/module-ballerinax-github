@@ -189,11 +189,11 @@ int createdIssueNumber = -1;
 }
 function testCreateIssue() {
     log:printInfo("githubClient -> createIssue()");
-    CreateIssueInput updateRepositoryInput = {
+    CreateIssueInput createIssueInput = {
         title: "This is a test Issue Title"
     };
 
-    var response = githubClient->createIssue(updateRepositoryInput, testUserName, testUserRepositoryName);
+    var response = githubClient->createIssue(createIssueInput, testUserName, testUserRepositoryName);
 
     if(response is Issue){
         createdIssueId = response.id;
@@ -304,7 +304,7 @@ function testUpdateComment() {
     dependsOn: [testUpdateComment]
 }
 function testDeleteComment() {
-    log:printInfo("githubClient -> addComment()");
+    log:printInfo("githubClient -> deleteComment()");
     DeleteIssueCommentInput deleteIssueComment = {
         id: createdIssueCommentId
     };
