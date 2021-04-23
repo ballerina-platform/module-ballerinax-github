@@ -45,6 +45,7 @@ jobs:
           args:
             push
         env:
-          WORKING_DIR: ./calendar
+          WORKING_DIR: ./github
+          JAVA_HOME: /usr/lib/jvm/default-jvm
           BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_ACCESS_TOKEN }}
 
