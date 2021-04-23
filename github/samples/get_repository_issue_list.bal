@@ -8,20 +8,18 @@ github:Configuration gitHubConfig = {
 github:Client githubClient = new (gitHubConfig);
 
 public function main() {
-    log:printInfo("githubClient -> getUserRepositoryList()");
+    log:printInfo("githubClient -> getRepositoryIssueList()");
 
     string repositoryOwnerName = "";
     string repositoryName = "";
+    github:IssueState[] issueStates = [github:ISSUE_OPEN];
     int perPageCount = 10;
 
-    var response = githubClient->getUserRepositoryList(repositoryOwnerName, repositoryName, perPageCount);
-    if(response is github:RepositoryList){
+    var response = githubClient->getRepositoryIssueList(repositoryOwnerName, repositoryName, issueStates, perPageCount);
+    if(response is github:IssueList){
         log:printInfo(response.toBalString());
     }else {
         log:printInfo(response.message());
     }
 }
-
-
-
 

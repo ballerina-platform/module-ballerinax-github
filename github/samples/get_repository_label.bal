@@ -8,20 +8,16 @@ github:Configuration gitHubConfig = {
 github:Client githubClient = new (gitHubConfig);
 
 public function main() {
-    log:printInfo("githubClient -> getUserRepositoryList()");
+    log:printInfo("githubClient -> getRepositoryLabel()");
 
     string repositoryOwnerName = "";
     string repositoryName = "";
-    int perPageCount = 10;
+    string labelName = "bug";
 
-    var response = githubClient->getUserRepositoryList(repositoryOwnerName, repositoryName, perPageCount);
-    if(response is github:RepositoryList){
+    var response = githubClient->getRepositoryLabel(repositoryOwnerName, repositoryName, labelName);
+    if(response is github:Label){
         log:printInfo(response.toBalString());
     }else {
-        log:printInfo(response.message());
+        log:printError(response.message());
     }
 }
-
-
-
-

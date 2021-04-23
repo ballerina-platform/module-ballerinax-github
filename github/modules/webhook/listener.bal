@@ -17,7 +17,7 @@ public class Listener {
         self.subscriberService = ();
     }
 
-    public function attach(SimpleWebhookService s, string[]|string? name = ()) returns error? {
+    public isolated function attach(SimpleWebhookService s, string[]|string? name = ()) returns error? {
         var configuration = retrieveSubscriberServiceAnnotations(s);
         if (configuration is websub:SubscriberServiceConfiguration) {
             self.subscriberService = new WebSubService(s);
@@ -31,7 +31,7 @@ public class Listener {
         check self.subscriberListener.detach(<WebSubService>self.subscriberService);
     }
 
-    public function 'start() returns error? {
+    public isolated  function 'start() returns error? {
         check self.subscriberListener.'start();
     }
 
