@@ -18,7 +18,8 @@ import ballerina/http;
 
 
 // mutation is in preview state
-isolated function createLabel(CreateLabelInput createLabelInput, string accessToken, http:Client graphQlClient) returns error? {
+isolated function createLabel(CreateLabelInput createLabelInput, string accessToken, http:Client graphQlClient) 
+                              returns @tainted error? {
     string stringQuery = getFormulatedStringQueryForCreateLabel(createLabelInput);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -31,7 +32,8 @@ isolated function createLabel(CreateLabelInput createLabelInput, string accessTo
     _ = check getValidatedResponse(response);
 }
 
-isolated function getRepositoryLabel(string repositoryOwnerName, string repositoryName, string labelName, string accessToken, http:Client graphQlClient) returns Label|error {
+isolated function getRepositoryLabel(string repositoryOwnerName, string repositoryName, string labelName, 
+                                     string accessToken, http:Client graphQlClient) returns @tainted Label|error {
     string stringQuery = getFormulatedStringQueryForGetLabel(repositoryOwnerName, repositoryName, labelName);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -59,8 +61,11 @@ isolated function getRepositoryLabel(string repositoryOwnerName, string reposito
     return err;
 }
 
-isolated function getLabelsInIssue(string repositoryOwnerName, string repositoryName, int issueNumber, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageToken=()) returns LabelList|error {
-    string stringQuery = getFormulatedStringQueryForGetAllLabelsForAIssue(repositoryOwnerName, repositoryName, issueNumber, perPageCount, nextPageToken);
+isolated function getLabelsInIssue(string repositoryOwnerName, string repositoryName, int issueNumber, 
+                                   int perPageCount, string accessToken, http:Client graphQlClient, 
+                                   string? nextPageToken=()) returns @tainted LabelList|error {
+    string stringQuery = getFormulatedStringQueryForGetAllLabelsForAIssue(repositoryOwnerName, repositoryName, 
+                                                                          issueNumber, perPageCount, nextPageToken);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);
@@ -92,7 +97,8 @@ isolated function getLabelsInIssue(string repositoryOwnerName, string repository
     return err;
 }
 
-isolated function addLabelsToLabelable(AddLabelsToLabelableInput addLabelsToLabelableInput, string accessToken, http:Client graphQlClient) returns LabelList|error {
+isolated function addLabelsToLabelable(AddLabelsToLabelableInput addLabelsToLabelableInput, string accessToken, 
+                                       http:Client graphQlClient) returns @tainted LabelList|error {
     string stringQuery = getFormulatedStringQueryForAddLabelsToLabelable(addLabelsToLabelableInput);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -125,7 +131,8 @@ isolated function addLabelsToLabelable(AddLabelsToLabelableInput addLabelsToLabe
     return err;
 }
 
-isolated function removeLabelFromLabelable(RemoveLabelsFromLabelableInput removeLabelsFromLabelable, string accessToken, http:Client graphQlClient) returns error? {
+isolated function removeLabelFromLabelable(RemoveLabelsFromLabelableInput removeLabelsFromLabelable, 
+                                           string accessToken, http:Client graphQlClient) returns @tainted error? {
     string stringQuery = getFormulatedStringQueryForRemoveLabelsFromLabelable(removeLabelsFromLabelable);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -138,6 +145,3 @@ isolated function removeLabelFromLabelable(RemoveLabelsFromLabelableInput remove
     _ = check getValidatedResponse(response);
 
 }
-
-
-

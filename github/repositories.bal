@@ -16,7 +16,8 @@
 
 import ballerina/http;
 
-isolated function getUserRepository(string username, string repositoryName, string accessToken, http:Client graphQlClient) returns Repository|error {
+isolated function getUserRepository(string username, string repositoryName, string accessToken, 
+                                    http:Client graphQlClient) returns @tainted Repository|error {
     string stringQuery = getFormulatedStringQueryForGetRepository(username, repositoryName);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -43,8 +44,10 @@ isolated function getUserRepository(string username, string repositoryName, stri
     return err;
 }
 
-isolated function getAuthenticatedUserRepositoryList(int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor=()) returns RepositoryList|error {
-        string stringQuery = getFormulatedStringQueryForGetAuthenticatedUserRepositoryList(perPageCount, nextPageCursor);
+isolated function getAuthenticatedUserRepositoryList(int perPageCount, string accessToken, http:Client graphQlClient, 
+                                                     string? nextPageCursor=()) returns @tainted RepositoryList|error {
+        string stringQuery = getFormulatedStringQueryForGetAuthenticatedUserRepositoryList(perPageCount, 
+                                                                                           nextPageCursor);
         http:Request request = new;
         setHeader(request, accessToken);
         json convertedQuery = check stringToJson(stringQuery);
@@ -73,7 +76,9 @@ isolated function getAuthenticatedUserRepositoryList(int perPageCount, string ac
         return err;
     }
 
-isolated function getUserRepositoryList(string username, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor = ()) returns RepositoryList|error {
+isolated function getUserRepositoryList(string username, int perPageCount, string accessToken, 
+                                        http:Client graphQlClient, string? nextPageCursor = ()) 
+                                        returns @tainted RepositoryList|error {
     string stringQuery = getFormulatedStringQueryForGetUserRepositoryList(username, perPageCount, nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -103,8 +108,11 @@ isolated function getUserRepositoryList(string username, int perPageCount, strin
     return err;
 }
 
-isolated function getOrganizationRepositoryList(string organizationName, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor = ()) returns RepositoryList|error {
-    string stringQuery = getFormulatedStringQueryForGetOrganizationRepositoryList(organizationName, perPageCount, nextPageCursor);
+isolated function getOrganizationRepositoryList(string organizationName, int perPageCount, string accessToken, 
+                                                http:Client graphQlClient, string? nextPageCursor = ()) 
+                                                returns @tainted RepositoryList|error {
+    string stringQuery = getFormulatedStringQueryForGetOrganizationRepositoryList(organizationName, perPageCount, 
+                                                                                  nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);
@@ -133,8 +141,12 @@ isolated function getOrganizationRepositoryList(string organizationName, int per
     return err;
 }
 
-isolated function getRepositoryCollobaratorList(string ownerName, string repositoryName, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor = ()) returns CollaboratorList|error {
-    string stringQuery = getFormulatedStringQueryForGetRepositoryCollaboratorList(ownerName, repositoryName, perPageCount, nextPageCursor);
+isolated function getRepositoryCollobaratorList(string ownerName, string repositoryName, int perPageCount, 
+                                                string accessToken, http:Client graphQlClient, 
+                                                string? nextPageCursor = ()) 
+                                                returns @tainted CollaboratorList|error {
+    string stringQuery = getFormulatedStringQueryForGetRepositoryCollaboratorList(ownerName, repositoryName, 
+                                                                                  perPageCount, nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);
@@ -163,8 +175,11 @@ isolated function getRepositoryCollobaratorList(string ownerName, string reposit
     return err;
 }
 
-isolated function getRepositoryBranchList(string ownerName, string repositoryName, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor = ()) returns BranchList|error {
-    string stringQuery = getFormulatedStringQueryForGetRepositoryBranchList(ownerName, repositoryName, perPageCount, nextPageCursor);
+isolated function getRepositoryBranchList(string ownerName, string repositoryName, int perPageCount, 
+                                          string accessToken, http:Client graphQlClient, string? nextPageCursor = ()) 
+                                          returns @tainted BranchList|error {
+    string stringQuery = getFormulatedStringQueryForGetRepositoryBranchList(ownerName, repositoryName, perPageCount, 
+                                                                            nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);
@@ -193,9 +208,12 @@ isolated function getRepositoryBranchList(string ownerName, string repositoryNam
     return err;
 }
 
-isolated function updateRepository(UpdateRepositoryInput updateRepositoryInput, string repositoryOwnerName, string repositoryName, string accessToken, http:Client graphQlClient) returns error? {
+isolated function updateRepository(@tainted UpdateRepositoryInput updateRepositoryInput, string repositoryOwnerName, 
+                                   string repositoryName, string accessToken, http:Client graphQlClient) 
+                                   returns @tainted error? {
     if(updateRepositoryInput?.repositoryId is ()) {
-        updateRepositoryInput["repositoryId"] = check getRepositoryId(repositoryOwnerName, repositoryName, accessToken, graphQlClient);
+        updateRepositoryInput["repositoryId"] = check getRepositoryId(repositoryOwnerName, repositoryName, accessToken,
+                                                                      graphQlClient);
     }
     string stringQuery = getFormulatedStringQueryForUpdateRepository(updateRepositoryInput);
     http:Request request = new;
@@ -211,8 +229,12 @@ isolated function updateRepository(UpdateRepositoryInput updateRepositoryInput, 
 
 }
 
-isolated function getRepositoryIssueListAssignedToUser(string repositoryOwnerName, string repositoryName, string assignee, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor = ()) returns IssueList|error {
-    string stringQuery = getFormulatedStringQueryForGetIssueListAssignedToUser(repositoryOwnerName, repositoryName, assignee, perPageCount, nextPageCursor);
+isolated function getRepositoryIssueListAssignedToUser(string repositoryOwnerName, string repositoryName, 
+                                                       string assignee, int perPageCount, string accessToken,
+                                                        http:Client graphQlClient, string? nextPageCursor = ()) 
+                                                        returns @tainted IssueList|error {
+    string stringQuery = getFormulatedStringQueryForGetIssueListAssignedToUser(repositoryOwnerName, repositoryName, 
+                                                                               assignee, perPageCount, nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);
@@ -241,8 +263,11 @@ isolated function getRepositoryIssueListAssignedToUser(string repositoryOwnerNam
     return err;
 }
 
-isolated function getRepositoryIssueList(string repositoryOwnerName, string repositoryName, IssueState[] states, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor = ()) returns IssueList|error {
-    string stringQuery = getFormulatedStringQueryForGetIssueList(repositoryOwnerName, repositoryName, states, perPageCount, nextPageCursor);
+isolated function getRepositoryIssueList(string repositoryOwnerName, string repositoryName, IssueState[] states, 
+                                         int perPageCount, string accessToken, http:Client graphQlClient, 
+                                         string? nextPageCursor = ()) returns @tainted IssueList|error {
+    string stringQuery = getFormulatedStringQueryForGetIssueList(repositoryOwnerName, repositoryName, states, 
+                                                                 perPageCount, nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);

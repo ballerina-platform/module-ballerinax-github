@@ -16,7 +16,8 @@
 
 import ballerina/http;
 
-isolated function addComment(AddCommentInput addCommentInput, string accessToken, http:Client graphQlClient) returns IssueComment|error {
+isolated function addComment(AddCommentInput addCommentInput, string accessToken, http:Client graphQlClient) 
+                             returns @tainted IssueComment|error {
     string stringQuery = getFormulatedStringQueryForAddComment(addCommentInput);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -48,7 +49,8 @@ isolated function addComment(AddCommentInput addCommentInput, string accessToken
     return err;
 }
 
-isolated function updateComment(UpdateIssueCommentInput updateCommentInput, string accessToken, http:Client graphQlClient) returns error? {
+isolated function updateComment(UpdateIssueCommentInput updateCommentInput, string accessToken, 
+                                http:Client graphQlClient) returns @tainted error? {
     string stringQuery = getFormulatedStringQueryForUpdateIssueComment(updateCommentInput);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -61,7 +63,8 @@ isolated function updateComment(UpdateIssueCommentInput updateCommentInput, stri
     _ = check getValidatedResponse(response);
 }
 
-isolated function deleteComment(DeleteIssueCommentInput deleteCommentInput, string accessToken, http:Client graphQlClient) returns error? {
+isolated function deleteComment(DeleteIssueCommentInput deleteCommentInput, string accessToken, 
+                                http:Client graphQlClient) returns @tainted error? {
     string stringQuery = getFormulatedStringQueryForDeleteIssueComment(deleteCommentInput);
     http:Request request = new;
     setHeader(request, accessToken);
