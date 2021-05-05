@@ -16,8 +16,10 @@
 
 import ballerina/http;
 
-isolated function getPullRequest(string repositoryOwnerName, string repositoryName, int pullRequestNumber, string accessToken, http:Client graphQlClient) returns PullRequest|error {
-    string stringQuery = getFormulatedStringQueryForGetAPullRequest(repositoryOwnerName, repositoryName, pullRequestNumber);
+isolated function getPullRequest(string repositoryOwnerName, string repositoryName, int pullRequestNumber, 
+                                 string accessToken, http:Client graphQlClient) returns @tainted PullRequest|error {
+    string stringQuery = getFormulatedStringQueryForGetAPullRequest(repositoryOwnerName, repositoryName, 
+                                                                    pullRequestNumber);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);
@@ -44,8 +46,12 @@ isolated function getPullRequest(string repositoryOwnerName, string repositoryNa
     return err;
 }
 
-isolated function getRepositoryPullRequestList(string repositoryOwnerName, string repositoryName, PullRequestState state, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor=()) returns PullRequestList|error {
-    string stringQuery = getFormulatedStringQueryForGetPullRequestList(repositoryOwnerName, repositoryName, state, perPageCount, nextPageCursor);
+isolated function getRepositoryPullRequestList(string repositoryOwnerName, string repositoryName, 
+                                               PullRequestState state, int perPageCount, string accessToken, 
+                                               http:Client graphQlClient, string? nextPageCursor=()) 
+                                               returns @tainted PullRequestList|error {
+    string stringQuery = getFormulatedStringQueryForGetPullRequestList(repositoryOwnerName, repositoryName, state,
+                                                                       perPageCount, nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);
@@ -77,9 +83,12 @@ isolated function getRepositoryPullRequestList(string repositoryOwnerName, strin
     return err;
 }
 
-isolated function createPullRequest(CreatePullRequestInput createPullRequestInput, string repositoryOwnerName, string repositoryName, string accessToken, http:Client graphQlClient) returns PullRequest|error {
+isolated function createPullRequest(@tainted CreatePullRequestInput createPullRequestInput, string repositoryOwnerName, 
+                                    string repositoryName, string accessToken, http:Client graphQlClient) 
+                                    returns @tainted PullRequest|error {
     if(createPullRequestInput?.repositoryId is ()) {
-        createPullRequestInput["repositoryId"] = check getRepositoryId(repositoryOwnerName, repositoryName, accessToken, graphQlClient);
+        createPullRequestInput["repositoryId"] = check getRepositoryId(repositoryOwnerName, repositoryName, 
+                                                                       accessToken, graphQlClient);
     }
     string stringQuery = getFormulatedStringQueryForCreatePullRequest(createPullRequestInput);
     http:Request request = new;
@@ -107,9 +116,12 @@ isolated function createPullRequest(CreatePullRequestInput createPullRequestInpu
     return err;
 }
 
-isolated function updatePullRequest(UpdatePullRequestInput updatePullRequestInput, string repositoryOwnerName, string repositoryName,  int pullRequestNumber, string accessToken, http:Client graphQlClient) returns PullRequest|error {
+isolated function updatePullRequest(@tainted UpdatePullRequestInput updatePullRequestInput, string repositoryOwnerName, 
+                                    string repositoryName,  int pullRequestNumber, string accessToken, 
+                                    http:Client graphQlClient) returns @tainted PullRequest|error {
     if(updatePullRequestInput?.pullRequestId is ()) {
-        updatePullRequestInput["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName, pullRequestNumber, accessToken, graphQlClient);
+        updatePullRequestInput["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName, 
+        pullRequestNumber, accessToken, graphQlClient);
     }
     string stringQuery = getFormulatedStringQueryForUpdatePullRequest(updatePullRequestInput);
     http:Request request = new;
@@ -137,8 +149,13 @@ isolated function updatePullRequest(UpdatePullRequestInput updatePullRequestInpu
     return err;
 }
 
-isolated function getPullRequestReviewCommentList(string repositoryOwnerName, string repositoryName, int pullRequestNumber, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor=()) returns PullRequestReviewList|error {
-    string stringQuery = getFormulatedStringQueryForGetReviewListForRepository(repositoryOwnerName, repositoryName, pullRequestNumber, perPageCount, nextPageCursor);
+isolated function getPullRequestReviewCommentList(string repositoryOwnerName, string repositoryName, 
+                                                  int pullRequestNumber, int perPageCount, string accessToken, 
+                                                  http:Client graphQlClient, string? nextPageCursor=()) 
+                                                  returns @tainted PullRequestReviewList|error {
+    string stringQuery = getFormulatedStringQueryForGetReviewListForRepository(repositoryOwnerName, repositoryName, 
+                                                                               pullRequestNumber, perPageCount, 
+                                                                               nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);
@@ -173,9 +190,14 @@ isolated function getPullRequestReviewCommentList(string repositoryOwnerName, st
     return err;
 }
 
- isolated function createPullRequestReview(AddPullRequestReviewInput addPullRequestReviewInput, string repositoryOwnerName, string repositoryName,  int pullRequestNumber, string accessToken, http:Client graphQlClient) returns PullRequestReview|error {
+ isolated function createPullRequestReview(@tainted AddPullRequestReviewInput addPullRequestReviewInput, 
+                                           string repositoryOwnerName, string repositoryName,  int pullRequestNumber, 
+                                           string accessToken, http:Client graphQlClient) 
+                                           returns @tainted PullRequestReview|error {
     if(addPullRequestReviewInput?.pullRequestId is ()) {
-        addPullRequestReviewInput["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName, pullRequestNumber, accessToken, graphQlClient);
+        addPullRequestReviewInput["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName, 
+                                                                            pullRequestNumber, accessToken, 
+                                                                            graphQlClient);
     }
     string stringQuery = getFormulatedStringQueryForAddPullRequestReview(addPullRequestReviewInput);
     http:Request request = new;
@@ -204,7 +226,8 @@ isolated function getPullRequestReviewCommentList(string repositoryOwnerName, st
     return err;
 }
 
-isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePullRequestReviewInput, string accessToken, http:Client graphQlClient) returns error? {
+isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePullRequestReviewInput, 
+                                          string accessToken, http:Client graphQlClient) returns @tainted error? {
 
     string stringQuery = getFormulatedStringQueryForUpdatePullRequestReview(updatePullRequestReviewInput);
     http:Request request = new;
@@ -218,7 +241,9 @@ isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePul
     _ = check getValidatedResponse(response);
 }
 
-isolated function deletePendingPullRequestReview(DeletePullRequestReviewInput deletePullRequestReview, string accessToken, http:Client graphQlClient) returns error? {
+isolated function deletePendingPullRequestReview(DeletePullRequestReviewInput deletePullRequestReview, 
+                                                 string accessToken, http:Client graphQlClient) 
+                                                 returns @tainted error? {
     string stringQuery = getFormulatedStringQueryForDeletePullRequestReview(deletePullRequestReview);
     http:Request request = new;
     setHeader(request, accessToken);

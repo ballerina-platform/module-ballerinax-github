@@ -16,8 +16,11 @@
 
 import ballerina/http;
 
-isolated function getOrganizationProjectList(string organizationName, ProjectState state, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor=()) returns ProjectList|error {
-    string stringQuery = getFormulatedStringQueryForOrgProjectList(organizationName, state, perPageCount, nextPageCursor);
+isolated function getOrganizationProjectList(string organizationName, ProjectState state, int perPageCount, 
+                                             string accessToken, http:Client graphQlClient, string? nextPageCursor=()) 
+                                             returns @tainted ProjectList|error {
+    string stringQuery = getFormulatedStringQueryForOrgProjectList(organizationName, state, perPageCount, 
+                                                                   nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);
@@ -49,7 +52,8 @@ isolated function getOrganizationProjectList(string organizationName, ProjectSta
     return err;
 }
 
-isolated function createProject(CreateProjectInput createProjectInput, string accessToken, http:Client graphQlClient) returns Project|error {
+isolated function createProject(CreateProjectInput createProjectInput, string accessToken, http:Client graphQlClient) 
+                                returns @tainted Project|error {
     string stringQuery = getFormulatedStringQueryForCreateProject(createProjectInput);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -75,7 +79,8 @@ isolated function createProject(CreateProjectInput createProjectInput, string ac
     return err;
 }
 
-isolated function getUserProject(string username, int projectNumber, string accessToken, http:Client graphQlClient) returns Project|error {
+isolated function getUserProject(string username, int projectNumber, string accessToken, http:Client graphQlClient) 
+                                 returns @tainted Project|error {
     string stringQuery = getFormulatedStringQueryForGetAProject(username, projectNumber);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -108,7 +113,8 @@ isolated function getUserProject(string username, int projectNumber, string acce
     return err;
 }
 
-isolated function updateProject(UpdateProjectInput updateProjectInput, string accessToken, http:Client graphQlClient) returns Project|error {
+isolated function updateProject(UpdateProjectInput updateProjectInput, string accessToken, http:Client graphQlClient) 
+                                returns @tainted Project|error {
     string stringQuery = getFormulatedStringQueryForUpdateProject(updateProjectInput);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -134,7 +140,8 @@ isolated function updateProject(UpdateProjectInput updateProjectInput, string ac
     return err;
 }
 
-isolated function deleteProject(DeleteProjectInput deleteProjectInput, string accessToken, http:Client graphQlClient) returns error? {
+isolated function deleteProject(DeleteProjectInput deleteProjectInput, string accessToken, http:Client graphQlClient) 
+                                returns @tainted error? {
     string stringQuery = getFormulatedStringQueryForDeleteProject(deleteProjectInput);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -147,8 +154,11 @@ isolated function deleteProject(DeleteProjectInput deleteProjectInput, string ac
     _ = check getValidatedResponse(response);
 }
 
-isolated function getRepositoryProjectList(string repositoryOwner, string repositoryName, ProjectState state, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor=()) returns ProjectList|error {
-    string stringQuery = getFormulatedStringQueryForRepositoryProjectList(repositoryOwner, repositoryName, state, perPageCount, nextPageCursor);
+isolated function getRepositoryProjectList(string repositoryOwner, string repositoryName, ProjectState state, 
+                                           int perPageCount, string accessToken, http:Client graphQlClient, 
+                                           string? nextPageCursor=()) returns @tainted ProjectList|error {
+    string stringQuery = getFormulatedStringQueryForRepositoryProjectList(repositoryOwner, repositoryName, state, 
+                                                                          perPageCount, nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);
@@ -180,7 +190,8 @@ isolated function getRepositoryProjectList(string repositoryOwner, string reposi
     return err;
 }
 
-isolated function getUserProjectList(string username, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor=()) returns ProjectList|error {
+isolated function getUserProjectList(string username, int perPageCount, string accessToken, http:Client graphQlClient,
+                                     string? nextPageCursor=()) returns @tainted ProjectList|error {
     string stringQuery = getFormulatedStringQueryForGetUserProjectList(username, perPageCount, nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);

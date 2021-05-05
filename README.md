@@ -34,7 +34,7 @@ sections explains how to use Ballerina GitHub connector. You can refer the [GitH
 
 * GitHub Account
 
-* Ballerina Swan Lake Alpha 4 Installed
+* Ballerina Swan Lake Alpha 5 Installed
 
 * [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) or [GitHub OAuth App token](https://docs.github.com/en/developers/apps/creating-an-oauth-app).
 
@@ -45,7 +45,7 @@ sections explains how to use Ballerina GitHub connector. You can refer the [GitH
 |                                   | Version               |
 |:---------------------------------:|:---------------------:|
 | GitHub GraphQL API                | v4                    |
-| Ballerina Language                | Swan Lake Alpha 4     |
+| Ballerina Language                | Swan Lake Alpha 5     |
 | Java Development Kit (JDK)        | 11                    |
 
 # Quickstart(s)

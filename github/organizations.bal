@@ -16,7 +16,8 @@
 
 import ballerina/http;
 
-isolated function getOrganization(string organizationName, string accessToken, http:Client graphQlClient) returns Organization|error {
+isolated function getOrganization(string organizationName, string accessToken, http:Client graphQlClient) 
+                                  returns @tainted Organization|error {
     string stringQuery = getFormulatedStringQueryForGetAnOrganization(organizationName);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -42,7 +43,8 @@ isolated function getOrganization(string organizationName, string accessToken, h
     return err;
 }
 
-isolated function getOrganizationOwnerId(string organizationName, string accessToken, http:Client graphQlClient) returns string|error {
+isolated function getOrganizationOwnerId(string organizationName, string accessToken, http:Client graphQlClient) 
+                                         returns @tainted string|error {
     string stringQuery = getFormulatedStringQueryForGetOrganizationOwnerId(organizationName);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -70,7 +72,9 @@ isolated function getOrganizationOwnerId(string organizationName, string accessT
     return err;
 }
 
-isolated function getUserOrganizationList(string username, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor=()) returns OrganizationList|error {
+isolated function getUserOrganizationList(string username, int perPageCount, string accessToken, 
+                                          http:Client graphQlClient, string? nextPageCursor=()) 
+                                          returns @tainted OrganizationList|error {
     string stringQuery = getFormulatedStringQueryForGetUserOrganizationList(username, perPageCount, nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -99,8 +103,11 @@ isolated function getUserOrganizationList(string username, int perPageCount, str
     return err;
 }
 
-isolated function getOrganizationMemberList(string organizationName, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor=()) returns UserList|error {
-    string stringQuery = getFormulatedStringQueryForGetOrganizationMemberList(organizationName, perPageCount, nextPageCursor);
+isolated function getOrganizationMemberList(string organizationName, int perPageCount, string accessToken, 
+                                            http:Client graphQlClient, string? nextPageCursor=()) 
+                                            returns @tainted UserList|error {
+    string stringQuery = getFormulatedStringQueryForGetOrganizationMemberList(organizationName, perPageCount, 
+                                                                              nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);
