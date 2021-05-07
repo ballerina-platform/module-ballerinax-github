@@ -12,34 +12,6 @@ plugins {
 }
 
 ext.ballerinaLangVersion = project.ballerinaLangVersion
-ext.puppycrawlCheckstyleVersion = project.puppycrawlCheckstyleVersion
-ext.slf4jVersion = project.slf4jVersion
-ext.ballerinaTomlParserVersion = project.ballerinaTomlParserVersion
-ext.nettyVersion = project.nettyVersion
-ext.nettyTcnativeVersion = project.nettyTcnativeVersion
-ext.wso2CommonsPoolVersion = project.wso2CommonsPoolVersion
-ext.wso2SnakeYamlVersion = project.wso2SnakeYamlVersion
-ext.bouncycastleVersion = project.bouncycastleVersion
-ext.guavaVersion = project.guavaVersion
-ext.wso2CarbonMetricsVersion = project.wso2CarbonMetricsVersion
-ext.stdlibHttpVersion = project.stdlibHttpVersion
-ext.stdlibMimeVersion = project.stdlibMimeVersion
-ext.stdlibAuthVersion = project.stdlibAuthVersion
-ext.stdlibFileVersion = project.stdlibFileVersion
-ext.stdlibCacheVersion = project.stdlibCacheVersion
-ext.stdlibCryptoVersion = project.stdlibCryptoVersion
-ext.stdlibEncodingVersion = project.stdlibEncodingVersion
-ext.stdlibTaskVersion = project.stdlibTaskVersion
-ext.stdlibLogVersion = project.stdlibLogVersion
-ext.stdlibTimeVersion = project.stdlibTimeVersion
-ext.stdlibOsVersion = project.stdlibOsVersion
-ext.stdlibIoVersion = project.stdlibIoVersion
-ext.stdlibRegexVersion = project.stdlibRegexVersion
-ext.stdlibUuidVersion = project.stdlibUuidVersion
-ext.stdlibJwtVersion = project.stdlibJwtVersion
-ext.stdlibOAuth2Version = project.stdlibOAuth2Version
-ext.stdlibRandomVersion = project.stdlibRandomVersion
-ext.stdlibWebsubVersion= project.stdlibWebsubVersion
 
 allprojects {
     group = project.group

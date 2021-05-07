@@ -141,67 +141,104 @@ isolated function getFormulatedStringQueryForGetRepository(string username, stri
     return string `{"variables":{"owner":"${username}", "name":"${repositoryName}"},"query":"${GET_REPOSIOTRY}"}`;
 }
 
-isolated function getFormulatedStringQueryForGetAuthenticatedUserRepositoryList(int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForGetAuthenticatedUserRepositoryList(int perPageCount, 
+                                                                                string? lastPageCursor=()) 
+                                                                                returns string {
 
     if (lastPageCursor is string){
-        return string `{"variables":{"perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_LIST_FOR_AUTHENTICATED_USER}"}`;
+        return string `{"variables":{"perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},
+                        "query":"${GET_REPOSITORY_LIST_FOR_AUTHENTICATED_USER}"}`;
     }else{
-        return string `{"variables":{"perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${GET_REPOSITORY_LIST_FOR_AUTHENTICATED_USER}"}`;
+        return string `{"variables":{"perPageCount":${perPageCount}, "lastPageCursor":null},
+                        "query":"${GET_REPOSITORY_LIST_FOR_AUTHENTICATED_USER}"}`;
     }
 }
 
-isolated function getFormulatedStringQueryForGetUserRepositoryList(string username, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForGetUserRepositoryList(string username, int perPageCount, 
+                                                                   string? lastPageCursor=()) returns string {
 
     if (lastPageCursor is string){
-        return string `{"variables":{"username":"${username}", "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_LIST_FOR_USER}"}`;
+        return string `{"variables":{"username":"${username}", "perPageCount":${perPageCount}, 
+                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_LIST_FOR_USER}"}`;
     }else{
-        return string `{"variables":{"username":"${username}", "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${GET_REPOSITORY_LIST_FOR_USER}"}`;
+        return string `{"variables":{"username":"${username}", "perPageCount":${perPageCount}, "lastPageCursor":null},
+                        "query":"${GET_REPOSITORY_LIST_FOR_USER}"}`;
     }
 }
 
-isolated function getFormulatedStringQueryForGetOrganizationRepositoryList(string organizationName, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForGetOrganizationRepositoryList(string organizationName, int perPageCount,
+                                                                           string? lastPageCursor=()) returns string {
 
     if (lastPageCursor is string){
-        return string `{"variables":{"organizationName":"${organizationName}", "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_LIST_FOR_ORGANIZATION}"}`;
+        return string `{"variables":{"organizationName":"${organizationName}", "perPageCount":${perPageCount}, 
+                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_LIST_FOR_ORGANIZATION}"}`;
     }else{
-        return string `{"variables":{"organizationName":"${organizationName}", "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${GET_REPOSITORY_LIST_FOR_ORGANIZATION}"}`;
+        return string `{"variables":{"organizationName":"${organizationName}", "perPageCount":${perPageCount}, 
+                        "lastPageCursor":null},"query":"${GET_REPOSITORY_LIST_FOR_ORGANIZATION}"}`;
     }
 }
 
-isolated function getFormulatedStringQueryForUpdateRepository( UpdateRepositoryInput updateRepositoryInput) returns string {
-    return string `{"variables":{"updateRepositoryInput": ${updateRepositoryInput.toJsonString()}},"query":"${UPDATE_REPOSITORY}"}`;
+isolated function getFormulatedStringQueryForUpdateRepository(UpdateRepositoryInput updateRepositoryInput) 
+                                                              returns string {
+    return string `{"variables":{"updateRepositoryInput": ${updateRepositoryInput.toJsonString()}},
+                    "query":"${UPDATE_REPOSITORY}"}`;
 }
 
-isolated function getFormulatedStringQueryForGetRepositoryCollaboratorList(string username, string repositoryName, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForGetRepositoryCollaboratorList(string username, string repositoryName, 
+                                                                           int perPageCount, string? lastPageCursor=()) 
+                                                                           returns string {
     if (lastPageCursor is string){
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${LIST_REPOSITORY_COLLOBORATORS}"}`;
+        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
+                        "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},
+                        "query":"${LIST_REPOSITORY_COLLOBORATORS}"}`;
     }else{
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${LIST_REPOSITORY_COLLOBORATORS}"}`;
+        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
+                        "perPageCount":${perPageCount}, "lastPageCursor":null},
+                        "query":"${LIST_REPOSITORY_COLLOBORATORS}"}`;
     }
 }
 
-isolated function getFormulatedStringQueryForGetRepositoryBranchList(string username, string repositoryName, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForGetRepositoryBranchList(string username, string repositoryName, 
+                                                                     int perPageCount, string? lastPageCursor=()) 
+                                                                     returns string {
     if (lastPageCursor is string){
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${GET_BRANCH_LIST_OF_A_REPOSITORY}"}`;
+        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
+                        "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},
+                        "query":"${GET_BRANCH_LIST_OF_A_REPOSITORY}"}`;
     }else{
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${GET_BRANCH_LIST_OF_A_REPOSITORY}"}`;
+        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
+                        "perPageCount":${perPageCount}, "lastPageCursor":null},
+                        "query":"${GET_BRANCH_LIST_OF_A_REPOSITORY}"}`;
     }
 }
 
-isolated function getFormulatedStringQueryForGetIssueListAssignedToUser(string repositoryOwnerName, string repositoryName, string assignee, int perPageCount, string? lastPageCursor = ()) returns string {
+isolated function getFormulatedStringQueryForGetIssueListAssignedToUser(string repositoryOwnerName, 
+                                                                        string repositoryName, string assignee, 
+                                                                        int perPageCount, string? lastPageCursor = ())
+                                                                        returns string {
 
     if (lastPageCursor is string){
-        return string `{"variables":{"owner":"${repositoryOwnerName}", "name":"${repositoryName}", "assignee":"${assignee}", "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${GET_ISSUE_LIST_ASSIGNED_TO_USER}"}`;
+        return string `{"variables":{"owner":"${repositoryOwnerName}", "name":"${repositoryName}", 
+                        "assignee":"${assignee}", "perPageCount":${perPageCount}, 
+                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_ISSUE_LIST_ASSIGNED_TO_USER}"}`;
     }else{
-        return string `{"variables":{"owner":"${repositoryOwnerName}", "name":"${repositoryName}", "assignee":"${assignee}", "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${GET_ISSUE_LIST_ASSIGNED_TO_USER}"}`;
+        return string `{"variables":{"owner":"${repositoryOwnerName}", "name":"${repositoryName}", 
+                        "assignee":"${assignee}", "perPageCount":${perPageCount}, "lastPageCursor":null},
+                        "query":"${GET_ISSUE_LIST_ASSIGNED_TO_USER}"}`;
     }
 }
 
-isolated function getFormulatedStringQueryForGetIssueList(string repositoryOwnerName, string repositoryName, string[] state, int perPageCount, string? lastPageCursor = ()) returns string {
+isolated function getFormulatedStringQueryForGetIssueList(string repositoryOwnerName, string repositoryName, 
+                                                          string[] state, int perPageCount, 
+                                                          string? lastPageCursor = ()) returns string {
     if (lastPageCursor is string){
-        return string `{"variables":{"owner":"${repositoryOwnerName}","name":"${repositoryName}","states":${state.toBalString()}, "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":" ${GET_ISSUE_LIST}"}`;
+        return string `{"variables":{"owner":"${repositoryOwnerName}","name":"${repositoryName}",
+                        "states":${state.toBalString()}, "perPageCount":${perPageCount}, 
+                        "lastPageCursor":"${lastPageCursor}"},"query":" ${GET_ISSUE_LIST}"}`;
     }else{
-        return string `{"variables":{"owner":"${repositoryOwnerName}","name":"${repositoryName}","states":${state.toBalString()}, "perPageCount":${perPageCount}, "lastPageCursor":null},"query":" ${GET_ISSUE_LIST}"}`;
+        return string `{"variables":{"owner":"${repositoryOwnerName}","name":"${repositoryName}",
+                        "states":${state.toBalString()}, "perPageCount":${perPageCount}, "lastPageCursor":null},
+                        "query":" ${GET_ISSUE_LIST}"}`;
     }
 
 }
@@ -215,8 +252,10 @@ isolated function getFormulatedStringQueryForUpdateIssue( UpdateIssueInput updat
 }
 
 
-isolated function getFormulatedStringQueryForGetRepositoryIssue(string repositoryOwnerName, string repositoryName, int issueNumber) returns string {
-    return string `{"variables":{"owner":"${repositoryOwnerName}", "name":"${repositoryName}", "issueNumber":${issueNumber}},"query":"${GET_ISSUE}"}`;
+isolated function getFormulatedStringQueryForGetRepositoryIssue(string repositoryOwnerName, string repositoryName, 
+                                                                int issueNumber) returns string {
+    return string `{"variables":{"owner":"${repositoryOwnerName}", "name":"${repositoryName}", 
+                    "issueNumber":${issueNumber}},"query":"${GET_ISSUE}"}`;
 }
 
 
@@ -224,11 +263,17 @@ isolated function getFormulatedStringQueryForGetRepositoryIssue(string repositor
 
 
 
-isolated function getFormulatedStringQueryForGetIssueCommentList(string username, string repositoryName, int issueNumber, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForGetIssueCommentList(string username, string repositoryName, 
+                                                                 int issueNumber, int perPageCount, 
+                                                                 string? lastPageCursor=()) returns string {
     if (lastPageCursor is string){
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", "issueNumber":${issueNumber}, "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${GET_COMMENT_ISSUE_COMMENT_LIST}"}`;
+        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
+                        "issueNumber":${issueNumber}, "perPageCount":${perPageCount}, 
+                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_COMMENT_ISSUE_COMMENT_LIST}"}`;
     }else{
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", "issueNumber":${issueNumber}, "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${GET_COMMENT_ISSUE_COMMENT_LIST}"}`;
+        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
+                        "issueNumber":${issueNumber}, "perPageCount":${perPageCount}, "lastPageCursor":null},
+                        "query":"${GET_COMMENT_ISSUE_COMMENT_LIST}"}`;
     }
 }
 
@@ -236,20 +281,26 @@ isolated function getFormulatedStringQueryForAddComment( AddCommentInput addComm
     return string `{"variables":{"addCommentInput": ${addCommentInput.toJsonString()}},"query":"${ADD_COMMENT}"}`;
 }
 
-isolated function getFormulatedStringQueryForUpdateIssueComment( UpdateIssueCommentInput updateIssueCommentInput) returns string {
-    return string `{"variables":{"updateIssueCommentInput": ${updateIssueCommentInput.toJsonString()}},"query":"${UPDATE_ISSUE_COMMENT}"}`;
+isolated function getFormulatedStringQueryForUpdateIssueComment(UpdateIssueCommentInput updateIssueCommentInput) 
+                                                                returns string {
+    return string `{"variables":{"updateIssueCommentInput": ${updateIssueCommentInput.toJsonString()}},
+                    "query":"${UPDATE_ISSUE_COMMENT}"}`;
 }
 
-isolated function getFormulatedStringQueryForDeleteIssueComment( DeleteIssueCommentInput deleteIssueCommentInput) returns string {
-    return string `{"variables":{"deleteIssueCommentInput": ${deleteIssueCommentInput.toJsonString()}},"query":"${DELETE_ISSUE_COMMENT}"}`;
+isolated function getFormulatedStringQueryForDeleteIssueComment(DeleteIssueCommentInput deleteIssueCommentInput) 
+                                                                returns string {
+    return string `{"variables":{"deleteIssueCommentInput": ${deleteIssueCommentInput.toJsonString()}},
+                    "query":"${DELETE_ISSUE_COMMENT}"}`;
 }
 
 isolated function getFormulatedStringQueryForCreateLabel( CreateLabelInput createLabelInput) returns string {
     return string `{"variables":{"createLabelInput": ${createLabelInput.toJsonString()}},"query":"${CREATE_LABEL}"}`;
 }
 
-isolated function getFormulatedStringQueryForGetLabel(string username, string repositoryName, string labelName) returns string {
-    return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", "labelName": "${labelName}"},"query":"${GET_A_REPOSITORY_LABEL}"}`;
+isolated function getFormulatedStringQueryForGetLabel(string username, string repositoryName, string labelName) 
+                                                      returns string {
+    return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
+                    "labelName": "${labelName}"},"query":"${GET_A_REPOSITORY_LABEL}"}`;
 }
 
 isolated function getFormulatedStringQueryForUpdateLabel( UpdateLabelInput updateLabelInput) returns string {
@@ -260,130 +311,193 @@ isolated function getFormulatedStringQueryForDeleteLabel( DeleteLabelInput delet
     return string `{"variables":{"deleteLabelInput": ${deleteLabelInput.toJsonString()}},"query":"${DELETE_LABEL}"}`;
 }
 
-isolated function getFormulatedStringQueryForGetAllLabelsForAIssue(string username, string repositoryName, int issueNumber, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForGetAllLabelsForAIssue(string username, string repositoryName, 
+                                                                   int issueNumber, int perPageCount, 
+                                                                   string? lastPageCursor=()) returns string {
     if (lastPageCursor is string){
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", "issueNumber":${issueNumber}, "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${GET_ALL_LABELS_FOR_A_ISSUE}"}`;
+        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
+                        "issueNumber":${issueNumber}, "perPageCount":${perPageCount}, 
+                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_ALL_LABELS_FOR_A_ISSUE}"}`;
     }else{
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", "issueNumber":${issueNumber}, "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${GET_ALL_LABELS_FOR_A_ISSUE}"}`;
+        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
+                        "issueNumber":${issueNumber}, "perPageCount":${perPageCount}, "lastPageCursor":null},
+                        "query":"${GET_ALL_LABELS_FOR_A_ISSUE}"}`;
     }
 }
 
-isolated function getFormulatedStringQueryForAddLabelsToLabelable( AddLabelsToLabelableInput addLabelsToLabelable) returns string {
-    return string `{"variables":{"addLabelsToLabelableInput": ${addLabelsToLabelable.toJsonString()}},"query":"${ADD_LABELS_TO_LABELABLE}"}`;
+isolated function getFormulatedStringQueryForAddLabelsToLabelable(AddLabelsToLabelableInput addLabelsToLabelable) 
+                                                                  returns string {
+    return string `{"variables":{"addLabelsToLabelableInput": ${addLabelsToLabelable.toJsonString()}},
+                    "query":"${ADD_LABELS_TO_LABELABLE}"}`;
 }
 
-isolated function getFormulatedStringQueryForRemoveLabelsFromLabelable( RemoveLabelsFromLabelableInput removeLabelsFromLabelable) returns string {
-    return string `{"variables":{"removeLabelsFromLabelableInput": ${removeLabelsFromLabelable.toJsonString()}},"query":"${REMOVE_LABELS_TO_LABELABLE}"}`;
+isolated function getFormulatedStringQueryForRemoveLabelsFromLabelable(RemoveLabelsFromLabelableInput 
+                                                                       removeLabelsFromLabelable) 
+                                                                       returns string {
+    return string `{"variables":{"removeLabelsFromLabelableInput": ${removeLabelsFromLabelable.toJsonString()}},
+                    "query":"${REMOVE_LABELS_TO_LABELABLE}"}`;
 }
 
-isolated function getFormulatedStringQueryForGetIssueListWithLabel(string username, string repositoryName, string labelName, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForGetIssueListWithLabel(string username, string repositoryName, 
+                                                                   string labelName, int perPageCount, 
+                                                                   string? lastPageCursor=()) returns string {
     if (lastPageCursor is string){
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", "labelName":"${labelName}", "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_ISSUES_WITH_LABEL}"}`;
+        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
+                        "labelName":"${labelName}", "perPageCount":${perPageCount}, 
+                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_ISSUES_WITH_LABEL}"}`;
     }else{
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", "labelName":"${labelName}", "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${GET_REPOSITORY_ISSUES_WITH_LABEL}"}`;
+        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
+                        "labelName":"${labelName}", "perPageCount":${perPageCount}, "lastPageCursor":null},
+                        "query":"${GET_REPOSITORY_ISSUES_WITH_LABEL}"}`;
     }
 }
 
-isolated function getFormulatedStringQueryForGetMilestoneListOfARepository(string username, string repositoryName, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForGetMilestoneListOfARepository(string username, string repositoryName, 
+                                                                           int perPageCount, string? lastPageCursor=())
+                                                                           returns string {
     if (lastPageCursor is string){
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}",  "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${LIST_MILESTONES}"}`;
+        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}",  
+                        "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},
+                        "query":"${LIST_MILESTONES}"}`;
     }else{
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}",  "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${LIST_MILESTONES}"}`;
+        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}",  
+                        "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${LIST_MILESTONES}"}`;
     }
 }
 
-isolated function getFormulatedStringQueryForGetAMilestone(string username, string repositoryName, int milestoneNumber) returns string {
-    return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}",  "milestoneNumber":${milestoneNumber}},"query":"${GET_A_MILESTONE}"}`;
+isolated function getFormulatedStringQueryForGetAMilestone(string username, string repositoryName, int milestoneNumber)
+                                                           returns string {
+    return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}",  
+                    "milestoneNumber":${milestoneNumber}},"query":"${GET_A_MILESTONE}"}`;
 }
 
-isolated function getFormulatedStringQueryForGetAPullRequest(string username, string repositoryName, int pullRequestNumber) returns string {
-    return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", "pullRequestNumber":${pullRequestNumber}},"query":"${GET_A_PULL_REQUEST}"}`;
+isolated function getFormulatedStringQueryForGetAPullRequest(string username, string repositoryName, 
+                                                             int pullRequestNumber) returns string {
+    return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
+                    "pullRequestNumber":${pullRequestNumber}},"query":"${GET_A_PULL_REQUEST}"}`;
 }
 
-isolated function getFormulatedStringQueryForGetPullRequestList(string repositoryOwner, string repositoryName, PullRequestState state, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForGetPullRequestList(string repositoryOwner, string repositoryName,
+                                                                PullRequestState state, int perPageCount, 
+                                                                string? lastPageCursor=()) returns string {
 
     if (lastPageCursor is string){
-        return string `{"variables":{"owner":"${repositoryOwner}","name":"${repositoryName}","states":${state.toBalString()}, ` +
-                                                                                   string `"perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${GET_PULL_REQUESTS_LIST}"}`;
+        return string `{"variables":{"owner":"${repositoryOwner}","name":"${repositoryName}",
+                        "states":${state.toBalString()}, ` + string `"perPageCount":${perPageCount}, 
+                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_PULL_REQUESTS_LIST}"}`;
     }else{
-        return string `{"variables":{"owner":"${repositoryOwner}","name":"${repositoryName}","states":${state.toBalString()}, ` +
-                                                                                           string `"perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${GET_PULL_REQUESTS_LIST}"}`;
+        return string `{"variables":{"owner":"${repositoryOwner}","name":"${repositoryName}",
+                        "states":${state.toBalString()}, ` + string `"perPageCount":${perPageCount}, 
+                        "lastPageCursor":null},"query":"${GET_PULL_REQUESTS_LIST}"}`;
     }
 }
 
 
-isolated function getFormulatedStringQueryForGetReviewListForRepository(string username, string repositoryName, int pullRequestNumber, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForGetReviewListForRepository(string username, string repositoryName, 
+                                                                        int pullRequestNumber, int perPageCount, 
+                                                                        string? lastPageCursor=()) returns string {
     if (lastPageCursor is string){
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", "pullRequestNumber":${pullRequestNumber}, "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${PULL_REQUEST_REVIEW_LIST}"}`;
+        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}",    
+                        "pullRequestNumber":${pullRequestNumber}, "perPageCount":${perPageCount}, 
+                        "lastPageCursor":"${lastPageCursor}"},"query":"${PULL_REQUEST_REVIEW_LIST}"}`;
     }else{
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", "pullRequestNumber":${pullRequestNumber}, "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${PULL_REQUEST_REVIEW_LIST}"}`;
+        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
+                        "pullRequestNumber":${pullRequestNumber}, "perPageCount":${perPageCount}, 
+                        "lastPageCursor":null},"query":"${PULL_REQUEST_REVIEW_LIST}"}`;
     }
 }
 
-isolated function getFormulatedStringQueryForCreatePullRequest(CreatePullRequestInput createPullRequestInput) returns string {
-    return string `{"variables":{"createPullRequestInput": ${createPullRequestInput.toJsonString()}},"query":"${CREATE_PULL_REQUEST}"}`;
+isolated function getFormulatedStringQueryForCreatePullRequest(CreatePullRequestInput createPullRequestInput) 
+                                                               returns string {
+    return string `{"variables":{"createPullRequestInput": ${createPullRequestInput.toJsonString()}},
+                    "query":"${CREATE_PULL_REQUEST}"}`;
 }
 
-isolated function getFormulatedStringQueryForUpdatePullRequest(UpdatePullRequestInput updatePullRequestInput) returns string {
-    return string `{"variables":{"updatePullRequestInput": ${updatePullRequestInput.toJsonString()}},"query":"${UPDATE_PULL_REQUEST}"}`;
+isolated function getFormulatedStringQueryForUpdatePullRequest(UpdatePullRequestInput updatePullRequestInput) 
+                                                               returns string {
+    return string `{"variables":{"updatePullRequestInput": ${updatePullRequestInput.toJsonString()}},
+                    "query":"${UPDATE_PULL_REQUEST}"}`;
 }
 
-isolated function getFormulatedStringQueryForAddPullRequestReview(AddPullRequestReviewInput addPullRequestReview) returns string {
-    return string `{"variables":{"addPullRequestReview": ${addPullRequestReview.toJsonString()}},"query":"${ADD_PULL_REQUEST_REVIEW}"}`;
+isolated function getFormulatedStringQueryForAddPullRequestReview(AddPullRequestReviewInput addPullRequestReview) 
+                                                                  returns string {
+    return string `{"variables":{"addPullRequestReview": ${addPullRequestReview.toJsonString()}},
+                    "query":"${ADD_PULL_REQUEST_REVIEW}"}`;
 }
 
-isolated function getFormulatedStringQueryForUpdatePullRequestReview(UpdatePullRequestReviewInput updatePullRequestReview) returns string {
-    return string `{"variables":{"updatePullRequestReview": ${updatePullRequestReview.toJsonString()}},"query":"${UPDATE_PULL_REQUEST_REVIEW}"}`;
+isolated function getFormulatedStringQueryForUpdatePullRequestReview(UpdatePullRequestReviewInput
+                                                                     updatePullRequestReview) returns string {
+    return string `{"variables":{"updatePullRequestReview": ${updatePullRequestReview.toJsonString()}},
+                    "query":"${UPDATE_PULL_REQUEST_REVIEW}"}`;
 }
 
-isolated function getFormulatedStringQueryForDeletePullRequestReview(DeletePullRequestReviewInput deletePullRequestReview) returns string {
-    return string `{"variables":{"deletePullRequestReview": ${deletePullRequestReview.toJsonString()}},"query":"${DELETE_PULL_REQUEST_REVIEW}"}`;
+isolated function getFormulatedStringQueryForDeletePullRequestReview(DeletePullRequestReviewInput 
+                                                                     deletePullRequestReview) returns string {
+    return string `{"variables":{"deletePullRequestReview": ${deletePullRequestReview.toJsonString()}},
+                    "query":"${DELETE_PULL_REQUEST_REVIEW}"}`;
 }
 
 
 
 
-isolated function getFormulatedStringQueryForOrgProjectList(string organizationName, ProjectState state, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForOrgProjectList(string organizationName, ProjectState state, 
+                                                            int perPageCount, string? lastPageCursor=()) 
+                                                            returns string {
     if (lastPageCursor is string){
-        return string `{"variables":{"organization":"${organizationName}", "states":${state.toBalString()}, "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${GET_ORGANIZATION_PROJECT_LIST}"}`;
+        return string `{"variables":{"organization":"${organizationName}", "states":${state.toBalString()}, 
+                        "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},
+                        "query":"${GET_ORGANIZATION_PROJECT_LIST}"}`;
     }else{
-        return string `{"variables":{"organization":"${organizationName}", "states":${state.toBalString()}, "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${GET_ORGANIZATION_PROJECT_LIST}"}`;
+        return string `{"variables":{"organization":"${organizationName}", "states":${state.toBalString()}, 
+                        "perPageCount":${perPageCount}, "lastPageCursor":null},
+                        "query":"${GET_ORGANIZATION_PROJECT_LIST}"}`;
     }
 }
 
 
 isolated function getFormulatedStringQueryForCreateProject(CreateProjectInput createProjectInput) returns string {
-    return string `{"variables":{"createProjectInput": ${createProjectInput.toJsonString()}},"query":"${CREATE_PROJECT}"}`;
+    return string `{"variables":{"createProjectInput": ${createProjectInput.toJsonString()}},
+                    "query":"${CREATE_PROJECT}"}`;
 }
 
 isolated function getFormulatedStringQueryForGetAProject(string username, int projectNumber) returns string {
-    return string `{"variables":{"username":"${username}", "projectNumber":${projectNumber}},"query":"${GET_USER_PROJECT}"}`;
+    return string `{"variables":{"username":"${username}", "projectNumber":${projectNumber}},
+                    "query":"${GET_USER_PROJECT}"}`;
 }
 
 isolated function getFormulatedStringQueryForUpdateProject(UpdateProjectInput updateProjectInput) returns string {
-    return string `{"variables":{"updateProjectInput": ${updateProjectInput.toJsonString()}},"query":"${UPDATE_PROJECT}"}`;
+    return string `{"variables":{"updateProjectInput": ${updateProjectInput.toJsonString()}},
+                    "query":"${UPDATE_PROJECT}"}`;
 }
 
 isolated function getFormulatedStringQueryForDeleteProject(DeleteProjectInput deleteProjectInput) returns string {
-    return string `{"variables":{"deleteProjectInput": ${deleteProjectInput.toJsonString()}},"query":"${DELETE_PROJECT}"}`;
+    return string `{"variables":{"deleteProjectInput": ${deleteProjectInput.toJsonString()}},
+                    "query":"${DELETE_PROJECT}"}`;
 }
 
-isolated function getFormulatedStringQueryForRepositoryProjectList(string repositoryOwner, string repositoryName, ProjectState state, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForRepositoryProjectList(string repositoryOwner, string repositoryName, 
+                                                                   ProjectState state, int perPageCount, 
+                                                                   string? lastPageCursor=()) returns string {
 
     if (lastPageCursor is string){
         return string `{"variables":{"owner":"${repositoryOwner}","repository":"${repositoryName}",` +
-                                                               string `"states":${state.toBalString()},"perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_PROJECT_LIST}"}`;
+                string `"states":${state.toBalString()},"perPageCount":${perPageCount}, 
+                "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_PROJECT_LIST}"}`;
     }else{
         return string `{"variables":{"owner":"${repositoryOwner}","repository":"${repositoryName}",` +
-                                                                       string `"states":${state.toBalString()},"perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${GET_REPOSITORY_PROJECT_LIST}"}`;
+               string `"states":${state.toBalString()},"perPageCount":${perPageCount}, "lastPageCursor":null},
+               "query":"${GET_REPOSITORY_PROJECT_LIST}"}`;
     }
 }
 
-isolated function getFormulatedStringQueryForGetUserProjectList(string username, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForGetUserProjectList(string username, int perPageCount, 
+                                                                string? lastPageCursor=()) returns string {
     if (lastPageCursor is string){
-        return string `{"variables":{"username":"${username}", "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${GET_USER_PROJECT_LIST}"}`;
+        return string `{"variables":{"username":"${username}", "perPageCount":${perPageCount}, 
+                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_USER_PROJECT_LIST}"}`;
     }else{
-        return string `{"variables":{"username":"${username}", "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${GET_USER_PROJECT_LIST}"}`;
+        return string `{"variables":{"username":"${username}", "perPageCount":${perPageCount}, 
+                        "lastPageCursor":null},"query":"${GET_USER_PROJECT_LIST}"}`;
     }
 }
 
@@ -396,44 +510,60 @@ isolated function getFormulatedStringQueryForGetAnOrganization(string organizati
 }
 
 
-isolated function getFormulatedStringQueryForGetOrganizationMemberList(string organizationName, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForGetOrganizationMemberList(string organizationName, int perPageCount, 
+                                                                       string? lastPageCursor=()) returns string {
     if (lastPageCursor is string){
-        return string `{"variables":{"organizationName":"${organizationName}", "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${GET_ORGANIZATION_MEMBERS_LIST}"}`;
+        return string `{"variables":{"organizationName":"${organizationName}", "perPageCount":${perPageCount},
+                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_ORGANIZATION_MEMBERS_LIST}"}`;
     }else{
-        return string `{"variables":{"organizationName":"${organizationName}", "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${GET_ORGANIZATION_MEMBERS_LIST}"}`;
+        return string `{"variables":{"organizationName":"${organizationName}", "perPageCount":${perPageCount},
+                        "lastPageCursor":null},"query":"${GET_ORGANIZATION_MEMBERS_LIST}"}`;
     }
 }
 
-isolated function getFormulatedStringQueryForGetUserOrganizationList(string username, int perPageCount, string? lastPageCursor=()) returns string {
+isolated function getFormulatedStringQueryForGetUserOrganizationList(string username, int perPageCount, 
+                                                                     string? lastPageCursor=()) returns string {
     if (lastPageCursor is string){
-        return string `{"variables":{"username":"${username}", "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"${GET_USER_ORGANIZATION_LIST}"}`;
+        return string `{"variables":{"username":"${username}", "perPageCount":${perPageCount}, 
+                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_USER_ORGANIZATION_LIST}"}`;
     }else{
-        return string `{"variables":{"username":"${username}", "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"${GET_USER_ORGANIZATION_LIST}"}`;
+        return string `{"variables":{"username":"${username}", "perPageCount":${perPageCount}, "lastPageCursor":null},
+                        "query":"${GET_USER_ORGANIZATION_LIST}"}`;
     }
 }
 
-isolated function getFormulatedStringQueryForGetRepositoryId(string repositoryOwnerName, string repositoryName) returns string {
-    return string `{"variables":{"repositoryOwnerName":"${repositoryOwnerName}", "repositoryName": "${repositoryName}"},"query":"`
+isolated function getFormulatedStringQueryForGetRepositoryId(string repositoryOwnerName, string repositoryName) 
+                                                             returns string {
+    return string `{"variables":{"repositoryOwnerName":"${repositoryOwnerName}", 
+                    "repositoryName": "${repositoryName}"},"query":"`
                       + string `${GET_REPOSITORY_ID}"}`;
 }
 
-isolated function getFormulatedStringQueryForGetIssueId(string repositoryOwnerName, string repositoryName, int issueNumber) returns string {
-    return string `{"variables":{"repositoryOwnerName":"${repositoryOwnerName}", "repositoryName": "${repositoryName}", "issueNumber":${issueNumber}},"query":"`
+isolated function getFormulatedStringQueryForGetIssueId(string repositoryOwnerName, string repositoryName, 
+                                                        int issueNumber) returns string {
+    return string `{"variables":{"repositoryOwnerName":"${repositoryOwnerName}", 
+                    "repositoryName": "${repositoryName}", "issueNumber":${issueNumber}},"query":"`
                       + string `${GET_ISSUE_ID}"}`;
 }
 
-isolated function getFormulatedStringQueryForGetPullRequestId(string repositoryOwnerName, string repositoryName, int pullRequestNumber) returns string {
-    return string `{"variables":{"repositoryOwnerName":"${repositoryOwnerName}", "repositoryName": "${repositoryName}", "pullRequestNumber":${pullRequestNumber}},"query":"`
+isolated function getFormulatedStringQueryForGetPullRequestId(string repositoryOwnerName, string repositoryName, 
+                                                              int pullRequestNumber) returns string {
+    return string `{"variables":{"repositoryOwnerName":"${repositoryOwnerName}", "repositoryName": "${repositoryName}",
+                    "pullRequestNumber":${pullRequestNumber}},"query":"`
                       + string `${GET_PULL_REQUEST_ID}"}`;
 }
 
-//isolated function getFormulatedStringQueryForGetPullRequestId(string repositoryOwnerName, string repositoryName) returns string {
-//    return string `{"variables":{"repositoryOwnerName":"${repositoryOwnerName}", "repositoryName": "${repositoryName}"},"query":"`
+//isolated function getFormulatedStringQueryForGetPullRequestId(string repositoryOwnerName, string repositoryName)
+// returns string {
+//    return string `{"variables":{"repositoryOwnerName":"${repositoryOwnerName}", "repositoryName": "${repositoryName}
+//"},"query":"`
 //                      + string `${GET_REPOSITORY_ID}"}`;
 //}
 
-isolated function getFormulatedStringQueryForGetProjectId(string repositoryOwnerName, string repositoryName, int projectNumber) returns string {
-    return string `{"variables":{"repositoryOwnerName":"${repositoryOwnerName}", "repositoryName": "${repositoryName}", "projectNumber":${projectNumber}},"query":"`
+isolated function getFormulatedStringQueryForGetProjectId(string repositoryOwnerName, string repositoryName, 
+                                                          int projectNumber) returns string {
+    return string `{"variables":{"repositoryOwnerName":"${repositoryOwnerName}", "repositoryName": "${repositoryName}",
+                    "projectNumber":${projectNumber}},"query":"`
                       + string `${GET_PROJECT_ID}"}`;
 }
 
@@ -449,7 +579,8 @@ isolated function getFormulatedStringQueryForGetOrganizationOwnerId(string organ
 
 // get resource id utl functions
 
-isolated function getRepositoryId(string repositoryOwnerName, string repositoryName, string accessToken, http:Client graphQlClient) returns string|error {
+isolated function getRepositoryId(string repositoryOwnerName, string repositoryName, string accessToken, 
+                                  http:Client graphQlClient) returns @tainted string|error {
     string stringQuery = getFormulatedStringQueryForGetRepositoryId(repositoryOwnerName, repositoryName);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -474,7 +605,8 @@ isolated function getRepositoryId(string repositoryOwnerName, string repositoryN
     return err;
 }
 
-isolated function getIssueId(string repositoryOwnerName, string repositoryName, int issueNumber, string accessToken, http:Client graphQlClient) returns string|error {
+isolated function getIssueId(string repositoryOwnerName, string repositoryName, int issueNumber, string accessToken,
+                             http:Client graphQlClient) returns @tainted string|error {
     string stringQuery = getFormulatedStringQueryForGetIssueId(repositoryOwnerName, repositoryName, issueNumber);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -502,8 +634,10 @@ isolated function getIssueId(string repositoryOwnerName, string repositoryName, 
     return err;
 }
 
-isolated function getPullRequestId(string repositoryOwnerName, string repositoryName, int pullRequestNumber, string accessToken, http:Client graphQlClient) returns string|error {
-    string stringQuery = getFormulatedStringQueryForGetPullRequestId(repositoryOwnerName, repositoryName, pullRequestNumber);
+isolated function getPullRequestId(string repositoryOwnerName, string repositoryName, int pullRequestNumber, 
+                                   string accessToken, http:Client graphQlClient) returns @tainted string|error {
+    string stringQuery = getFormulatedStringQueryForGetPullRequestId(repositoryOwnerName, repositoryName, 
+                                                                     pullRequestNumber);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);
@@ -530,7 +664,8 @@ isolated function getPullRequestId(string repositoryOwnerName, string repository
     return err;
 }
 
-isolated function getUserId(string userName, string accessToken, http:Client graphQlClient) returns string|error {
+isolated function getUserId(string userName, string accessToken, http:Client graphQlClient) 
+                            returns @tainted string|error {
     string stringQuery = getFormulatedStringQueryForGetUserOwnerId(userName);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -560,8 +695,10 @@ isolated function getUserId(string userName, string accessToken, http:Client gra
 } 
 
 
-//isolated function getProjectId(string repositoryOwnerName, string repositoryName, int projectNumber, string accessToken, http:Client graphQlClient) returns string|error {
-//    string stringQuery = getFormulatedStringQueryForGetPullRequestId(repositoryOwnerName, repositoryName, pullRequestNumber);
+//isolated function getProjectId(string repositoryOwnerName, string repositoryName, int projectNumber, string 
+//accessToken, http:Client graphQlClient) returns string|error {
+//    string stringQuery = getFormulatedStringQueryForGetPullRequestId(repositoryOwnerName, repositoryName, 
+//pullRequestNumber);
 //    http:Request request = new;
 //    setHeader(request, accessToken);
 //    json convertedQuery = check stringToJson(stringQuery);

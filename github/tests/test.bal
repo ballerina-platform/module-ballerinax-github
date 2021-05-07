@@ -29,7 +29,7 @@ Configuration gitHubConfig = {
     accessToken: accessToken
 };
 
-Client githubClient = new (gitHubConfig);
+Client githubClient = checkpanic new (gitHubConfig);
 
 @test:Config {
     groups: ["network-calls"],
@@ -196,8 +196,8 @@ function testCreateIssue() {
     var response = githubClient->createIssue(createIssueInput, testUserName, testUserRepositoryName);
 
     if(response is Issue){
-        createdIssueId = response.id;
-        createdIssueNumber = response.number;
+        createdIssueId = <@untainted>response.id;
+        createdIssueNumber = <@untainted>response.number;
         test:assertTrue(true);
     }else {
         test:assertFail(msg = response.message());
@@ -271,7 +271,7 @@ function testAddComment() {
     var response = githubClient->addComment(updateRepositoryInput);
 
     if(response is IssueComment){
-        createdIssueCommentId = response.id;
+        createdIssueCommentId = <@untainted>response.id;
         test:assertTrue(true);
     }else {
         test:assertFail(msg = response.message());
@@ -355,9 +355,10 @@ function testGetRepositoryLabelListInIssue() {
 }
 function testAddLabelsToLabelable() {
     log:printInfo("githubClient -> addLabelsToLabelable()");
+    Label labelIdResponse = checkpanic githubClient->getRepositoryLabel(testUserName, testUserRepositoryName, "bug");
     AddLabelsToLabelableInput addLabelInput = {
         labelableId: createdIssueId,
-        labelIds: ["MDU6TGFiZWwyNTc0ODMzODMy", "MDU6TGFiZWwyNTc0ODMzODM3"] // ids of bug, duplicate labels
+        labelIds: [labelIdResponse.id] // ids of bug, duplicate labels
     };
     var response = githubClient->addLabelsToLabelable(addLabelInput);
     if(response is LabelList){
@@ -374,9 +375,10 @@ function testAddLabelsToLabelable() {
 }
 function testRemoveLabelsFromLabelable() {
     log:printInfo("githubClient -> removeLabelFromLabelable()");
+    Label labelIdResponse = checkpanic githubClient->getRepositoryLabel(testUserName, testUserRepositoryName, "bug");
     RemoveLabelsFromLabelableInput addLabelInput = {
         labelableId: createdIssueId,
-        labelIds: ["MDU6TGFiZWwyNTc0ODMzODMy", "MDU6TGFiZWwyNTc0ODMzODM3"] // ids of bug, duplicate labels
+        labelIds: [labelIdResponse.id] // ids of bug, duplicate labels
     };
     var response = githubClient->removeLabelFromLabelable(addLabelInput);
      if(response is error){
@@ -423,9 +425,33 @@ function testGetRepositoryMilestoneList() {
 }
 function testGetRepositoryMilestone() {
     log:printInfo("githubClient -> getRepositoryMilestone()");
-    var response = githubClient->getRepositoryMilestone(testUserName, testUserRepositoryName, 6);
+    var response = githubClient->getRepositoryMilestone(testUserName, testUserRepositoryName, 1);
      if(response is Milestone){
-         test:assertTrue(response.number==6, msg = "Failed testGetRepositoryMilestoneList()");
+         test:assertTrue(response.number==1, msg = "Failed testGetRepositoryMilestoneList()");
+     }else {
+         test:assertFail(msg = response.message());
+     }
+}
+
+string createdPullRequestId="";
+int createdPullRequestNumber=-1;
+@test:Config {
+    groups: ["network-calls"],
+    enable: true
+}
+function testCreatePullRequest() {
+    log:printInfo("githubClient -> createPullRequest()");
+    CreatePullRequestInput createPullRequestInput = {
+       title: "Test PR created from Ballerina GitHub Connector",
+       baseRefName: "master",
+       headRefName: "feature/feature1",
+       body: "This is some dummy content for PR body"
+    };
+    var response = githubClient->createPullRequest(createPullRequestInput, testUserName, testUserRepositoryName);
+     if(response is PullRequest){
+         createdPullRequestId = <@untainted>response.id;
+         createdPullRequestNumber = <@untainted>(<int>(response?.number));
+         test:assertTrue(true);
      }else {
          test:assertFail(msg = response.message());
      }
@@ -433,13 +459,14 @@ function testGetRepositoryMilestone() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: true
+    enable: true,
+    dependsOn: [testCreatePullRequest]
 }
 function testGetPullRequest() {
     log:printInfo("githubClient -> getPullRequest()");
-    var response = githubClient->getPullRequest(testUserName, testUserRepositoryName, 488);
+    var response = githubClient->getPullRequest(testUserName, testUserRepositoryName, createdPullRequestNumber);
      if(response is PullRequest){
-         test:assertTrue(response.number==488, msg = "Failed testGetPullRequest()");
+         test:assertTrue(response.number==createdPullRequestNumber, msg = "Failed testGetPullRequest()");
      }else {
          test:assertFail(msg = response.message());
      }
@@ -455,29 +482,6 @@ function testGetPullRequestList() {
     var response = githubClient->getRepositoryPullRequestList(testUserName, testUserRepositoryName, PULL_REQUEST_OPEN, perPageCount);
      if(response is PullRequestList){
          test:assertTrue(response.length()>=0, msg = "Failed testGetPullRequest()");
-     }else {
-         test:assertFail(msg = response.message());
-     }
-}
-string createdPullRequestId="";
-int createdPullRequestNumber=-1;
-@test:Config {
-    groups: ["network-calls"],
-    enable: true
-}
-function testCreatePullRequest() {
-    log:printInfo("githubClient -> createPullRequest()");
-    CreatePullRequestInput createPullRequestInput = {
-       title: "Test PR created from Ballerina GitHub Connector",
-       baseRefName: "master",
-       headRefName: "feature11",
-       body: "This is some dummy content for PR body"
-    };
-    var response = githubClient->createPullRequest(createPullRequestInput, testUserName, testUserRepositoryName);
-     if(response is PullRequest){
-         createdPullRequestId = response.id;
-         createdPullRequestNumber = <int>(response?.number);
-         test:assertTrue(true);
      }else {
          test:assertFail(msg = response.message());
      }
@@ -556,7 +560,7 @@ function testCreatePullRequestReview() {
 
     var response = githubClient->createPullRequestReview(createPullRequestReviewInput, testUserName, testUserRepositoryName, createdPullRequestNumber);
     if(response is PullRequestReview){
-        createdPullRequestReviewId = response.id;
+        createdPullRequestReviewId = <@untainted>response.id;
         test:assertTrue(true);
     }else {
        test:assertFail(msg = response.message());
@@ -576,7 +580,7 @@ function testCreatePullRequestReviewWithPendingState() {
 
     var response = githubClient->createPullRequestReview(createPullRequestReviewInput, testUserName, testUserRepositoryName, createdPullRequestNumber);
     if(response is PullRequestReview){
-        createdPullRequestReviewIdWithPendingState = response.id;
+        createdPullRequestReviewIdWithPendingState = <@untainted>response.id;
         test:assertTrue(true);
     }else {
        test:assertFail(msg = response.message());
@@ -640,7 +644,7 @@ int createdProjectNumber =-1;
     groups: ["network-calls"],
     enable: true
 }
-function testCreateUserProject() returns error? {
+function testCreateUserProject() returns @tainted error? {
     log:printInfo("githubClient -> createProject()");
     string userId = check githubClient->getUserId(testUserName);
     CreateProjectInput createProjectInput = {
@@ -649,8 +653,8 @@ function testCreateUserProject() returns error? {
     };
     var response = githubClient->createProject(createProjectInput);
     if(response is Project){
-        createdProjectId = response.id;
-        createdProjectNumber = <int>(response?.number);
+        createdProjectId = <@untainted>response.id;
+        createdProjectNumber = <@untainted>(<int>(response?.number));
         test:assertTrue(true);
     }else {
         test:assertFail(msg = response.message());

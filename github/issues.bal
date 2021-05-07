@@ -16,9 +16,12 @@
 
 import ballerina/http;
 
-isolated function createIssue(CreateIssueInput createIssueInput, string repositoryOwnerName, string repositoryName, string accessToken, http:Client graphQlClient) returns Issue|error {
+isolated function createIssue(@tainted CreateIssueInput createIssueInput, string repositoryOwnerName, 
+                              string repositoryName, string accessToken, http:Client graphQlClient) 
+                              returns @tainted Issue|error {
     if(createIssueInput?.repositoryId is ()) {
-        createIssueInput["repositoryId"] = check getRepositoryId(repositoryOwnerName, repositoryName, accessToken, graphQlClient);
+        createIssueInput["repositoryId"] = check getRepositoryId(repositoryOwnerName, repositoryName, accessToken,
+                                                                 graphQlClient);
     }
     string stringQuery = getFormulatedStringQueryForCreateIssue(createIssueInput);
     http:Request request = new;
@@ -49,9 +52,12 @@ isolated function createIssue(CreateIssueInput createIssueInput, string reposito
 
 }
 
-isolated function updateIssue(UpdateIssueInput updateIssueInput, string repositoryOwnerName, string repositoryName,  int issueNumber, string accessToken, http:Client graphQlClient) returns Issue|error {
+isolated function updateIssue(@tainted UpdateIssueInput updateIssueInput, string repositoryOwnerName, string repositoryName,  
+                              int issueNumber, string accessToken, http:Client graphQlClient) 
+                              returns @tainted Issue|error {
     if(updateIssueInput?.id is ()) {
-        updateIssueInput["id"] = check getIssueId(repositoryOwnerName, repositoryName, issueNumber, accessToken, graphQlClient);
+        updateIssueInput["id"] = check getIssueId(repositoryOwnerName, repositoryName, issueNumber, accessToken, 
+                                                  graphQlClient);
     }
     string stringQuery = getFormulatedStringQueryForUpdateIssue(updateIssueInput);
     http:Request request = new;
@@ -80,8 +86,10 @@ isolated function updateIssue(UpdateIssueInput updateIssueInput, string reposito
 
 }
 
-isolated function getRepositoryIssue(string repositoryOwnerName, string repositoryName, int issueNumber, string accessToken, http:Client graphQlClient) returns Issue|error {
-    string stringQuery = getFormulatedStringQueryForGetRepositoryIssue(repositoryOwnerName, repositoryName, issueNumber);
+isolated function getRepositoryIssue(string repositoryOwnerName, string repositoryName, int issueNumber, 
+                                     string accessToken, http:Client graphQlClient) returns @tainted Issue|error {
+    string stringQuery = getFormulatedStringQueryForGetRepositoryIssue(repositoryOwnerName, repositoryName, 
+                                                                       issueNumber);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);
@@ -108,8 +116,11 @@ isolated function getRepositoryIssue(string repositoryOwnerName, string reposito
     return err;
 }
 
-isolated function getRepositoryIssueCommentList(string repositoryOwnerName, string repositoryName, int issueNumber, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor=()) returns IssueCommentList|error {
-    string stringQuery = getFormulatedStringQueryForGetIssueCommentList(repositoryOwnerName, repositoryName, issueNumber, perPageCount, nextPageCursor);
+isolated function getRepositoryIssueCommentList(string repositoryOwnerName, string repositoryName, int issueNumber, 
+                                                int perPageCount, string accessToken, http:Client graphQlClient, 
+                                                string? nextPageCursor=()) returns @tainted IssueCommentList|error {
+    string stringQuery = getFormulatedStringQueryForGetIssueCommentList(repositoryOwnerName, repositoryName, 
+                                                                        issueNumber, perPageCount, nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);
     json convertedQuery = check stringToJson(stringQuery);
@@ -141,7 +152,9 @@ isolated function getRepositoryIssueCommentList(string repositoryOwnerName, stri
     return err;
 }
 
-isolated function getIssuesWithLabel(string repositoryOwnerName, string repositoryName, string labelName, int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor=()) returns IssueList|error {
+isolated function getIssuesWithLabel(string repositoryOwnerName, string repositoryName, string labelName, 
+                                     int perPageCount, string accessToken, http:Client graphQlClient, 
+                                     string? nextPageCursor=()) returns @tainted IssueList|error {
     string stringQuery = getFormulatedStringQueryForGetIssueListWithLabel(repositoryOwnerName, repositoryName, labelName, perPageCount, nextPageCursor);
     http:Request request = new;
     setHeader(request, accessToken);

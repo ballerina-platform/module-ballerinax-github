@@ -107,7 +107,7 @@ function testWebhookNotificationOnIssueCreation() {
         accessToken: accessToken
     };
 
-    github:Client githubClient = new (gitHubConfig);
+    github:Client githubClient = checkpanic new (gitHubConfig);
 
     github:CreateIssueInput createIssueInput = {
         title: createdIssueTitle
@@ -118,7 +118,7 @@ function testWebhookNotificationOnIssueCreation() {
     if (issueCreationPayload is error) {
         test:assertFail(msg = "Issue creation failed: " + issueCreationPayload.message());
     }else {
-        createdIssueNumber = issueCreationPayload.number;
+        createdIssueNumber = <@untainted>issueCreationPayload.number;
     }
 
     int counter = 10;
@@ -162,7 +162,7 @@ function testWebhookNotificationOnIssueEdited() returns error? {
         accessToken: accessToken
     };
 
-    github:Client githubClient = new (gitHubConfig);
+    github:Client githubClient = checkpanic new (gitHubConfig);
 
     github:UpdateIssueInput updateRepositoryInput = {
         title: updatedIssueTitle
