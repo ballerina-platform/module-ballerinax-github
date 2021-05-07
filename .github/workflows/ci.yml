@@ -17,8 +17,8 @@ jobs:
               run: chmod +x gradlew
             - name: Build with Gradle
               env:
-                packageUser: ${{ secrets.BALLERINA_BOT_USERNAME }}
-                packagePAT: ${{ secrets.BALLERINA_BOT_TOKEN }}
+                packageUser: ${{ github.actor }}
+                packagePAT: ${{ secrets.GITHUB_TOKEN }}
                 JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
               run: |
                  ./gradlew build
