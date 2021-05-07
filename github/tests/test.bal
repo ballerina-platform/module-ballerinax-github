@@ -425,9 +425,9 @@ function testGetRepositoryMilestoneList() {
 }
 function testGetRepositoryMilestone() {
     log:printInfo("githubClient -> getRepositoryMilestone()");
-    var response = githubClient->getRepositoryMilestone(testUserName, testUserRepositoryName, 1);
+    var response = githubClient->getRepositoryMilestone(testUserName, testUserRepositoryName, 5);
      if(response is Milestone){
-         test:assertTrue(response.number==1, msg = "Failed testGetRepositoryMilestoneList()");
+         test:assertTrue(response.number==5, msg = "Failed testGetRepositoryMilestoneList()");
      }else {
          test:assertFail(msg = response.message());
      }
