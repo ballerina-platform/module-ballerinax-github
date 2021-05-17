@@ -21,14 +21,14 @@ Connects to GitHub using Ballerina.
 - Track and assign tasks
 - Propose changes
 
-![Ballerina GitHub Endpoint Overview](./docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
+![Ballerina GitHub Endpoint Overview](../docs/resources/BallerinaGitHubEndpoint_Overview.jpg)
 
 ## Connector Overview
 
-Github Ballerina Connector is used to connect with the GitHub to perform operations exposed by GitHub GraphQL and REST API. Also, it provides easy integration with GitHub webhooks
+Github Ballerina Connector is used to connect with the GitHub to perform operations exposed by GitHub GraphQL. Also, it provides easy integration with GitHub webhooks
 
-The connector has built-in support to handle OAuth2.0, provides auto completion and type conversions. The following
-sections explains how to use Ballerina GitHub connector. You can refer the [GitHub GraphQL API v4.0](https://developer.github.com/v4/), [GitHub REST API v3.0](https://docs.github.com/en/rest) and [GitHub Webhooks](https://developer.github.com/webhooks/) to learn more about the APIs.
+The connector provides auto completion and type conversions. The following
+sections explains how to use Ballerina GitHub connector. You can refer the [GitHub GraphQL API v4.0](https://developer.github.com/v4/) and [GitHub Webhooks](https://developer.github.com/webhooks/) to learn more about the APIs.
 
 # Prerequisites
 
