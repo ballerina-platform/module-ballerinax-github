@@ -1,1 +1,22 @@
-{"ballerinax/github:0.99.14:BranchList":[{"startCursor":"MQ", "endCursor":"Mw", "hasNextPage":true, "hasPreviousPage":false},{"startCursor":"MQ", "endCursor":"Mw", "hasNextPage":true, "hasPreviousPage":false},{"startCursor":"MQ", "endCursor":"Mg", "hasNextPage":false, "hasPreviousPage":false}]}
+{
+    "ballerinax/github:0.99.14:BranchList": [
+        {
+            "startCursor": "MQ",
+            "endCursor": "Mw",
+            "hasNextPage": true,
+            "hasPreviousPage": false
+        },
+        {
+            "startCursor": "MQ",
+            "endCursor": "Mw",
+            "hasNextPage": true,
+            "hasPreviousPage": false
+        },
+        {
+            "startCursor": "MQ",
+            "endCursor": "Mg",
+            "hasNextPage": false,
+            "hasPreviousPage": false
+        }
+    ]
+}
