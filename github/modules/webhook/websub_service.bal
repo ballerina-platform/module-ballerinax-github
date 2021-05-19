@@ -56,6 +56,8 @@ service class WebSubService {
 
     private SimpleWebhookService webhookService;
 
+    public string? deleteWebhookEndpoint = ();
+
     public isolated function init(SimpleWebhookService webhookService) {
         self.webhookService = webhookService;
         string[] methodNames = getServiceMethodNames(webhookService);
@@ -221,6 +223,11 @@ service class WebSubService {
                         returns websub:Acknowledgement|websub:SubscriptionDeletedError? {
         GitHubEvent|error eventPayload = event.content.cloneWithType(GitHubEvent);
         if((eventPayload is PingEvent) ) {
+            Repository repository = eventPayload.repository;
+            int hookId = eventPayload.hook_id;
+            string fullName = eventPayload.repository.full_name;
+            string deleteWebhookEndpoint = "/repos/"+fullName+"/hooks/"+hookId.toString();
+            self.deleteWebhookEndpoint = deleteWebhookEndpoint;
             if (self.isOnPingAvailable) {
                 var response = callOnPingMethod(self.webhookService, eventPayload);
             }

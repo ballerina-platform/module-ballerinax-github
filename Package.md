@@ -1,4 +1,4 @@
-# Ballerina GitHub Endpoint
+# Ballerina GitHub Connector
 
 [![Build Status](https://travis-ci.org/ballerina-platform/module-ballerinax-github.svg?branch=master)](https://travis-ci.org/ballerina-platform/module-ballerinax-github)
 
@@ -25,16 +25,16 @@ Connects to GitHub using Ballerina.
 
 ## Connector Overview
 
-Github Ballerina Connector is used to connect with the GitHub to perform operations exposed by GitHub GraphQL and REST API. Also, it provides easy integration with GitHub webhooks
+Github Ballerina Connector is used to connect with the GitHub to perform operations exposed by GitHub GraphQL. Also, it provides easy integration with GitHub webhooks
 
-The connector has built-in support to handle OAuth2.0, provides auto completion and type conversions. The following
-sections explains how to use Ballerina GitHub connector. You can refer the [GitHub GraphQL API v4.0](https://developer.github.com/v4/), [GitHub REST API v3.0](https://docs.github.com/en/rest) and [GitHub Webhooks](https://developer.github.com/webhooks/) to learn more about the APIs.
+The connector provides auto completion and type conversions. The following
+sections explains how to use Ballerina GitHub connector. You can refer the [GitHub GraphQL API v4.0](https://developer.github.com/v4/) and [GitHub Webhooks](https://developer.github.com/webhooks/) to learn more about the APIs.
 
 # Prerequisites
 
 * GitHub Account
 
-* Ballerina Swan Lake Alpha5 Installed
+* Ballerina Swan Lake Alpha 5 Installed
 
 * [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) or [GitHub OAuth App token](https://docs.github.com/en/developers/apps/creating-an-oauth-app).
 
@@ -86,11 +86,11 @@ Initialize variables with suitable values which needs to be passed as arguments 
 ### Step 4: Invoke the client remote function and obtain the results.
 
 ```ballerina
-    var issueList = githubClient->getRepositoryIssueList(repositoryOwner, repositoryName, [github:ISSUE_OPEN], recordCount);
+    var response = githubClient->getRepositoryIssueList(repositoryOwner, repositoryName, [ISSUE_OPEN], perPageCount);
     if (issueList is github:IssueList) {
         log:printInfo(string `Issue List: ${issueList.nodes.length()} Issues found`);
     } else {
-        log:printError("Error: "+ issueList.toString());
+        log:printError("Error: "+ issueList.message());
     }
 ```
 
@@ -137,3 +137,5 @@ service /subscriber on webhookListener {
         log:printInfo("Received push-event-message ", eventPayload = event);
     }
 ```
+
+

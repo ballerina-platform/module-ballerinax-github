@@ -154,7 +154,7 @@ public type Issue record {
     string? closed_at;
     string author_association;
     string? active_lock_reason;
-    string body;
+    string? body;
     string? performed_via_github_app;
 };
 
