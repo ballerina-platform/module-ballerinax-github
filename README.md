@@ -1,4 +1,4 @@
-# Ballerina GitHub Endpoint
+# Ballerina GitHub Connector
 
 [![Build Status](https://travis-ci.org/ballerina-platform/module-ballerinax-github.svg?branch=master)](https://travis-ci.org/ballerina-platform/module-ballerinax-github)
 

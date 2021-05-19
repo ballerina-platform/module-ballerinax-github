@@ -46,19 +46,21 @@ isolated function getValidatedResponse(http:Response|http:PayloadType|error resp
                         foreach var singleError in errorList {
                             map<json> mapSingleerror = <map<json>> singleError;
                             string errorMessage = mapSingleerror[GIT_MESSAGE].toString();
-                            error err = error(GITHUB_ERROR_CODE, message = errorMessage);
+                            string errMessage = string ` ${GITHUB_ERROR_CODE} : ${errorMessage}`;
+                            error err = error(errMessage, message = errorMessage);
                             return err;
                         }
                     } else {
-                        error err = error(GITHUB_ERROR_CODE,
+                        string errorMessage = string ` ${GITHUB_ERROR_CODE} : Error occurred while accessing the Json payload of the response.`;
+                        error err = error(errorMessage,
                         message = "Error occurred while accessing the Json payload of the response.");
                         return err;
                     }
                 }
 
                 if (strings:equalsIgnoreCaseAscii(GIT_MESSAGE, key)) {
-
-                    error err = error(GITHUB_ERROR_CODE, message = mapJsonPayload[GIT_MESSAGE].toString());
+                    string errorMessage = string ` ${GITHUB_ERROR_CODE} : ${mapJsonPayload[GIT_MESSAGE].toString()}`;
+                    error err = error(errorMessage, message = mapJsonPayload[GIT_MESSAGE].toString());
                     return err;
                 }
             }
@@ -74,12 +76,14 @@ isolated function getValidatedResponse(http:Response|http:PayloadType|error resp
             map<json> output = <map<json>> mapJsondata[keyInData];
             return jsonPayload;
         } else {
-            error err = error(GITHUB_ERROR_CODE,
+            string errorMessage = string `${GITHUB_ERROR_CODE}: Entity body is not json compatible since the received content-type is : null`;
+            error err = error(errorMessage,
             message = "Entity body is not json compatible since the received content-type is : null");
             return err;
         }
     } else {
-        error err = error(GITHUB_ERROR_CODE, message = "HTTP Connector Error");
+        string errorMessage = string ` ${GITHUB_ERROR_CODE} : HTTP Connector Error`;
+        error err = error(errorMessage, message = "HTTP Connector Error");
         return err;
     }
 }

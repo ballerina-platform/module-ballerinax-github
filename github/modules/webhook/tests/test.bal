@@ -49,7 +49,7 @@ service /subscriber on webhookListener {
     }
 
     remote function onIssuesOpened(IssuesEvent event) returns Acknowledgement? {
-        log:printInfo("Issue opened");
+        log:printInfo("Issue opened", notificationMsg = event);
         issueCreationNotified = true;
         issueTitle = <@untainted> event.issue.title;
     }
