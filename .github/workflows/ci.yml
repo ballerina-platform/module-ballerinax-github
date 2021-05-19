@@ -23,7 +23,7 @@ jobs:
               run: |
                  ./gradlew build
             - name: Ballerina Build
-              uses: ballerina-platform/ballerina-action@master
+              uses: ballerina-platform/ballerina-action@nightly
               with:
                   args:
                       build -c ./github
@@ -39,3 +39,4 @@ jobs:
                   GITHUB_CALLBACK: ${{ secrets.CALLBACK }}
                   GITHUB_USERNAME: ${{ secrets.USERNAME }}
                   JAVA_HOME: /usr/lib/jvm/default-jvm
+                  

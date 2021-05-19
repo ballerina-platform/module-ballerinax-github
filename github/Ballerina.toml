@@ -1,7 +1,7 @@
 [package]
 org = "ballerinax"
 name = "github"
-version = "0.99.14"
+version = "0.99.15-SNAPSHOT"
 export= ["github", "github.webhook"]
 authors = ["Ballerina"]
 keywords = ["github", "endpoint", "API"]
@@ -12,7 +12,7 @@ license = ["Apache-2.0"]
 observabilityIncluded = true
 
 [[platform.java11.dependency]]
-path = "../java-wrapper/build/libs/java-wrapper-0.99.14.jar"
+path = "../java-wrapper/build/libs/java-wrapper-0.99.15-SNAPSHOT.jar"
 groupId = "io.ballerinax.webhook"
 artifactId = "java-wrapper"
-version = "0.99.14"
+version = "0.99.15-SNAPSHOT"
