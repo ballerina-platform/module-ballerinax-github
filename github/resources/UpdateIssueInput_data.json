@@ -1,0 +1,61 @@
+{
+    "ballerinax/github:0.99.14:UpdateIssueInput": [
+        {
+            "id": "1",
+            "title": "Issue in Test Repo 1",
+            "body": "This issue is a blocker",
+            "assigneeIds": [
+                "Nuwan",
+                "Kanishka",
+                "Roland"
+            ],
+            "milestoneId": "1",
+            "labelIds": [
+                "abc111"
+            ],
+            "state": "OPEN",
+            "projectIds": [
+                "1"
+            ],
+            "clientMutationId": "clientMutationId1"
+        },
+        {
+            "id": "2",
+            "title": "Issue in Test Repo 2",
+            "body": "This issue is a blocker",
+            "assigneeIds": [
+                "Nuwan",
+                "Kanishka",
+                "Roland"
+            ],
+            "milestoneId": "2",
+            "labelIds": [
+                "abc222"
+            ],
+            "state": "OPEN",
+            "projectIds": [
+                "2"
+            ],
+            "clientMutationId": "clientMutationId2"
+        },
+        {
+            "id": "3",
+            "title": "Issue in Test Repo 3",
+            "body": "This issue is a blocker",
+            "assigneeIds": [
+                "Nuwan",
+                "Kanishka",
+                "Roland"
+            ],
+            "milestoneId": "3",
+            "labelIds": [
+                "abc333"
+            ],
+            "state": "OPEN",
+            "projectIds": [
+                "3"
+            ],
+            "clientMutationId": "clientMutationId3"
+        }
+    ]
+}

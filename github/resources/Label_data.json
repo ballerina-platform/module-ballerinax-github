@@ -1,0 +1,94 @@
+{
+    "ballerinax/github:0.99.14:Label": [
+        {
+            "createdAt": "2021-05-12T23:57:56Z",
+            "isDefault": "boolean",
+            "color": "d73a4a",
+            "name": "bug",
+            "description": "Something isn't working",
+            "id": "MDU6TGFiZWwyOTk1MzQwMTIx",
+            "url": "https://github.com/SkNuwanTissera/github-data-generator-1/labels/bug",
+            "updatedAt": "2021-05-12T23:57:56Z"
+        },
+        {
+            "createdAt": "2021-05-12T23:57:56Z",
+            "isDefault": "boolean",
+            "color": "0075ca",
+            "name": "documentation",
+            "description": "Improvements or additions to documentation",
+            "id": "MDU6TGFiZWwyOTk1MzQwMTIz",
+            "url": "https://github.com/SkNuwanTissera/github-data-generator-1/labels/documentation",
+            "updatedAt": "2021-05-12T23:57:56Z"
+        },
+        {
+            "createdAt": "2021-05-12T23:57:56Z",
+            "isDefault": "boolean",
+            "color": "cfd3d7",
+            "name": "duplicate",
+            "description": "This issue or pull request already exists",
+            "id": "MDU6TGFiZWwyOTk1MzQwMTI1",
+            "url": "https://github.com/SkNuwanTissera/github-data-generator-1/labels/duplicate",
+            "updatedAt": "2021-05-12T23:57:56Z"
+        },
+        {
+            "createdAt": "2021-05-12T23:57:56Z",
+            "isDefault": "boolean",
+            "color": "d73a4a",
+            "name": "bug",
+            "description": "Something isn't working",
+            "id": "MDU6TGFiZWwyOTk1MzQwMTIx",
+            "url": "https://github.com/SkNuwanTissera/github-data-generator-1/labels/bug",
+            "updatedAt": "2021-05-12T23:57:56Z"
+        },
+        {
+            "createdAt": "2021-05-12T23:57:56Z",
+            "isDefault": "boolean",
+            "color": "0075ca",
+            "name": "documentation",
+            "description": "Improvements or additions to documentation",
+            "id": "MDU6TGFiZWwyOTk1MzQwMTIz",
+            "url": "https://github.com/SkNuwanTissera/github-data-generator-1/labels/documentation",
+            "updatedAt": "2021-05-12T23:57:56Z"
+        },
+        {
+            "createdAt": "2021-05-12T23:57:56Z",
+            "isDefault": "boolean",
+            "color": "cfd3d7",
+            "name": "duplicate",
+            "description": "This issue or pull request already exists",
+            "id": "MDU6TGFiZWwyOTk1MzQwMTI1",
+            "url": "https://github.com/SkNuwanTissera/github-data-generator-1/labels/duplicate",
+            "updatedAt": "2021-05-12T23:57:56Z"
+        },
+        {
+            "createdAt": "2021-05-12T23:57:56Z",
+            "isDefault": "boolean",
+            "color": "d73a4a",
+            "name": "bug",
+            "description": "Something isn't working",
+            "id": "MDU6TGFiZWwyOTk1MzQwMTIx",
+            "url": "https://github.com/SkNuwanTissera/github-data-generator-1/labels/bug",
+            "updatedAt": "2021-05-12T23:57:56Z"
+        },
+        {
+            "createdAt": "2021-05-12T23:57:56Z",
+            "isDefault": "boolean",
+            "color": "0075ca",
+            "name": "documentation",
+            "description": "Improvements or additions to documentation",
+            "id": "MDU6TGFiZWwyOTk1MzQwMTIz",
+            "url": "https://github.com/SkNuwanTissera/github-data-generator-1/labels/documentation",
+            "updatedAt": "2021-05-12T23:57:56Z"
+        },
+        {
+            "createdAt": "2021-05-12T23:57:56Z",
+            "isDefault": "boolean",
+            "color": "cfd3d7",
+            "name": "duplicate",
+            "description": "This issue or pull request already exists",
+            "id": "MDU6TGFiZWwyOTk1MzQwMTI1",
+            "url": "https://github.com/SkNuwanTissera/github-data-generator-1/labels/duplicate",
+            "updatedAt": "2021-05-12T23:57:56Z"
+        }
+    ]
+}

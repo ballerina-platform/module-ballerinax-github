@@ -1,0 +1,28 @@
+{
+    "ballerinax/github:0.99.14:UpdateProjectInput": [
+        {
+            "projectId": "1",
+            "body": "This is some dummy content for body",
+            "name": "TestProject1",
+            "public": true,
+            "state": "OPEN",
+            "updateClientMutationId": "clientMutationId1"
+        },
+        {
+            "projectId": "2",
+            "body": "This is some dummy content for body",
+            "name": "TestProject2",
+            "public": true,
+            "state": "OPEN",
+            "updateClientMutationId": "clientMutationId2"
+        },
+        {
+            "projectId": "3",
+            "body": "This is some dummy content for body",
+            "name": "TestProject3",
+            "public": true,
+            "state": "OPEN",
+            "updateClientMutationId": "clientMutationId3"
+        }
+    ]
+}

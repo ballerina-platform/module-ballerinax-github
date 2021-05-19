@@ -1,0 +1,37 @@
+{
+    "ballerinax/github:0.99.14:UpdateRepositoryInput": [
+        {
+            "clientMutationId": "clientMutationId1",
+            "description": "description1",
+            "hasIssuesEnabled": true,
+            "hasProjectsEnabled": true,
+            "hasWikiEnabled": true,
+            "homePageUrl": "https://github.com/TestRepository1",
+            "name": "Test Repository1",
+            "repositoryId": "1",
+            "template": true
+        },
+        {
+            "clientMutationId": "clientMutationId2",
+            "description": "description2",
+            "hasIssuesEnabled": true,
+            "hasProjectsEnabled": true,
+            "hasWikiEnabled": true,
+            "homePageUrl": "https://github.com/TestRepository2",
+            "name": "Test Repository2",
+            "repositoryId": "2",
+            "template": true
+        },
+        {
+            "clientMutationId": "clientMutationId3",
+            "description": "description3",
+            "hasIssuesEnabled": true,
+            "hasProjectsEnabled": true,
+            "hasWikiEnabled": true,
+            "homePageUrl": "https://github.com/TestRepository3",
+            "name": "Test Repository3",
+            "repositoryId": "3",
+            "template": true
+        }
+    ]
+}
