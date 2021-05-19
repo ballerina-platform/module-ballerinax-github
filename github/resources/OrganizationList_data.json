@@ -1,0 +1,163 @@
+{
+    "ballerinax/github:0.99.14:OrganizationList": [
+        {
+            "nodes": [
+                {
+                    "avatarUrl": "https://avatars.githubusercontent.com/u/20661354?v=4",
+                    "description": "",
+                    "email": null,
+                    "id": "MDEyOk9yZ2FuaXphdGlvbjIwNjYxMzU0",
+                    "location": null,
+                    "login": "wso2-enterprise",
+                    "name": "wso2-enterprise",
+                    "projectsResourcePath": "/orgs/wso2-enterprise/projects",
+                    "projectsUrl": "https://github.com/orgs/wso2-enterprise/projects",
+                    "resourcePath": "/wso2-enterprise",
+                    "url": "https://github.com/wso2-enterprise",
+                    "websiteUrl": null
+                },
+                {
+                    "avatarUrl": "https://avatars.githubusercontent.com/u/42164243?v=4",
+                    "description": null,
+                    "email": null,
+                    "id": "MDEyOk9yZ2FuaXphdGlvbjQyMTY0MjQz",
+                    "location": null,
+                    "login": "CodeAcid",
+                    "name": "CodeAcid",
+                    "projectsResourcePath": "/orgs/CodeAcid/projects",
+                    "projectsUrl": "https://github.com/orgs/CodeAcid/projects",
+                    "resourcePath": "/CodeAcid",
+                    "url": "https://github.com/CodeAcid",
+                    "websiteUrl": null
+                },
+                {
+                    "avatarUrl": "https://avatars.githubusercontent.com/u/66877177?v=4",
+                    "description": null,
+                    "email": null,
+                    "id": "MDEyOk9yZ2FuaXphdGlvbjY2ODc3MTc3",
+                    "location": null,
+                    "login": "SyntaxLK",
+                    "name": "SyntaxLK",
+                    "projectsResourcePath": "/orgs/SyntaxLK/projects",
+                    "projectsUrl": "https://github.com/orgs/SyntaxLK/projects",
+                    "resourcePath": "/SyntaxLK",
+                    "url": "https://github.com/SyntaxLK",
+                    "websiteUrl": null
+                }
+            ],
+            "pageInfo": {
+                "startCursor": "Y3Vyc29yOnYyOpHOATtEag==",
+                "endCursor": "Y3Vyc29yOnYyOpHOA_x2-Q==",
+                "hasNextPage": true,
+                "hasPreviousPage": false
+            },
+            "totalCount": 4
+        },
+        {
+            "nodes": [
+                {
+                    "avatarUrl": "https://avatars.githubusercontent.com/u/20661354?v=4",
+                    "description": "",
+                    "email": null,
+                    "id": "MDEyOk9yZ2FuaXphdGlvbjIwNjYxMzU0",
+                    "location": null,
+                    "login": "wso2-enterprise",
+                    "name": "wso2-enterprise",
+                    "projectsResourcePath": "/orgs/wso2-enterprise/projects",
+                    "projectsUrl": "https://github.com/orgs/wso2-enterprise/projects",
+                    "resourcePath": "/wso2-enterprise",
+                    "url": "https://github.com/wso2-enterprise",
+                    "websiteUrl": null
+                },
+                {
+                    "avatarUrl": "https://avatars.githubusercontent.com/u/42164243?v=4",
+                    "description": null,
+                    "email": null,
+                    "id": "MDEyOk9yZ2FuaXphdGlvbjQyMTY0MjQz",
+                    "location": null,
+                    "login": "CodeAcid",
+                    "name": "CodeAcid",
+                    "projectsResourcePath": "/orgs/CodeAcid/projects",
+                    "projectsUrl": "https://github.com/orgs/CodeAcid/projects",
+                    "resourcePath": "/CodeAcid",
+                    "url": "https://github.com/CodeAcid",
+                    "websiteUrl": null
+                },
+                {
+                    "avatarUrl": "https://avatars.githubusercontent.com/u/66877177?v=4",
+                    "description": null,
+                    "email": null,
+                    "id": "MDEyOk9yZ2FuaXphdGlvbjY2ODc3MTc3",
+                    "location": null,
+                    "login": "SyntaxLK",
+                    "name": "SyntaxLK",
+                    "projectsResourcePath": "/orgs/SyntaxLK/projects",
+                    "projectsUrl": "https://github.com/orgs/SyntaxLK/projects",
+                    "resourcePath": "/SyntaxLK",
+                    "url": "https://github.com/SyntaxLK",
+                    "websiteUrl": null
+                }
+            ],
+            "pageInfo": {
+                "startCursor": "Y3Vyc29yOnYyOpHOATtEag==",
+                "endCursor": "Y3Vyc29yOnYyOpHOA_x2-Q==",
+                "hasNextPage": true,
+                "hasPreviousPage": false
+            },
+            "totalCount": 4
+        },
+        {
+            "nodes": [
+                {
+                    "avatarUrl": "https://avatars.githubusercontent.com/u/20661354?v=4",
+                    "description": "",
+                    "email": null,
+                    "id": "MDEyOk9yZ2FuaXphdGlvbjIwNjYxMzU0",
+                    "location": null,
+                    "login": "wso2-enterprise",
+                    "name": "wso2-enterprise",
+                    "projectsResourcePath": "/orgs/wso2-enterprise/projects",
+                    "projectsUrl": "https://github.com/orgs/wso2-enterprise/projects",
+                    "resourcePath": "/wso2-enterprise",
+                    "url": "https://github.com/wso2-enterprise",
+                    "websiteUrl": null
+                },
+                {
+                    "avatarUrl": "https://avatars.githubusercontent.com/u/42164243?v=4",
+                    "description": null,
+                    "email": null,
+                    "id": "MDEyOk9yZ2FuaXphdGlvbjQyMTY0MjQz",
+                    "location": null,
+                    "login": "CodeAcid",
+                    "name": "CodeAcid",
+                    "projectsResourcePath": "/orgs/CodeAcid/projects",
+                    "projectsUrl": "https://github.com/orgs/CodeAcid/projects",
+                    "resourcePath": "/CodeAcid",
+                    "url": "https://github.com/CodeAcid",
+                    "websiteUrl": null
+                },
+                {
+                    "avatarUrl": "https://avatars.githubusercontent.com/u/66877177?v=4",
+                    "description": null,
+                    "email": null,
+                    "id": "MDEyOk9yZ2FuaXphdGlvbjY2ODc3MTc3",
+                    "location": null,
+                    "login": "SyntaxLK",
+                    "name": "SyntaxLK",
+                    "projectsResourcePath": "/orgs/SyntaxLK/projects",
+                    "projectsUrl": "https://github.com/orgs/SyntaxLK/projects",
+                    "resourcePath": "/SyntaxLK",
+                    "url": "https://github.com/SyntaxLK",
+                    "websiteUrl": null
+                }
+            ],
+            "pageInfo": {
+                "startCursor": "Y3Vyc29yOnYyOpHOATtEag==",
+                "endCursor": "Y3Vyc29yOnYyOpHOA_x2-Q==",
+                "hasNextPage": true,
+                "hasPreviousPage": false
+            },
+            "totalCount": 4
+        }
+    ]
+}

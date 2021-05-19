@@ -1,0 +1,19 @@
+{
+    "ballerinax/github:0.99.14:MilestoneList": [
+        {
+            "nodes": "ballerinax/github:0.99.14:Milestone[]",
+            "pageInfo": "ballerinax/github:0.99.14:PageInfo",
+            "totalCount": 1
+        },
+        {
+            "nodes": "ballerinax/github:0.99.14:Milestone[]",
+            "pageInfo": "ballerinax/github:0.99.14:PageInfo",
+            "totalCount": 2
+        },
+        {
+            "nodes": "ballerinax/github:0.99.14:Milestone[]",
+            "pageInfo": "ballerinax/github:0.99.14:PageInfo",
+            "totalCount": 10
+        }
+    ]
+}

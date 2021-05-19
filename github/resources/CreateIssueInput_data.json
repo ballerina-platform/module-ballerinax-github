@@ -1,0 +1,43 @@
+{
+    "ballerinax/github:0.99.14:CreateIssueInput": [
+        {
+            "clientMutationId": "clientMutationId1",
+            "repositoryId": "1",
+            "labelIds": [
+                "MDU6TGFiZWwyOTk1MzQwMTIx"
+            ],
+            "milestoneId": "1",
+            "projectIds": ["1"],
+            "title": "Sample issue 1",
+            "body": "Sample issue body",
+            "assigneeIds": "string[]",
+            "issueTemplate": "string"
+        },
+        {
+            "clientMutationId": "clientMutationId2",
+            "repositoryId": "2",
+            "labelIds": [
+                "MDU6TGFiZWwyOTk2MzQwMTIx"
+            ],
+            "milestoneId": "2",
+            "projectIds": ["2"],
+            "title": "Sample issue 2",
+            "body": "Sample issue body",
+            "assigneeIds": "string[]",
+            "issueTemplate": "string"
+        },
+        {
+            "clientMutationId": "clientMutationId3",
+            "repositoryId": "3",
+            "labelIds": [
+                "MDU6TGFiZWwyOTk3MzQwMTIx"
+            ],
+            "milestoneId": "3",
+            "projectIds": ["3"],
+            "title": "Sample issue 3",
+            "body": "Sample issue body",
+            "assigneeIds": "string[]",
+            "issueTemplate": "string"
+        }
+    ]
+}

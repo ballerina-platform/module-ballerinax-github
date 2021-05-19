@@ -1,0 +1,19 @@
+{
+    "ballerinax/github:0.99.14:RepositoryList": [
+        {
+            "nodes": "ballerinax/github:0.99.14:Repository[]",
+            "pageInfo": "ballerinax/github:0.99.14:PageInfo",
+            "totalCount": 2
+        },
+        {
+            "nodes": "ballerinax/github:0.99.14:Repository[]",
+            "pageInfo": "ballerinax/github:0.99.14:PageInfo",
+            "totalCount": 4
+        },
+        {
+            "nodes": "ballerinax/github:0.99.14:Repository[]",
+            "pageInfo": "ballerinax/github:0.99.14:PageInfo",
+            "totalCount": 5
+        }
+    ]
+}

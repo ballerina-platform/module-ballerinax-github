@@ -1,0 +1,16 @@
+{
+    "ballerinax/github:0.99.14:DeletePullRequestReviewInput": [
+        {
+            "pullRequestReviewId": "1",
+            "clientMutationId": "clientMutationId1"
+        },
+        {
+            "pullRequestReviewId": "2",
+            "clientMutationId": "clientMutationId2"
+        },
+        {
+            "pullRequestReviewId": "3",
+            "clientMutationId": "clientMutationId3"
+        }
+    ]
+}

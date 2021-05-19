@@ -1,0 +1,19 @@
+{
+    "ballerinax/github:0.99.14:UpdateIssueCommentInput": [
+        {
+            "id": "1",
+            "body": "This contains Updated comment input",
+            "clientMutationId": "clientMutationId1"
+        },
+        {
+            "id": "2",
+            "body": "This contains Updated comment input",
+            "clientMutationId": "clientMutationId2"
+        },
+        {
+            "id": "3",
+            "body": "This contains Updated comment input",
+            "clientMutationId": "clientMutationId3"
+        }
+    ]
+}
