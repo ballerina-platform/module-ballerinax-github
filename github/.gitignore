@@ -42,7 +42,7 @@ target/
 
 # Ignore resource .json files
 **/resources/*.json
-# !**/resources/*_data.json
+!**/resources/*_data.json
 
 tests/Config.toml
 modules/webhook/tests/Config.toml
