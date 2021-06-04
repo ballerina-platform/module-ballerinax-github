@@ -113,6 +113,9 @@ isolated function getValidatedRestResponse(http:Response|http:PayloadType|error 
     }
 }
 
+# Set Auth header
+# + request - HTTP Request where the header needs to be set
+# + accessToken - Access token
 isolated function setHeader(http:Request request, string accessToken){
     request.setHeader("Authorization", "token " + accessToken);
 }
@@ -247,11 +250,11 @@ isolated function getFormulatedStringQueryForGetIssueList(string repositoryOwner
 
 }
 
-isolated function getFormulatedStringQueryForCreateIssue( CreateIssueInput createIssueInput) returns string {
+isolated function getFormulatedStringQueryForCreateIssue(CreateIssueInputPayload createIssueInput) returns string {
     return string `{"variables":{"createIssueInput": ${createIssueInput.toJsonString()}},"query":"${CREATE_ISSUE}"}`;
 }
 
-isolated function getFormulatedStringQueryForUpdateIssue( UpdateIssueInput updateIssueInput) returns string {
+isolated function getFormulatedStringQueryForUpdateIssue( UpdateIssueInputPayload updateIssueInput) returns string {
     return string `{"variables":{"updateIssueInput": ${updateIssueInput.toJsonString()}},"query":"${UPDATE_ISSUE}"}`;
 }
 
@@ -417,7 +420,7 @@ isolated function getFormulatedStringQueryForCreatePullRequest(CreatePullRequest
                     "query":"${CREATE_PULL_REQUEST}"}`;
 }
 
-isolated function getFormulatedStringQueryForUpdatePullRequest(UpdatePullRequestInput updatePullRequestInput) 
+isolated function getFormulatedStringQueryForUpdatePullRequest(UpdatePullRequestInputPayload updatePullRequestInput) 
                                                                returns string {
     return string `{"variables":{"updatePullRequestInput": ${updatePullRequestInput.toJsonString()}},
                     "query":"${UPDATE_PULL_REQUEST}"}`;
@@ -592,7 +595,7 @@ isolated function getRepositoryId(string repositoryOwnerName, string repositoryN
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
     json validatedResponse = check getValidatedResponse(response);
 
     if (validatedResponse is map<json>) {
@@ -618,7 +621,7 @@ isolated function getIssueId(string repositoryOwnerName, string repositoryName, 
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
     json validatedResponse = check getValidatedResponse(response);
 
     if (validatedResponse is map<json>) {
@@ -648,7 +651,7 @@ isolated function getPullRequestId(string repositoryOwnerName, string repository
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
     json validatedResponse = check getValidatedResponse(response);
 
     if (validatedResponse is map<json>) {
@@ -677,7 +680,7 @@ isolated function getUserId(string userName, string accessToken, http:Client gra
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -698,33 +701,3 @@ isolated function getUserId(string userName, string accessToken, http:Client gra
     return err;
 } 
 
-
-//isolated function getProjectId(string repositoryOwnerName, string repositoryName, int projectNumber, string 
-//accessToken, http:Client graphQlClient) returns string|error {
-//    string stringQuery = getFormulatedStringQueryForGetPullRequestId(repositoryOwnerName, repositoryName, 
-//pullRequestNumber);
-//    http:Request request = new;
-//    setHeader(request, accessToken);
-//    json convertedQuery = check stringToJson(stringQuery);
-//    //Set headers and payload to the request
-//    constructRequest(request, <@untainted> convertedQuery);
-//
-//    var response = graphQlClient->post(EMPTY_STRING, request);
-//    json validatedResponse = check getValidatedResponse(response);
-//
-//    if (validatedResponse is map<json>) {
-//        var gitData = validatedResponse[GIT_DATA];
-//        if (gitData is map<json>) {
-//            var repo = gitData[GIT_REPOSITORY];
-//            if (repo is map<json>) {
-//                var project = repo["project"];
-//                if(project is map<json>){
-//                    json projectId = project["id"];
-//                    return projectId.toBalString();
-//                }
-//            }
-//        }
-//    }
-//    error err = error(GITHUB_ERROR_CODE, message = "Error parsing git repository response");
-//    return err;
-//}

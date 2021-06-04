@@ -16,8 +16,20 @@
 
 import ballerina/http;
 
-isolated function addComment(AddCommentInput addCommentInput, string accessToken, http:Client graphQlClient) 
+isolated function addComment(AddIssueCommentInput addIssueCommentInput, string accessToken, http:Client graphQlClient)
                              returns @tainted IssueComment|error {
+   Issue issue = check getRepositoryIssue(addIssueCommentInput.repositoryOwnerName, addIssueCommentInput.repositoryName,
+             addIssueCommentInput.issueNumber, accessToken, graphQlClient);
+
+    AddCommentInput addCommentInput = {
+        subjectId: issue.id,
+        body: addIssueCommentInput.body
+    };
+
+    if (!(addIssueCommentInput?.clientMutationId is ())) { 
+        addCommentInput["clientMutationId"] = <string>addIssueCommentInput?.clientMutationId;
+    }
+
     string stringQuery = getFormulatedStringQueryForAddComment(addCommentInput);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -25,10 +37,9 @@ isolated function addComment(AddCommentInput addCommentInput, string accessToken
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     json validatedResponse = check getValidatedResponse(response);
-    //io:println(validatedResponse);
 
     if (validatedResponse is map<json>) {
         var gitData = validatedResponse[GIT_DATA];
@@ -58,7 +69,7 @@ isolated function updateComment(UpdateIssueCommentInput updateCommentInput, stri
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     _ = check getValidatedResponse(response);
 }
@@ -72,7 +83,7 @@ isolated function deleteComment(DeleteIssueCommentInput deleteCommentInput, stri
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     _ = check getValidatedResponse(response);
 
