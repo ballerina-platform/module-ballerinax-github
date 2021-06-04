@@ -72,7 +72,7 @@ public class Listener {
                     if (result.statusCode == 204) {
                         log:printInfo("Webhook deleted!");
                     }else {
-                        log:printError("Webhook deletion failed");
+                        log:printError("Webhook deletion failed : "+ check result.getTextPayload());
                     }
                 }
             }
