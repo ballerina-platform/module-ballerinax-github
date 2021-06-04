@@ -304,9 +304,9 @@ final string GET_REPOSITORY_LIST_FOR_ORGANIZATION = "query($organizationName: St
 
 
 
-final string LIST_REPOSITORY_COLLOBORATORS = "query($username: String!, $repositoryName: String!, $perPageCount: Int!, $previousCursor: String){ \n"+
+final string LIST_REPOSITORY_COLLOBORATORS = "query($username: String!, $repositoryName: String!, $perPageCount: Int!, $lastPageCursor: String){ \n"+
                                              "  repository(owner: $username, name: $repositoryName){\n"+
-                                             "      collaborators(first: $perPageCount, after: $previousCursor){ \n"+
+                                             "      collaborators(first: $perPageCount, after: $lastPageCursor){ \n"+
                                              "          nodes{ \n"+
                                                             USER+
                                              "          },\n"+
@@ -315,9 +315,9 @@ final string LIST_REPOSITORY_COLLOBORATORS = "query($username: String!, $reposit
                                              "  }\n"+
                                              "}";
 
-final string GET_BRANCH_LIST_OF_A_REPOSITORY = "query($username: String!, $repositoryName: String!, $perPageCount: Int!, $previousCursor: String){\n"+
+final string GET_BRANCH_LIST_OF_A_REPOSITORY = "query($username: String!, $repositoryName: String!, $perPageCount: Int!, $lastPageCursor: String){\n"+
                                                "  repository(owner: $username, name: $repositoryName){\n"+
-                                               "    refs(first:$perPageCount, after: $previousCursor, refPrefix: \\\"refs/heads/\\\"){\n"+
+                                               "    refs(first:$perPageCount, after: $lastPageCursor, refPrefix: \\\"refs/heads/\\\"){\n"+
                                                "        nodes{\n"+
                                                "            name,\n"+
                                                "            id\n"+

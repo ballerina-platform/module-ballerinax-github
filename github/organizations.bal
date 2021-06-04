@@ -25,7 +25,7 @@ isolated function getOrganization(string organizationName, string accessToken, h
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -37,9 +37,8 @@ isolated function getOrganization(string organizationName, string accessToken, h
             Organization organization = check org.cloneWithType(Organization);
             return organization;
         }
-
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing user project response");
+    error err = error(GITHUB_ERROR_CODE+" Error parsing organization response", message = "Error parsing organization response");
     return err;
 }
 
@@ -52,7 +51,7 @@ isolated function getOrganizationOwnerId(string organizationName, string accessT
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -68,7 +67,7 @@ isolated function getOrganizationOwnerId(string organizationName, string accessT
         }
 
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing org response");
+    error err = error(GITHUB_ERROR_CODE+" Error parsing organization response", message = "Error parsing organization response");
     return err;
 }
 
@@ -82,7 +81,7 @@ isolated function getUserOrganizationList(string username, int perPageCount, str
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -93,13 +92,18 @@ isolated function getUserOrganizationList(string username, int perPageCount, str
             var user = gitData[GIT_USER];
             if(user is map<json>){
                 var organizations = user[GIT_ORGANIZATIONS];
-                OrganizationList organizationList = check organizations.cloneWithType(OrganizationList);
+                OrganizationListPayload organizationListResponse = check organizations.cloneWithType(OrganizationListPayload);
+                OrganizationList organizationList = {
+                    organizations: organizationListResponse.nodes,
+                    pageInfo: organizationListResponse.pageInfo,
+                    totalCount: organizationListResponse.totalCount
+                };
                 return organizationList;
             }
         }
 
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing user project response");
+    error err = error(GITHUB_ERROR_CODE+ " Error parsing organization users response", message = "Error parsing organization users response");
     return err;
 }
 
@@ -114,7 +118,7 @@ isolated function getOrganizationMemberList(string organizationName, int perPage
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -125,12 +129,17 @@ isolated function getOrganizationMemberList(string organizationName, int perPage
             var org = gitData[GIT_ORGANIZATION];
             if(org is map<json>){
                 var members = org[GIT_MEMBERS_WITH_ROLE];
-                UserList userList = check members.cloneWithType(UserList);
+                UserListPayload userListResponse = check members.cloneWithType(UserListPayload);
+                UserList userList = {
+                    users: userListResponse.nodes,
+                    pageInfo: userListResponse.pageInfo,
+                    totalCount: userListResponse.totalCount
+                };
                 return userList;
             }
         }
 
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing user project response");
+    error err = error(GITHUB_ERROR_CODE+ " Error organization user response", message = "Error organization user response");
     return err;
 }

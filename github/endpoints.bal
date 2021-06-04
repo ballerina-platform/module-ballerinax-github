@@ -34,6 +34,9 @@ public client class Client {
         };
     }
 
+    # Get authenticated user
+    #
+    # + return - `User` record if successful else `error`
     @display {label: "Get Authenticated User"}
     remote isolated function getAuthenticatedUser()  returns @display {label: "Authenticated User"} 
                                                   @tainted User|error {
@@ -45,7 +48,7 @@ public client class Client {
         //Set headers and payload to the request
         constructRequest(request, <@untainted> convertedQuery);
 
-        var response = self.githubGraphQlClient->post(EMPTY_STRING, request);
+        http:Response response = check self.githubGraphQlClient->post(EMPTY_STRING, request);
 
         //Check for empty payloads and errors
         json validatedResponse = check getValidatedResponse(response);
@@ -64,13 +67,23 @@ public client class Client {
         return err;
     }
 
-
+    # Get User Id
+    # 
+    # + userName - GitHub username
+    # 
+    # + return - User Id
     @display {label: "Get User Id"}
     remote isolated function getUserId(@display {label: "User name"} string userName) 
                                        returns @display {label: "User Id"} @tainted string|error {
         return getUserId(userName, self.accessToken, self.githubGraphQlClient);
     }
 
+    # Get user repository
+    # 
+    # + username - GitHub repository owner name
+    # + repositoryName - GitHub repository name
+    # 
+    # + return - `Repository` record if successful else `error`
     @display {label: "Get User Repository"}
     remote isolated function getUserRepository(@display {label: "Repository Owner Name"} string username, 
                                                @display {label: "Repository Name"} string repositoryName) 
@@ -81,6 +94,12 @@ public client class Client {
 
     // Repositories
 
+    # Get authenticated user repository list
+    # 
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `RepositoryList` record if successful else `error`
     @display {label: "Get Authenticated User Repository List"}
     remote isolated function getAuthenticatedUserRepositoryList(@display {label: "Per Page Count"} int perPageCount, 
                                                                 @display {label: "Next Page Cursor"} 
@@ -88,10 +107,17 @@ public client class Client {
                                                                 returns @display {label: "Repository List"} 
                                                                 @tainted RepositoryList|error {
         return getAuthenticatedUserRepositoryList(perPageCount, self.accessToken, self.githubGraphQlClient, 
-                                                  nextPageCursor=());
+                                                  nextPageCursor);
 
     }
 
+    # Get user repository list
+    # 
+    # + username - Repository owner name
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `RepositoryList` record if successful else `error`
     @display {label: "Get User Repository List"}
     remote isolated function getUserRepositoryList(@display {label: "Repository Owner Name"} string username, 
                                                    @display {label: "Per Page Count"} int perPageCount, 
@@ -102,6 +128,13 @@ public client class Client {
                                      nextPageCursor);
     }
 
+    # Get organization repository list
+    # 
+    # + organizationName - Organization GitHub username
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `RepositoryList` record if successful else `error`
     @display {label: "Get Organization Repository List"}
     remote isolated function getOrganizationRepositoryList(@display {label: "Organization Name"} 
                                                            string organizationName, 
@@ -114,7 +147,15 @@ public client class Client {
                                              self.githubGraphQlClient, nextPageCursor);
     }
 
-    @display {label: "Get Repository Collobarator List"}
+    # Get repository collaborator list
+    # 
+    # + ownerName - Repository owner username
+    # + repositoryName - Repository name
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `CollaboratorList` record if successful else `error`
+    @display {label: "Get Repository Collaborator List"}
     remote isolated function getRepositoryCollobaratorList(@display {label: "Repository Owner Name"} string ownerName,
                                                            @display {label: "Repository Name"} string repositoryName,
                                                            @display {label: "Per Page Count"} int perPageCount, 
@@ -127,6 +168,14 @@ public client class Client {
 
     }
 
+    # Get repository branch list
+    # 
+    # + ownerName - Repository owner name
+    # + repositoryName - Repository name
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `BranchList` record if success else `error`
     @display {label: "Get Repository Branch List"}
     remote isolated function getRepositoryBranchList(@display {label: "Repository Owner Name"} string ownerName,
                                                      @display {label: "Repository Name"} string repositoryName, 
@@ -138,6 +187,13 @@ public client class Client {
                                        self.githubGraphQlClient, nextPageCursor);
     }
 
+    # Update repository
+    # 
+    # + updateRepositoryInput - Update repository input
+    # + repositoryOwnerName - Repositoru owner name
+    # + repositoryName - Repository name
+    # 
+    # + return - `error` if not successful
     @display {label: "Update Repository"}
     remote isolated function updateRepository(@display {label: "Update Repository Input"} 
                                               @tainted UpdateRepositoryInput updateRepositoryInput, 
@@ -151,7 +207,16 @@ public client class Client {
 
     // Issues
 
-    @display {label: "Get Repository Issue List Assigned To User"}
+    # Get repository issue list assigned to user
+    # 
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # + assignee - Issue assignee username
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `IssueList` record if successful else `error`
+    @display {label: "Get Issue List Assigned To User"}
     remote isolated function getRepositoryIssueListAssignedToUser(@display {label: "Repository Owner Name"} 
                                                                   string repositoryOwnerName, 
                                                                   @display {label: "Repository Name"} 
@@ -168,6 +233,15 @@ public client class Client {
 
     }
 
+    # Get repository issue list
+    # 
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # + states - Array of issue states
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `IssueList` record if successful else `error`
     @display {label: "Get Repository Issue List"}
     remote isolated function getRepositoryIssueList(@display {label: "Repository Owner Name"} 
                                                     string repositoryOwnerName, 
@@ -180,6 +254,13 @@ public client class Client {
                                       self.githubGraphQlClient, nextPageCursor);
     }
 
+    # Create issue
+    # 
+    # + createIssueInput - `CreateIssueInput` record
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # 
+    # + return - `Issue` record if successful else `error`
     @display {label: "Create Issue"}
     remote isolated function createIssue(@display {label: "Create Issue Input"} @tainted 
                                          CreateIssueInput createIssueInput, 
@@ -190,6 +271,14 @@ public client class Client {
                            self.githubGraphQlClient);
     }
 
+    # Update issue
+    # 
+    # + updateIssueInput - `UpdateIssueInput` record
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # + issueNumber - Issue number of the issue to be updated
+    # 
+    # + return - `Issue` record if successful else `error`
     @display {label: "Update Issue"}
     remote isolated function updateIssue(@display {label: "Update Issue Input"} @tainted 
                                          UpdateIssueInput updateIssueInput,
@@ -201,6 +290,13 @@ public client class Client {
                             self.githubGraphQlClient);
     }
 
+    # Get repository issue
+    # 
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - repositoryName
+    # + issueNumber - Issue number
+    # 
+    # + return - `Issue` record if successful else `error`
     @display {label: "Get Repository Issue"}
     remote isolated function getRepositoryIssue(@display {label: "Repository Owner Name"} string repositoryOwnerName,
                                                 @display {label: "Repository Name"} string repositoryName, 
@@ -210,6 +306,15 @@ public client class Client {
                                   self.githubGraphQlClient);
     }
 
+    # Get repository issue comment list
+    # 
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # + issueNumber - Issue number
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `IssueCommentList` if successful else `error`
     @display {label: "Get Repository Issue Comment List"}
     remote isolated function getRepositoryIssueCommentList(@display {label: "Repository Owner Name"} 
                                                            string repositoryOwnerName, 
@@ -224,7 +329,16 @@ public client class Client {
                                              self.accessToken, self.githubGraphQlClient, nextPageCursor);
     }
 
-    @display {label: "Get Issues WIth Label"}
+    # Get issue with label
+    # 
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # + labelName - Label name
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `IssueList` record if successful else `error`
+    @display {label: "Get Issues With Label"}
     remote isolated function getIssuesWithLabel(@display {label: "Repository Owner Name"} string repositoryOwnerName,
                                                 @display {label: "Repository Name"} string repositoryName, 
                                                 @display {label: "Label Name"} string labelName, 
@@ -238,18 +352,33 @@ public client class Client {
 
     // Comments
 
+    # Add issue comment
+    # 
+    # + addIssueCommentInput - `AddIssueCommentInput` record
+    # 
+    # + return - `IssueComment` if successful else `error`
     @display {label: "Add Issue Comment"}
-    remote isolated function addComment(@display {label: "Add Comment Input"} AddCommentInput addCommentInput) 
+    remote isolated function addComment(@display {label: "Add Comment Input"} AddIssueCommentInput addIssueCommentInput)
                                         returns @display {label: "Issue Comment"} @tainted IssueComment|error {
-        return addComment(addCommentInput, self.accessToken, self.githubGraphQlClient);
+        return addComment(addIssueCommentInput, self.accessToken, self.githubGraphQlClient);
     }
 
+    # Update issue comment
+    # 
+    # + updateCommentInput - `UpdateIssueCommentInput` record
+    # 
+    # + return - `error` if un-successful
     @display {label: "Update Issue Comment"}
     remote isolated function updateComment(@display {label: "Update Comment Input"} 
                                            UpdateIssueCommentInput updateCommentInput) returns @tainted error? {
         return updateComment(updateCommentInput, self.accessToken, self.githubGraphQlClient);
     }
 
+    # Delete issue comment
+    # 
+    # + deleteCommentInput - `DeleteCommentInput` record
+    # 
+    # + return - `error` if un-successful
     @display {label: "Delete Issue Comment"}
     remote isolated function deleteComment(@display {label: "Delete Comment Input"} 
                                            DeleteIssueCommentInput deleteCommentInput) returns @tainted error? {
@@ -264,6 +393,13 @@ public client class Client {
     //     return createLabel(createLabelInput, self.accessToken, self.githubGraphQlClient);
     // }
 
+    # Get repository label
+    # 
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # + labelName - Label name
+    # 
+    # + return - `Label` record if successful else `error`
     @display {label: "Get Repository Label"}
     remote isolated function getRepositoryLabel(@display {label: "Repository Owner Name"} string repositoryOwnerName,
                                                 @display {label: "Repository Name"} string repositoryName, 
@@ -273,34 +409,61 @@ public client class Client {
                                   self.githubGraphQlClient);
     }
 
+    # Get labels in an issue
+    # 
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # + issueNumber - Issue number
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `LabelList` record if successful else `error`
     @display {label: "Get Labels In An Issue"}
     remote isolated function getLabelsInIssue(@display {label: "Repository Owner Name"} string repositoryOwnerName,
                                              @display {label: "Repository Name"} string repositoryName, 
                                              @display {label: "Issue Number"} int issueNumber, 
                                              @display {label: "Per Page Count"} int perPageCount, 
-                                             @display {label: "Next Page Cursor"} string? nextPageToken=()) 
+                                             @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
                                              returns @display {label: "Label List"} @tainted LabelList|error {
         return getLabelsInIssue(repositoryOwnerName, repositoryName, issueNumber, perPageCount, self.accessToken, 
-                                self.githubGraphQlClient, nextPageToken);
+                                self.githubGraphQlClient, nextPageCursor);
     }
 
-    @display {label: "Add Labels To Labelable"}
-    remote isolated function addLabelsToLabelable(@display {label: "Add Labels To Labelable Input"} 
-                                                  AddLabelsToLabelableInput addLabelsToLabelableInput) 
+    # Add labels to an issue
+    # 
+    # + addIssueLabelsInput - `AddIssueLabelInput` record
+    # 
+    # + return - `LabelList` record if successful else `error`
+    @display {label: "Add Labels To An Issue"}
+    remote isolated function addIssueLabels(@display {label: "Add Issue Labels Input"} 
+                                                  AddIssueLabelsInput addIssueLabelsInput) 
                                                   returns @display {label: "Label List"} @tainted LabelList|error {
-        return addLabelsToLabelable(addLabelsToLabelableInput, self.accessToken, self.githubGraphQlClient);
+        return addIssueLabels(addIssueLabelsInput, self.accessToken, self.githubGraphQlClient);
     }
 
-    @display {label: "Remove Labels From Labelable"}
-    remote isolated function removeLabelFromLabelable(@display {label: "Remove Labels From Labelable Input"} 
-                                                      RemoveLabelsFromLabelableInput removeLabelsFromLabelable) 
+    # Remove issue labeles
+    # 
+    # + removeIssueLabelInput - `RemoveIssueLabelInput` record
+    # 
+    # + return - `error` if failed
+    @display {label: "Remove Issue Labels"}
+    remote isolated function removeLabelFromLabelable(@display {label: "Remove Issue Label Input"} 
+                                                      RemoveIssueLabelInput removeIssueLabelInput) 
                                                       returns @tainted error? {
-        return removeLabelFromLabelable(removeLabelsFromLabelable, self.accessToken, self.githubGraphQlClient);
+        return removeLabelFromLabelable(removeIssueLabelInput, self.accessToken, self.githubGraphQlClient);
     }
 
 
     // Milestones
 
+    # Get repository milestone list
+    # 
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `MilestoneList` record if successful else `error`
     @display {label: "Get Repository Milestone List"}
     remote isolated function getRepositoryMilestoneList(@display {label: "Repository Owner Name"} 
                                                         string repositoryOwnerName, @display {label: "Repository Name"}
@@ -313,6 +476,13 @@ public client class Client {
                                           self.githubGraphQlClient, nextPageCursor);
     }
 
+    # Get repository milestone
+    # 
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # + milestoneNumber - Milestone number
+    # 
+    # + return - `Milestone` record if successful elese `error`
     @display {label: "Get Repository Milestone"}
     remote isolated function getRepositoryMilestone(@display {label: "Repository Owner Name"} 
                                                     string repositoryOwnerName, 
@@ -326,6 +496,13 @@ public client class Client {
 
     //Pul Requests
 
+    # Get pull requests 
+    # 
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # + pullRequestNumber - Pull request number
+    # 
+    # + return - `PullRequest` record if successful else `error`
     @display {label: "Get Pull Request"}
     remote isolated function getPullRequest(@display {label: "Repository Owner Name"} string repositoryOwnerName, 
                                             @display {label: "Repository Name"} string repositoryName, 
@@ -335,6 +512,15 @@ public client class Client {
                               self.githubGraphQlClient);
     }
 
+    # Get repository pull request list
+    # 
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # + state - `Pull request state`
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `PullRequestList` record if successful else `error`
     @display {label: "Get Repository Pull Request List"}
     remote isolated function getRepositoryPullRequestList(@display {label: "Repository Owner Name"} 
                                                           string repositoryOwnerName, 
@@ -350,6 +536,13 @@ public client class Client {
                                             self.accessToken, self.githubGraphQlClient, nextPageCursor);
     }
 
+    # Create pull request
+    # 
+    # + createPullRequestInput - `CreatePullRequestInput` record
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # 
+    # + return - `PullRequest` record if success or else `error`
     @display {label: "Create Pull Request"}
     remote isolated function createPullRequest(@display {label: "Create Pull Request Input"} 
                                                @tainted CreatePullRequestInput createPullRequestInput, 
@@ -360,6 +553,14 @@ public client class Client {
                                  self.githubGraphQlClient);
     }
 
+    # Update pull request
+    # 
+    # + updatePullRequestInput - `UpdatePullRequestInput` record if successful else `error`
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # + pullRequestNumber - Pull request number
+    # 
+    # + return - `PullRequest` record if successful else `error`
     @display {label: "Update Pull Request"}
     remote isolated function updatePullRequest(@display {label: "Update Pull Request Input"} @tainted 
                                                UpdatePullRequestInput updatePullRequestInput, 
@@ -371,6 +572,15 @@ public client class Client {
                                  self.accessToken, self.githubGraphQlClient);
     }
 
+    # Get pull request review comment list
+    # 
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # + pullRequestNumber - Pull request number
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `PullRequestReviewList` record if successful or else `error`
     @display {label: "Get Pull Request Review Comment List"}
     remote isolated function getPullRequestReviewCommentList(@display {label: "Repository Owner Name"} 
                                                              string repositoryOwnerName, 
@@ -387,6 +597,14 @@ public client class Client {
 
     }
 
+    # Create pull request review 
+    # 
+    # + addPullRequestReviewInput - `AddPullRequestReviewInput` record
+    # + repositoryOwnerName - Repository owner name
+    # + repositoryName - Repository name
+    # + pullRequestNumber - Pull request number
+    # 
+    # + return - `PullRequestReview` record
     @display {label: "Create Pull Request Review"}
     remote isolated function createPullRequestReview(@display {label: "Add Pull Request Review Input"} @tainted 
                                                      AddPullRequestReviewInput addPullRequestReviewInput, 
@@ -400,6 +618,11 @@ public client class Client {
                                         pullRequestNumber, self.accessToken, self.githubGraphQlClient);
     }
 
+    # Update pull request review
+    # 
+    # + updatePullRequestReviewInput - `UpdatePullRequestReviewInput` record
+    # 
+    # + return - `error` if failed.
     @display {label: "Update Pull Request Review"}
     remote isolated function updatePullRequestReview(@display {label: "Update Pull Request Review"} 
                                                      UpdatePullRequestReviewInput updatePullRequestReviewInput) 
@@ -407,6 +630,11 @@ public client class Client {
         return updatePullRequestReview(updatePullRequestReviewInput, self.accessToken, self.githubGraphQlClient);
     }
 
+    # Delete pending pull request review
+    # 
+    # + deletePullRequestReview - `DeletePullRequestReviewInput` record
+    # 
+    # + return - `error` if failed
     @display {label: "Delete Pending Pull Request Review"}
     remote isolated function deletePendingPullRequestReview(@display {label: "Delete Pull Request Review Input"}
                                                             DeletePullRequestReviewInput deletePullRequestReview) 
@@ -417,6 +645,14 @@ public client class Client {
 
     // Projects
 
+    # Get organization project list
+    # 
+    # + organizationName - Organization name
+    # + state - Project state
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `ProjectList` record if successful 
     @display {label: "Get Organization Project List"}
     remote isolated function getOrganizationProjectList(@display {label: "Organization Name"} string organizationName, 
                                                         @display {label: "Project State"} ProjectState state, 
@@ -428,13 +664,24 @@ public client class Client {
                                           self.githubGraphQlClient, nextPageCursor);
     }
 
+    # Create project
+    # 
+    # + createRepositoryProjectInput - `CreateRepositoryProjectInput` record
+    # 
+    # + return - `Project` record if successful else `error`
     @display {label: "Create Project"}
     remote isolated function createProject(@display {label: "Create Project Input"} 
-                                           CreateProjectInput createProjectInput) 
+                                           CreateRepositoryProjectInput createRepositoryProjectInput) 
                                            returns @display {label: "Project"} @tainted Project|error {
-        return createProject(createProjectInput, self.accessToken, self.githubGraphQlClient);
+        return createProject(createRepositoryProjectInput, self.accessToken, self.githubGraphQlClient);
     }
 
+    # Get user project
+    # 
+    # + username - Project owner name
+    # + projectNumber - Project number
+    # 
+    # + return - `Project`
     @display {label: "Get User Project"}
     remote isolated function getUserProject(@display {label: "Project Owner Name"} string username, 
                                             @display {label: "Project Number"} int projectNumber) 
@@ -442,6 +689,11 @@ public client class Client {
         return getUserProject(username, projectNumber, self.accessToken, self.githubGraphQlClient);
     }
 
+    # Update project
+    # 
+    # + updateProjectInput - `UpdateProjectInput`
+    # 
+    # + return - `Project` record if successful or else `error`
     @display {label: "Update Project"}
     remote isolated function updateProject(@display {label: "Update Project Input"} 
                                            UpdateProjectInput updateProjectInput) 
@@ -449,12 +701,26 @@ public client class Client {
         return updateProject(updateProjectInput, self.accessToken, self.githubGraphQlClient);
     }
 
+    # Delete project
+    # 
+    # + deleteProjectInput - `DeleteProjectInput` record
+    # 
+    # + return - `error` if failed
     @display {label: "Delete Project"}
     remote isolated function deleteProject(@display {label: "Delete Project Input"} 
                                            DeleteProjectInput deleteProjectInput) returns @tainted error? {
         return deleteProject(deleteProjectInput, self.accessToken, self.githubGraphQlClient);
     }
 
+    # Get Repository project list
+    # 
+    # + repositoryOwner - Repository owner name
+    # + repositoryName - Repository name
+    # + state - Project state
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `ProjectList` record if successful or else `error`
     @display {label: "Get Repository Project List"}
     remote isolated function getRepositoryProjectList(@display {label: "Repository Owner Name"} string repositoryOwner, 
                                                       @display {label: "Repository Name"} string repositoryName, 
@@ -467,6 +733,13 @@ public client class Client {
                                         self.githubGraphQlClient, nextPageCursor);
     }
 
+    # Get user project list
+    # 
+    # + username - Project owner name
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `ProjectList` record if successful or else `error`
     @display {label: "Get User Project List"}
     remote isolated function getUserProjectList(@display {label: "Project Owner Name"} string username, 
                                                 @display {label: "Per Page Count"} int perPageCount, 
@@ -478,22 +751,41 @@ public client class Client {
 
     // Organizations
 
+    # Get a organization
+    # 
+    # + organizationName - Organization name
+    # 
+    # + return - `Organization` record if successful or else `error`
     @display {label: "Get An Organization"}
     remote isolated function getOrganization(@display {label: "Organization Name"} string organizationName) 
                                              returns @display {label: "Organization"} @tainted Organization|error {
         return getOrganization(organizationName, self.accessToken, self.githubGraphQlClient);
     }
 
+    # Get user organization list
+    # 
+    # + username - Organization username
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `OrganizationList` record or else `error`
     @display {label: "Get User Organization List"}
-    remote isolated function getUserOrganizationList(@display {label: "User Name"} string username, 
+    remote isolated function getUserOrganizationList(@display {label: "Organization Username"} string username, 
                                                      @display {label: "Per Page Count"} int perPageCount, 
-                                                     @display {label: "Next Page Cursor"} string? lastPageCursor=()) 
+                                                     @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
                                                      returns @display {label: "Organization List"} @tainted 
                                                      OrganizationList|error {
         return getUserOrganizationList(username, perPageCount, self.accessToken, self.githubGraphQlClient, 
-                                       lastPageCursor);
+                                       nextPageCursor);
     }
 
+    # Get organization member list
+    # 
+    # + organizationName - Organization username
+    # + perPageCount - Per page record count
+    # + nextPageCursor - Next page token
+    # 
+    # + return - `UserList` record if successful or else `error`
     @display {label: "Get Organization Member List"}
     remote isolated function getOrganizationMemberList(@display {label: "Organization Name"} string organizationName, 
                                                        @display {label: "Per Page Count"} int perPageCount, 
@@ -503,6 +795,11 @@ public client class Client {
                                          nextPageCursor);
     }
 
+    # Get organization Id
+    # 
+    # + organizationName - Organization username
+    # 
+    # + return - Organization Id
     @display {label: "Get Organization Id"}
     remote isolated function getOrganizationOwnerId(@display {label: "Organization Name"} string organizationName) 
                                                     returns @display {label: "Organization Id"} @tainted string|error {
