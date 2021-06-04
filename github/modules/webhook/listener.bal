@@ -68,15 +68,11 @@ public class Listener {
                 if(self.accessToken is string) {
                     request.setHeader("Authorization", "token " + <string>self.accessToken);
                     http:Client httpClient = check new (GITHUB_REST_API_BASE_URL, {});
-                    var result = httpClient->delete(endpoint, request);
-                    if (result is http:Response) {
-                        if (result.statusCode == 204) {
-                            log:printInfo("Webhook deleted!");
-                        }else {
-                            log:printError("Webhook deletion failed");
-                        }
-                    } else {
-                        log:printError("Webhook deletion failed");
+                    http:Response result = check httpClient->delete(endpoint, request);
+                    if (result.statusCode == 204) {
+                        log:printInfo("Webhook deleted!");
+                    }else {
+                        log:printError("Webhook deletion failed : "+ check result.getTextPayload());
                     }
                 }
             }
