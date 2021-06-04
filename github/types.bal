@@ -837,14 +837,23 @@ public type Configuration record {
 # + repositoryId - The ID of the repository to update.
 # + template - Whether this repository should be marked as a template such that anyone who can access it can create new repositories with the same files and directory structure.
 public type UpdateRepositoryInput record {
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
+    @display { label: "Description" }
     string description?;
+    @display { label: "Has Issues Enabled" }
     boolean hasIssuesEnabled?;
+    @display { label: "Has Project Boards Enabled" }
     boolean hasProjectsEnabled?;
+    @display { label: "Has Wiki Enabled" }
     boolean hasWikiEnabled?;
+    @display { label: "Home Page URL" }
     string homePageUrl?;
+    @display { label: "Name" }
     string name?;
+    @display { label: "Repository Id" }
     string repositoryId?;
+    @display { label: "Template" }
     boolean template?;
 };
 
@@ -859,13 +868,21 @@ public type UpdateRepositoryInput record {
 # + issueTemplate - The name of an issue template in the repository, assigns labels and assignees from the template to the issue
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type CreateIssueInput record {
+    @display { label: "Title" }
     string title;
+    @display { label: "Body" }
     string body?;
+    @display { label: "Assignee Names" }
     string[] assigneeNames?;
+    @display { label: "Milestone Id" }
     string milestoneId?;
+    @display { label: "Label Names" }
     string[] labelNames?;
+    @display { label: "Project Ids" }
     string[] projectIds?;
+    @display { label: "Issue Template" }
     string issueTemplate?;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -904,14 +921,23 @@ public type CreateIssueInputPayload record {
 # + projectIds - An array of Node IDs for projects associated with this issue.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type UpdateIssueInput record {
+    @display { label: "Id" }
     string id?;
+    @display { label: "Issue Title" }
     string title?;
+    @display { label: "Issue Description" }
     string body?;
+    @display { label: "Assignee Names" }
     string[] assigneeNames?;
+    @display { label: "Milestone Ids" }
     string milestoneId?;
+    @display { label: "Label Names" }
     string[] labelNames?;
+    @display { label: "State" }
     IssueState state?;
+    @display { label: "Project Ids" }
     string[] projectIds?;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -965,10 +991,15 @@ public type AddCommentInput record {
 # + body - The contents of the comment.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type AddIssueCommentInput record {
+    @display { label: "Repository Owner Name" }
     string repositoryOwnerName;
+    @display { label: "Repository Name" }
     string repositoryName;
+    @display { label: "Issue Number" }
     int issueNumber;
+    @display { label: "Body" }
     string body;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -978,8 +1009,11 @@ public type AddIssueCommentInput record {
 # + body - The updated text of the comment.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type UpdateIssueCommentInput record {
+    @display { label: "Issue Comment Id" }
     string id;
+    @display { label: "Comment Text" }
     string body;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -988,7 +1022,9 @@ public type UpdateIssueCommentInput record {
 # + id - The ID of the comment to delete.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type DeleteIssueCommentInput record {
+    @display { label: "Issue Comment Id" }
     string id;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -1000,10 +1036,15 @@ public type DeleteIssueCommentInput record {
 # + repositoryId - Node ID of the repository where this label needs to be created
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type CreateLabelInput record {
+    @display { label: "Name" }
     string name;
+    @display { label: "Description" }
     string description;
+    @display { label: "Color" }
     string color;
+    @display { label: "Repository Id" }
     string repositoryId;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -1015,10 +1056,15 @@ public type CreateLabelInput record {
 # + color - Color of the label
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type UpdateLabelInput record {
+    @display { label: "Label Id" }
     string id;
+    @display { label: "Name" }
     string name?;
+    @display { label: "Description" }
     string description?;
+    @display { label: "Color" }
     string color?;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -1027,7 +1073,9 @@ public type UpdateLabelInput record {
 # + id - Node ID of the label
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type DeleteLabelInput record {
+    @display { label: "Label Id" }
     string id;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -1050,10 +1098,15 @@ public type AddLabelsToLabelableInput record {
 # + labelNames - Repository label name
 # + clientMutationId - A unique identifier for the client performing the mutation. 
 public type AddIssueLabelsInput record {
+    @display { label: "Repository Owner Name" }
     string repositoryOwnerName;
+    @display { label: "Repository Name" }
     string repositoryName;
+    @display { label: "Issue Number" }
     int issueNumber;
+    @display { label: "Label Names" }
     string[] labelNames;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -1065,10 +1118,15 @@ public type AddIssueLabelsInput record {
 # + labelNames - Array of existing label names of the issue to be removed
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type RemoveIssueLabelInput record {
+    @display { label: "Repository Owner Name" }
     string repositoryOwnerName;
+    @display { label: "Repository Name" }
     string repositoryName;
+    @display { label: "Issue Number" }
     int issueNumber;
+    @display { label: "Label Names" }
     string[] labelNames;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -1094,13 +1152,21 @@ public type RemoveLabelsFromLabelableInput record {
 # + draft - Indicates whether this pull request should be a draft.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type CreatePullRequestInput record {
+    @display { label: "Repository Id" }
     string repositoryId?;
+    @display { label: "Title" }
     string title;
+    @display { label: "Base Ref Name" }
     string baseRefName;
+    @display { label: "Head Ref Name" }
     string headRefName;
+    @display { label: "Body" }
     string body?;
+    @display { label: "Maintainer Can Modify" }
     boolean maintainerCanModify = false;
+    @display { label: "Fraft" }
     boolean draft = false;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -1118,16 +1184,27 @@ public type CreatePullRequestInput record {
 # + projectIds - An array of Node IDs for projects associated with this pull request.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type UpdatePullRequestInput record {
+    @display { label: "Pull Request Id" }
     string pullRequestId?;
+    @display { label: "Base Ref Name" }
     string baseRefName?;
+    @display { label: "Title" }
     string title?;
+    @display { label: "Pull Request Content" }
     string body?;
+    @display { label: "State" }
     PullRequestState state?;
+    @display { label: "Maintainer Can Modify" }
     boolean maintainerCanModify?;
+    @display { label: "Assignee Names" }
     string[] assigneeNames?;
+    @display { label: "Milestone Id" }
     string milestoneId?;
+    @display { label: "Label Names" }
     string[] labelNames?;
+    @display { label: "Project Ids" }
     string[] projectIds?;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -1177,12 +1254,19 @@ public enum PullRequestState {
 # + threads - The review line comment threads.
 # + clientMutationId - A unique identifier for the client performing the mutation. A unique identifier for the client performing the mutation.
 public type AddPullRequestReviewInput record {
+    @display { label: "Pull Request Id" }
     string pullRequestId?;
+    @display { label: "Commit OID" }
     string commitOID?;
+    @display { label: "Body" }
     string body?;
+    @display { label: "Event" }
     PullRequestReviewEvent event?;
+    @display { label: "Review Comments" }
     DraftPullRequestReviewComment[] comments?;
+    @display { label: "Pull Request Review Threads" }
     DraftPullRequestReviewThread[] threads?;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -1192,8 +1276,11 @@ public type AddPullRequestReviewInput record {
 # + position - Position in the file to leave a comment on.
 # + body - Body of the comment to leave.
 public type DraftPullRequestReviewComment record {
+    @display { label: "Path" }
     string path;
+    @display { label: "Position" }
     int position;
+    @display { label: "Body" }
     string body;
 };
 
@@ -1206,11 +1293,17 @@ public type DraftPullRequestReviewComment record {
 # + startSide - The side of the diff on which the start line resides.
 # + body - Body of the comment to leave.
 public type DraftPullRequestReviewThread record {
+    @display { label: "Path" }
     string path;
+    @display { label: "Line" }
     int line;
+    @display { label: "Side" }
     DiffSide side = DIFF_SIDE_RIGHT;
+    @display { label: "Start Line" }
     int startLine?;
+    @display { label: "Start Side" }
     DiffSide startSide = DIFF_SIDE_RIGHT;
+    @display { label: "Body" }
     string body;
 };
 
@@ -1242,8 +1335,11 @@ public enum DiffSide {
 # + body - The contents of the pull request review body.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type UpdatePullRequestReviewInput record {
+    @display { label: "Pull Request Review Id" }
     string pullRequestReviewId;
+    @display { label: "Body" }
     string body;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -1252,7 +1348,9 @@ public type UpdatePullRequestReviewInput record {
 # + pullRequestReviewId - The Node ID of the pull request review to delete.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type DeletePullRequestReviewInput record {
+    @display { label: "Pull Request Review Id" }
     string pullRequestReviewId;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -1277,13 +1375,19 @@ public enum ProjectTemplate {
 # + body - Description of the project.
 # + repositoryNames - Array of repository names to be included in the project.
 # + clientMutationId - A unique identifier for the client performing the mutation.
-# + template -
+# + template - The name of the GitHub-provided template.
 public type CreateRepositoryProjectInput record {
+    @display { label: "Repository Owner Name" }
     string ownerName;
+    @display { label: "Project Name" }
     string name;
+    @display { label: "Project Description" }
     string body?;
+    @display { label: "Repository Names" }
     string[] repositoryNames?;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
+    @display { label: "Project Template" }
     ProjectTemplate template?;
 };
 
@@ -1294,7 +1398,7 @@ public type CreateRepositoryProjectInput record {
 # + body - The description of project.
 # + repositoryIds - A list of repository IDs to create as linked repositories for the project
 # + clientMutationId - A unique identifier for the client performing the mutation.
-# + template -
+# + template - The name of the GitHub-provided template.
 public type CreateProjectInput record {
     string ownerId;
     string name;
@@ -1313,11 +1417,17 @@ public type CreateProjectInput record {
 # + state - Whether the project is open or closed.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type UpdateProjectInput record {
+    @display { label: "Project Id" }
     string projectId;
+    @display { label: "Project Description" }
     string body?;
+    @display { label: "Project Name" }
     string name?;
+    @display { label: "Is Public" }
     boolean 'public?;
+    @display { label: "Project State" }
     ProjectState state?;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };
 
@@ -1326,6 +1436,8 @@ public type UpdateProjectInput record {
 # + projectId -
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type DeleteProjectInput record {
+    @display { label: "Project Id" }
     string projectId;
+    @display { label: "Client Mutation Id" }
     string clientMutationId?;
 };

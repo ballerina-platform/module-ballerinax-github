@@ -1,7 +1,7 @@
 [package]
 org = "ballerinax"
 name = "github"
-version = "0.99.16"
+version = "0.99.15"
 export= ["github", "github.webhook"]
 authors = ["Ballerina"]
 keywords = ["github", "endpoint", "API"]
