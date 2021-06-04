@@ -27,7 +27,7 @@ isolated function getOrganizationProjectList(string organizationName, ProjectSta
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -38,22 +38,57 @@ isolated function getOrganizationProjectList(string organizationName, ProjectSta
             var org = gitData[GIT_ORGANIZATION];
             if(org is map<json>){
                 var orgProjects = org[GIT_PROJECTS];
-                ProjectList|error projectList = orgProjects.cloneWithType(ProjectList);
-                if(projectList is error){
-                    return error(GITHUB_ERROR_CODE, message = "Error parsing org project list response");
+                ProjectListPayload|error projectListResponse = orgProjects.cloneWithType(ProjectListPayload);
+
+                if(projectListResponse is error){
+                    return error(GITHUB_ERROR_CODE+ "Error parsing org project list response", message = "Error parsing org project list response");
                 }else {
+                    ProjectList projectList = {
+                        projects: projectListResponse.nodes,
+                        pageInfo: projectListResponse.pageInfo,
+                        totalCount: projectListResponse.totalCount 
+                    };
                     return projectList;
                 }
             }
 
         }
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing org project response");
+    error err = error(GITHUB_ERROR_CODE+ " Error parsing org project list response", message = "Error parsing org project list response");
     return err;
 }
 
-isolated function createProject(CreateProjectInput createProjectInput, string accessToken, http:Client graphQlClient) 
+isolated function createProject(CreateRepositoryProjectInput createRepositoryProjectInput, string accessToken, http:Client graphQlClient) 
                                 returns @tainted Project|error {
+    
+    string userId = check getUserId(createRepositoryProjectInput.ownerName, accessToken, graphQlClient);
+
+    CreateProjectInput createProjectInput = {
+        ownerId: userId,
+        name: createRepositoryProjectInput.name
+    };
+
+    string[] repositoryIds = [];
+    if (!(createRepositoryProjectInput?.repositoryNames is ())) { 
+        foreach string repositoryName in <string[]>createRepositoryProjectInput?.repositoryNames {
+            Repository repository = check getUserRepository(createRepositoryProjectInput.ownerName, repositoryName, accessToken, graphQlClient);
+            repositoryIds.push(repository.id);
+        }
+        createProjectInput["repositoryIds"] = repositoryIds;
+    }
+
+    if (!(createRepositoryProjectInput?.body is ())) { 
+        createProjectInput["body"] = <string>createRepositoryProjectInput?.body;
+    }
+
+    if (!(createRepositoryProjectInput?.template is ())) { 
+        createProjectInput["template"] = <ProjectTemplate>createRepositoryProjectInput?.template;
+    }
+
+    if (!(createRepositoryProjectInput?.clientMutationId is ())) { 
+        createProjectInput["clientMutationId"] = <string>createRepositoryProjectInput?.clientMutationId;
+    }
+
     string stringQuery = getFormulatedStringQueryForCreateProject(createProjectInput);
     http:Request request = new;
     setHeader(request, accessToken);
@@ -61,7 +96,7 @@ isolated function createProject(CreateProjectInput createProjectInput, string ac
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
     json validatedResponse = check getValidatedResponse(response);
 
     if (validatedResponse is map<json>) {
@@ -75,7 +110,7 @@ isolated function createProject(CreateProjectInput createProjectInput, string ac
 
         }
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing create project response");
+    error err = error(GITHUB_ERROR_CODE+ " Error parsing create project response", message = "Error parsing create project response");
     return err;
 }
 
@@ -88,7 +123,7 @@ isolated function getUserProject(string username, int projectNumber, string acce
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
 
     //Check for empty payloads and errors
@@ -100,16 +135,16 @@ isolated function getUserProject(string username, int projectNumber, string acce
             var user = gitData[GIT_USER];
             if(user is map<json>){
                 var userProject = user[GIT_PROJECT];
-                Project|error project = userProject.cloneWithType(Project);
-                if(project is error){
-                    return error(GITHUB_ERROR_CODE, message = "Error parsing user project response");
-                }else {
-                    return project;
+                if (userProject is ()) {
+                    error err = error(GITHUB_ERROR_CODE+string `: Could not resolve to a project with the number ${projectNumber}.`, message = string `: Could not resolve to a project with the number ${projectNumber}.`);
+                    return err;
                 }
+                Project project = check userProject.cloneWithType(Project);
+                return project;
             }
         }
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing user project response");
+    error err = error(GITHUB_ERROR_CODE+ " Error parsing user project response", message = "Error parsing user project response");
     return err;
 }
 
@@ -122,7 +157,7 @@ isolated function updateProject(UpdateProjectInput updateProjectInput, string ac
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
     json validatedResponse = check getValidatedResponse(response);
 
     if (validatedResponse is map<json>) {
@@ -136,7 +171,7 @@ isolated function updateProject(UpdateProjectInput updateProjectInput, string ac
 
         }
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing create project response");
+    error err = error(GITHUB_ERROR_CODE+ " Error parsing update project response", message = "Error parsing update project response");
     return err;
 }
 
@@ -149,7 +184,7 @@ isolated function deleteProject(DeleteProjectInput deleteProjectInput, string ac
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     _ = check getValidatedResponse(response);
 }
@@ -165,7 +200,7 @@ isolated function getRepositoryProjectList(string repositoryOwner, string reposi
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -176,17 +211,23 @@ isolated function getRepositoryProjectList(string repositoryOwner, string reposi
             var org = gitData[GIT_REPOSITORY];
             if(org is map<json>){
                 var orgProjects = org[GIT_PROJECTS];
-                ProjectList|error projectList = orgProjects.cloneWithType(ProjectList);
-                if(projectList is error){
-                    return error(GITHUB_ERROR_CODE, message = "Error parsing repository project list response");
+                ProjectListPayload|error projectListResponse = orgProjects.cloneWithType(ProjectListPayload);
+
+                if(projectListResponse is error){
+                    return error(GITHUB_ERROR_CODE+ "Error parsing org project list response", message = "Error parsing org project list response");
                 }else {
+                    ProjectList projectList = {
+                        projects: projectListResponse.nodes,
+                        pageInfo: projectListResponse.pageInfo,
+                        totalCount: projectListResponse.totalCount 
+                    };
                     return projectList;
                 }
             }
 
         }
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing repository project response");
+    error err = error(GITHUB_ERROR_CODE+ " Error parsing repository project list response", message = "Error parsing repository project list response");
     return err;
 }
 
@@ -199,7 +240,7 @@ isolated function getUserProjectList(string username, int perPageCount, string a
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -210,16 +251,22 @@ isolated function getUserProjectList(string username, int perPageCount, string a
             var org = gitData[GIT_USER];
             if(org is map<json>){
                 var orgProjects = org[GIT_PROJECTS];
-                ProjectList|error projectList = orgProjects.cloneWithType(ProjectList);
-                if(projectList is error){
-                    return error(GITHUB_ERROR_CODE, message = "Error parsing user project list response");
+                ProjectListPayload|error projectListResponse = orgProjects.cloneWithType(ProjectListPayload);
+
+                if(projectListResponse is error){
+                    return error(GITHUB_ERROR_CODE+ "Error parsing org project list response", message = "Error parsing org project list response");
                 }else {
+                    ProjectList projectList = {
+                        projects: projectListResponse.nodes,
+                        pageInfo: projectListResponse.pageInfo,
+                        totalCount: projectListResponse.totalCount 
+                    };
                     return projectList;
                 }
             }
 
         }
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing user project response");
+    error err = error(GITHUB_ERROR_CODE + " Error parsing user project list response", message = "Error parsing user project list response");
     return err;
 }

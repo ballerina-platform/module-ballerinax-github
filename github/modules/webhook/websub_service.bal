@@ -220,7 +220,13 @@ service class WebSubService {
     }
 
     remote isolated function onEventNotification(websub:ContentDistributionMessage event)
-                        returns websub:Acknowledgement|websub:SubscriptionDeletedError? {
+                        returns websub:Acknowledgement|websub:SubscriptionDeletedError|error? {
+        string[] events = <string[]>event.headers["X-Github-Event"];                          
+        map<json> content = <map<json> >event.content; 
+        string eventAction = <string> content["action"];               
+        string incomingEventDescription = events[0]+" "+eventAction+ " event";  
+        log:printInfo(incomingEventDescription+ " recieved.");
+
         GitHubEvent|error eventPayload = event.content.cloneWithType(GitHubEvent);
         if((eventPayload is PingEvent) ) {
             Repository repository = eventPayload.repository;
@@ -492,7 +498,7 @@ service class WebSubService {
                 }
             }
         }else {
-            log:printError("error:  ", errorPayload = eventPayload.message());
+            log:printError("error:  "+incomingEventDescription+ " type does not support by the connector");
         }
 
         return {};

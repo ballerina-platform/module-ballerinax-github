@@ -25,7 +25,7 @@ isolated function getUserRepository(string username, string repositoryName, stri
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -40,7 +40,7 @@ isolated function getUserRepository(string username, string repositoryName, stri
             }
         }
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing git repository response");
+    error err = error(GITHUB_ERROR_CODE+ " Error parsing git repository response", message = "Error parsing git repository response");
     return err;
 }
 
@@ -54,7 +54,7 @@ isolated function getAuthenticatedUserRepositoryList(int perPageCount, string ac
         //Set headers and payload to the request
         constructRequest(request, <@untainted> convertedQuery);
 
-        var response = graphQlClient->post(EMPTY_STRING, request);
+        http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
         //Check for empty payloads and errors
         json validatedResponse = check getValidatedResponse(response);
@@ -66,13 +66,18 @@ isolated function getAuthenticatedUserRepositoryList(int perPageCount, string ac
                 if (viewer is map<json>) {
                     var repositories = viewer[GIT_REPOSITORIES];
                     if(repositories is map<json>){
-                        RepositoryList repositoryList = check repositories.cloneWithType(RepositoryList);
+                        RepositoryListPayload repositoryListResponse = check repositories.cloneWithType(RepositoryListPayload);
+                        RepositoryList repositoryList = {
+                            repositories: repositoryListResponse.nodes,
+                            pageInfo: repositoryListResponse.pageInfo,
+                            totalCount: repositoryListResponse.totalCount
+                        };
                         return repositoryList;
                     }
                 }
             }
         }
-        error err = error(GITHUB_ERROR_CODE, message = "Error parsing git repository response");
+        error err = error(GITHUB_ERROR_CODE+ " Error parsing git repository list response", message = "Error parsing git repository list response");
         return err;
     }
 
@@ -86,7 +91,7 @@ isolated function getUserRepositoryList(string username, int perPageCount, strin
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -98,13 +103,18 @@ isolated function getUserRepositoryList(string username, int perPageCount, strin
             if (viewer is map<json>) {
                 var repositories = viewer[GIT_REPOSITORIES];
                 if(repositories is map<json>){
-                    RepositoryList repositoryList = check repositories.cloneWithType(RepositoryList);
+                    RepositoryListPayload repositoryListResponse = check repositories.cloneWithType(RepositoryListPayload);
+                    RepositoryList repositoryList = {
+                        repositories: repositoryListResponse.nodes,
+                        pageInfo: repositoryListResponse.pageInfo,
+                        totalCount: repositoryListResponse.totalCount
+                    };
                     return repositoryList;
                 }
             }
         }
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing git repository response");
+    error err = error(GITHUB_ERROR_CODE+ "Error parsing git repository list response", message = "Error parsing git repository list response");
     return err;
 }
 
@@ -119,7 +129,7 @@ isolated function getOrganizationRepositoryList(string organizationName, int per
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -131,13 +141,18 @@ isolated function getOrganizationRepositoryList(string organizationName, int per
             if (viewer is map<json>) {
                 var repositories = viewer[GIT_REPOSITORIES];
                 if(repositories is map<json>){
-                    RepositoryList repositoryList = check repositories.cloneWithType(RepositoryList);
+                    RepositoryListPayload repositoryListResponse = check repositories.cloneWithType(RepositoryListPayload);
+                    RepositoryList repositoryList = {
+                        repositories: repositoryListResponse.nodes,
+                        pageInfo: repositoryListResponse.pageInfo,
+                        totalCount: repositoryListResponse.totalCount
+                    };
                     return repositoryList;
                 }
             }
         }
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing git repository response");
+    error err = error(GITHUB_ERROR_CODE+ " Error parsing git repository list response", message = "Error parsing git repository list response");
     return err;
 }
 
@@ -153,7 +168,7 @@ isolated function getRepositoryCollobaratorList(string ownerName, string reposit
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -165,13 +180,18 @@ isolated function getRepositoryCollobaratorList(string ownerName, string reposit
             if (viewer is map<json>) {
                 var repositories = viewer[GIT_COLLABORATORS];
                 if(repositories is map<json>){
-                    CollaboratorList repositoryList = check repositories.cloneWithType(CollaboratorList);
-                    return repositoryList;
+                    CollaboratorListPayload collaboratorListResponse = check repositories.cloneWithType(CollaboratorListPayload);
+                    CollaboratorList collaboratorList = {
+                        collaborators: collaboratorListResponse.nodes,
+                        pageInfo: collaboratorListResponse.pageInfo,
+                        totalCount: collaboratorListResponse.totalCount
+                    };
+                    return collaboratorList;
                 }
             }
         }
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing git repository response");
+    error err = error(GITHUB_ERROR_CODE+ " Error parsing git collaborator list response", message = "Error parsing git collaborator list response");
     return err;
 }
 
@@ -186,7 +206,7 @@ isolated function getRepositoryBranchList(string ownerName, string repositoryNam
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -198,13 +218,18 @@ isolated function getRepositoryBranchList(string ownerName, string repositoryNam
             if (viewer is map<json>) {
                 var repositories = viewer[GIT_REFS];
                 if(repositories is map<json>){
-                    BranchList repositoryList = check repositories.cloneWithType(BranchList);
-                    return repositoryList;
+                    BranchListPayload branchListResponse = check repositories.cloneWithType(BranchListPayload);
+                    BranchList branchList = {
+                        branches: branchListResponse.nodes,
+                        pageInfo: branchListResponse.pageInfo,
+                        totalCount: branchListResponse.totalCount
+                    };
+                    return branchList;
                 }
             }
         }
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing git repository response");
+    error err = error(GITHUB_ERROR_CODE+" Error parsing git branch list response", message = "Error parsing git branch list response");
     return err;
 }
 
@@ -222,7 +247,7 @@ isolated function updateRepository(@tainted UpdateRepositoryInput updateReposito
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     _ = check getValidatedResponse(response);
@@ -241,7 +266,7 @@ isolated function getRepositoryIssueListAssignedToUser(string repositoryOwnerNam
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -253,13 +278,18 @@ isolated function getRepositoryIssueListAssignedToUser(string repositoryOwnerNam
             if (viewer is map<json>) {
                 var issues = viewer[GIT_ISSUES];
                 if(issues is map<json>){
-                    IssueList issueList = check issues.cloneWithType(IssueList);
+                    IssueListPayload issueListResponse = check issues.cloneWithType(IssueListPayload);
+                    IssueList issueList = {
+                        issues: issueListResponse.nodes,
+                        pageInfo: issueListResponse.pageInfo,
+                        totalCount: issueListResponse.totalCount
+                    };
                     return issueList;
                 }
             }
         }
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing git repository response");
+    error err = error(GITHUB_ERROR_CODE+ "Error parsing git issue list response", message = "Error parsing git issue list response");
     return err;
 }
 
@@ -274,7 +304,7 @@ isolated function getRepositoryIssueList(string repositoryOwnerName, string repo
     //Set headers and payload to the request
     constructRequest(request, <@untainted> convertedQuery);
 
-    var response = graphQlClient->post(EMPTY_STRING, request);
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     //Check for empty payloads and errors
     json validatedResponse = check getValidatedResponse(response);
@@ -286,12 +316,17 @@ isolated function getRepositoryIssueList(string repositoryOwnerName, string repo
             if (viewer is map<json>) {
                 var issues = viewer[GIT_ISSUES];
                 if(issues is map<json>){
-                    IssueList issueList = check issues.cloneWithType(IssueList);
+                    IssueListPayload issueListResponse = check issues.cloneWithType(IssueListPayload);
+                    IssueList issueList = {
+                        issues: issueListResponse.nodes,
+                        pageInfo: issueListResponse.pageInfo,
+                        totalCount: issueListResponse.totalCount
+                    };
                     return issueList;
                 }
             }
         }
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing git repository response");
+    error err = error(GITHUB_ERROR_CODE+ "Error parsing git repository issue list response", message = "Error parsing git repository issue list response");
     return err;
 }

@@ -35,13 +35,13 @@ Client githubClient = checkpanic new (gitHubConfig);
     groups: ["network-calls"],
     enable: true
 }
-function testGetAuthenticatedUser() {
+function testGetAuthenticatedUser() returns @tainted error? {
     log:printInfo("githubClient -> getAuthenticatedUser()");
     var response = githubClient->getAuthenticatedUser();
     if(response is User){
         test:assertEquals(response.login, testUserName, msg = "Failed getAuthenticatedUser()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -49,13 +49,13 @@ function testGetAuthenticatedUser() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetUserRepository() {
+function testGetUserRepository() returns @tainted error? {
     log:printInfo("githubClient -> getUserRepository()");
     var response = githubClient->getUserRepository(testUserName, testUserRepositoryName);
     if(response is Repository){
         test:assertEquals(response.name, testUserRepositoryName, msg = "Failed testGetUserRepository()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -63,14 +63,14 @@ function testGetUserRepository() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetAuthenticatedUserRepositoryList() {
+function testGetAuthenticatedUserRepositoryList() returns @tainted error? {
     log:printInfo("githubClient -> getAuthenticatedUserRepositoryList()");
     int perPageCount = 10;
     var response = githubClient->getAuthenticatedUserRepositoryList(perPageCount);
     if(response is RepositoryList){
-        test:assertTrue(response.nodes.length()>0, msg = "Failed testGetAuthenticatedUserRepositoryList()");
+        test:assertTrue(response.repositories.length()>0, msg = "Failed testGetAuthenticatedUserRepositoryList()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -78,14 +78,14 @@ function testGetAuthenticatedUserRepositoryList() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetUserRepositoryList() {
+function testGetUserRepositoryList() returns @tainted error? {
     log:printInfo("githubClient -> getUserRepositoryList()");
     int perPageCount = 10;
     var response = githubClient->getUserRepositoryList(testUserName, perPageCount);
     if(response is RepositoryList){
         test:assertTrue(response.length()>0, msg = "Failed testGetUserRepositoryList()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -93,14 +93,14 @@ function testGetUserRepositoryList() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetOrganizationRepositoryList() {
+function testGetOrganizationRepositoryList() returns @tainted error? {
     log:printInfo("githubClient -> getOrganizationRepositoryList()");
     int perPageCount = 10;
     var response = githubClient->getOrganizationRepositoryList(testOrganizationName,perPageCount);
     if(response is RepositoryList){
         test:assertTrue(response.length()>0, msg = "Failed testGetOrganizationRepositoryList()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -108,14 +108,14 @@ function testGetOrganizationRepositoryList() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetRepositoryCollobaratorList() {
+function testGetRepositoryCollobaratorList() returns @tainted error? {
     log:printInfo("githubClient -> getRepositoryCollobaratorList()");
     int perPageCount = 10;
     var response = githubClient->getRepositoryCollobaratorList(testUserName, testUserRepositoryName, perPageCount);
     if(response is CollaboratorList){
-        test:assertTrue(response.nodes.length()>0, msg = "Failed testGetRepositoryCollobaratorList()");
+        test:assertTrue(response.collaborators.length()>0, msg = "Failed testGetRepositoryCollobaratorList()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -123,14 +123,14 @@ function testGetRepositoryCollobaratorList() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetRepositoryBranchList() {
+function testGetRepositoryBranchList() returns @tainted error? {
     log:printInfo("githubClient -> getRepositoryBranchList()");
     int perPageCount = 10;
     var response = githubClient->getRepositoryBranchList(testUserName, testUserRepositoryName, perPageCount);
     if(response is BranchList){
-        test:assertTrue(response.nodes.length()>0, msg = "Failed testGetRepositoryBranchList()");
+        test:assertTrue(response.branches.length()>0, msg = "Failed testGetRepositoryBranchList()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -138,7 +138,7 @@ function testGetRepositoryBranchList() {
     groups: ["network-calls"],
     enable: true
 }
-function testUpdateRepository() {
+function testUpdateRepository() returns @tainted error? {
     log:printInfo("githubClient -> updateRepository()");
     UpdateRepositoryInput updateRepositoryInput = {
         description: "New Updated Description"
@@ -146,7 +146,7 @@ function testUpdateRepository() {
     var response = githubClient->updateRepository(updateRepositoryInput, testUserName, testUserRepositoryName);
 
     if(response is error){
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }else {
         test:assertTrue(true);
     }
@@ -156,14 +156,14 @@ function testUpdateRepository() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetIssueListAssignedToUser() {
+function testGetIssueListAssignedToUser() returns @tainted error? {
     log:printInfo("githubClient -> getRepositoryIssueListAssignedToUser()");
     int perPageCount = 10;
     var response = githubClient->getRepositoryIssueListAssignedToUser(testUserName, testUserRepositoryName, testIssueAssignee, perPageCount);
     if(response is IssueList){
-        test:assertTrue(response.nodes.length()>=0, msg = "Failed testGetIssueListAssignedToUser()");
+        test:assertTrue(response.issues.length()>=0, msg = "Failed testGetIssueListAssignedToUser()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -171,14 +171,14 @@ function testGetIssueListAssignedToUser() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetIssueList() {
+function testGetIssueList() returns @tainted error? {
     log:printInfo("githubClient -> getRepositoryIssueList()");
     int perPageCount = 10;
     var response = githubClient->getRepositoryIssueList(testUserName, testUserRepositoryName, [ISSUE_OPEN], perPageCount);
     if(response is IssueList){
-        test:assertTrue(response.nodes.length()>=0, msg = "Failed testGetIssueList()");
+        test:assertTrue(response.issues.length()>=0, msg = "Failed testGetIssueList()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 string createdIssueId = "";
@@ -187,10 +187,12 @@ int createdIssueNumber = -1;
     groups: ["network-calls"],
     enable: true
 }
-function testCreateIssue() {
+function testCreateIssue() returns @tainted error?{
     log:printInfo("githubClient -> createIssue()");
     CreateIssueInput createIssueInput = {
-        title: "This is a test Issue Title"
+        title: "This is a test Issue Title",
+        labelNames: ["bug"],
+        assigneeNames: [testUserName]
     };
 
     var response = githubClient->createIssue(createIssueInput, testUserName, testUserRepositoryName);
@@ -200,7 +202,7 @@ function testCreateIssue() {
         createdIssueNumber = <@untainted>response.number;
         test:assertTrue(true);
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -209,10 +211,9 @@ function testCreateIssue() {
     enable: true,
     dependsOn: [testCreateIssue]
 }
-function testUpdateIssue() {
+function testUpdateIssue() returns @tainted error? {
     log:printInfo("githubClient -> updateIssue()");
     UpdateIssueInput updateRepositoryInput = {
-        id: createdIssueId,
         title: "Updated issue title"
     };
 
@@ -221,7 +222,7 @@ function testUpdateIssue() {
     if(response is Issue){
         test:assertTrue(true);
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -230,13 +231,13 @@ function testUpdateIssue() {
     enable: true,
     dependsOn: [testCreateIssue]
 }
-function testGetIssue() {
+function testGetIssue() returns @tainted error? {
     log:printInfo("githubClient -> getRepositoryIssue()");
     var response = githubClient->getRepositoryIssue(testUserName, testUserRepositoryName, createdIssueNumber);
     if(response is Issue){
         test:assertTrue(response.number==createdIssueNumber, msg = "Failed testGetIssue()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -245,7 +246,7 @@ function testGetIssue() {
     enable: true,
     dependsOn: [testAddComment]
 }
-function testGetIssueCommentList() {
+function testGetIssueCommentList() returns @tainted error? {
     log:printInfo("githubClient -> getRepositoryIssueCommentList()");
     int perPageCount = 10;
 
@@ -253,7 +254,7 @@ function testGetIssueCommentList() {
     if(response is IssueCommentList){
         test:assertTrue(response.length()>=0, msg = "Failed testGetIssue()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 string createdIssueCommentId="";
@@ -262,19 +263,21 @@ string createdIssueCommentId="";
     enable: true,
     dependsOn: [testCreateIssue]
 }
-function testAddComment() {
+function testAddComment() returns @tainted error? {
     log:printInfo("githubClient -> addComment()");
-    AddCommentInput updateRepositoryInput = {
-        subjectId: createdIssueId,
+    AddIssueCommentInput addIssueCommentInput = {
+        repositoryOwnerName: testUserName,
+        repositoryName: testUserRepositoryName,
+        issueNumber: createdIssueNumber,
         body: "Comment Added by Ballerina GitHub connector!"
     };
-    var response = githubClient->addComment(updateRepositoryInput);
+    var response = githubClient->addComment(addIssueCommentInput);
 
     if(response is IssueComment){
         createdIssueCommentId = <@untainted>response.id;
         test:assertTrue(true);
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -283,7 +286,7 @@ function testAddComment() {
     enable: true,
     dependsOn: [testGetIssueCommentList]
 }
-function testUpdateComment() {
+function testUpdateComment() returns @tainted error?{
     log:printInfo("githubClient -> updateComment()");
     UpdateIssueCommentInput updateIssueComment = {
         id: createdIssueCommentId,
@@ -292,7 +295,7 @@ function testUpdateComment() {
     var response = githubClient->updateComment(updateIssueComment);
 
     if(response is error){
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+": "+ <string> check response.detail()["message"]);
     }else {
         test:assertTrue(true);
     }
@@ -303,7 +306,7 @@ function testUpdateComment() {
     enable: true,
     dependsOn: [testUpdateComment]
 }
-function testDeleteComment() {
+function testDeleteComment() returns @tainted error? {
     log:printInfo("githubClient -> deleteComment()");
     DeleteIssueCommentInput deleteIssueComment = {
         id: createdIssueCommentId
@@ -311,7 +314,7 @@ function testDeleteComment() {
     var response = githubClient->deleteComment(deleteIssueComment);
 
     if(response is error){
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+": "+ <string> check response.detail()["message"]);
     }else {
         test:assertTrue(true);
     }
@@ -321,7 +324,7 @@ function testDeleteComment() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetRepositoryLabel() {
+function testGetRepositoryLabel() returns @tainted error? {
     log:printInfo("githubClient -> getRepositoryLabel()");
     string labelName = "bug";
     var response = githubClient->getRepositoryLabel(testUserName, testUserRepositoryName, labelName);
@@ -337,7 +340,7 @@ function testGetRepositoryLabel() {
     enable: true,
     dependsOn: [testAddLabelsToLabelable]
 }
-function testGetRepositoryLabelListInIssue() {
+function testGetRepositoryLabelListInIssue() returns @tainted error? {
     log:printInfo("githubClient -> getLabelsInIssue()");
     int perPageCount = 10;
     var response = githubClient->getLabelsInIssue(testUserName, testUserRepositoryName, createdIssueNumber, perPageCount);
@@ -353,14 +356,15 @@ function testGetRepositoryLabelListInIssue() {
     enable: true,
     dependsOn: [testCreateIssue]
 }
-function testAddLabelsToLabelable() {
-    log:printInfo("githubClient -> addLabelsToLabelable()");
-    Label labelIdResponse = checkpanic githubClient->getRepositoryLabel(testUserName, testUserRepositoryName, "bug");
-    AddLabelsToLabelableInput addLabelInput = {
-        labelableId: createdIssueId,
-        labelIds: [labelIdResponse.id] // ids of bug, duplicate labels
+function testAddLabelsToLabelable() returns @tainted error? {
+    log:printInfo("githubClient -> addIssueLabel()");
+    AddIssueLabelsInput addIssueLabelInput = {
+        repositoryOwnerName: testUserName,
+        repositoryName: testUserRepositoryName, 
+        issueNumber: createdIssueNumber,
+        labelNames: ["bug"] 
     };
-    var response = githubClient->addLabelsToLabelable(addLabelInput);
+    var response = githubClient->addIssueLabels(addIssueLabelInput);
     if(response is LabelList){
         test:assertTrue(response.length()>=0, msg = "Failed testGetRepositoryLabelListInIssue()");
     }else {
@@ -373,16 +377,17 @@ function testAddLabelsToLabelable() {
     enable: true,
     dependsOn: [testAddLabelsToLabelable]
 }
-function testRemoveLabelsFromLabelable() {
+function testRemoveLabelsFromLabelable() returns @tainted error? {
     log:printInfo("githubClient -> removeLabelFromLabelable()");
-    Label labelIdResponse = checkpanic githubClient->getRepositoryLabel(testUserName, testUserRepositoryName, "bug");
-    RemoveLabelsFromLabelableInput addLabelInput = {
-        labelableId: createdIssueId,
-        labelIds: [labelIdResponse.id] // ids of bug, duplicate labels
+    RemoveIssueLabelInput removeIssueLabelsInput = {
+        repositoryOwnerName: testUserName,
+        repositoryName: testUserRepositoryName,
+        issueNumber: createdIssueNumber,
+        labelNames: ["bug"] 
     };
-    var response = githubClient->removeLabelFromLabelable(addLabelInput);
+    var response = githubClient->removeLabelFromLabelable(removeIssueLabelsInput);
      if(response is error){
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
      }else {
         test:assertTrue(true);
      }
@@ -392,13 +397,13 @@ function testRemoveLabelsFromLabelable() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetIssuesWithLabel() {
+function testGetIssuesWithLabel() returns @tainted error? {
     log:printInfo("githubClient -> getIssuesWithLabel()");
     int perPageCount = 10;
     string label = "bug";
     var response = githubClient->getIssuesWithLabel(testUserName, testUserRepositoryName, label, perPageCount);
      if(response is error){
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
      }else {
         test:assertTrue(true);
      }
@@ -408,14 +413,14 @@ function testGetIssuesWithLabel() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetRepositoryMilestoneList() {
+function testGetRepositoryMilestoneList() returns @tainted error? {
     log:printInfo("githubClient -> getRepositoryMilestoneList()");
     int perPageCount = 10;
     var response = githubClient->getRepositoryMilestoneList(testUserName, testUserRepositoryName, perPageCount);
      if(response is MilestoneList){
-         test:assertTrue(response.nodes.length()>=0, msg = "Failed testGetRepositoryMilestoneList()");
+         test:assertTrue(response.milestones.length()>=0, msg = "Failed testGetRepositoryMilestoneList()");
      }else {
-         test:assertFail(msg = response.message());
+         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
      }
 }
 
@@ -423,13 +428,13 @@ function testGetRepositoryMilestoneList() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetRepositoryMilestone() {
+function testGetRepositoryMilestone() returns @tainted error? {
     log:printInfo("githubClient -> getRepositoryMilestone()");
     var response = githubClient->getRepositoryMilestone(testUserName, testUserRepositoryName, 1);
      if(response is Milestone){
          test:assertTrue(response.number==1, msg = "Failed testGetRepositoryMilestoneList()");
      }else {
-         test:assertFail(msg = response.message());
+         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
      }
 }
 
@@ -439,7 +444,7 @@ int createdPullRequestNumber=-1;
     groups: ["network-calls"],
     enable: true
 }
-function testCreatePullRequest() {
+function testCreatePullRequest() returns @tainted error? {
     log:printInfo("githubClient -> createPullRequest()");
     CreatePullRequestInput createPullRequestInput = {
        title: "Test PR created from Ballerina GitHub Connector",
@@ -453,7 +458,7 @@ function testCreatePullRequest() {
          createdPullRequestNumber = <@untainted>(<int>(response?.number));
          test:assertTrue(true);
      }else {
-         test:assertFail(msg = response.message());
+         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
      }
 }
 
@@ -462,13 +467,13 @@ function testCreatePullRequest() {
     enable: true,
     dependsOn: [testCreatePullRequest]
 }
-function testGetPullRequest() {
+function testGetPullRequest() returns @tainted error? {
     log:printInfo("githubClient -> getPullRequest()");
     var response = githubClient->getPullRequest(testUserName, testUserRepositoryName, createdPullRequestNumber);
      if(response is PullRequest){
          test:assertTrue(response.number==createdPullRequestNumber, msg = "Failed testGetPullRequest()");
      }else {
-         test:assertFail(msg = response.message());
+         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
      }
 }
 
@@ -476,14 +481,14 @@ function testGetPullRequest() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetPullRequestList() {
+function testGetPullRequestList() returns @tainted error? {
     log:printInfo("githubClient -> getRepositoryPullRequestList()");
     int perPageCount = 10;
     var response = githubClient->getRepositoryPullRequestList(testUserName, testUserRepositoryName, PULL_REQUEST_OPEN, perPageCount);
      if(response is PullRequestList){
          test:assertTrue(response.length()>=0, msg = "Failed testGetPullRequest()");
      }else {
-         test:assertFail(msg = response.message());
+         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
      }
 }
 
@@ -492,16 +497,17 @@ function testGetPullRequestList() {
     enable: true,
     dependsOn: [testCreatePullRequest]
 }
-function testUpdatePullRequest() {
+function testUpdatePullRequest() returns @tainted error? {
     log:printInfo("githubClient -> updatePullRequest()");
     UpdatePullRequestInput updatePullRequestInput = {
-       pullRequestId: createdPullRequestId,
-       title: "Test PR created from Ballerina GitHub Connector Updated"
+       title: "Test PR created from Ballerina GitHub Connector Updated",
+       labelNames: ["bug"],
+       assigneeNames: ["MadhurangaWije"]
     };
 
     var response = githubClient->updatePullRequest(updatePullRequestInput, testUserName, testUserRepositoryName, createdPullRequestNumber);
      if(response is error){
-         test:assertFail(msg = response.message());
+         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
      }else {
          test:assertTrue(true);
      }
@@ -509,19 +515,17 @@ function testUpdatePullRequest() {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: true,
-    dependsOn: [testDeletePullRequestReview]
+    enable: true
 }
-function testUpdatePullRequestToClose() {
+function testUpdatePullRequestToClose() returns @tainted error? {
     log:printInfo("githubClient -> updatePullRequest()");
     UpdatePullRequestInput updatePullRequestInput = {
-       pullRequestId: createdPullRequestId,
        state: PULL_REQUEST_CLOSED
     };
 
     var response = githubClient->updatePullRequest(updatePullRequestInput, testUserName, testUserRepositoryName, createdPullRequestNumber);
      if(response is error){
-         test:assertFail(msg = response.message());
+         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
      }else {
          test:assertTrue(true);
      }
@@ -532,15 +536,15 @@ function testUpdatePullRequestToClose() {
     enable: true,
     dependsOn: [testCreatePullRequestReview]
 }
-function testGetPullRequestReviewCommentList() {
+function testGetPullRequestReviewCommentList() returns @tainted error? {
     log:printInfo("githubClient -> getPullRequestReviewCommentList()");
     int pullRequestNumber = 165;
     int perPageCount = 10;
     var response = githubClient->getPullRequestReviewCommentList(testUserName, testUserRepositoryName, createdPullRequestNumber, perPageCount);
      if(response is PullRequestReviewList){
-         test:assertTrue(response.nodes.length()>=0, msg = "Failed testGetPullRequest()");
+         test:assertTrue(response.pullRequestReviews.length()>=0, msg = "Failed testGetPullRequest()");
      }else {
-         test:assertFail(msg = response.message());
+         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
      }
 }
 
@@ -551,7 +555,7 @@ string createdPullRequestReviewIdWithPendingState = "";
     enable: true,
     dependsOn: [testUpdatePullRequest]
 }
-function testCreatePullRequestReview() {
+function testCreatePullRequestReview() returns @tainted error? {
     log:printInfo("githubClient -> createPullRequestReview()");
     AddPullRequestReviewInput createPullRequestReviewInput = {
         body: "This is a test review comment for a pull  from Ballerina GitHub connector ",
@@ -563,7 +567,7 @@ function testCreatePullRequestReview() {
         createdPullRequestReviewId = <@untainted>response.id;
         test:assertTrue(true);
     }else {
-       test:assertFail(msg = response.message());
+       test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -572,7 +576,7 @@ function testCreatePullRequestReview() {
     enable: true,
     dependsOn: [testUpdatePullRequest]
 }
-function testCreatePullRequestReviewWithPendingState() {
+function testCreatePullRequestReviewWithPendingState() returns @tainted error? {
     log:printInfo("githubClient -> createPullRequestReview()");
     AddPullRequestReviewInput createPullRequestReviewInput = {
         body: "This is a test review comment for a pull  from Ballerina GitHub connector "
@@ -583,7 +587,7 @@ function testCreatePullRequestReviewWithPendingState() {
         createdPullRequestReviewIdWithPendingState = <@untainted>response.id;
         test:assertTrue(true);
     }else {
-       test:assertFail(msg = response.message());
+       test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -592,7 +596,7 @@ function testCreatePullRequestReviewWithPendingState() {
     enable: true,
     dependsOn: [testCreatePullRequestReview]
 }
-function testUpdatePullRequestReview() {
+function testUpdatePullRequestReview() returns @tainted error? {
     log:printInfo("githubClient -> updatePullRequestReview()");
     UpdatePullRequestReviewInput updatePullRequestReviewInput = {
         pullRequestReviewId: createdPullRequestReviewId,
@@ -600,7 +604,7 @@ function testUpdatePullRequestReview() {
     };
     var response = githubClient->updatePullRequestReview(updatePullRequestReviewInput);
     if(response is error){
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }else {
         test:assertTrue(true);
     }
@@ -611,14 +615,14 @@ function testUpdatePullRequestReview() {
     enable: true,
     dependsOn: [testCreatePullRequestReviewWithPendingState]
 }
-function testDeletePullRequestReview() {
+function testDeletePullRequestReview() returns @tainted error? {
     log:printInfo("githubClient -> deletePendingPullRequestReview()");
     DeletePullRequestReviewInput deletePullRequestReview = {
         pullRequestReviewId: createdPullRequestReviewIdWithPendingState
     };
     var response = githubClient->deletePendingPullRequestReview(deletePullRequestReview);
     if(response is error){
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }else {
         test:assertTrue(true);
     }
@@ -628,14 +632,14 @@ function testDeletePullRequestReview() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetOrgProjectList() {
+function testGetOrgProjectList() returns @tainted error? {
     log:printInfo("githubClient -> getOrganizationProjectList()");
     int perPageCount = 10;
     var response = githubClient->getOrganizationProjectList(testOrganizationName, PROJECT_OPEN, perPageCount);
     if(response is ProjectList){
-        test:assertTrue(response.nodes.length()>=0, msg = "Failed testGetOrgProjectList()");
+        test:assertTrue(response.projects.length()>=0, msg = "Failed testGetOrgProjectList()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 string createdProjectId = "";
@@ -647,17 +651,17 @@ int createdProjectNumber =-1;
 function testCreateUserProject() returns @tainted error? {
     log:printInfo("githubClient -> createProject()");
     string userId = check githubClient->getUserId(testUserName);
-    CreateProjectInput createProjectInput = {
-        ownerId: userId,
+    CreateRepositoryProjectInput createRepositoryProjectInput = {
+        ownerName: testUserName,
         name: "Test Project Created by Ballerina GitHub Connector"
     };
-    var response = githubClient->createProject(createProjectInput);
+    var response = githubClient->createProject(createRepositoryProjectInput);
     if(response is Project){
         createdProjectId = <@untainted>response.id;
         createdProjectNumber = <@untainted>(<int>(response?.number));
         test:assertTrue(true);
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -666,11 +670,11 @@ function testCreateUserProject() returns @tainted error? {
     enable: true,
     dependsOn: [testCreateUserProject]
 }
-function testGetUserProject() {
+function testGetUserProject() returns @tainted error? {
     log:printInfo("githubClient -> getUserProject()");
     var response = githubClient->getUserProject(testUserName, createdProjectNumber);
     if(response is error){
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }else {
         test:assertTrue(true);
     }
@@ -681,7 +685,7 @@ function testGetUserProject() {
     enable: true,
     dependsOn: [testGetUserProject]
 }
-function testUpdateProject() {
+function testUpdateProject() returns @tainted error? {
     log:printInfo("githubClient -> updateProject()");
     UpdateProjectInput updateProjectInput = {
         projectId: createdProjectId,
@@ -690,7 +694,7 @@ function testUpdateProject() {
 
     var response = githubClient->updateProject(updateProjectInput);
     if(response is error){
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }else {
         test:assertTrue(true);
     }
@@ -701,14 +705,14 @@ function testUpdateProject() {
     enable: true,
     dependsOn: [testUpdateProject]
 }
-function testDeleteProject() {
+function testDeleteProject() returns @tainted error? {
     log:printInfo("githubClient -> deleteProject()");
     DeleteProjectInput deleteProjectInput = {
         projectId: createdProjectId
     };
     var response = githubClient->deleteProject(deleteProjectInput);
     if(response is error){
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }else {
         test:assertTrue(true);
     }
@@ -718,14 +722,14 @@ function testDeleteProject() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetRepositoryProjectList() {
+function testGetRepositoryProjectList() returns @tainted error? {
     log:printInfo("githubClient -> getRepositoryProjectList()");
     int perPageCount = 10;
     var response = githubClient->getRepositoryProjectList(testUserName, testUserRepositoryName, PROJECT_OPEN, perPageCount);
     if(response is ProjectList){
-        test:assertTrue(response.nodes.length()>=0, msg = "Failed testGetOrgProjectList()");
+        test:assertTrue(response.projects.length()>=0, msg = "Failed testGetOrgProjectList()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -733,14 +737,14 @@ function testGetRepositoryProjectList() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetUserProjectList() {
+function testGetUserProjectList() returns @tainted error? {
     log:printInfo("githubClient -> getUserProjectList()");
     int perPageCount = 10;
     var response = githubClient->getUserProjectList(testUserName, perPageCount);
     if(response is ProjectList){
-        test:assertTrue(response.nodes.length()>=0, msg = "Failed testGetOrgProjectList()");
+        test:assertTrue(response.projects.length()>=0, msg = "Failed testGetOrgProjectList()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -748,13 +752,13 @@ function testGetUserProjectList() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetOrganization() {
+function testGetOrganization() returns @tainted error? {
     log:printInfo("githubClient -> getOrganization()");
     var response = githubClient->getOrganization(testOrganizationName);
     if(response is Organization){
         test:assertTrue(response.login==testOrganizationName, msg = "Failed testGetOrganization()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -762,14 +766,14 @@ function testGetOrganization() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetUserOrganizationList() {
+function testGetUserOrganizationList() returns @tainted error? {
     log:printInfo("githubClient -> getUserOrganizationList()");
     int perPageCount = 10;
     var response = githubClient->getUserOrganizationList(testUserName, perPageCount);
     if(response is OrganizationList){
-        test:assertTrue(response.nodes.length()>=0, msg = "Failed testGetOrgProjectList()");
+        test:assertTrue(response.organizations.length()>=0, msg = "Failed testGetOrgProjectList()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
 
@@ -777,13 +781,13 @@ function testGetUserOrganizationList() {
     groups: ["network-calls"],
     enable: true
 }
-function testGetOrganizationMembersList() {
+function testGetOrganizationMembersList() returns @tainted error? {
     log:printInfo("githubClient -> getOrganizationMemberList()");
     int perPageCount = 10;
     var response = githubClient->getOrganizationMemberList(testOrganizationName, perPageCount);
     if(response is UserList){
-        test:assertTrue(response.nodes.length()>=0, msg = "Failed testGetOrganizationMembersList()");
+        test:assertTrue(response.users.length()>=0, msg = "Failed testGetOrganizationMembersList()");
     }else {
-        test:assertFail(msg = response.message());
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
