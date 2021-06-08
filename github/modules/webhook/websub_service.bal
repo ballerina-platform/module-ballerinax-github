@@ -221,10 +221,13 @@ service class WebSubService {
 
     remote isolated function onEventNotification(websub:ContentDistributionMessage event)
                         returns websub:Acknowledgement|websub:SubscriptionDeletedError|error? {
-        string[] events = <string[]>event.headers["X-Github-Event"];                          
-        map<json> content = <map<json> >event.content; 
-        string eventAction = <string> content["action"];               
-        string incomingEventDescription = events[0]+" "+eventAction+ " event";  
+        string[] events = <string[]>event.headers["X-Github-Event"];
+        map<json> content = <map<json> >event.content;
+        string eventAction = "";
+        if (content["action"] is string) {
+            eventAction = <string> content["action"];
+        }
+        string incomingEventDescription = events[0]+" "+eventAction+ " event";
         log:printInfo(incomingEventDescription+ " recieved.");
 
         GitHubEvent|error eventPayload = event.content.cloneWithType(GitHubEvent);
