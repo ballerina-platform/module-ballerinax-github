@@ -237,7 +237,7 @@ public client class Client {
     # 
     # + repositoryOwnerName - Repository owner name
     # + repositoryName - Repository name
-    # + states - Array of issue states
+    # + states - Array of issue states Eg. [github:ISSUE_OPEN, github:ISSUE_CLOSED]
     # + perPageCount - Per page record count
     # + nextPageCursor - Next page token
     # 
@@ -516,7 +516,7 @@ public client class Client {
     # 
     # + repositoryOwnerName - Repository owner name
     # + repositoryName - Repository name
-    # + state - `Pull request state`
+    # + state - Pull request state Eg. github:PULL_REQUEST_OPEN, github:PULL_REQUEST_CLOSED
     # + perPageCount - Per page record count
     # + nextPageCursor - Next page token
     # 
@@ -648,7 +648,7 @@ public client class Client {
     # Get organization project list
     # 
     # + organizationName - Organization name
-    # + state - Project state
+    # + state - Project state Eg. github:PROJECT_OPEN, github:PROJECT_CLOSED
     # + perPageCount - Per page record count
     # + nextPageCursor - Next page token
     # 
@@ -716,7 +716,7 @@ public client class Client {
     # 
     # + repositoryOwner - Repository owner name
     # + repositoryName - Repository name
-    # + state - Project state
+    # + state - Project state Eg. github:PROJECT_OPEN, github:PROJECT_CLOSED
     # + perPageCount - Per page record count
     # + nextPageCursor - Next page token
     # 

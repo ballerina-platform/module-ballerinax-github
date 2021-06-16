@@ -221,14 +221,6 @@ service class WebSubService {
 
     remote isolated function onEventNotification(websub:ContentDistributionMessage event)
                         returns websub:Acknowledgement|websub:SubscriptionDeletedError|error? {
-        string[] events = <string[]>event.headers["X-Github-Event"];
-        map<json> content = <map<json> >event.content;
-        string eventAction = "";
-        if (content["action"] is string) {
-            eventAction = <string> content["action"];
-        }
-        string incomingEventDescription = events[0]+" "+eventAction+ " event";
-        log:printInfo(incomingEventDescription+ " recieved.");
 
         GitHubEvent|error eventPayload = event.content.cloneWithType(GitHubEvent);
         if((eventPayload is PingEvent) ) {
@@ -501,7 +493,7 @@ service class WebSubService {
                 }
             }
         }else {
-            log:printError("error:  "+incomingEventDescription+ " type does not support by the connector");
+            log:printError("error: event type does not support by the connector");
         }
 
         return {};

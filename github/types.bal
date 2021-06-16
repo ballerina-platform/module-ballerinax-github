@@ -227,7 +227,7 @@ public type Branch record {
 # + number - Identifies the issue number.
 # + publishedAt - Identifies when the comment was published at.
 # + resourcePath - The HTTP path for this issue
-# + state - Identifies the state of the issue.
+# + state - Identifies the state of the issue. Eg. github:ISSUE_OPEN, github:ISSUE_CLOSED
 # + title - Identifies the issue title.
 # + updatedAt - Identifies the date and time when the object was last updated.
 # + url - The HTTP URL for this issue
@@ -407,7 +407,7 @@ public type Ref record {
 # + publishedAt - Identifies when the comment was published at.
 # + resourcePath - The HTTP path for this pull request.
 # + revertUrl - The HTTP URL for reverting this pull request.
-# + state - Identifies the state of the pull request.
+# + state - Identifies the state of the pull request. Eg. github:PULL_REQUEST_OPEN, github:PULL_REQUEST_CLOSED
 # + title - Identifies the pull request title.
 # + updatedAt - Identifies the date and time when the object was last updated.
 # + url - The HTTP URL for this pull request.
@@ -479,7 +479,8 @@ public enum ProjectState {
 # + id - ID
 # + lastEditedAt - The moment the editor made the last edit
 # + url - The HTTP URL permalink for this PullRequestReview.
-# + state - Identifies the current state of the pull request review.
+# + state - Identifies the current state of the pull request review. 
+#           Eg. github:PR_REVIEW_PENDING, github:PR_REVIEW_COMMENTED, github:PR_REVIEW_APPROVED, github:PR_REVIEW_CHANGES_REQUESTED, github:PR_REVIEW_DISMISSED
 # + publishedAt - Identifies when the comment was published at.
 public type PullRequestReview record {
     string body?;
@@ -502,7 +503,7 @@ public type PullRequestReview record {
 # + creator - The actor who originally created the project.
 # + databaseId - Identifies the primary key from the database.
 # + number - The project's number.
-# + state - Whether the project is open or closed.
+# + state - Whether the project is open or closed. Eg. github:PROJECT_OPEN, github:PROJECT_CLOSED
 # + updatedAt - Identifies the date and time when the object was last updated.
 # + url - The HTTP URL for this project
 public type Project record {
@@ -554,7 +555,7 @@ public type Organization record {
 # + nodes - Repository list
 # + pageInfo - Response pagination info 
 # + totalCount - Total repository count
-public type RepositoryListPayload record {
+type RepositoryListPayload record {
     Repository[] nodes;
     PageInfo pageInfo;
     int totalCount;
@@ -577,7 +578,7 @@ public type RepositoryList record {
 # + nodes - Collaborator list.
 # + pageInfo - Response pagination info.
 # + totalCount - Total collaborator count.
-public type CollaboratorListPayload record {
+type CollaboratorListPayload record {
 
     User[] nodes;
     PageInfo pageInfo;
@@ -623,7 +624,7 @@ public type BranchList record {
 # + nodes - Issue list
 # + pageInfo - Response pagination info.
 # + totalCount - Total issues count.
-public type IssueListPayload record {
+type IssueListPayload record {
     Issue[] nodes;
     PageInfo pageInfo;
     int totalCount;
@@ -645,7 +646,7 @@ public type IssueList record {
 # + nodes - Issues Comment list
 # + pageInfo - Response pagination info.
 # + totalCount - Total issues comment count.
-public type IssueCommentListPayload record {
+type IssueCommentListPayload record {
     IssueComment[] nodes;
     PageInfo pageInfo;
     int totalCount;
@@ -667,7 +668,7 @@ public type IssueCommentList record {
 # + nodes - Labale list.
 # + pageInfo - Response pagination info.
 # + totalCount - Total label count
-public type LabelListPayload record {
+type LabelListPayload record {
     Label[] nodes;
     PageInfo pageInfo;
     int totalCount;
@@ -689,7 +690,7 @@ public type LabelList record {
 # + nodes - Milestone list
 # + pageInfo - Response pagination info.
 # + totalCount - Total milestone count
-public type MilestoneListPayload record {
+type MilestoneListPayload record {
     Milestone[] nodes;
     PageInfo pageInfo;
     int totalCount;
@@ -711,7 +712,7 @@ public type MilestoneList record {
 # + nodes - Pull Request list
 # + pageInfo - Response pagination info.
 # + totalCount - Total pull request count
-public type PullRequestListPayload record {
+type PullRequestListPayload record {
     PullRequest[] nodes;
     PageInfo pageInfo;
     int totalCount;
@@ -733,7 +734,7 @@ public type PullRequestList record {
 # + nodes - Pull Request Review list
 # + pageInfo - Response pagination info.
 # + totalCount - Total pull request review count
-public type PullRequestReviewListPayload record {
+type PullRequestReviewListPayload record {
     PullRequestReview[] nodes;
     PageInfo pageInfo;
     int totalCount;
@@ -755,7 +756,7 @@ public type PullRequestReviewList record {
 # + nodes - Project list
 # + pageInfo - Response pagination info.
 # + totalCount - Total projects count.
-public type ProjectListPayload record {
+type ProjectListPayload record {
     Project[] nodes;
     PageInfo pageInfo;
     int totalCount;
@@ -777,7 +778,7 @@ public type ProjectList record {
 # + nodes - Organization list.
 # + pageInfo - Response pagination info.
 # + totalCount - Total organization count.
-public type OrganizationListPayload record {
+type OrganizationListPayload record {
     Organization[] nodes;
     PageInfo pageInfo;
     int totalCount;
@@ -799,7 +800,7 @@ public type OrganizationList record {
 # + nodes - User list.
 # + pageInfo - Response pagination info.
 # + totalCount - Total user count
-public type UserListPayload record {
+type UserListPayload record {
     User[] nodes;
     PageInfo pageInfo;
     int totalCount;
@@ -897,7 +898,7 @@ public type CreateIssueInput record {
 # + projectIds - An array of Node IDs for projects associated with this issue.
 # + issueTemplate - The name of an issue template in the repository, assigns labels and assignees from the template to the issue
 # + clientMutationId - A unique identifier for the client performing the mutation.
-public type CreateIssueInputPayload record {
+type CreateIssueInputPayload record {
     string repositoryId;
     string title;
     string body?;
@@ -917,7 +918,7 @@ public type CreateIssueInputPayload record {
 # + assigneeNames - An array of GitHub usernames of users for this issue.
 # + milestoneId - The Node ID of the milestone for this issue.
 # + labelNames - An array of label names of labels for this issue.
-# + state - The desired issue state.
+# + state - The desired issue state. Eg. github:ISSUE_OPEN, github:ISSUE_CLOSED
 # + projectIds - An array of Node IDs for projects associated with this issue.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type UpdateIssueInput record {
@@ -949,10 +950,10 @@ public type UpdateIssueInput record {
 # + assigneeIds - An array of Node IDs of users for this issue.
 # + milestoneId - The Node ID of the milestone for this issue.
 # + labelIds - An array of Node IDs of labels for this issue.
-# + state - The desired issue state.
+# + state - The desired issue state. Eg. github:ISSUE_OPEN, github:ISSUE_CLOSED
 # + projectIds - An array of Node IDs for projects associated with this issue.
 # + clientMutationId - A unique identifier for the client performing the mutation.
-public type UpdateIssueInputPayload record {
+type UpdateIssueInputPayload record {
     string id?;
     string title?;
     string body?;
@@ -1176,7 +1177,7 @@ public type CreatePullRequestInput record {
 # + baseRefName - The name of the branch you want your changes pulled into. This should be an existing branch on the current repository.
 # + title - Title of the pull request
 # + body - The contents of the pull request.
-# + state - The target state of the pull request.
+# + state - The target state of the pull request. Eg. github:PULL_REQUEST_OPEN, github:PULL_REQUEST_CLOSED
 # + maintainerCanModify - Indicates whether maintainers can modify the pull request.
 # + assigneeNames - An array of assignee names of users for this pull request.
 # + milestoneId - The Node ID of the milestone for this pull request.
@@ -1214,14 +1215,14 @@ public type UpdatePullRequestInput record {
 # + baseRefName - The name of the branch you want your changes pulled into. This should be an existing branch on the current repository.
 # + title - Title of the pull request
 # + body - The contents of the pull request.
-# + state - The target state of the pull request.
+# + state - The target state of the pull request. Eg. github:PULL_REQUEST_OPEN, github:PULL_REQUEST_CLOSED
 # + maintainerCanModify -
 # + assigneeIds - An array of Node IDs of users for this pull request.
 # + milestoneId - The Node ID of the milestone for this pull request.
 # + labelIds - An array of Node IDs of labels for this pull request.
 # + projectIds - An array of Node IDs for projects associated with this pull request.
 # + clientMutationId - A unique identifier for the client performing the mutation.
-public type UpdatePullRequestInputPayload record {
+type UpdatePullRequestInputPayload record {
     string pullRequestId?;
     string baseRefName?;
     string title?;
@@ -1249,7 +1250,8 @@ public enum PullRequestState {
 # + pullRequestId - The Node ID of the pull request to modify.
 # + commitOID - The commit OID the review pertains to.
 # + body - The contents of the review body comment.
-# + event - The event to perform on the pull request review.
+# + event - The event to perform on the pull request review. 
+#           Eg. github:PULL_REQUEST_REVIEW_COMMENT, github:PULL_REQUEST_REVIEW_APPROVE, github:PULL_REQUEST_REVIEW_REQUEST_CHANGES, github:PULL_REQUEST_REVIEW_DISMISS
 # + comments - The review line comments.
 # + threads - The review line comment threads.
 # + clientMutationId - A unique identifier for the client performing the mutation. A unique identifier for the client performing the mutation.
@@ -1289,8 +1291,10 @@ public type DraftPullRequestReviewComment record {
 # + path - Path to the file being commented on.
 # + line - The line of the blob to which the thread refers. The end of the line range for multi-line comments.
 # + side - The side of the diff on which the line resides. For multi-line comments, this is the side for the end of the line range.
+#          Eg. github:DIFF_SIDE_RIGHT, github:DIFF_SIDE_LEFT 
 # + startLine - The first line of the range to which the comment refers.
 # + startSide - The side of the diff on which the start line resides.
+#               Eg. github:DIFF_SIDE_RIGHT, github:DIFF_SIDE_LEFT 
 # + body - Body of the comment to leave.
 public type DraftPullRequestReviewThread record {
     @display { label: "Path" }
@@ -1375,7 +1379,8 @@ public enum ProjectTemplate {
 # + body - Description of the project.
 # + repositoryNames - Array of repository names to be included in the project.
 # + clientMutationId - A unique identifier for the client performing the mutation.
-# + template - The name of the GitHub-provided template.
+# + template - The name of the GitHub-provided template. 
+#              Eg. github:PROJECT_TEMPLATE_AUTOMATED_KANBAN_V2, github:PROJECT_TEMPLATE_AUTOMATED_REVIEWS_KANBAN, github:PROJECT_TEMPLATE_BASIC_KANBAN, github:PROJECT_TEMPLATE_BUG_TRIAGE
 public type CreateRepositoryProjectInput record {
     @display { label: "Repository Owner Name" }
     string ownerName;
@@ -1399,6 +1404,7 @@ public type CreateRepositoryProjectInput record {
 # + repositoryIds - A list of repository IDs to create as linked repositories for the project
 # + clientMutationId - A unique identifier for the client performing the mutation.
 # + template - The name of the GitHub-provided template.
+#              Eg. github:PROJECT_TEMPLATE_AUTOMATED_KANBAN_V2, github:PROJECT_TEMPLATE_AUTOMATED_REVIEWS_KANBAN, github:PROJECT_TEMPLATE_BASIC_KANBAN, github:PROJECT_TEMPLATE_BUG_TRIAGE 
 public type CreateProjectInput record {
     string ownerId;
     string name;
@@ -1414,7 +1420,7 @@ public type CreateProjectInput record {
 # + body - The description of project.
 # + name - The name of project.
 # + public - Whether the project is public or not.
-# + state - Whether the project is open or closed.
+# + state - Whether the project is open or closed. Eg. github:PROJECT_OPEN, github:PROJECT_CLOSED
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type UpdateProjectInput record {
     @display { label: "Project Id" }
