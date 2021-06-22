@@ -208,7 +208,7 @@ public type Repository record {
     string? mirror_url;
     string deployments_url?;
     int open_issues_count;
-    string? license;
+    License? license;
     int forks;
     int open_issues;
     int watchers;
@@ -222,6 +222,21 @@ public type Repository record {
     boolean delete_branch_on_merge?;
     int stargazers?;
     string master_branch?;
+};
+
+# Represent repository licence
+#
+# + key - License key
+# + name - License name
+# + spdx_id - Short identifier specified by https://spdx.org/licenses
+# + url - URL to the license on https://choosealicense.com
+# + node_id - GItHub node ID
+public type License record {
+    string key;
+    string name;
+    string? spdx_id;
+    string? url;
+    string node_id;
 };
 
 # Represents the Page payload.
@@ -1389,4 +1404,56 @@ type CommonResponse record {|
 # Represent webhook acknowledgement
 public type Acknowledgement record {
     *CommonResponse;
+};
+
+type SupportedRemoteFunctionImpl record {
+    boolean isOnPingAvailable = false;
+    boolean isOnForkAvailable = false;
+    boolean isOnPushAvailable = false;
+    boolean isOnCreateAvailable = false;
+    boolean isOnReleasedAvailable = false;
+    boolean isOnReleasePublishedAvailable = false;
+    boolean isOnReleaseUnpublishedAvailable = false;
+    boolean isOnReleaseCreatedAvailable = false;
+    boolean isOnReleaseEditedAvailable = false;
+    boolean isOnReleaseDeletedAvailable = false;
+    boolean isOnPreReleasedAvailable = false;
+    boolean isOnWatchStartedAvailable = false;
+    boolean isOnIssueCommentCreatedAvailable = false;
+    boolean isOnIssueCommentEditedAvailable = false;
+    boolean isOnIssueCommentDeletedAvailable = false;
+    boolean isOnIssuesAssignedAvailable = false;
+    boolean isOnIssuesUnassignedAvailable = false;
+    boolean isOnIssuesLabeledAvailable = false;
+    boolean isOnIssuesUnlabeledAvailable = false;
+    boolean isOnIssuesOpenedAvailable = false;
+    boolean isOnIssuesEditedAvailable = false;
+    boolean isOnIssuesMilestonedAvailable = false;
+    boolean isOnIssuesDemilestonedAvailable = false;
+    boolean isOnIssuesClosedAvailable = false;
+    boolean isOnIssuesReopenedAvailable = false;
+    boolean isOnLabelCreatedAvailable = false;
+    boolean isOnLabelEditedAvailable = false;
+    boolean isOnLabelDeletedAvailable = false;
+    boolean isOnMilestoneCreatedAvailable = false;
+    boolean isOnMilestoneClosedAvailable = false;
+    boolean isOnMilestoneOpenedAvailable = false;
+    boolean isOnMilestoneEditedAvailable = false;
+    boolean isOnMilestoneDeletedAvailable = false;
+    boolean isOnPullRequestAssignedAvailable = false;
+    boolean isOnPullRequestUnassignedAvailable = false;
+    boolean isOnPullRequestReviewRequestedAvailable = false;
+    boolean isOnPullRequestReviewRequestRemovedAvailable = false;
+    boolean isOnPullRequestLabeledAvailable = false;
+    boolean isOnPullRequestUnlabeledAvailable = false;
+    boolean isOnPullRequestOpenedAvailable = false;
+    boolean isOnPullRequestEditedAvailable = false;
+    boolean isOnPullRequestClosedAvailable = false;
+    boolean isOnPullRequestReopenedAvailable = false;
+    boolean isOnPullRequestReviewSubmittedAvailable = false;
+    boolean isOnPullRequestReviewEditedAvailable = false;
+    boolean isOnPullRequestReviewDismissedAvailable = false;
+    boolean isOnPullRequestReviewCommentCreatedAvailable = false;
+    boolean isOnPullRequestReviewCommentEditedAvailable = false;
+    boolean isOnPullRequestReviewCommentDeletedAvailable = false;
 };
