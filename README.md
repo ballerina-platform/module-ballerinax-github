@@ -1,6 +1,8 @@
 # Ballerina GitHub Connector
 
-[![Build Status](https://travis-ci.org/ballerina-platform/module-ballerinax-github.svg?branch=master)](https://travis-ci.org/ballerina-platform/module-ballerinax-github)
+[![Build](https://github.com/ballerina-platform/module-ballerinax-github/workflows/CI/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-github/actions?query=workflow%3ACI)
+[![GitHub Last Commit](https://img.shields.io/github/last-commit/ballerina-platform/module-ballerinax-github.svg)](https://github.com/ballerina-platform/module-ballerinax-github/commits/master)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Connects to GitHub using Ballerina.
 

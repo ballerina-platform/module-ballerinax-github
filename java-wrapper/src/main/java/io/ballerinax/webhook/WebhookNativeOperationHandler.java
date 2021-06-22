@@ -243,6 +243,10 @@ public class WebhookNativeOperationHandler {
         env.getRuntime().invokeMethodAsync(bWebhookService, remoteFunctionName, null, metadata, new Callback() {
             @Override
             public void notifySuccess(Object result) {
+                if(result instanceof BError){
+                    BError error = (BError) result;
+                    error.printStackTrace();
+                }
                 balFuture.complete(result);
             }
 
