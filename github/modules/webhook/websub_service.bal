@@ -3,57 +3,7 @@ import ballerina/log;
 
 service class WebSubService {
     *websub:SubscriberService;
-
-    private boolean isOnPingAvailable = false;
-    private boolean isOnForkAvailable = false;
-    private boolean isOnPushAvailable = false;
-    private boolean isOnCreateAvailable = false;
-    private boolean isOnReleasePublishedAvailable = false;
-    private boolean isOnReleaseUnpublishedAvailable = false;
-    private boolean isOnReleaseCreatedAvailable = false;
-    private boolean isOnReleaseEditedAvailable = false;
-    private boolean isOnReleaseDeletedAvailable = false;
-    private boolean isOnPreReleasedAvailable = false;
-    private boolean isOnReleasedAvailable = false;
-    private boolean isOnWatchStartedAvailable = false;
-    private boolean isOnIssueCommentCreatedAvailable = false;
-    private boolean isOnIssueCommentEditedAvailable = false;
-    private boolean isOnIssueCommentDeletedAvailable = false;
-    private boolean isOnIssuesAssignedAvailable = false;
-    private boolean isOnIssuesUnassignedAvailable = false;
-    private boolean isOnIssuesLabeledAvailable = false;
-    private boolean isOnIssuesUnlabeledAvailable = false;
-    private boolean isOnIssuesOpenedAvailable = false;
-    private boolean isOnIssuesEditedAvailable = false;
-    private boolean isOnIssuesMilestonedAvailable = false;
-    private boolean isOnIssuesDemilestonedAvailable = false;
-    private boolean isOnIssuesClosedAvailable = false;
-    private boolean isOnIssuesReopenedAvailable = false;
-    private boolean isOnLabelCreatedAvailable = false;
-    private boolean isOnLabelEditedAvailable = false;
-    private boolean isOnLabelDeletedAvailable = false;
-    private boolean isOnMilestoneCreatedAvailable = false;
-    private boolean isOnMilestoneClosedAvailable = false;
-    private boolean isOnMilestoneOpenedAvailable = false;
-    private boolean isOnMilestoneEditedAvailable = false;
-    private boolean isOnMilestoneDeletedAvailable = false;
-    private boolean isOnPullRequestAssignedAvailable = false;
-    private boolean isOnPullRequestUnassignedAvailable = false;
-    private boolean isOnPullRequestReviewRequestedAvailable = false;
-    private boolean isOnPullRequestReviewRequestRemovedAvailable = false;
-    private boolean isOnPullRequestLabeledAvailable = false;
-    private boolean isOnPullRequestUnlabeledAvailable = false;
-    private boolean isOnPullRequestOpenedAvailable = false;
-    private boolean isOnPullRequestEditedAvailable = false;
-    private boolean isOnPullRequestClosedAvailable = false;
-    private boolean isOnPullRequestReopenedAvailable = false;
-    private boolean isOnPullRequestReviewSubmittedAvailable = false;
-    private boolean isOnPullRequestReviewEditedAvailable = false;
-    private boolean isOnPullRequestReviewDismissedAvailable = false;
-    private boolean isOnPullRequestReviewCommentCreatedAvailable = false;
-    private boolean isOnPullRequestReviewCommentEditedAvailable = false;
-    private boolean isOnPullRequestReviewCommentDeletedAvailable = false;
-
+    final SupportedRemoteFunctionImpl supportedRemoteFunctionImpl = {};
     private SimpleWebhookService webhookService;
 
     public string? deleteWebhookEndpoint = ();
@@ -65,151 +15,151 @@ service class WebSubService {
         foreach var methodName in methodNames {
             match methodName {
                 "onPing" => {
-                    self.isOnPingAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPingAvailable = true;
                 }
                 "onFork" => {
-                    self.isOnForkAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnForkAvailable = true;
                 }
                 "onPush" => {
-                    self.isOnPushAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPushAvailable = true;
                 }
                 "onCreate" => {
-                    self.isOnCreateAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnCreateAvailable = true;
                 }
                 "onReleased" => {
-                    self.isOnReleasedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnReleasedAvailable = true;
                 }
                 "onReleasePublished" => {
-                    self.isOnReleasePublishedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnReleasePublishedAvailable = true;
                 }
                 "onReleaseUnpublished" => {
-                    self.isOnReleaseUnpublishedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnReleaseUnpublishedAvailable = true;
                 }
                 "onReleaseCreated" => {
-                    self.isOnReleaseCreatedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnReleaseCreatedAvailable = true;
                 }
                 "onReleaseEdited" => {
-                    self.isOnReleaseEditedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnReleaseEditedAvailable = true;
                 }
                 "onReleaseDeleted" => {
-                    self.isOnReleaseDeletedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnReleaseDeletedAvailable = true;
                 }
                 "onPreReleased" => {
-                    self.isOnPreReleasedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPreReleasedAvailable = true;
                 }
                  "onWatch" => {
-                    self.isOnWatchStartedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnWatchStartedAvailable = true;
                 }
                  "onIssueCommentCreated" => {
-                    self.isOnIssueCommentCreatedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnIssueCommentCreatedAvailable = true;
                 }
                  "onIssueCommentEdited" => {
-                    self.isOnIssueCommentEditedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnIssueCommentEditedAvailable = true;
                 }
                  "onIssueCommentDeleted" => {
-                    self.isOnIssueCommentDeletedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnIssueCommentDeletedAvailable = true;
                 }
                  "onIssuesAssigned" => {
-                    self.isOnIssuesAssignedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnIssuesAssignedAvailable = true;
                 }
                  "onIssuesUnassigned" => {
-                    self.isOnIssuesUnassignedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnIssuesUnassignedAvailable = true;
                 }
                  "onIssuesLabeled" => {
-                    self.isOnIssuesLabeledAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnIssuesLabeledAvailable = true;
                 }
                  "onIssuesUnlabeled" => {
-                    self.isOnIssuesUnlabeledAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnIssuesUnlabeledAvailable = true;
                 }
                  "onIssuesOpened" => {
-                    self.isOnIssuesOpenedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnIssuesOpenedAvailable = true;
                 }
                  "onIssuesEdited" => {
-                    self.isOnIssuesEditedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnIssuesEditedAvailable = true;
                 }
                  "onIssuesMilestoned" => {
-                    self.isOnIssuesMilestonedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnIssuesMilestonedAvailable = true;
                 }
                  "onIssuesDemilestoned" => {
-                    self.isOnIssuesDemilestonedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnIssuesDemilestonedAvailable = true;
                 }
                  "onIssuesClosed" => {
-                    self.isOnIssuesClosedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnIssuesClosedAvailable = true;
                 }
                  "onIssuesReopened" => {
-                    self.isOnIssuesReopenedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnIssuesReopenedAvailable = true;
                 }
                  "onLabelCreated" => {
-                    self.isOnLabelCreatedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnLabelCreatedAvailable = true;
                 }
                  "onLabelEdited" => {
-                    self.isOnLabelEditedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnLabelEditedAvailable = true;
                 }
                  "onLabelDeleted" => {
-                    self.isOnLabelDeletedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnLabelDeletedAvailable = true;
                 }
                  "onMilestoneCreated" => {
-                    self.isOnMilestoneCreatedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnMilestoneCreatedAvailable = true;
                 }
                  "onMilestoneClosed" => {
-                    self.isOnMilestoneClosedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnMilestoneClosedAvailable = true;
                 }
                  "onMilestoneOpened" => {
-                    self.isOnMilestoneOpenedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnMilestoneOpenedAvailable = true;
                 }
                  "onMilestoneEdited" => {
-                    self.isOnMilestoneEditedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnMilestoneEditedAvailable = true;
                 }
                  "onMilestoneDeleted" => {
-                    self.isOnMilestoneDeletedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnMilestoneDeletedAvailable = true;
                 }
                  "onPullRequestAssigned" => {
-                    self.isOnPullRequestAssignedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestAssignedAvailable = true;
                 }
                  "onPullRequestUnassigned" => {
-                    self.isOnPullRequestUnassignedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestUnassignedAvailable = true;
                 }
                  "onPullRequestReviewRequested" => {
-                    self.isOnPullRequestReviewRequestedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestReviewRequestedAvailable = true;
                 }
                  "onPullRequestReviewRequestRemoved" => {
-                    self.isOnPullRequestReviewRequestRemovedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestReviewRequestRemovedAvailable = true;
                 }
                  "onPullRequestLabeled" => {
-                    self.isOnPullRequestLabeledAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestLabeledAvailable = true;
                 }
                  "onPullRequestUnlabeled" => {
-                    self.isOnPullRequestUnlabeledAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestUnlabeledAvailable = true;
                 }
                  "onPullRequestOpened" => {
-                    self.isOnPullRequestOpenedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestOpenedAvailable = true;
                 }
                  "onPullRequestEdited" => {
-                    self.isOnPullRequestEditedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestEditedAvailable = true;
                 }
                  "onPullRequestClosed" => {
-                    self.isOnPullRequestClosedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestClosedAvailable = true;
                 }
                  "onPullRequestReopened" => {
-                    self.isOnPullRequestReopenedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestReopenedAvailable = true;
                 }
                  "onPullRequestReviewSubmitted" => {
-                    self.isOnPullRequestReviewSubmittedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestReviewSubmittedAvailable = true;
                 }
                  "onPullRequestReviewEdited" => {
-                    self.isOnPullRequestReviewEditedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestReviewEditedAvailable = true;
                 }
                  "onPullRequestReviewDismissed" => {
-                    self.isOnPullRequestReviewDismissedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestReviewDismissedAvailable = true;
                 }
                  "onPullRequestReviewCommentCreated" => {
-                    self.isOnPullRequestReviewCommentCreatedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestReviewCommentCreatedAvailable = true;
                 }
                  "onPullRequestReviewCommentEdited" => {
-                    self.isOnPullRequestReviewCommentEditedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestReviewCommentEditedAvailable = true;
                 }
                  "onPullRequestReviewCommentDeleted" => {
-                    self.isOnPullRequestReviewCommentDeletedAvailable = true;
+                    self.supportedRemoteFunctionImpl.isOnPullRequestReviewCommentDeletedAvailable = true;
                 }
 
                 _ => {
@@ -220,7 +170,7 @@ service class WebSubService {
     }
 
     remote isolated function onEventNotification(websub:ContentDistributionMessage event)
-                        returns websub:Acknowledgement|websub:SubscriptionDeletedError|error? {
+                        returns error? {
 
         GitHubEvent|error eventPayload = event.content.cloneWithType(GitHubEvent);
         if((eventPayload is PingEvent) ) {
@@ -229,274 +179,357 @@ service class WebSubService {
             string fullName = eventPayload.repository.full_name;
             string deleteWebhookEndpoint = "/repos/"+fullName+"/hooks/"+hookId.toString();
             self.deleteWebhookEndpoint = deleteWebhookEndpoint;
-            if (self.isOnPingAvailable) {
+            if (self.supportedRemoteFunctionImpl.isOnPingAvailable) {
                 var response = callOnPingMethod(self.webhookService, eventPayload);
+                if (response is error) {
+                    handleError(response);
+                }
             }
         }else if ((eventPayload is ForkEvent)) {
-            if (self.isOnForkAvailable) {
+            if (self.supportedRemoteFunctionImpl.isOnForkAvailable) {
                 var response = callOnForkMethod(self.webhookService, eventPayload);
+                if (response is error) {
+                    handleError(response);
+                }
             }
         }else if ((eventPayload is PushEvent)) {
-            if (self.isOnPushAvailable) {
+            if (self.supportedRemoteFunctionImpl.isOnPushAvailable) {
                 var response = callOnPushMethod(self.webhookService, eventPayload);
+                if (response is error) {
+                    handleError(response);
+                }
             }
         }else if ((eventPayload is CreateEvent)) {
-            if (self.isOnCreateAvailable) {
+            if (self.supportedRemoteFunctionImpl.isOnCreateAvailable) {
                 var response = callOnCreateMethod(self.webhookService, eventPayload);
-            }
-        }else if ((eventPayload is ReleaseEvent)) {
-            match (eventPayload.action) {
-                RELEASE_PUBLISHED => {
-                    if (self.isOnReleasePublishedAvailable) {
-                        var response = callOnReleasePublishedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                RELEASE_UNPUBLISHED => {
-                    if (self.isOnReleaseUnpublishedAvailable) {
-                        var response = callOnReleaseUnpublishedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                RELEASE_CREATED => {
-                    if (self.isOnReleaseCreatedAvailable) {
-                        var response = callOnReleaseCreatedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                RELEASE_EDITED => {
-                    if (self.isOnReleaseEditedAvailable) {
-                        var response = callOnReleaseEditedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                RELEASE_DELETED => {
-                    if (self.isOnReleaseDeletedAvailable) {
-                        var response = callOnReleaseDeletedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                RELEASE_PRE_RELEASED => {
-                    if (self.isOnPreReleasedAvailable) {
-                        var response = callOnPreReleasedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                RELEASE_RELEASED => {
-                    if (self.isOnReleasedAvailable) {
-                        var response = callOnReleasedMethod(self.webhookService, eventPayload);
-                    }
+                if (response is error) {
+                    handleError(response);
                 }
             }
+        }else if (eventPayload is ReleaseEvent) {
+            check handleReleaseEvent(self.webhookService, self.supportedRemoteFunctionImpl, eventPayload);
         }else if ((eventPayload is WatchEvent)) {
-            if (self.isOnWatchStartedAvailable) {
+            if (self.supportedRemoteFunctionImpl.isOnWatchStartedAvailable) {
                 var response = callOnWatchStartedMethod(self.webhookService, eventPayload);
+                if (response is error) {
+                    handleError(response);
+                }
             }
         }else if (eventPayload is IssueCommentEvent) {
-            match (eventPayload.action) {
-                ISSUE_COMMENT_CREATED => {
-                    if (self.isOnIssueCommentCreatedAvailable) {
-                        var response = callOnIssueCommentCreatedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                ISSUE_COMMENT_EDITED => {
-                    if (self.isOnIssueCommentEditedAvailable) {
-                        var response = callOnIssueCommentEditedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                ISSUE_COMMENT_DELETED => {
-                    if (self.isOnIssueCommentDeletedAvailable) {
-                        var response = callOnIssueCommentDeletedMethod(self.webhookService, eventPayload);
-                    }
-                }
-            }
+            check handleIssueCommentEvent(self.webhookService, self.supportedRemoteFunctionImpl, eventPayload);
         }else if (eventPayload is IssuesEvent) {
-            match (eventPayload.action) {
-                ISSUE_ASSIGNED => {
-                    if (self.isOnIssuesAssignedAvailable) {
-                        var response = callOnIssuesAssignedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                ISSUE_UNASSIGNED => {
-                    if (self.isOnIssuesUnassignedAvailable) {
-                        var response = callOnIssuesUnassignedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                ISSUE_LABELED => {
-                    if (self.isOnIssuesLabeledAvailable) {
-                        var response = callOnIssuesLabeledMethod(self.webhookService, eventPayload);
-                    }
-                }
-                ISSUE_UNLABELED => {
-                    if (self.isOnIssuesUnlabeledAvailable) {
-                        var response = callOnIssuesUnlabeledMethod(self.webhookService, eventPayload);
-                    }
-                }
-                ISSUE_OPENED => {
-                    if (self.isOnIssuesOpenedAvailable) {
-                        var response = callOnIssuesOpenedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                ISSUE_EDITED => {
-                    if (self.isOnIssuesEditedAvailable) {
-                        var response = callOnIssuesEditedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                ISSUE_MILESTONED => {
-                    if (self.isOnIssuesMilestonedAvailable) {
-                        var response = callOnIssuesMilestonedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                ISSUE_DEMILESTONED => {
-                    if (self.isOnIssuesDemilestonedAvailable) {
-                        var response = callOnIssuesDemilestonedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                ISSUE_CLOSED => {
-                    if (self.isOnIssuesClosedAvailable) {
-                        var response = callOnIssuesClosedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                ISSUE_REOPENED => {
-                    if (self.isOnIssuesReopenedAvailable) {
-                        var response = callOnIssuesReopenedMethod(self.webhookService, eventPayload);
-                    }
-                }
-            }
+            check handleIssueEvent(self.webhookService, self.supportedRemoteFunctionImpl, eventPayload);
         }else if (eventPayload is LabelEvent) {
-            match (eventPayload.action) {
-                LABEL_CREATED => {
-                    if (self.isOnLabelCreatedAvailable) {
-                        var response = callOnLabelCreatedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                LABEL_EDITED => {
-                    if (self.isOnLabelEditedAvailable) {
-                        var response = callOnLabelEditedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                LABEL_DELETED => {
-                    if (self.isOnLabelDeletedAvailable) {
-                        var response = callOnLabelDeletedMethod(self.webhookService, eventPayload);
-                    }
-                }
-            }
+            check handleLabelEvent(self.webhookService, self.supportedRemoteFunctionImpl, eventPayload);
         }else if (eventPayload is MilestoneEvent) {
-            match (eventPayload.action) {
-                MILESTONE_CREATED => {
-                    if (self.isOnMilestoneCreatedAvailable) {
-                        var response = callOnMilestoneCreatedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                MILESTONE_CLOSED => {
-                    if (self.isOnMilestoneClosedAvailable) {
-                        var response = callOnMilestoneClosedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                MILESTONE_OPENED => {
-                    if (self.isOnMilestoneOpenedAvailable) {
-                        var response = callOnMilestoneOpenedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                MILESTONE_EDITED => {
-                    if (self.isOnMilestoneEditedAvailable) {
-                        var response = callOnMilestoneEditedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                MILESTONE_DELETED => {
-                    if (self.isOnMilestoneDeletedAvailable) {
-                        var response = callOnMilestoneDeletedMethod(self.webhookService, eventPayload);
-                    }
-                }
-            }
+            check handleMilestoneEvent(self.webhookService, self.supportedRemoteFunctionImpl, eventPayload);
         }else if (eventPayload is PullRequestEvent) {
-            match (eventPayload.action) {
-                PULL_REQUEST_ASSIGNED => {
-                    if (self.isOnPullRequestAssignedAvailable) {
-                        var response = callOnPullRequestAssignedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                PULL_REQUEST_UNASSIGNED => {
-                    if (self.isOnPullRequestUnassignedAvailable) {
-                        var response = callOnPullRequestUnassignedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                PULL_REQUEST_REVIEW_REQUESTED => {
-                    if (self.isOnPullRequestReviewRequestedAvailable) {
-                        var response = callOnPullRequestReviewRequestedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                PULL_REQUEST_REVIEW_REQUEST_REMOVED => {
-                    if (self.isOnPullRequestReviewRequestRemovedAvailable) {
-                        var response = callOnPullRequestReviewRequestRemovedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                PULL_REQUEST_LABELED => {
-                    if (self.isOnPullRequestLabeledAvailable) {
-                        var response = callOnPullRequestLabeledMethod(self.webhookService, eventPayload);
-                    }
-                }
-                PULL_REQUEST_UNLABELED => {
-                    if (self.isOnPullRequestUnlabeledAvailable) {
-                        var response = callOnPullRequestUnlabeledMethod(self.webhookService, eventPayload);
-                    }
-                }
-                PULL_REQUEST_OPENED => {
-                    if (self.isOnPullRequestOpenedAvailable) {
-                        var response = callOnPullRequestOpenedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                PULL_REQUEST_EDITED => {
-                    if (self.isOnPullRequestEditedAvailable) {
-                        var response = callOnPullRequestEditedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                PULL_REQUEST_CLOSED => {
-                    if (self.isOnPullRequestClosedAvailable) {
-                        var response = callOnPullRequestClosedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                PULL_REQUEST_REOPENED => {
-                    if (self.isOnPullRequestReopenedAvailable) {
-                        var response = callOnPullRequestReopenedMethod(self.webhookService, eventPayload);
-                    }
-                }
-            }
+            check handlePullRequestEvent(self.webhookService, self.supportedRemoteFunctionImpl, eventPayload);
         }else if (eventPayload is PullRequestReviewEvent) {
-            match (eventPayload.action) {
-                PULL_REQUEST_REVIEW_SUBMITTED => {
-                    if (self.isOnPullRequestReviewSubmittedAvailable) {
-                        var response = callOnPullRequestReviewSubmittedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                PULL_REQUEST_REVIEW_EDITED => {
-                    if (self.isOnPullRequestReviewEditedAvailable) {
-                        var response = callOnPullRequestReviewEditedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                PULL_REQUEST_REVIEW_DISMISSED => {
-                    if (self.isOnPullRequestReviewDismissedAvailable) {
-                        var response = callOnPullRequestReviewDismissedMethod(self.webhookService, eventPayload);
-                    }
-                }
-            }
+            check handlePullRequestReviewEvent(self.webhookService, self.supportedRemoteFunctionImpl, eventPayload);
         }else if (eventPayload is PullRequestReviewCommentEvent) {
-            match (eventPayload.action) {
-                PULL_REQUEST_REVIEW_COMMENT_CREATED => {
-                    if (self.isOnPullRequestReviewCommentCreatedAvailable) {
-                        var response = callOnPullRequestReviewCommentCreatedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                PULL_REQUEST_REVIEW_COMMENT_EDITED => {
-                    if (self.isOnPullRequestReviewCommentEditedAvailable) {
-                        var response = callOnPullRequestReviewCommentEditedMethod(self.webhookService, eventPayload);
-                    }
-                }
-                PULL_REQUEST_REVIEW_COMMENT_DELETED => {
-                    if (self.isOnPullRequestReviewCommentDeletedAvailable) {
-                        var response = callOnPullRequestReviewCommentDeletedMethod(self.webhookService, eventPayload);
-                    }
-                }
-            }
+            check handlePullRequestReviewCommentEvent(self.webhookService, self.supportedRemoteFunctionImpl, eventPayload);
         }else {
-            log:printError("error: event type does not support by the connector");
+            log:printDebug("Incoming event payload: "+event.content.toBalString());
+            log:printDebug("Unsupported event received. Associated conversion error: "+eventPayload.message(), 'error=eventPayload);
         }
-
-        return {};
     }
 }
+
+isolated function handleReleaseEvent(SimpleWebhookService webhookService, SupportedRemoteFunctionImpl supportedRemoteFunctionImpl, ReleaseEvent eventPayload) returns error? {
+    error? response = ();
+    match (eventPayload.action) {
+        RELEASE_PUBLISHED => {
+            if (supportedRemoteFunctionImpl.isOnReleasePublishedAvailable) {
+                response = callOnReleasePublishedMethod(webhookService, eventPayload);
+            }
+        }
+        RELEASE_UNPUBLISHED => {
+            if (supportedRemoteFunctionImpl.isOnReleaseUnpublishedAvailable) {
+                response = callOnReleaseUnpublishedMethod(webhookService, eventPayload);
+            }
+        }
+        RELEASE_CREATED => {
+            if (supportedRemoteFunctionImpl.isOnReleaseCreatedAvailable) {
+                response = callOnReleaseCreatedMethod(webhookService, eventPayload);
+            }
+        }
+        RELEASE_EDITED => {
+            if (supportedRemoteFunctionImpl.isOnReleaseEditedAvailable) {
+                response = callOnReleaseEditedMethod(webhookService, eventPayload);
+            }
+        }
+        RELEASE_DELETED => {
+            if (supportedRemoteFunctionImpl.isOnReleaseDeletedAvailable) {
+                response = callOnReleaseDeletedMethod(webhookService, eventPayload);
+            }
+        }
+        RELEASE_PRE_RELEASED => {
+            if (supportedRemoteFunctionImpl.isOnPreReleasedAvailable) {
+                response = callOnPreReleasedMethod(webhookService, eventPayload);
+            }
+        }
+        RELEASE_RELEASED => {
+            if (supportedRemoteFunctionImpl.isOnReleasedAvailable) {
+                response = callOnReleasedMethod(webhookService, eventPayload);
+            }
+        }
+    }
+    if (response is error) {
+        handleError(response);
+    }
+}
+
+isolated function handleIssueCommentEvent(SimpleWebhookService webhookService, SupportedRemoteFunctionImpl supportedRemoteFunctionImpl, IssueCommentEvent eventPayload) returns error? {
+        error? response = ();
+        match (eventPayload.action) {
+            ISSUE_COMMENT_CREATED => {
+                if (supportedRemoteFunctionImpl.isOnIssueCommentCreatedAvailable) {
+                    response = callOnIssueCommentCreatedMethod(webhookService, eventPayload);
+                }
+            }
+            ISSUE_COMMENT_EDITED => {
+                if (supportedRemoteFunctionImpl.isOnIssueCommentEditedAvailable) {
+                    response = callOnIssueCommentEditedMethod(webhookService, eventPayload);
+                }
+            }
+            ISSUE_COMMENT_DELETED => {
+                if (supportedRemoteFunctionImpl.isOnIssueCommentDeletedAvailable) {
+                    response = callOnIssueCommentDeletedMethod(webhookService, eventPayload);
+                }
+            }
+        }
+        if (response is error) {
+            handleError(response);
+        }
+    }
+
+isolated function handleIssueEvent(SimpleWebhookService webhookService, SupportedRemoteFunctionImpl supportedRemoteFunctionImpl, IssuesEvent eventPayload) returns error? {
+    error? response = ();
+    match (eventPayload.action) {
+        ISSUE_ASSIGNED => {
+            if (supportedRemoteFunctionImpl.isOnIssuesAssignedAvailable) {
+                response = callOnIssuesAssignedMethod(webhookService, eventPayload);
+            }
+        }
+        ISSUE_UNASSIGNED => {
+            if (supportedRemoteFunctionImpl.isOnIssuesUnassignedAvailable) {
+                response = callOnIssuesUnassignedMethod(webhookService, eventPayload);
+            }
+        }
+        ISSUE_LABELED => {
+            if (supportedRemoteFunctionImpl.isOnIssuesLabeledAvailable) {
+                response = callOnIssuesLabeledMethod(webhookService, eventPayload);
+            }
+        }
+        ISSUE_UNLABELED => {
+            if (supportedRemoteFunctionImpl.isOnIssuesUnlabeledAvailable) {
+                response = callOnIssuesUnlabeledMethod(webhookService, eventPayload);
+            }
+        }
+        ISSUE_OPENED => {
+            if (supportedRemoteFunctionImpl.isOnIssuesOpenedAvailable) {
+                response = callOnIssuesOpenedMethod(webhookService, eventPayload);
+            }
+        }
+        ISSUE_EDITED => {
+            if (supportedRemoteFunctionImpl.isOnIssuesEditedAvailable) {
+                response = callOnIssuesEditedMethod(webhookService, eventPayload);
+            }
+        }
+        ISSUE_MILESTONED => {
+            if (supportedRemoteFunctionImpl.isOnIssuesMilestonedAvailable) {
+                response = callOnIssuesMilestonedMethod(webhookService, eventPayload);
+            }
+        }
+        ISSUE_DEMILESTONED => {
+            if (supportedRemoteFunctionImpl.isOnIssuesDemilestonedAvailable) {
+                response = callOnIssuesDemilestonedMethod(webhookService, eventPayload);
+            }
+        }
+        ISSUE_CLOSED => {
+            if (supportedRemoteFunctionImpl.isOnIssuesClosedAvailable) {
+                response = callOnIssuesClosedMethod(webhookService, eventPayload);
+            }
+        }
+        ISSUE_REOPENED => {
+            if (supportedRemoteFunctionImpl.isOnIssuesReopenedAvailable) {
+                response = callOnIssuesReopenedMethod(webhookService, eventPayload);
+            }
+        }
+    }
+    if (response is error) {
+        handleError(response);
+    }
+}
+
+isolated function handleLabelEvent(SimpleWebhookService webhookService, SupportedRemoteFunctionImpl supportedRemoteFunctionImpl, LabelEvent eventPayload) returns error? {
+    error? response = ();
+    match (eventPayload.action) {
+        LABEL_CREATED => {
+            if (supportedRemoteFunctionImpl.isOnLabelCreatedAvailable) {
+                response = callOnLabelCreatedMethod(webhookService, eventPayload);
+            }
+        }
+        LABEL_EDITED => {
+            if (supportedRemoteFunctionImpl.isOnLabelEditedAvailable) {
+                response = callOnLabelEditedMethod(webhookService, eventPayload);
+            }
+        }
+        LABEL_DELETED => {
+            if (supportedRemoteFunctionImpl.isOnLabelDeletedAvailable) {
+                response = callOnLabelDeletedMethod(webhookService, eventPayload);
+            }
+        }
+    }
+    if (response is error) {
+        handleError(response);
+    }
+}
+
+isolated function handleMilestoneEvent(SimpleWebhookService webhookService, SupportedRemoteFunctionImpl supportedRemoteFunctionImpl, MilestoneEvent eventPayload) returns error? {
+    error? response = ();
+    match (eventPayload.action) {
+        MILESTONE_CREATED => {
+            if (supportedRemoteFunctionImpl.isOnMilestoneCreatedAvailable) {
+                response = callOnMilestoneCreatedMethod(webhookService, eventPayload);
+            }
+        }
+        MILESTONE_CLOSED => {
+            if (supportedRemoteFunctionImpl.isOnMilestoneClosedAvailable) {
+                response = callOnMilestoneClosedMethod(webhookService, eventPayload);
+            }
+        }
+        MILESTONE_OPENED => {
+            if (supportedRemoteFunctionImpl.isOnMilestoneOpenedAvailable) {
+                response = callOnMilestoneOpenedMethod(webhookService, eventPayload);
+            }
+        }
+        MILESTONE_EDITED => {
+            if (supportedRemoteFunctionImpl.isOnMilestoneEditedAvailable) {
+                response = callOnMilestoneEditedMethod(webhookService, eventPayload);
+            }
+        }
+        MILESTONE_DELETED => {
+            if (supportedRemoteFunctionImpl.isOnMilestoneDeletedAvailable) {
+                response = callOnMilestoneDeletedMethod(webhookService, eventPayload);
+            }
+        }
+    }
+    if (response is error) {
+        handleError(response);
+    }
+}
+
+isolated function handlePullRequestEvent(SimpleWebhookService webhookService, SupportedRemoteFunctionImpl supportedRemoteFunctionImpl, PullRequestEvent eventPayload) returns error? {
+    error? response = ();
+    match (eventPayload.action) {
+        PULL_REQUEST_ASSIGNED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestAssignedAvailable) {
+                response = callOnPullRequestAssignedMethod(webhookService, eventPayload);
+            }
+        }
+        PULL_REQUEST_UNASSIGNED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestUnassignedAvailable) {
+                response = callOnPullRequestUnassignedMethod(webhookService, eventPayload);
+            }
+        }
+        PULL_REQUEST_REVIEW_REQUESTED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestReviewRequestedAvailable) {
+                response = callOnPullRequestReviewRequestedMethod(webhookService, eventPayload);
+            }
+        }
+        PULL_REQUEST_REVIEW_REQUEST_REMOVED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestReviewRequestRemovedAvailable) {
+                response = callOnPullRequestReviewRequestRemovedMethod(webhookService, eventPayload);
+            }
+        }
+        PULL_REQUEST_LABELED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestLabeledAvailable) {
+                response = callOnPullRequestLabeledMethod(webhookService, eventPayload);
+            }
+        }
+        PULL_REQUEST_UNLABELED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestUnlabeledAvailable) {
+                response = callOnPullRequestUnlabeledMethod(webhookService, eventPayload);
+            }
+        }
+        PULL_REQUEST_OPENED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestOpenedAvailable) {
+                response = callOnPullRequestOpenedMethod(webhookService, eventPayload);
+            }
+        }
+        PULL_REQUEST_EDITED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestEditedAvailable) {
+                response = callOnPullRequestEditedMethod(webhookService, eventPayload);
+            }
+        }
+        PULL_REQUEST_CLOSED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestClosedAvailable) {
+                response = callOnPullRequestClosedMethod(webhookService, eventPayload);
+            }
+        }
+        PULL_REQUEST_REOPENED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestReopenedAvailable) {
+                response = callOnPullRequestReopenedMethod(webhookService, eventPayload);
+            }
+        }
+    }
+    if (response is error) {
+        handleError(response);
+    }
+}
+
+isolated function handlePullRequestReviewEvent(SimpleWebhookService webhookService, SupportedRemoteFunctionImpl supportedRemoteFunctionImpl, PullRequestReviewEvent eventPayload) returns error? {
+    error? response = ();
+    match (eventPayload.action) {
+        PULL_REQUEST_REVIEW_SUBMITTED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestReviewSubmittedAvailable) {
+                response = callOnPullRequestReviewSubmittedMethod(webhookService, eventPayload);
+            }
+        }
+        PULL_REQUEST_REVIEW_EDITED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestReviewEditedAvailable) {
+                response = callOnPullRequestReviewEditedMethod(webhookService, eventPayload);
+            }
+        }
+        PULL_REQUEST_REVIEW_DISMISSED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestReviewDismissedAvailable) {
+                response = callOnPullRequestReviewDismissedMethod(webhookService, eventPayload);
+            }
+        }
+    }
+    if (response is error) {
+        handleError(response);
+    }
+}
+
+isolated function handlePullRequestReviewCommentEvent(SimpleWebhookService webhookService, SupportedRemoteFunctionImpl supportedRemoteFunctionImpl, PullRequestReviewCommentEvent eventPayload) returns error? {
+    error? response = ();
+    match (eventPayload.action) {
+        PULL_REQUEST_REVIEW_COMMENT_CREATED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestReviewCommentCreatedAvailable) {
+                response = callOnPullRequestReviewCommentCreatedMethod(webhookService, eventPayload);
+            }
+        }
+        PULL_REQUEST_REVIEW_COMMENT_EDITED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestReviewCommentEditedAvailable) {
+                response = callOnPullRequestReviewCommentEditedMethod(webhookService, eventPayload);
+            }
+        }
+        PULL_REQUEST_REVIEW_COMMENT_DELETED => {
+            if (supportedRemoteFunctionImpl.isOnPullRequestReviewCommentDeletedAvailable) {
+                response = callOnPullRequestReviewCommentDeletedMethod(webhookService, eventPayload);
+            }
+        }
+    }
+    if (response is error) {
+        handleError(response);
+    }
+}
+
+isolated function handleError(error response) {
+    log:printDebug(response.message(), 'error=response);
+}
+
 
