@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:AddLabelsToLabelableInput": [
+    "ballerinax/github:0.99.15-SNAPSHOT:AddLabelsToLabelableInput": [
         {
             "labelableId": "MDU6SXNzdWU4OTE2OTExMzc=",
             "labelIds": [

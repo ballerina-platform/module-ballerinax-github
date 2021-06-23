@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:PullRequest": [
+    "ballerinax/github:0.99.15-SNAPSHOT:PullRequest": [
         {
             "additions": 1,
             "author": "ballerinax/github:0.99.14:Actor?",

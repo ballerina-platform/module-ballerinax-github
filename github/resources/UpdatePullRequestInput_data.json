@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:UpdatePullRequestInput": [
+    "ballerinax/github:0.99.15-SNAPSHOT:UpdatePullRequestInput": [
         {
             "pullRequestId": "1",
             "baseRefName": "main",
@@ -7,7 +7,7 @@
             "body": "This is some dummy content for PR body",
             "state": "OPEN",
             "maintainerCanModify": true,
-            "assigneeIds": [
+            "assigneeNames": [
                 "1",
                 "2"
             ],
@@ -25,7 +25,7 @@
             "body": "This is some dummy content for PR body",
             "state": "OPEN",
             "maintainerCanModify": true,
-            "assigneeIds": [
+            "assigneeNames": [
                 "1",
                 "2"
             ],
@@ -43,7 +43,7 @@
             "body": "This is some dummy content for PR body",
             "state": "OPEN",
             "maintainerCanModify": true,
-            "assigneeIds": [
+            "assigneeNames": [
                 "1",
                 "2"
             ],

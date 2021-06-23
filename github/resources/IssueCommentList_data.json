@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:IssueCommentList": [
+    "ballerinax/github:0.99.15-SNAPSHOT:IssueCommentList": [
         {
             "nodes": "ballerinax/github:0.99.14:IssueComment[]",
             "pageInfo": "ballerinax/github:0.99.14:PageInfo",

@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:DeletePullRequestReviewInput": [
+    "ballerinax/github:0.99.15-SNAPSHOT:DeletePullRequestReviewInput": [
         {
             "pullRequestReviewId": "1",
             "clientMutationId": "clientMutationId1"
