@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:IssueList": [
+    "ballerinax/github:0.99.15-SNAPSHOT:IssueList": [
         {
             "nodes": "ballerinax/github:0.99.14:Issue[]",
             "pageInfo": "ballerinax/github:0.99.14:PageInfo",

@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:UpdateRepositoryInput": [
+    "ballerinax/github:0.99.15-SNAPSHOT:UpdateRepositoryInput": [
         {
             "clientMutationId": "clientMutationId1",
             "description": "description1",

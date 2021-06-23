@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:CreateProjectInput": [
+    "ballerinax/github:0.99.15-SNAPSHOT:CreateProjectInput": [
         {
             "ownerId": "1",
             "name": "TestProject",

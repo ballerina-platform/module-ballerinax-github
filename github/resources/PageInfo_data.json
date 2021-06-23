@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:PageInfo": [
+    "ballerinax/github:0.99.15-SNAPSHOT:PageInfo": [
         {
             "hasNextPage": "boolean",
             "hasPreviousPage": "boolean",

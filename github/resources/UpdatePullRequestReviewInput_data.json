@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:UpdatePullRequestReviewInput": [
+    "ballerinax/github:0.99.15-SNAPSHOT:UpdatePullRequestReviewInput": [
         {
             "pullRequestReviewId": "1",
             "body": "Adding review for a PR",

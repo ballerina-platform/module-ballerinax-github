@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:AddPullRequestReviewInput": [
+    "ballerinax/github:0.99.15-SNAPSHOT:AddPullRequestReviewInput": [
         {
             "pullRequestId": "1",
             "commitOID": "521747298a3790fde1710f3aa2d03b55020575aa",

@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:UpdateProjectInput": [
+    "ballerinax/github:0.99.15-SNAPSHOT:UpdateProjectInput": [
         {
             "projectId": "1",
             "body": "This is some dummy content for body",

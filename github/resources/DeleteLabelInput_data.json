@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:DeleteLabelInput": [
+    "ballerinax/github:0.99.15-SNAPSHOT:DeleteLabelInput": [
         {
             "id": "1",
             "clientMutationId": "clientMutationId1"
