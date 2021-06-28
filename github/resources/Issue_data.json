@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:Issue": [
+    "ballerinax/github:0.99.15-SNAPSHOT:Issue": [
         {
             "author": "ballerinax/github:0.99.14:Actor?",
             "body": "Test Issue 3",

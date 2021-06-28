@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:MilestoneList": [
+    "ballerinax/github:0.99.15-SNAPSHOT:MilestoneList": [
         {
             "nodes": "ballerinax/github:0.99.14:Milestone[]",
             "pageInfo": "ballerinax/github:0.99.14:PageInfo",

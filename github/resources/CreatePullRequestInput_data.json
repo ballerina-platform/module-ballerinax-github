@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:CreatePullRequestInput": [
+    "ballerinax/github:0.99.15-SNAPSHOT:CreatePullRequestInput": [
         {
             "title": "Test PR created from Ballerina GitHub Data Generator",
             "baseRefName": "main",

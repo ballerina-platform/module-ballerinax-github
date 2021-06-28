@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:DraftPullRequestReviewComment": [
+    "ballerinax/github:0.99.15-SNAPSHOT:DraftPullRequestReviewComment": [
         {
             "path": "https://github.com/SkNuwanTissera/module-ballerinax-github/commit/2",
             "position": "int",

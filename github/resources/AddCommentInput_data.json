@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:AddCommentInput": [
+    "ballerinax/github:0.99.15-SNAPSHOT:AddCommentInput": [
         {
             "subjectId": "Comment Input1",
             "body": "This contains comment input",

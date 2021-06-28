@@ -1,5 +1,5 @@
 {
-    "ballerinax/github:0.99.14:UpdateIssueCommentInput": [
+    "ballerinax/github:0.99.15-SNAPSHOT:UpdateIssueCommentInput": [
         {
             "id": "1",
             "body": "This contains Updated comment input",
