@@ -12,7 +12,7 @@
                 "2"
             ],
             "milestoneId": "1",
-            "labelId": "1",
+            "labelNames": ["1"],
             "projectIds": [
                 "12"
             ],
@@ -30,7 +30,7 @@
                 "2"
             ],
             "milestoneId": "2",
-            "labelId": "2",
+            "labelNames": ["2"],
             "projectIds": [
                 "22"
             ],
@@ -48,7 +48,7 @@
                 "2"
             ],
             "milestoneId": "3",
-            "labelId": "3",
+            "labelNames": ["3"],
             "projectIds": [
                 "33"
             ],

@@ -1,7 +1,7 @@
 {
     "ballerinax/github:0.99.15-SNAPSHOT:BranchList": [
         {
-            "nodes": [
+            "branches": [
                 {
                     "id": "MDM6UmVmOTAxMTM1NzU6cmVmcy9oZWFkcy9UZXN0aW5n",
                     "name": "Testing",
@@ -27,7 +27,7 @@
             "totalCount": 4
         },
         {
-            "nodes": [
+            "branches": [
                 {
                     "id": "MDM6UmVmMjM2MTQzMTg3OnJlZnMvaGVhZHMvYW5ndWxhci1hcHA=",
                     "name": "angular-app",
@@ -53,7 +53,7 @@
             "totalCount": 17
         },
         {
-            "nodes": [
+            "branches": [
                 {
                     "id": "MDM6UmVmMTMxMTY1MzU3OnJlZnMvaGVhZHMvZGV2",
                     "name": "dev",
