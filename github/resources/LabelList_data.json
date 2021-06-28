@@ -1,7 +1,7 @@
 {
     "ballerinax/github:0.99.15-SNAPSHOT:LabelList": [
         {
-            "nodes": [
+            "labels": [
                 {
                     "color": "d73a4a",
                     "createdAt": "2021-05-12T23:57:56Z",
@@ -42,7 +42,7 @@
             "totalCount": 9
         },
         {
-            "nodes": [
+            "labels": [
                 {
                     "color": "d73a4a",
                     "createdAt": "2021-05-12T23:57:56Z",
@@ -83,7 +83,7 @@
             "totalCount": 9
         },
         {
-            "nodes": [
+            "labels": [
                 {
                     "color": "d73a4a",
                     "createdAt": "2021-05-12T23:57:56Z",
