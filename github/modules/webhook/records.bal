@@ -956,7 +956,7 @@ public type Asset record {|
 # + test_url - test URL
 # + ping_url - Ping URL
 # + last_response - Last Hook response
-public type Hook record {|
+public type Hook record {
     string 'type;
     int id;
     string name;
@@ -969,7 +969,7 @@ public type Hook record {|
     string test_url;
     string ping_url;
     HookLastResponse last_response;
-|};
+};
 
 # Represent GitHub Hook config payload.
 #
@@ -977,23 +977,23 @@ public type Hook record {|
 # + secret - Hook secret
 # + url - Hook registration URL
 # + insecure_ssl - Insecure SSL
-public type HookConfig record {|
+public type HookConfig record {
     string content_type;
     string secret?;
     string url;
     string insecure_ssl;
-|};
+};
 
 # Represent GitHub Hook last response.
 #
 # + code - Code associated with HookLastResponse
 # + status - Hook status
 # + message - Hook message
-public type HookLastResponse record {|
+public type HookLastResponse record {
     string? code;
     string status;
     string? message;
-|};
+};
 
 # Represent GitHub fork event.
 #

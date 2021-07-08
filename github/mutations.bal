@@ -14,6 +14,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
+final string CREATE_REPOSITORY = "mutation($createRepositoryInput: CreateRepositoryInput!) {\n"+
+                                 "  createRepository(input:$createRepositoryInput){ \n"+
+                                 "      clientMutationId \n"+
+                                 "  }\n"+
+                                 "}";
+
 final string UPDATE_REPOSITORY = "mutation($updateRepositoryInput: UpdateRepositoryInput!) {\n"+
                                  "  updateRepository(input:$updateRepositoryInput){ \n"+
                                  "      clientMutationId \n"+
