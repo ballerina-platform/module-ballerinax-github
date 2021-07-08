@@ -58,6 +58,10 @@ isolated function createIssue(@tainted CreateIssueInput createIssueInput, string
         createIssueInputPayload["issueTemplate"] = <string>createIssueInput?.issueTemplate;
     }
 
+    if (!(createIssueInput?.body is ())) { 
+        createIssueInputPayload["body"] = <string>createIssueInput?.body;
+    }
+
     if (!(createIssueInput?.clientMutationId is ())) { 
         createIssueInputPayload["clientMutationId"] = <string>createIssueInput?.clientMutationId;
     }

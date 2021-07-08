@@ -187,10 +187,23 @@ public client class Client {
                                        self.githubGraphQlClient, nextPageCursor);
     }
 
+    # Create repository
+    # 
+    # + createRepositoryInput - Create repository input
+    # 
+    # + return - `error` if not successful
+    @display { label: "Create Repository" }
+    remote isolated function createRepository(@display {label: "Create Repository Input"} 
+                                              @tainted CreateRepositoryInput createRepositoryInput)
+                                              returns @tainted error? {
+        return createRepository(createRepositoryInput, self.accessToken, 
+                                 self.githubGraphQlClient);
+    }
+
     # Update repository
     # 
     # + updateRepositoryInput - Update repository input
-    # + repositoryOwnerName - Repositoru owner name
+    # + repositoryOwnerName - Repository owner name
     # + repositoryName - Repository name
     # 
     # + return - `error` if not successful

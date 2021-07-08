@@ -825,6 +825,41 @@ public type Configuration record {
     string accessToken;
 };
 
+# Represent repository visibility types
+# 
+# + PRIVATE_REPOSITORY - The repository is visible only to anyone
+# + PUBLIC_REPOSITORY - The repository is visible only to those with explicit access.
+# + INTERNAL_REPOSITORY - The repository is visible only to users in the same business.
+public enum RepositoryVisibility {
+    PRIVATE_REPOSITORY = "PRIVATE",
+    PUBLIC_REPOSITORY = "PUBLIC",
+    INTERNAL_REPOSITORY = "INTERNAL"
+}
+
+# Represent create repository input payload
+# + ownerId - The ID of the owner for the new repository.
+# + name - The name of the new repository.
+# + description - A short description of the new repository.
+# + visibility - Indicates the repository's visibility level. eg: github: PUBLIC_REPOSITORY
+# + template - Whether this repository should be marked as a template such that anyone who can access it can create new repositories with the same files and directory structure.
+# + homepageUrl - The URL for a web page about this repository.
+# + hasWikiEnabled - Indicates if the repository should have the wiki feature enabled.
+# + hasIssuesEnabled - Indicates if the repository should have the issues feature enabled.
+# + teamId - When an organization is specified as the owner, this ID identifies the team that should be granted access to the new repository.
+# + clientMutationId - A unique identifier for the client performing the mutation.
+public type CreateRepositoryInput record{
+    string ownerId?;
+    string name;
+    string description?;
+    RepositoryVisibility visibility;
+    boolean template?;
+    string homepageUrl?;
+    boolean hasWikiEnabled?;
+    boolean hasIssuesEnabled?;
+    string teamId?;
+    string clientMutationId?;
+};
+
 # Represent update repository input payload.
 #
 # + clientMutationId - A unique identifier for the client performing the mutation. 

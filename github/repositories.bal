@@ -330,3 +330,30 @@ isolated function getRepositoryIssueList(string repositoryOwnerName, string repo
     error err = error(GITHUB_ERROR_CODE+ "Error parsing git repository issue list response", message = "Error parsing git repository issue list response");
     return err;
 }
+
+isolated function createRepository(@tainted CreateRepositoryInput createRepositoryInput, string accessToken, http:Client graphQlClient) 
+                                   returns @tainted error? {
+
+    if (createRepositoryInput?.template is ()){
+        createRepositoryInput["template"] = false;
+    }
+    if (createRepositoryInput?.hasWikiEnabled is ()){
+        createRepositoryInput["hasWikiEnabled"] = false;
+    }
+    if (createRepositoryInput?.hasIssuesEnabled is ()){
+        createRepositoryInput["hasIssuesEnabled"] = true;
+    }
+
+    string stringQuery = getFormulatedStringQueryForCreateRepository(createRepositoryInput);
+    http:Request request = new;
+    setHeader(request, accessToken);
+    json convertedQuery = check stringToJson(stringQuery);
+    //Set headers and payload to the request
+    constructRequest(request, <@untainted> convertedQuery);
+
+    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
+
+    //Check for empty payloads and errors
+    _ = check getValidatedResponse(response);
+
+}

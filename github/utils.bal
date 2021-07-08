@@ -185,6 +185,12 @@ isolated function getFormulatedStringQueryForGetOrganizationRepositoryList(strin
     }
 }
 
+isolated function getFormulatedStringQueryForCreateRepository(CreateRepositoryInput createRepositoryInput) 
+                                                              returns string {
+    return string `{"variables":{"createRepositoryInput": ${createRepositoryInput.toJsonString()}},
+                    "query":"${CREATE_REPOSITORY}"}`;
+}
+
 isolated function getFormulatedStringQueryForUpdateRepository(UpdateRepositoryInput updateRepositoryInput) 
                                                               returns string {
     return string `{"variables":{"updateRepositoryInput": ${updateRepositoryInput.toJsonString()}},
