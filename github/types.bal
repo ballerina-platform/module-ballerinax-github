@@ -847,7 +847,7 @@ public enum RepositoryVisibility {
 # + hasIssuesEnabled - Indicates if the repository should have the issues feature enabled.
 # + teamId - When an organization is specified as the owner, this ID identifies the team that should be granted access to the new repository.
 # + clientMutationId - A unique identifier for the client performing the mutation.
-public type CreateRepositoryInput record{
+public type CreateRepositoryInput record {
     string ownerId?;
     string name;
     string description?;

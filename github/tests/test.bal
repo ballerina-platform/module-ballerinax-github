@@ -136,7 +136,8 @@ function testGetRepositoryBranchList() returns @tainted error? {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: false
+    enable: false // This test case have been disabled as this operation cannot be run continuosly without 
+                  // deleteRepository operation which is not yet supported by the GitHub GraphQL API.
 }
 function testCreateRepository() returns @tainted error? {
     log:printInfo("githubClient -> createRepository()");
