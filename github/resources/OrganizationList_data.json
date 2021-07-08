@@ -1,7 +1,7 @@
 {
     "ballerinax/github:0.99.15-SNAPSHOT:OrganizationList": [
         {
-            "nodes": [
+            "organizations": [
                 {
                     "avatarUrl": "https://avatars.githubusercontent.com/u/20661354?v=4",
                     "description": "",
@@ -54,7 +54,7 @@
             "totalCount": 4
         },
         {
-            "nodes": [
+            "organizations": [
                 {
                     "avatarUrl": "https://avatars.githubusercontent.com/u/20661354?v=4",
                     "description": "",
@@ -107,7 +107,7 @@
             "totalCount": 4
         },
         {
-            "nodes": [
+            "organizations": [
                 {
                     "avatarUrl": "https://avatars.githubusercontent.com/u/20661354?v=4",
                     "description": "",

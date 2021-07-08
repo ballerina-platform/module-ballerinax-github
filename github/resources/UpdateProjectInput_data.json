@@ -6,7 +6,7 @@
             "name": "TestProject1",
             "public": true,
             "state": "OPEN",
-            "updateClientMutationId": "clientMutationId1"
+            "clientMutationId": "clientMutationId1"
         },
         {
             "projectId": "2",
@@ -14,7 +14,7 @@
             "name": "TestProject2",
             "public": true,
             "state": "OPEN",
-            "updateClientMutationId": "clientMutationId2"
+            "clientMutationId": "clientMutationId2"
         },
         {
             "projectId": "3",
@@ -22,7 +22,7 @@
             "name": "TestProject3",
             "public": true,
             "state": "OPEN",
-            "updateClientMutationId": "clientMutationId3"
+            "clientMutationId": "clientMutationId3"
         }
     ]
 }

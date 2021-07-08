@@ -2,7 +2,6 @@
     "ballerinax/github:0.99.15-SNAPSHOT:CreateIssueInput": [
         {
             "clientMutationId": "clientMutationId1",
-            "repositoryId": "1",
             "labelNames": [
                 "MDU6TGFiZWwyOTk1MzQwMTIx"
             ],
@@ -15,7 +14,6 @@
         },
         {
             "clientMutationId": "clientMutationId2",
-            "repositoryId": "2",
             "labelNames": [
                 "MDU6TGFiZWwyOTk2MzQwMTIx"
             ],
@@ -28,7 +26,6 @@
         },
         {
             "clientMutationId": "clientMutationId3",
-            "repositoryId": "3",
             "labelNames": [
                 "MDU6TGFiZWwyOTk3MzQwMTIx"
             ],

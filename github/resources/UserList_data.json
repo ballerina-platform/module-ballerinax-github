@@ -1,7 +1,7 @@
 {
     "ballerinax/github:0.99.15-SNAPSHOT:UserList": [
         {
-            "nodes": [
+            "users": [
                 {
                     "anyPinnableItems": true,
                     "avatarUrl": "https://avatars.githubusercontent.com/u/19235998?u=176a71e7ab7502c1b5ef3d04e7c7baba0beac69c&v=4",
@@ -41,7 +41,7 @@
             "totalCount": 1
         },
         {
-            "nodes": [
+            "users": [
                 {
                     "anyPinnableItems": true,
                     "avatarUrl": "https://avatars.githubusercontent.com/u/19235998?u=176a71e7ab7502c1b5ef3d04e7c7baba0beac69c&v=4",
@@ -81,7 +81,7 @@
             "totalCount": 1
         },
         {
-            "nodes": [
+            "users": [
                 {
                     "anyPinnableItems": true,
                     "avatarUrl": "https://avatars.githubusercontent.com/u/19235998?u=176a71e7ab7502c1b5ef3d04e7c7baba0beac69c&v=4",

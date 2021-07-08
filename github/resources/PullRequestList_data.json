@@ -1,17 +1,17 @@
 {
     "ballerinax/github:0.99.15-SNAPSHOT:PullRequestList": [
         {
-            "nodes": "ballerinax/github:0.99.14:PullRequest[]",
+            "pullRequests": "ballerinax/github:0.99.14:PullRequest[]",
             "pageInfo": "ballerinax/github:0.99.14:PageInfo",
             "totalCount": 12
         },
         {
-            "nodes": "ballerinax/github:0.99.14:PullRequest[]",
+            "pullRequests": "ballerinax/github:0.99.14:PullRequest[]",
             "pageInfo": "ballerinax/github:0.99.14:PageInfo",
             "totalCount": 1
         },
         {
-            "nodes": "ballerinax/github:0.99.14:PullRequest[]",
+            "pullRequests": "ballerinax/github:0.99.14:PullRequest[]",
             "pageInfo": "ballerinax/github:0.99.14:PageInfo",
             "totalCount": 4
         }
