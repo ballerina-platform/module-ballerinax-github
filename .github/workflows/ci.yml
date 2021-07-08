@@ -1,6 +1,10 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    branches-ignore:
+      - "automated/dependency_version_update"
+      - "automated/dependency_version_update_tmp"
 
 jobs:
     build:
