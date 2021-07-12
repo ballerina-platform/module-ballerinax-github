@@ -136,6 +136,27 @@ function testGetRepositoryBranchList() returns @tainted error? {
 
 @test:Config {
     groups: ["network-calls"],
+    enable: false // This test case have been disabled as this operation cannot be run continuosly without 
+                  // deleteRepository operation which is not yet supported by the GitHub GraphQL API.
+}
+function testCreateRepository() returns @tainted error? {
+    log:printInfo("githubClient -> createRepository()");
+    CreateRepositoryInput createRepositoryInput = {
+        name: "ballerina-github-connector-test-repo",
+        visibility: PUBLIC_REPOSITORY,
+        description: "New Updated Description"
+    };
+    var response = githubClient->createRepository(createRepositoryInput);
+
+    if(response is error){
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
+    }else {
+        test:assertTrue(true);
+    }
+}
+
+@test:Config {
+    groups: ["network-calls"],
     enable: true
 }
 function testUpdateRepository() returns @tainted error? {
@@ -181,18 +202,64 @@ function testGetIssueList() returns @tainted error? {
         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
+
+string milestoneId="";
+
+@test:Config {
+    groups: ["network-calls"],
+    enable: true
+}
+function testGetRepositoryMilestone() returns @tainted error? {
+    log:printInfo("githubClient -> getRepositoryMilestone()");
+    var response = githubClient->getRepositoryMilestone(testUserName, testUserRepositoryName, 2);
+     if(response is Milestone){
+         test:assertTrue(response.number==2, msg = "Failed testGetRepositoryMilestoneList()");
+         milestoneId=response.id;
+     }else {
+         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
+     }
+}
+
+string createdProjectId = "";
+int createdProjectNumber =-1;
+@test:Config {
+    groups: ["network-calls"],
+    enable: true
+}
+function testCreateUserProject() returns @tainted error? {
+    log:printInfo("githubClient -> createProject()");
+    string userId = check githubClient->getUserId(testUserName);
+    CreateRepositoryProjectInput createRepositoryProjectInput = {
+        ownerName: testUserName,
+        name: "Test Project Created by Ballerina GitHub Connector",
+        body: "This is the body of the test project"
+    };
+    var response = githubClient->createProject(createRepositoryProjectInput);
+    if(response is Project){
+        createdProjectId = <@untainted>response.id;
+        createdProjectNumber = <@untainted>(<int>(response?.number));
+        test:assertTrue(true);
+    }else {
+        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
+    }
+}
+
 string createdIssueId = "";
 int createdIssueNumber = -1;
 @test:Config {
     groups: ["network-calls"],
-    enable: true
+    enable: true,
+    dependsOn: [testGetRepositoryMilestone, testCreateUserProject]
 }
 function testCreateIssue() returns @tainted error?{
     log:printInfo("githubClient -> createIssue()");
     CreateIssueInput createIssueInput = {
         title: "This is a test Issue Title",
+        body: "This is test issue body",
         labelNames: ["bug"],
-        assigneeNames: [testUserName]
+        assigneeNames: [testUserName],
+        projectIds: [createdProjectId],
+        milestoneId: milestoneId
     };
 
     var response = githubClient->createIssue(createIssueInput, testUserName, testUserRepositoryName);
@@ -214,7 +281,11 @@ function testCreateIssue() returns @tainted error?{
 function testUpdateIssue() returns @tainted error? {
     log:printInfo("githubClient -> updateIssue()");
     UpdateIssueInput updateRepositoryInput = {
-        title: "Updated issue title"
+        title: "Updated issue title",
+        body: "This is updated test issue body",
+        labelNames: ["enhancement"],
+        assigneeNames: [testUserName],
+        milestoneId: milestoneId
     };
 
     var response = githubClient->updateIssue(updateRepositoryInput, testUserName, testUserRepositoryName, createdIssueNumber);
@@ -424,20 +495,6 @@ function testGetRepositoryMilestoneList() returns @tainted error? {
      }
 }
 
-@test:Config {
-    groups: ["network-calls"],
-    enable: true
-}
-function testGetRepositoryMilestone() returns @tainted error? {
-    log:printInfo("githubClient -> getRepositoryMilestone()");
-    var response = githubClient->getRepositoryMilestone(testUserName, testUserRepositoryName, 1);
-     if(response is Milestone){
-         test:assertTrue(response.number==1, msg = "Failed testGetRepositoryMilestoneList()");
-     }else {
-         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
-     }
-}
-
 string createdPullRequestId="";
 int createdPullRequestNumber=-1;
 @test:Config {
@@ -642,28 +699,7 @@ function testGetOrgProjectList() returns @tainted error? {
         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
 }
-string createdProjectId = "";
-int createdProjectNumber =-1;
-@test:Config {
-    groups: ["network-calls"],
-    enable: true
-}
-function testCreateUserProject() returns @tainted error? {
-    log:printInfo("githubClient -> createProject()");
-    string userId = check githubClient->getUserId(testUserName);
-    CreateRepositoryProjectInput createRepositoryProjectInput = {
-        ownerName: testUserName,
-        name: "Test Project Created by Ballerina GitHub Connector"
-    };
-    var response = githubClient->createProject(createRepositoryProjectInput);
-    if(response is Project){
-        createdProjectId = <@untainted>response.id;
-        createdProjectNumber = <@untainted>(<int>(response?.number));
-        test:assertTrue(true);
-    }else {
-        test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
-    }
-}
+
 
 @test:Config {
     groups: ["network-calls"],
