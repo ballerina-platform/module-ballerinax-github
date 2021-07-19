@@ -34,7 +34,8 @@ public class Listener {
                     self.accessToken = auth?.token;
                 }
             }
-            self.subscriberService = new WebSubService(s);
+            WebhookToGithubAdaptor adaptor = check new (s);
+            self.subscriberService = new WebSubService(adaptor);
             check self.subscriberListener.attachWithConfig(<websub:SubscriberService>self.subscriberService, configuration, name);
         } else {
             return error ListenerError("Could not find the required service-configurations");
@@ -62,7 +63,7 @@ public class Listener {
     private isolated function deleteWebhook() returns error? {
         if (self.subscriberService is WebSubService) {
             WebSubService websubService = <WebSubService>self.subscriberService;
-            string? endpoint = websubService.deleteWebhookEndpoint;
+            string? endpoint = websubService.getDeleteWeebhookEndpoint();
             if(endpoint is string){
                 http:Request request = new;
                 if(self.accessToken is string) {
