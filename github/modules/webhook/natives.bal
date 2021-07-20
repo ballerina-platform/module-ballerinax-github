@@ -1,247 +1,208 @@
 import ballerina/jballerina.java;
 
-// General Events
+isolated class WebhookToGithubAdaptor {
+    isolated function init(SimpleWebhookService serviceObj) returns error? {
+        externInit(self, serviceObj);
+    }
+    // General Events
 
-isolated function callOnPingMethod(SimpleWebhookService webhookService, PingEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnPingMethod(PingEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-isolated function callOnForkMethod(SimpleWebhookService webhookService, ForkEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnForkMethod(ForkEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-isolated function callOnPushMethod(SimpleWebhookService webhookService, PushEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnPushMethod(PushEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-isolated function callOnCreateMethod(SimpleWebhookService webhookService, CreateEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnCreateMethod(CreateEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-// Release Events
+    // Release Events
 
-isolated function callOnReleasePublishedMethod(SimpleWebhookService webhookService, ReleaseEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnReleasePublishedMethod(ReleaseEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-isolated function callOnReleaseUnpublishedMethod(SimpleWebhookService webhookService, ReleaseEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnReleaseUnpublishedMethod(ReleaseEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-isolated function callOnReleaseCreatedMethod(SimpleWebhookService webhookService, ReleaseEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnReleaseCreatedMethod(ReleaseEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-isolated function callOnReleaseEditedMethod(SimpleWebhookService webhookService, ReleaseEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnReleaseEditedMethod(ReleaseEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-isolated function callOnReleaseDeletedMethod(SimpleWebhookService webhookService, ReleaseEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnReleaseDeletedMethod(ReleaseEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-isolated function callOnPreReleasedMethod(SimpleWebhookService webhookService, ReleaseEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnPreReleasedMethod(ReleaseEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-isolated function callOnReleasedMethod(SimpleWebhookService webhookService, ReleaseEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnReleasedMethod(ReleaseEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-// Watch Events
+    // Watch Events
 
-isolated function callOnWatchStartedMethod(SimpleWebhookService webhookService, WatchEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnWatchStartedMethod(WatchEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-// Issue Comment Events
+    // Issue Comment Events
 
-isolated function callOnIssueCommentCreatedMethod(SimpleWebhookService webhookService, IssueCommentEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnIssueCommentCreatedMethod(IssueCommentEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-isolated function callOnIssueCommentEditedMethod(SimpleWebhookService webhookService, IssueCommentEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnIssueCommentEditedMethod(IssueCommentEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-isolated function callOnIssueCommentDeletedMethod(SimpleWebhookService webhookService, IssueCommentEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnIssueCommentDeletedMethod(IssueCommentEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-// Issue Events
+    // Issue Events
 
-isolated function callOnIssuesAssignedMethod(SimpleWebhookService webhookService, IssuesEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnIssuesUnassignedMethod(SimpleWebhookService webhookService, IssuesEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnIssuesLabeledMethod(SimpleWebhookService webhookService, IssuesEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnIssuesUnlabeledMethod(SimpleWebhookService webhookService, IssuesEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnIssuesOpenedMethod(SimpleWebhookService webhookService, IssuesEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnIssuesEditedMethod(SimpleWebhookService webhookService, IssuesEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnIssuesMilestonedMethod(SimpleWebhookService webhookService, IssuesEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnIssuesDemilestonedMethod(SimpleWebhookService webhookService, IssuesEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnIssuesClosedMethod(SimpleWebhookService webhookService, IssuesEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnIssuesReopenedMethod(SimpleWebhookService webhookService, IssuesEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnIssuesAssignedMethod(IssuesEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnIssuesUnassignedMethod(IssuesEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnIssuesLabeledMethod(IssuesEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnIssuesUnlabeledMethod(IssuesEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnIssuesOpenedMethod(IssuesEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnIssuesEditedMethod(IssuesEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnIssuesMilestonedMethod(IssuesEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnIssuesDemilestonedMethod(IssuesEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnIssuesClosedMethod(IssuesEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnIssuesReopenedMethod(IssuesEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-// Label Events
+    // Label Events
 
-isolated function callOnLabelCreatedMethod(SimpleWebhookService webhookService, LabelEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnLabelEditedMethod(SimpleWebhookService webhookService, LabelEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnLabelDeletedMethod(SimpleWebhookService webhookService, LabelEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnLabelCreatedMethod(LabelEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnLabelEditedMethod(LabelEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnLabelDeletedMethod(LabelEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-// Milestone Events
+    // Milestone Events
 
-isolated function callOnMilestoneCreatedMethod(SimpleWebhookService webhookService, MilestoneEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnMilestoneClosedMethod(SimpleWebhookService webhookService, MilestoneEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnMilestoneOpenedMethod(SimpleWebhookService webhookService, MilestoneEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnMilestoneEditedMethod(SimpleWebhookService webhookService, MilestoneEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnMilestoneDeletedMethod(SimpleWebhookService webhookService, MilestoneEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnMilestoneCreatedMethod(MilestoneEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnMilestoneClosedMethod(MilestoneEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnMilestoneOpenedMethod(MilestoneEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnMilestoneEditedMethod(MilestoneEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnMilestoneDeletedMethod( MilestoneEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-// Pull Request Events
+    // Pull Request Events
 
-isolated function callOnPullRequestAssignedMethod(SimpleWebhookService webhookService, PullRequestEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnPullRequestUnassignedMethod(SimpleWebhookService webhookService, PullRequestEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnPullRequestReviewRequestedMethod(SimpleWebhookService webhookService, PullRequestEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnPullRequestReviewRequestRemovedMethod(SimpleWebhookService webhookService, PullRequestEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnPullRequestLabeledMethod(SimpleWebhookService webhookService, PullRequestEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnPullRequestUnlabeledMethod(SimpleWebhookService webhookService, PullRequestEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnPullRequestOpenedMethod(SimpleWebhookService webhookService, PullRequestEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnPullRequestEditedMethod(SimpleWebhookService webhookService, PullRequestEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnPullRequestClosedMethod(SimpleWebhookService webhookService, PullRequestEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnPullRequestReopenedMethod(SimpleWebhookService webhookService, PullRequestEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnPullRequestAssignedMethod(PullRequestEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnPullRequestUnassignedMethod(PullRequestEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnPullRequestReviewRequestedMethod(PullRequestEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnPullRequestReviewRequestRemovedMethod(PullRequestEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnPullRequestLabeledMethod(PullRequestEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnPullRequestUnlabeledMethod(PullRequestEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnPullRequestOpenedMethod(PullRequestEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnPullRequestEditedMethod(PullRequestEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnPullRequestClosedMethod(PullRequestEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnPullRequestReopenedMethod(PullRequestEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-// Pull Request Review Events
+    // Pull Request Review Events
 
-isolated function callOnPullRequestReviewSubmittedMethod(SimpleWebhookService webhookService, PullRequestReviewEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnPullRequestReviewEditedMethod(SimpleWebhookService webhookService, PullRequestReviewEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnPullRequestReviewDismissedMethod(SimpleWebhookService webhookService, PullRequestReviewEvent msg)
-                                returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    isolated function callOnPullRequestReviewSubmittedMethod(PullRequestReviewEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnPullRequestReviewEditedMethod(PullRequestReviewEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnPullRequestReviewDismissedMethod(PullRequestReviewEvent msg) returns error? = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-// Pull Request Review Comment Events
+    // Pull Request Review Comment Events
 
-isolated function callOnPullRequestReviewCommentCreatedMethod(SimpleWebhookService webhookService, PullRequestReviewCommentEvent msg)
+    isolated function callOnPullRequestReviewCommentCreatedMethod(PullRequestReviewCommentEvent msg) 
                                 returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnPullRequestReviewCommentEditedMethod(SimpleWebhookService webhookService, PullRequestReviewCommentEvent msg)
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnPullRequestReviewCommentEditedMethod(PullRequestReviewCommentEvent msg) 
                                 returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
-isolated function callOnPullRequestReviewCommentDeletedMethod(SimpleWebhookService webhookService, PullRequestReviewCommentEvent msg)
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+    isolated function callOnPullRequestReviewCommentDeletedMethod(PullRequestReviewCommentEvent msg) 
                                 returns error? = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
 
-# Invoke native method to retrive implemented method names in the subscriber service
-#
-# + subscriberService - current subscriber-service
-# + return - {@code string[]} containing the method-names in current implementation
-isolated function getServiceMethodNames(SimpleWebhookService subscriberService) returns string[] = @java:Method {
-    'class: "io.ballerinax.webhook.WebhookNativeOperationHandler"
-} external;
+    # Invoke native method to retrive implemented method names in the subscriber service
+    #
+    # + return - {@code string[]} containing the method-names in current implementation
+    isolated function getServiceMethodNames() returns string[] = @java:Method {
+        'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+    } external;
+}
 
+isolated function externInit(WebhookToGithubAdaptor adaptor, SimpleWebhookService serviceObj) = @java:Method {
+    'class: "io.ballerinax.webhook.WebhookToGithubAdaptor"
+} external;
