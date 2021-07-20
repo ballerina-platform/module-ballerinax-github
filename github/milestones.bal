@@ -77,7 +77,7 @@ isolated function getRepositoryMilestone(string repositoryOwnerName, string repo
         var gitData = validatedResponse[GIT_DATA];
         if (gitData is map<json>) {
             var repository = gitData[GIT_REPOSITORY];
-            if(repository is map<json>){
+            if (repository is map<json>) {
                 var milestone = repository[GIT_MILESTONE];
                 if (milestone is ()) {
                     error err = error(GITHUB_ERROR_CODE+string `: Could not resolve to a milestone with the number ${milestoneNumber}.`, message = string `: Could not resolve to a milestone with the number ${milestoneNumber}.`);

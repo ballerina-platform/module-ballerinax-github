@@ -14,7 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-
 final string USER =       "       anyPinnableItems,  \n"+
                           "       avatarUrl,         \n"+
                           "       bio,               \n"+
@@ -645,4 +644,3 @@ final string GET_USER_OWNER_ID = "query($userName: String!){\n"+
                                  "     id\n"+
                                  "  }\n"+
                                  "}";
-

@@ -262,7 +262,7 @@ isolated function getPullRequestReviewCommentList(string repositoryOwnerName, st
                                            string repositoryOwnerName, string repositoryName,  int pullRequestNumber, 
                                            string accessToken, http:Client graphQlClient) 
                                            returns @tainted PullRequestReview|error {
-    if(addPullRequestReviewInput?.pullRequestId is ()) {
+    if (addPullRequestReviewInput?.pullRequestId is ()) {
         addPullRequestReviewInput["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName, 
                                                                             pullRequestNumber, accessToken, 
                                                                             graphQlClient);
@@ -305,7 +305,6 @@ isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePul
     constructRequest(request, <@untainted> convertedQuery);
 
     http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
     _ = check getValidatedResponse(response);
 }
 
@@ -320,6 +319,5 @@ isolated function deletePendingPullRequestReview(DeletePullRequestReviewInput de
     constructRequest(request, <@untainted> convertedQuery);
 
     http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
     _ = check getValidatedResponse(response);
 }

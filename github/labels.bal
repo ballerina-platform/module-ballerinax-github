@@ -27,7 +27,6 @@ isolated function createLabel(CreateLabelInput createLabelInput, string accessTo
     constructRequest(request, <@untainted> convertedQuery);
 
     http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
     _ = check getValidatedResponse(response);
 }
 
@@ -194,5 +193,4 @@ isolated function removeLabelFromLabelable(RemoveIssueLabelInput removeIssueLabe
     http:Response response = check graphQlClient->post(EMPTY_STRING, request);
 
     _ = check getValidatedResponse(response);
-
 }
