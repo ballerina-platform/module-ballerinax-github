@@ -1,20 +1,22 @@
 
 ## Overview
 
-Ballerina connector for GitHub is connecting the GitHub GraphQL API via Ballerina language easily. It provides capability to perform operations on major resource types such as `Repositories`, `Issues`, `Pull Requests`, `Projects` etc.
+This GitHub connector client module provides capability to perform operations on major resource types such as `Repositories`, `Issues`, `Pull Requests`, `Projects` etc.
 
 This module supports [GitHub API](https://docs.github.com/en/graphql) v4 version and only allows to perform functions behalf of the currently logged in user.
 
+## Prerequisites
+Before using this connector in your Ballerina application, complete the following:
 
-## Configuring connector
-### Prerequisites
-- GitHub account
-
-### Obtaining tokens
-
+* Create account
+* Obtain token
 Follow the [steps](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)  to obtain a Personal Access Token in order to access the API.
 
+* Configure the connector with obtained token
+
 ## Quickstart
+
+To use the GitHub connector in your Ballerina application, update the .bal file as follows:
 
 #### Step 1: Import GitHub module
 First, import the ballerinax/github module into the Ballerina project.
@@ -33,8 +35,8 @@ You can now make the connection configuration using the OAuth2 refresh token gra
 
 ```
 
-## Snippets
-Snippets of some operations.
+## Quick reference
+Code snippets of some frequently used functions.
 
 - Get Authenticated User Repositories
     ```ballerina

@@ -1,11 +1,14 @@
 Connects to GitHub from Ballerina
 
+Connects to GitHub GraphQL API from Ballerina
 ### Package Overview
+The github is a [Ballerina](https://ballerina.io/) connector for GitHub GraphQL API. This package provides the capability to access GitHub GraphQL API service.
+
 #### Compatibility
 |                                                                                    | Version               |
 |------------------------------------------------------------------------------------|-----------------------|
-| Ballerina Language Version                                                         | **Swan Lake Beta 2**  |
-| [Github API](https://docs.github.com/en/graphql) Version     | **v4.0**              |
+| Ballerina Language                                                                 | Swan Lake Beta 2      |
+| [Github API](https://docs.github.com/en/graphql)                                   | v4.0                  |
 
 The `github` is a [Ballerina](https://ballerina.io/) connector for GitHub.
 
