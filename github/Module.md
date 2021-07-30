@@ -18,12 +18,12 @@ Follow the [steps](https://docs.github.com/en/github/authenticating-to-github/ke
 
 To use the GitHub connector in your Ballerina application, update the .bal file as follows:
 
-#### Step 1: Import GitHub module
+### Step 1: Import connector
 First, import the ballerinax/github module into the Ballerina project.
 ```ballerina
 import ballerinax/github;
 ```
-#### Step 2: Configure the connection credentials.
+### Step 2: Create a new connector instance
 You can now make the connection configuration using the OAuth2 refresh token grant config.
 ```ballerina
 
@@ -34,6 +34,13 @@ You can now make the connection configuration using the OAuth2 refresh token gra
     github:Client githubClient = new (config);
 
 ```
+### Step 3: Invoke connector operation
+- Get All Open Pull Requests In A Repository
+```ballerina
+    github:PullRequestList response = check githubClient->getRepositoryPullRequestList(<GitHub_Username>, <GitHub_Repository_Name>, github:PULL_REQUEST_OPEN, <Per_Page_Count>);
+```
+- Use `bal run` command to compile and run the Ballerina program.    
+
 
 ## Quick reference
 Code snippets of some frequently used functions.

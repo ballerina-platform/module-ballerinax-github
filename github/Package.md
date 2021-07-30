@@ -7,12 +7,8 @@ The github is a [Ballerina](https://ballerina.io/) connector for GitHub GraphQL 
 #### Compatibility
 |                                                                                    | Version               |
 |------------------------------------------------------------------------------------|-----------------------|
-| Ballerina Language                                                                 | Swan Lake Beta 2      |
+| Ballerina Language                                                                 | Swan Lake Beta2       |
 | [Github API](https://docs.github.com/en/graphql)                                   | v4.0                  |
-
-The `github` is a [Ballerina](https://ballerina.io/) connector for GitHub.
-
-This package provides the capability to easily access GitHub.
 
 ### Report Issues
 

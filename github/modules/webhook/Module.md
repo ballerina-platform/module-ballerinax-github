@@ -64,6 +64,8 @@ The remote functions can be provided as follows.
         log:printInfo("Received push-event-message ", eventPayload = event);
     }
 ```
+### Step 5: Run the service 
+Use `bal run` command to compile and run the Ballerina program.    
 
 ## Quick reference
 Code snippets of some frequently used functions:
