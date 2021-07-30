@@ -20,10 +20,9 @@ isolated function createIssue(@tainted CreateIssueInput createIssueInput, string
                               string repositoryName, string accessToken, http:Client graphQlClient) 
                               returns @tainted Issue|error {
     
-    string repositoryId = check getRepositoryId(repositoryOwnerName, repositoryName, accessToken,
-                                                                 graphQlClient);
+    string repositoryId = check getRepositoryId(repositoryOwnerName, repositoryName, accessToken, graphQlClient);
 
-     CreateIssueInputPayload createIssueInputPayload = {
+    CreateIssueInputPayload createIssueInputPayload = {
         repositoryId: repositoryId,
         title: createIssueInput.title
     };                                                                 
@@ -174,7 +173,6 @@ isolated function updateIssue(@tainted UpdateIssueInput updateIssueInput, string
 
     error err = error(GITHUB_ERROR_CODE+ " Error parsing git issue response", message = "Error parsing git issue response");
     return err;
-
 }
 
 isolated function getRepositoryIssue(string repositoryOwnerName, string repositoryName, int issueNumber, 

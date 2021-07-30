@@ -36,11 +36,11 @@ isolated function getOrganizationProjectList(string organizationName, ProjectSta
         var gitData = validatedResponse[GIT_DATA];
         if (gitData is map<json>) {
             var org = gitData[GIT_ORGANIZATION];
-            if(org is map<json>){
+            if (org is map<json>) {
                 var orgProjects = org[GIT_PROJECTS];
                 ProjectListPayload|error projectListResponse = orgProjects.cloneWithType(ProjectListPayload);
 
-                if(projectListResponse is error){
+                if (projectListResponse is error) {
                     return error(GITHUB_ERROR_CODE+ "Error parsing org project list response", message = "Error parsing org project list response");
                 }else {
                     ProjectList projectList = {
@@ -168,7 +168,6 @@ isolated function updateProject(UpdateProjectInput updateProjectInput, string ac
                 var project = createProject[GIT_PROJECT];
                 return check project.cloneWithType(Project);
             }
-
         }
     }
     error err = error(GITHUB_ERROR_CODE+ " Error parsing update project response", message = "Error parsing update project response");
@@ -185,7 +184,6 @@ isolated function deleteProject(DeleteProjectInput deleteProjectInput, string ac
     constructRequest(request, <@untainted> convertedQuery);
 
     http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
     _ = check getValidatedResponse(response);
 }
 

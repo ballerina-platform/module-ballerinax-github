@@ -355,5 +355,4 @@ isolated function createRepository(@tainted CreateRepositoryInput createReposito
 
     //Check for empty payloads and errors
     _ = check getValidatedResponse(response);
-
 }
