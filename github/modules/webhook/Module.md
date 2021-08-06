@@ -1,6 +1,5 @@
 
 ## Overview
-
 The GitHub connector Listener module allows you to listen to following events occur in GitHub. 
 - `Ping`, `Fork`, `Push`, `Create`, `Watch`
 - `Release`, `Issue`, `Label`, `Milestone`
@@ -13,13 +12,12 @@ This module supports [GitHub API](https://docs.github.com/en/graphql) v4 version
 Before using this connector in your Ballerina application, complete the following:
 
 * Create account
-* Obtain token
-Follow the [steps](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)  to obtain a Personal Access Token in order to access the API.
+* Obtain token -
+To obtain a personal access token via which the connector can access the API, follow these [steps](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 
 * Configure the connector with obtained token
 
 ## Quickstart
-
 To use the GitHub connector in your Ballerina application, update the  .bal file as follows:
 
 ### Step 1: Import the GitHub Webhook Ballerina library
