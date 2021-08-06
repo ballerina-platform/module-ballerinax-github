@@ -19,24 +19,20 @@ For more information, go to the module(s).
 # Building from the Source
 ## Setting Up the Prerequisites
 
-1. Download and install Java SE Development Kit (JDK) version 11 (from one of the following locations).
-
-   * [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
-
-   * [OpenJDK](https://adoptopenjdk.net/)
+1. Download and install Java SE Development Kit (JDK) version 11. You can install either [OpenJDK](https://adoptopenjdk.net/) or [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html).
 
         > **Note:** Set the JAVA_HOME environment variable to the path name of the directory in which you installed JDK.
 
-2. Download and install [Ballerina Swan Lake Beta 2](https://ballerina.io/). 
+2. Download and install [Ballerina Swan Lake Beta2](https://ballerina.io/). 
 
 ## Building the Source
-Execute the commands below to build from the source after installing Ballerina SL Beta 2 version:
+Execute the commands below to build from the source after installing Ballerina Swan Lake Beta2 version:
 
-- To build the package:
+* To build the package:
     ```    
     bal build -c ./github
     ```
-- To run the without tests:
+* To run the without tests:
     ```
     bal build -c --skip-tests ./github
     ```

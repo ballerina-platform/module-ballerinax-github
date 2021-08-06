@@ -67,40 +67,4 @@ The remote functions can be provided as follows.
 ### Step 5: Run the service 
 Use `bal run` command to compile and run the Ballerina program.    
 
-## Quick reference
-Code snippets of some frequently used functions:
-
-- Trigger on create issue
-    ```ballerina
-    remote function onIssuesOpened(github:IssuesEvent event) returns github:Acknowledgement? {
-        log:printInfo("Issue opened", notificationMsg = event);
-    }
-    ```
-
-- Trigger on issue comment create
-    ``` ballerina
-    remote function onIssueCommentCreated(github:IssuesCommentEvent event) returns github:Acknowledgement? {
-        log:printInfo("Issue comment created", notificationMsg = event);
-    }
-    ```
-
-- Trigger on pull request open
-    ```ballerina
-    remote function onPullRequestOpened(github:PullRequestEvent event) returns github:Acknowledgement? {
-        log:printInfo("Pull request opened", notificationMsg = event);
-    }
-    ```
-
-- Trigger on issue assigned
-    ```ballerina
-    remote function onIssuesAssigned(github:IssuesEvent event) returns github:Acknowledgement? {
-        log:printInfo("Issue assigned", notificationMsg = event);
-    }
-    ```
-
-- Trigger on milestone closed
-    ```ballerina
-    remote function onMilestoneClosed(github:MilestoneEvent event) returns github:Acknowledgement? {
-        log:printInfo("Milestone closed", notificationMsg = event);
-    }
-    ```
+**[You can find a list of samples here](https://github.com/ballerina-platform/module-ballerinax-github/tree/master/github/samples/listener)**
