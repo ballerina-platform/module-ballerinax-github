@@ -506,7 +506,7 @@ function testCreatePullRequest() returns @tainted error? {
     CreatePullRequestInput createPullRequestInput = {
        title: "Test PR created from Ballerina GitHub Connector",
        baseRefName: "master",
-       headRefName: "feature/feature1",
+       headRefName: "feature/feature2",
        body: "This is some dummy content for PR body"
     };
     var response = githubClient->createPullRequest(createPullRequestInput, testUserName, testUserRepositoryName);

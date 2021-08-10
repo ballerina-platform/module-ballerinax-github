@@ -16,22 +16,24 @@
 
 import ballerina/http;
 
-# GitHub Client.
+# Ballerina GitHub connector provides the capability to access GitHub GraphQL API.
+# This connector lets you to get authorized access to GitHub data in a personal or organization
+# account. 
 # + accessToken - The access token of the github account
 # + githubGraphQlClient - HTTP client endpoint
-# + headers - Request Header map
 @display { label: "GitHub Client",iconPath:"GithubLogo.png" }
-public client class Client {
-    string accessToken;
-    http:Client githubGraphQlClient;
-    map<string> headers;
+public isolated client class Client {
+    final string accessToken;
+    final http:Client githubGraphQlClient;
 
+    # Initialize the connector. During the initialization you have to pass 
+    # Create a GitHub account and obtain tokens following [this guid](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+    #
+    # + config - Configurations required to initialize the `Client`
+    # + return -  Error at failure of client initialization
     public isolated function init(Configuration config) returns error? {
         self.accessToken = config.accessToken;
         self.githubGraphQlClient = check new(GIT_GRAPHQL_API_URL, config.clientConfig);
-        self.headers = {
-           AUTHORIZATION_HEADER: TOKEN + self.accessToken
-        };
     }
 
     # Get authenticated user
@@ -46,7 +48,7 @@ public client class Client {
         setHeader(request, self.accessToken);
         json convertedQuery = check stringToJson(stringQuery);
         //Set headers and payload to the request
-        constructRequest(request, <@untainted> convertedQuery);
+        constructRequest(request, <@untainted> convertedQuery.cloneReadOnly());
 
         http:Response response = check self.githubGraphQlClient->post(EMPTY_STRING, request);
 
