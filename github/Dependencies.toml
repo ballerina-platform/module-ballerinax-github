@@ -1,24 +1,24 @@
 [[dependency]]
 org = "ballerina"
 name = "http"
-version = "1.1.0-beta.3"
+version = "2.0.0"
 
 [[dependency]]
 org = "ballerina"
 name = "regex"
-version = "0.7.0-beta.3"
+version = "1.0.0"
 
 [[dependency]]
 org = "ballerina"
 name = "log"
-version = "1.1.0-beta.3"
+version = "2.0.0"
 
 [[dependency]]
 org = "ballerina"
 name = "websub"
-version = "1.2.0-beta.3"
+version = "2.0.0"
 
 [[dependency]]
 org = "ballerina"
 name = "os"
-version = "0.8.0-beta.3"
+version = "1.0.0"
