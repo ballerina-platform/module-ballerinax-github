@@ -61,3 +61,5 @@ Ballerina.lock
 # Log file
 *.log
 
+# DS_Store file
+*.DS_Store

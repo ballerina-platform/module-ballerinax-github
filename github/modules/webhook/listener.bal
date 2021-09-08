@@ -26,7 +26,7 @@ public const string GITHUB_REST_API_BASE_URL = "https://api.github.com";
 
 # Listener for GitHub connector
 # 
-@display {label: "GitHub Listener"}
+@display {label: "GitHub Listener", iconPath:"resources/github.svg"}
 public class Listener {
     private websub:Listener subscriberListener;
     private websub:SubscriberService? subscriberService;

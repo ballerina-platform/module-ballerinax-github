@@ -4,7 +4,7 @@ name = "github"
 version = "0.99.15-SNAPSHOT"
 export= ["github", "github.webhook"]
 authors = ["Ballerina"]
-keywords = ["github", "endpoint", "API"]
+keywords = ["dev tools/source control", "cost/freemium"]
 repository = "https://github.com/ballerina-platform/module-ballerinax-github"
 license = ["Apache-2.0"]
 

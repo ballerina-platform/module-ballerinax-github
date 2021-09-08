@@ -21,7 +21,7 @@ import ballerina/http;
 # account. 
 # + accessToken - The access token of the github account
 # + githubGraphQlClient - HTTP client endpoint
-@display { label: "GitHub Client",iconPath:"GithubLogo.png" }
+@display { label: "GitHub Client",iconPath:"resources/github.svg" }
 public isolated client class Client {
     final string accessToken;
     final http:Client githubGraphQlClient;
@@ -31,7 +31,7 @@ public isolated client class Client {
     #
     # + config - Configurations required to initialize the `Client`
     # + return -  Error at failure of client initialization
-    public isolated function init(Configuration config) returns error? {
+    public isolated function init(ConnectionConfig config) returns error? {
         self.accessToken = config.accessToken;
         self.githubGraphQlClient = check new(GIT_GRAPHQL_API_URL, config.clientConfig);
     }
