@@ -821,7 +821,7 @@ public type UserList record {
 # + clientConfig - HTTP client endpoint configuration
 # + accessToken - The access token of the Github 
 @display{label: "Connection Config"}
-public type Configuration record {
+public type ConnectionConfig record {
     http:ClientConfiguration clientConfig = {};
     string accessToken;
 };

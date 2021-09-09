@@ -118,7 +118,7 @@ string createdIssueAssignee = testIssueAssignee;
     enable: false
 }
 function testWebhookNotificationOnIssueCreation() {
-    github:Configuration gitHubConfig = {
+    github:ConnectionConfig gitHubConfig = {
         accessToken: accessToken
     };
 
@@ -173,7 +173,7 @@ function testWebhookNotificationOnIssueAssignment() {
 }
 function testWebhookNotificationOnIssueEdited() returns error? {
 
-    github:Configuration gitHubConfig = {
+    github:ConnectionConfig gitHubConfig = {
         accessToken: accessToken
     };
 

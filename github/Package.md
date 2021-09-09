@@ -10,8 +10,7 @@ The `ballerinax/github` is a [Ballerina](https://ballerina.io/) connector for Gi
 | [Github API](https://docs.github.com/en/graphql)                                   | v4.0                  |
 
 ## Report Issues
-
-To report bugs, request new features, start new discussions, view project boards, etc., go to the [Ballerina GitHub connector repository](https://github.com/ballerina-platform/module-ballerinax-github)
+To report bugs, request new features, start new discussions, view project boards, etc., go to the [Ballerina Extended Library repository](https://github.com/ballerina-platform/ballerina-extended-library)
 
 ## Useful Links
 - Discuss code changes of the Ballerina project in [ballerina-dev@googlegroups.com](mailto:ballerina-dev@googlegroups.com).

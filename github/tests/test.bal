@@ -25,7 +25,7 @@ configurable string testIssueAssignee = os:getEnv("ISSUE_ASSIGNEE");
 configurable string testUserName = os:getEnv("GITHUB_USERNAME");
 configurable string accessToken = os:getEnv("ACCESS_TOKEN");
 
-Configuration gitHubConfig = {
+ConnectionConfig gitHubConfig = {
     accessToken: accessToken
 };
 

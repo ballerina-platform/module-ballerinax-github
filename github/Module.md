@@ -22,10 +22,10 @@ First, import the `ballerinax/github` module into the Ballerina project as follo
 import ballerinax/github;
 ```
 ### Step 2: Create a new connector instance
-Create a `github:Configuration` using your GitHub personal access token and and initialize the connector with it.
+Create a `github:ConnectionConfig` using your GitHub personal access token and and initialize the connector with it.
 ```ballerina
 
-    github:Configuration config = {
+    github:ConnectionConfig config = {
         token: accessToken
     };
 
