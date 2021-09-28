@@ -19,11 +19,9 @@ import ballerina/http;
 # Ballerina GitHub connector provides the capability to access GitHub GraphQL API.
 # This connector lets you to get authorized access to GitHub data in a personal or organization
 # account. 
-# + accessToken - The access token of the github account
-# + githubGraphQlClient - HTTP client endpoint
-@display { label: "GitHub Client",iconPath:"resources/github.svg" }
+@display { label: "GitHub Client", iconPath:"resources/github.svg" }
 public isolated client class Client {
-    final string accessToken;
+    final string authToken;
     final http:Client githubGraphQlClient;
 
     # Initialize the connector. During the initialization you have to pass 
@@ -32,8 +30,8 @@ public isolated client class Client {
     # + config - Configurations required to initialize the `Client`
     # + return -  Error at failure of client initialization
     public isolated function init(ConnectionConfig config) returns error? {
-        self.accessToken = config.accessToken;
-        self.githubGraphQlClient = check new(GIT_GRAPHQL_API_URL, config.clientConfig);
+        self.authToken = config.auth.token;
+        self.githubGraphQlClient = check new(GIT_GRAPHQL_API_URL, config);
     }
 
     # Get authenticated user
@@ -45,7 +43,7 @@ public isolated client class Client {
 
         string stringQuery = getFormulatedStringQueryForGetAuthenticatedUser();
         http:Request request = new;
-        setHeader(request, self.accessToken);
+        setHeader(request, self.authToken);
         json convertedQuery = check stringToJson(stringQuery);
         //Set headers and payload to the request
         constructRequest(request, <@untainted> convertedQuery.cloneReadOnly());
@@ -77,7 +75,7 @@ public isolated client class Client {
     @display { label: "Get User Id" }
     remote isolated function getUserId(@display {label: "User name"} string userName) 
                                        returns @display {label: "User Id"} @tainted string|error {
-        return getUserId(userName, self.accessToken, self.githubGraphQlClient);
+        return getUserId(userName, self.authToken, self.githubGraphQlClient);
     }
 
     # Get user repository
@@ -90,7 +88,7 @@ public isolated client class Client {
     remote isolated function getUserRepository(@display {label: "Repository Owner Name"} string username, 
                                                @display {label: "Repository Name"} string repositoryName) 
                                                returns @display {label: "Repository"} @tainted Repository|error {
-        return getUserRepository(username, repositoryName, self.accessToken, self.githubGraphQlClient);
+        return getUserRepository(username, repositoryName, self.authToken, self.githubGraphQlClient);
     }
 
 
@@ -108,7 +106,7 @@ public isolated client class Client {
                                                                 string? nextPageCursor=()) 
                                                                 returns @display {label: "Repository List"} 
                                                                 @tainted RepositoryList|error {
-        return getAuthenticatedUserRepositoryList(perPageCount, self.accessToken, self.githubGraphQlClient, 
+        return getAuthenticatedUserRepositoryList(perPageCount, self.authToken, self.githubGraphQlClient, 
                                                   nextPageCursor);
 
     }
@@ -126,8 +124,7 @@ public isolated client class Client {
                                                    @display {label: "Next Page Cursor"} string? nextPageCursor = ())
                                                    returns @display {label: "Repository List"} @tainted 
                                                    RepositoryList|error {
-        return getUserRepositoryList(username, perPageCount, self.accessToken, self.githubGraphQlClient, 
-                                     nextPageCursor);
+        return getUserRepositoryList(username, perPageCount, self.authToken, self.githubGraphQlClient, nextPageCursor);
     }
 
     # Get organization repository list
@@ -145,8 +142,8 @@ public isolated client class Client {
                                                            string? nextPageCursor = ()) 
                                                            returns @display {label: "Repository List"} 
                                                            @tainted RepositoryList|error {
-        return getOrganizationRepositoryList(organizationName, perPageCount, self.accessToken, 
-                                             self.githubGraphQlClient, nextPageCursor);
+        return getOrganizationRepositoryList(organizationName, perPageCount, self.authToken, self.githubGraphQlClient, 
+                                             nextPageCursor);
     }
 
     # Get repository collaborator list
@@ -165,7 +162,7 @@ public isolated client class Client {
                                                            string? nextPageCursor = ()) 
                                                            returns @display {label: "Collaborator List"} @tainted 
                                                            CollaboratorList|error {
-        return getRepositoryCollobaratorList(ownerName, repositoryName, perPageCount, self.accessToken, 
+        return getRepositoryCollobaratorList(ownerName, repositoryName, perPageCount, self.authToken, 
                                              self.githubGraphQlClient, nextPageCursor);
 
     }
@@ -185,8 +182,8 @@ public isolated client class Client {
                                                      @display {label: "Next Page Cursor"} string? nextPageCursor = ())
                                                      returns @display {label: "Branch List"} 
                                                      @tainted BranchList|error {
-        return getRepositoryBranchList(ownerName, repositoryName, perPageCount, self.accessToken, 
-                                       self.githubGraphQlClient, nextPageCursor);
+        return getRepositoryBranchList(ownerName, repositoryName, perPageCount, self.authToken, self.githubGraphQlClient, 
+                                       nextPageCursor);
     }
 
     # Create repository
@@ -198,8 +195,7 @@ public isolated client class Client {
     remote isolated function createRepository(@display {label: "Create Repository Input"} 
                                               @tainted CreateRepositoryInput createRepositoryInput)
                                               returns @tainted error? {
-        return createRepository(createRepositoryInput, self.accessToken, 
-                                 self.githubGraphQlClient);
+        return createRepository(createRepositoryInput, self.authToken, self.githubGraphQlClient);
     }
 
     # Update repository
@@ -215,7 +211,7 @@ public isolated client class Client {
                                               @display {label: "Repository Owner Name"} string repositoryOwnerName,
                                               @display {label: "Repository Name"} string repositoryName) 
                                               returns @tainted error? {
-        return  updateRepository(updateRepositoryInput, repositoryOwnerName, repositoryName, self.accessToken, 
+        return  updateRepository(updateRepositoryInput, repositoryOwnerName, repositoryName, self.authToken, 
                                  self.githubGraphQlClient);
     }
 
@@ -244,7 +240,7 @@ public isolated client class Client {
                                                                   returns @display {label: "Issue List"} 
                                                                   @tainted IssueList|error {
         return getRepositoryIssueListAssignedToUser(repositoryOwnerName, repositoryName, assignee, perPageCount, 
-                                                    self.accessToken, self.githubGraphQlClient, nextPageCursor);
+                                                    self.authToken, self.githubGraphQlClient, nextPageCursor);
 
     }
 
@@ -265,7 +261,7 @@ public isolated client class Client {
                                                     @display {label: "Per Page Count"} int perPageCount, 
                                                     @display {label: "Next Page Cursor"} string? nextPageCursor = ())
                                                     returns @display {label: "Issue List"} @tainted IssueList|error {
-        return getRepositoryIssueList(repositoryOwnerName, repositoryName, states, perPageCount, self.accessToken, 
+        return getRepositoryIssueList(repositoryOwnerName, repositoryName, states, perPageCount, self.authToken, 
                                       self.githubGraphQlClient, nextPageCursor);
     }
 
@@ -282,8 +278,7 @@ public isolated client class Client {
                                          @display {label: "Repository Owner Name"} string repositoryOwnerName, 
                                          @display {label: "Repository Name"} string repositoryName) 
                                          returns @display {label: "Issue"} @tainted Issue|error {
-        return createIssue(createIssueInput, repositoryOwnerName, repositoryName, self.accessToken, 
-                           self.githubGraphQlClient);
+        return createIssue(createIssueInput, repositoryOwnerName, repositoryName, self.authToken, self.githubGraphQlClient);
     }
 
     # Update issue
@@ -301,7 +296,7 @@ public isolated client class Client {
                                          @display {label: "Repository Name"} string repositoryName, 
                                          @display {label: "Issue Number"} int issueNumber) 
                                          returns @display {label: "Issue"} @tainted Issue|error {
-        return  updateIssue(updateIssueInput, repositoryOwnerName, repositoryName, issueNumber, self.accessToken, 
+        return  updateIssue(updateIssueInput, repositoryOwnerName, repositoryName, issueNumber, self.authToken, 
                             self.githubGraphQlClient);
     }
 
@@ -317,8 +312,7 @@ public isolated client class Client {
                                                 @display {label: "Repository Name"} string repositoryName, 
                                                 @display {label: "Issue Number"} int issueNumber) 
                                                 returns @display {label: "Issue"} @tainted Issue|error {
-        return getRepositoryIssue(repositoryOwnerName, repositoryName, issueNumber, self.accessToken, 
-                                  self.githubGraphQlClient);
+        return getRepositoryIssue(repositoryOwnerName, repositoryName, issueNumber, self.authToken, self.githubGraphQlClient);
     }
 
     # Get repository issue comment list
@@ -341,7 +335,7 @@ public isolated client class Client {
                                                            returns @display {label: "Issue Comment List"} 
                                                            @tainted IssueCommentList|error {
         return getRepositoryIssueCommentList(repositoryOwnerName, repositoryName, issueNumber, perPageCount, 
-                                             self.accessToken, self.githubGraphQlClient, nextPageCursor);
+                                             self.authToken, self.githubGraphQlClient, nextPageCursor);
     }
 
     # Get issue with label
@@ -360,7 +354,7 @@ public isolated client class Client {
                                                 @display {label: "Per Page Count"} int perPageCount, 
                                                 @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
                                                 returns @display {label: "Issue List"} @tainted IssueList|error {
-        return getIssuesWithLabel(repositoryOwnerName, repositoryName, labelName, perPageCount, self.accessToken, 
+        return getIssuesWithLabel(repositoryOwnerName, repositoryName, labelName, perPageCount, self.authToken, 
                                   self.githubGraphQlClient, nextPageCursor);
     }
 
@@ -375,7 +369,7 @@ public isolated client class Client {
     @display { label: "Add Issue Comment" }
     remote isolated function addComment(@display {label: "Add Comment Input"} AddIssueCommentInput addIssueCommentInput)
                                         returns @display {label: "Issue Comment"} @tainted IssueComment|error {
-        return addComment(addIssueCommentInput, self.accessToken, self.githubGraphQlClient);
+        return addComment(addIssueCommentInput, self.authToken, self.githubGraphQlClient);
     }
 
     # Update issue comment
@@ -386,7 +380,7 @@ public isolated client class Client {
     @display { label: "Update Issue Comment" }
     remote isolated function updateComment(@display {label: "Update Comment Input"} 
                                            UpdateIssueCommentInput updateCommentInput) returns @tainted error? {
-        return updateComment(updateCommentInput, self.accessToken, self.githubGraphQlClient);
+        return updateComment(updateCommentInput, self.authToken, self.githubGraphQlClient);
     }
 
     # Delete issue comment
@@ -397,7 +391,7 @@ public isolated client class Client {
     @display { label: "Delete Issue Comment" }
     remote isolated function deleteComment(@display {label: "Delete Comment Input"} 
                                            DeleteIssueCommentInput deleteCommentInput) returns @tainted error? {
-        return deleteComment(deleteCommentInput, self.accessToken, self.githubGraphQlClient);
+        return deleteComment(deleteCommentInput, self.authToken, self.githubGraphQlClient);
     }
 
 
@@ -420,8 +414,7 @@ public isolated client class Client {
                                                 @display {label: "Repository Name"} string repositoryName, 
                                                 @display {label: "Label Name"} string labelName) 
                                                 returns @display {label: "Label"} @tainted Label|error {
-        return getRepositoryLabel(repositoryOwnerName, repositoryName, labelName, self.accessToken, 
-                                  self.githubGraphQlClient);
+        return getRepositoryLabel(repositoryOwnerName, repositoryName, labelName, self.authToken, self.githubGraphQlClient);
     }
 
     # Get labels in an issue
@@ -440,7 +433,7 @@ public isolated client class Client {
                                              @display {label: "Per Page Count"} int perPageCount, 
                                              @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
                                              returns @display {label: "Label List"} @tainted LabelList|error {
-        return getLabelsInIssue(repositoryOwnerName, repositoryName, issueNumber, perPageCount, self.accessToken, 
+        return getLabelsInIssue(repositoryOwnerName, repositoryName, issueNumber, perPageCount, self.authToken, 
                                 self.githubGraphQlClient, nextPageCursor);
     }
 
@@ -450,10 +443,9 @@ public isolated client class Client {
     # 
     # + return - `LabelList` record if successful else `error`
     @display { label: "Add Labels To Issue" }
-    remote isolated function addIssueLabels(@display {label: "Add Issue Labels Input"} 
-                                                  AddIssueLabelsInput addIssueLabelsInput) 
-                                                  returns @display {label: "Label List"} @tainted LabelList|error {
-        return addIssueLabels(addIssueLabelsInput, self.accessToken, self.githubGraphQlClient);
+    remote isolated function addIssueLabels(@display {label: "Add Issue Labels Input"} AddIssueLabelsInput 
+                                            addIssueLabelsInput) returns @display {label: "Label List"} @tainted LabelList|error {
+        return addIssueLabels(addIssueLabelsInput, self.authToken, self.githubGraphQlClient);
     }
 
     # Remove issue labeles
@@ -465,9 +457,8 @@ public isolated client class Client {
     remote isolated function removeLabelFromLabelable(@display {label: "Remove Issue Label Input"} 
                                                       RemoveIssueLabelInput removeIssueLabelInput) 
                                                       returns @tainted error? {
-        return removeLabelFromLabelable(removeIssueLabelInput, self.accessToken, self.githubGraphQlClient);
+        return removeLabelFromLabelable(removeIssueLabelInput, self.authToken, self.githubGraphQlClient);
     }
-
 
     // Milestones
 
@@ -487,7 +478,7 @@ public isolated client class Client {
                                                         @display {label: "Next Page Cursor"} string? nextPageCursor=())
                                                         returns @display {label: "Milestone List"} @tainted 
                                                         MilestoneList|error {
-        return getRepositoryMilestoneList(repositoryOwnerName, repositoryName, perPageCount, self.accessToken, 
+        return getRepositoryMilestoneList(repositoryOwnerName, repositoryName, perPageCount, self.authToken, 
                                           self.githubGraphQlClient, nextPageCursor);
     }
 
@@ -504,10 +495,9 @@ public isolated client class Client {
                                                     @display {label: "Repository Name"} string repositoryName, 
                                                     @display {label: "Milestone Number"} int milestoneNumber) 
                                                     returns @display {label: "Milestone"} @tainted Milestone|error {
-        return getRepositoryMilestone(repositoryOwnerName, repositoryName, milestoneNumber, self.accessToken, 
+        return getRepositoryMilestone(repositoryOwnerName, repositoryName, milestoneNumber, self.authToken, 
                                       self.githubGraphQlClient);
     }
-
 
     //Pul Requests
 
@@ -523,7 +513,7 @@ public isolated client class Client {
                                             @display {label: "Repository Name"} string repositoryName, 
                                             @display {label: "Pull Request Number"} int pullRequestNumber) 
                                             returns @display {label: "Pull Request"} @tainted PullRequest|error {
-        return getPullRequest(repositoryOwnerName, repositoryName, pullRequestNumber, self.accessToken, 
+        return getPullRequest(repositoryOwnerName, repositoryName, pullRequestNumber, self.authToken, 
                               self.githubGraphQlClient);
     }
 
@@ -547,8 +537,8 @@ public isolated client class Client {
                                                           string? nextPageCursor=()) 
                                                           returns @display {label: "Pull Request List"} @tainted 
                                                           PullRequestList|error {
-        return getRepositoryPullRequestList(repositoryOwnerName, repositoryName, state, perPageCount, 
-                                            self.accessToken, self.githubGraphQlClient, nextPageCursor);
+        return getRepositoryPullRequestList(repositoryOwnerName, repositoryName, state, perPageCount, self.authToken, 
+                                            self.githubGraphQlClient, nextPageCursor);
     }
 
     # Create pull request
@@ -564,7 +554,7 @@ public isolated client class Client {
                                                @display {label: "Repository Owner Name"} string repositoryOwnerName, 
                                                @display {label: "Repository Name"} string repositoryName) 
                                                returns @display {label: "Pull Request"} @tainted PullRequest|error {
-        return createPullRequest(createPullRequestInput, repositoryOwnerName, repositoryName, self.accessToken, 
+        return createPullRequest(createPullRequestInput, repositoryOwnerName, repositoryName, self.authToken, 
                                  self.githubGraphQlClient);
     }
 
@@ -584,7 +574,7 @@ public isolated client class Client {
                                                @display {label: "Pull Request Number"} int pullRequestNumber) 
                                                returns @display {label: "Pull Request"} @tainted PullRequest|error {
         return updatePullRequest(updatePullRequestInput, repositoryOwnerName, repositoryName, pullRequestNumber, 
-                                 self.accessToken, self.githubGraphQlClient);
+                                 self.authToken, self.githubGraphQlClient);
     }
 
     # Get pull request review comment list
@@ -608,7 +598,7 @@ public isolated client class Client {
                                                              returns @display {label: "Pull Request Review List"}
                                                              @tainted PullRequestReviewList|error {
         return getPullRequestReviewCommentList(repositoryOwnerName, repositoryName, pullRequestNumber, perPageCount, 
-                                               self.accessToken, self.githubGraphQlClient, nextPageCursor);
+                                               self.authToken, self.githubGraphQlClient, nextPageCursor);
 
     }
 
@@ -630,7 +620,7 @@ public isolated client class Client {
                                                      returns @display {label: "Pull Request Review"} @tainted 
                                                      PullRequestReview|error {
          return createPullRequestReview(addPullRequestReviewInput, repositoryOwnerName, repositoryName, 
-                                        pullRequestNumber, self.accessToken, self.githubGraphQlClient);
+                                        pullRequestNumber, self.authToken, self.githubGraphQlClient);
     }
 
     # Update pull request review
@@ -642,7 +632,7 @@ public isolated client class Client {
     remote isolated function updatePullRequestReview(@display {label: "Update Pull Request Review"} 
                                                      UpdatePullRequestReviewInput updatePullRequestReviewInput) 
                                                      returns @tainted error? {
-        return updatePullRequestReview(updatePullRequestReviewInput, self.accessToken, self.githubGraphQlClient);
+        return updatePullRequestReview(updatePullRequestReviewInput, self.authToken, self.githubGraphQlClient);
     }
 
     # Delete pending pull request review
@@ -654,7 +644,7 @@ public isolated client class Client {
     remote isolated function deletePendingPullRequestReview(@display {label: "Delete Pull Request Review Input"}
                                                             DeletePullRequestReviewInput deletePullRequestReview) 
                                                             returns @tainted error? {
-        return deletePendingPullRequestReview(deletePullRequestReview, self.accessToken, self.githubGraphQlClient);
+        return deletePendingPullRequestReview(deletePullRequestReview, self.authToken, self.githubGraphQlClient);
     }
 
 
@@ -675,8 +665,8 @@ public isolated client class Client {
                                                         @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
                                                         returns @display {label: "Project List"} @tainted 
                                                         ProjectList|error {
-        return getOrganizationProjectList(organizationName, state, perPageCount, self.accessToken, 
-                                          self.githubGraphQlClient, nextPageCursor);
+        return getOrganizationProjectList(organizationName, state, perPageCount, self.authToken, self.githubGraphQlClient, 
+                                          nextPageCursor);
     }
 
     # Create project
@@ -688,7 +678,7 @@ public isolated client class Client {
     remote isolated function createProject(@display {label: "Create Project Input"} 
                                            CreateRepositoryProjectInput createRepositoryProjectInput) 
                                            returns @display {label: "Project"} @tainted Project|error {
-        return createProject(createRepositoryProjectInput, self.accessToken, self.githubGraphQlClient);
+        return createProject(createRepositoryProjectInput, self.authToken, self.githubGraphQlClient);
     }
 
     # Get user project
@@ -701,7 +691,7 @@ public isolated client class Client {
     remote isolated function getUserProject(@display {label: "Project Owner Name"} string username, 
                                             @display {label: "Project Number"} int projectNumber) 
                                             returns @display {label: "Project"} @tainted Project|error {
-        return getUserProject(username, projectNumber, self.accessToken, self.githubGraphQlClient);
+        return getUserProject(username, projectNumber, self.authToken, self.githubGraphQlClient);
     }
 
     # Update project
@@ -713,7 +703,7 @@ public isolated client class Client {
     remote isolated function updateProject(@display {label: "Update Project Input"} 
                                            UpdateProjectInput updateProjectInput) 
                                            returns @display {label: "Project"} @tainted Project|error {
-        return updateProject(updateProjectInput, self.accessToken, self.githubGraphQlClient);
+        return updateProject(updateProjectInput, self.authToken, self.githubGraphQlClient);
     }
 
     # Delete project
@@ -724,7 +714,7 @@ public isolated client class Client {
     @display { label: "Delete Project" }
     remote isolated function deleteProject(@display {label: "Delete Project Input"} 
                                            DeleteProjectInput deleteProjectInput) returns @tainted error? {
-        return deleteProject(deleteProjectInput, self.accessToken, self.githubGraphQlClient);
+        return deleteProject(deleteProjectInput, self.authToken, self.githubGraphQlClient);
     }
 
     # Get Repository project list
@@ -744,7 +734,7 @@ public isolated client class Client {
                                                       @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
                                                       returns @display {label: "Project List"} @tainted 
                                                       ProjectList|error {
-        return getRepositoryProjectList(repositoryOwner, repositoryName, state, perPageCount, self.accessToken, 
+        return getRepositoryProjectList(repositoryOwner, repositoryName, state, perPageCount, self.authToken, 
                                         self.githubGraphQlClient, nextPageCursor);
     }
 
@@ -760,7 +750,7 @@ public isolated client class Client {
                                                 @display {label: "Per Page Count"} int perPageCount, 
                                                 @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
                                                 returns @display {label: "Project List"} @tainted ProjectList|error {
-        return getUserProjectList(username, perPageCount, self.accessToken, self.githubGraphQlClient, nextPageCursor);
+        return getUserProjectList(username, perPageCount, self.authToken, self.githubGraphQlClient, nextPageCursor);
     }
 
 
@@ -774,7 +764,7 @@ public isolated client class Client {
     @display { label: "Get Organization" }
     remote isolated function getOrganization(@display {label: "Organization Name"} string organizationName) 
                                              returns @display {label: "Organization"} @tainted Organization|error {
-        return getOrganization(organizationName, self.accessToken, self.githubGraphQlClient);
+        return getOrganization(organizationName, self.authToken, self.githubGraphQlClient);
     }
 
     # Get user organization list
@@ -790,7 +780,7 @@ public isolated client class Client {
                                                      @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
                                                      returns @display {label: "Organization List"} @tainted 
                                                      OrganizationList|error {
-        return getUserOrganizationList(username, perPageCount, self.accessToken, self.githubGraphQlClient, 
+        return getUserOrganizationList(username, perPageCount, self.authToken, self.githubGraphQlClient, 
                                        nextPageCursor);
     }
 
@@ -806,7 +796,7 @@ public isolated client class Client {
                                                        @display {label: "Per Page Count"} int perPageCount, 
                                                        @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
                                                        returns @display {label: "User List"} @tainted UserList|error {
-        return getOrganizationMemberList(organizationName, perPageCount, self.accessToken, self.githubGraphQlClient, 
+        return getOrganizationMemberList(organizationName, perPageCount, self.authToken, self.githubGraphQlClient, 
                                          nextPageCursor);
     }
 
@@ -818,6 +808,6 @@ public isolated client class Client {
     @display { label: "Get Organization Id" }
     remote isolated function getOrganizationOwnerId(@display {label: "Organization Name"} string organizationName) 
                                                     returns @display {label: "Organization Id"} @tainted string|error {
-        return getOrganizationOwnerId(organizationName, self.accessToken, self.githubGraphQlClient);
+        return getOrganizationOwnerId(organizationName, self.authToken, self.githubGraphQlClient);
     }
 }

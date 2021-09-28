@@ -23,10 +23,12 @@ configurable string testUserRepositoryName = os:getEnv("USER_REPO_NAME");
 configurable string testResourcePath = os:getEnv("RESOURCE_PATH");
 configurable string testIssueAssignee = os:getEnv("ISSUE_ASSIGNEE");
 configurable string testUserName = os:getEnv("GITHUB_USERNAME");
-configurable string accessToken = os:getEnv("ACCESS_TOKEN");
+configurable string authToken = os:getEnv("ACCESS_TOKEN");
 
 ConnectionConfig gitHubConfig = {
-    accessToken: accessToken
+    auth: {
+        token: authToken
+    }
 };
 
 Client githubClient = checkpanic new (gitHubConfig);
