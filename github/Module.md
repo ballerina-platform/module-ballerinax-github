@@ -26,7 +26,9 @@ Create a `github:ConnectionConfig` using your GitHub personal access token and a
 ```ballerina
 
     github:ConnectionConfig config = {
-        token: accessToken
+        auth: {
+            token: "authToken"
+        }
     };
 
     github:Client githubClient = new (config);

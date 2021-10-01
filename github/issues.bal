@@ -65,7 +65,6 @@ isolated function createIssue(@tainted CreateIssueInput createIssueInput, string
         createIssueInputPayload["clientMutationId"] = <string>createIssueInput?.clientMutationId;
     }
 
-    
     string stringQuery = getFormulatedStringQueryForCreateIssue(createIssueInputPayload);
     http:Request request = new;
     setHeader(request, accessToken);

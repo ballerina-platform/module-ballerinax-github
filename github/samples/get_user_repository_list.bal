@@ -18,7 +18,9 @@ import ballerina/log;
 import ballerinax/github;
 
 github:ConnectionConfig gitHubConfig = {
-    accessToken: "<access_token>"
+    auth: {
+        token: "authToken"
+    }
 };
 
 github:Client githubClient = new (gitHubConfig);

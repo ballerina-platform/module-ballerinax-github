@@ -43,7 +43,7 @@ configurable string githubSecret = ?;
 configurable string githubCallback = ?;
 configurable string testIssueAssignee = ?;
 configurable string testUserName = ?;
-configurable string accessToken = ?;
+configurable string authToken = ?;
 
 @websub:SubscriberServiceConfig {
     target: [HUB, githubTopic],
@@ -51,7 +51,7 @@ configurable string accessToken = ?;
     callback: githubCallback,
     httpConfig: {
         auth: {
-            token: accessToken
+            token: authToken
         }
     }
 }
@@ -119,7 +119,9 @@ string createdIssueAssignee = testIssueAssignee;
 }
 function testWebhookNotificationOnIssueCreation() {
     github:ConnectionConfig gitHubConfig = {
-        accessToken: accessToken
+        auth: {
+            token: authToken
+        }
     };
 
     github:Client githubClient = checkpanic new (gitHubConfig);
@@ -174,7 +176,9 @@ function testWebhookNotificationOnIssueAssignment() {
 function testWebhookNotificationOnIssueEdited() returns error? {
 
     github:ConnectionConfig gitHubConfig = {
-        accessToken: accessToken
+        auth: {
+            token: authToken
+        }
     };
 
     github:Client githubClient = checkpanic new (gitHubConfig);
