@@ -30,7 +30,12 @@ jobs:
               uses: ballerina-platform/ballerina-action@nightly
               with:
                   args:
-                      build -c ./github
+                      pack ./github
+            - name: Ballerina Tests
+              uses: ballerina-platform/ballerina-action@nightly
+              with:
+                  args:
+                      test ./github
               env:
                   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                   ORG_NAME: ${{ secrets.ORG_NAME }}

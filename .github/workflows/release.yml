@@ -28,7 +28,7 @@ jobs:
         uses: ballerina-platform/ballerina-action@slalpha5
         with:
           args:
-            build -c --skip-tests ./github
+            pack ./github
         env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           ORG_NAME: ${{ secrets.ORG_NAME }}
