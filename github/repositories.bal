@@ -251,7 +251,7 @@ isolated function updateRepository(@tainted UpdateRepositoryInput updateReposito
 
     //Check for empty payloads and errors
     _ = check getValidatedResponse(response);
-
+    return;
 }
 
 isolated function getRepositoryIssueListAssignedToUser(string repositoryOwnerName, string repositoryName, 

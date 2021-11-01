@@ -28,6 +28,7 @@ isolated function createLabel(CreateLabelInput createLabelInput, string accessTo
 
     http:Response response = check graphQlClient->post(EMPTY_STRING, request);
     _ = check getValidatedResponse(response);
+    return;
 }
 
 isolated function getRepositoryLabel(string repositoryOwnerName, string repositoryName, string labelName, 

@@ -306,6 +306,7 @@ isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePul
 
     http:Response response = check graphQlClient->post(EMPTY_STRING, request);
     _ = check getValidatedResponse(response);
+    return;
 }
 
 isolated function deletePendingPullRequestReview(DeletePullRequestReviewInput deletePullRequestReview, 
@@ -320,4 +321,5 @@ isolated function deletePendingPullRequestReview(DeletePullRequestReviewInput de
 
     http:Response response = check graphQlClient->post(EMPTY_STRING, request);
     _ = check getValidatedResponse(response);
+    return;
 }
