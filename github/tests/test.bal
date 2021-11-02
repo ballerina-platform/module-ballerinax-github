@@ -699,7 +699,6 @@ function testGetOrgProjectList() returns @tainted error? {
     }else {
         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
-    return;
 }
 
 

@@ -41,6 +41,8 @@ jobs:
               with:
                   args:
                       pack ./github
+              env:
+                  JAVA_HOME: /usr/lib/jvm/default-jvm
             - name: Ballerina Tests
               uses: ballerina-platform/ballerina-action/@nightly
               with:

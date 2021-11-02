@@ -185,7 +185,6 @@ isolated function deleteProject(DeleteProjectInput deleteProjectInput, string ac
 
     http:Response response = check graphQlClient->post(EMPTY_STRING, request);
     _ = check getValidatedResponse(response);
-    return;
 }
 
 isolated function getRepositoryProjectList(string repositoryOwner, string repositoryName, ProjectState state, 
