@@ -71,6 +71,7 @@ isolated function updateComment(UpdateIssueCommentInput updateCommentInput, stri
 
     http:Response response = check graphQlClient->post(EMPTY_STRING, request);
     _ = check getValidatedResponse(response);
+    return;
 }
 
 isolated function deleteComment(DeleteIssueCommentInput deleteCommentInput, string accessToken, 
@@ -84,4 +85,5 @@ isolated function deleteComment(DeleteIssueCommentInput deleteCommentInput, stri
 
     http:Response response = check graphQlClient->post(EMPTY_STRING, request);
     _ = check getValidatedResponse(response);
+    return;
 }

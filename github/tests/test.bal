@@ -39,7 +39,7 @@ Client githubClient = checkpanic new (gitHubConfig);
 }
 function testGetAuthenticatedUser() returns @tainted error? {
     log:printInfo("githubClient -> getAuthenticatedUser()");
-    var response = githubClient->getAuthenticatedUser();
+    User|error response = githubClient->getAuthenticatedUser();
     if(response is User){
         test:assertEquals(response.login, testUserName, msg = "Failed getAuthenticatedUser()");
     }else {
@@ -53,7 +53,7 @@ function testGetAuthenticatedUser() returns @tainted error? {
 }
 function testGetUserRepository() returns @tainted error? {
     log:printInfo("githubClient -> getUserRepository()");
-    var response = githubClient->getUserRepository(testUserName, testUserRepositoryName);
+    Repository|error response = githubClient->getUserRepository(testUserName, testUserRepositoryName);
     if(response is Repository){
         test:assertEquals(response.name, testUserRepositoryName, msg = "Failed testGetUserRepository()");
     }else {
@@ -68,7 +68,7 @@ function testGetUserRepository() returns @tainted error? {
 function testGetAuthenticatedUserRepositoryList() returns @tainted error? {
     log:printInfo("githubClient -> getAuthenticatedUserRepositoryList()");
     int perPageCount = 10;
-    var response = githubClient->getAuthenticatedUserRepositoryList(perPageCount);
+    RepositoryList|error response = githubClient->getAuthenticatedUserRepositoryList(perPageCount);
     if(response is RepositoryList){
         test:assertTrue(response.repositories.length()>0, msg = "Failed testGetAuthenticatedUserRepositoryList()");
     }else {
@@ -83,7 +83,7 @@ function testGetAuthenticatedUserRepositoryList() returns @tainted error? {
 function testGetUserRepositoryList() returns @tainted error? {
     log:printInfo("githubClient -> getUserRepositoryList()");
     int perPageCount = 10;
-    var response = githubClient->getUserRepositoryList(testUserName, perPageCount);
+    RepositoryList|error response = githubClient->getUserRepositoryList(testUserName, perPageCount);
     if(response is RepositoryList){
         test:assertTrue(response.length()>0, msg = "Failed testGetUserRepositoryList()");
     }else {
@@ -98,7 +98,7 @@ function testGetUserRepositoryList() returns @tainted error? {
 function testGetOrganizationRepositoryList() returns @tainted error? {
     log:printInfo("githubClient -> getOrganizationRepositoryList()");
     int perPageCount = 10;
-    var response = githubClient->getOrganizationRepositoryList(testOrganizationName,perPageCount);
+    RepositoryList|error response = githubClient->getOrganizationRepositoryList(testOrganizationName,perPageCount);
     if(response is RepositoryList){
         test:assertTrue(response.length()>0, msg = "Failed testGetOrganizationRepositoryList()");
     }else {
@@ -113,7 +113,7 @@ function testGetOrganizationRepositoryList() returns @tainted error? {
 function testGetRepositoryCollobaratorList() returns @tainted error? {
     log:printInfo("githubClient -> getRepositoryCollobaratorList()");
     int perPageCount = 10;
-    var response = githubClient->getRepositoryCollobaratorList(testUserName, testUserRepositoryName, perPageCount);
+    CollaboratorList|error response = githubClient->getRepositoryCollobaratorList(testUserName, testUserRepositoryName, perPageCount);
     if(response is CollaboratorList){
         test:assertTrue(response.collaborators.length()>0, msg = "Failed testGetRepositoryCollobaratorList()");
     }else {
@@ -128,7 +128,7 @@ function testGetRepositoryCollobaratorList() returns @tainted error? {
 function testGetRepositoryBranchList() returns @tainted error? {
     log:printInfo("githubClient -> getRepositoryBranchList()");
     int perPageCount = 10;
-    var response = githubClient->getRepositoryBranchList(testUserName, testUserRepositoryName, perPageCount);
+    BranchList|error response = githubClient->getRepositoryBranchList(testUserName, testUserRepositoryName, perPageCount);
     if(response is BranchList){
         test:assertTrue(response.branches.length()>0, msg = "Failed testGetRepositoryBranchList()");
     }else {
@@ -167,7 +167,6 @@ function testUpdateRepository() returns @tainted error? {
         description: "New Updated Description"
     };
     var response = githubClient->updateRepository(updateRepositoryInput, testUserName, testUserRepositoryName);
-
     if(response is error){
         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }else {
@@ -700,6 +699,7 @@ function testGetOrgProjectList() returns @tainted error? {
     }else {
         test:assertFail(msg = response.message()+response.message()+": "+ <string> check response.detail()["message"]);
     }
+    return;
 }
 
 

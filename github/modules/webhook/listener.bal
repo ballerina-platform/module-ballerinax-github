@@ -46,6 +46,7 @@ public class Listener {
         self.subscriberListener = check new(listenTo, subscriberListenerConfig);
         self.subscriberService = ();
         self.accessToken = ();
+        return;
     }
 
     public isolated function attach(SimpleWebhookService s, string[]|string? name = ()) returns error? {
@@ -66,14 +67,17 @@ public class Listener {
         } else {
             return error ListenerError("Could not find the required service-configurations");
         }
+        return;
     }
 
     public isolated function detach(SimpleWebhookService s) returns error? {
         check self.subscriberListener.detach(<WebSubService>self.subscriberService);
+        return;
     }
 
     public isolated  function 'start() returns error? {
         check self.subscriberListener.'start();
+        return;
     }
 
     public isolated function gracefulStop() returns error? {
@@ -104,6 +108,7 @@ public class Listener {
                 }
             }
         }
+        return;
     }
 }
 

@@ -30,11 +30,11 @@ Execute the commands below to build from the source after installing Ballerina S
 
 * To build the package:
     ```    
-    bal build -c ./github
+    bal build ./github
     ```
-* To run the without tests:
+* To run the tests:
     ```
-    bal build -c --skip-tests ./github
+    bal test ./github
     ```
 
 # Contributing to Ballerina
