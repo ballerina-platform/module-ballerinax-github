@@ -6,7 +6,7 @@ The `ballerinax/github` is a [Ballerina](https://ballerina.io/) connector for Gi
 ### Compatibility
 |                                                                                    | Version               |
 |------------------------------------------------------------------------------------|-----------------------|
-| Ballerina Language                                                                 | Swan Lake Beta3       |
+| Ballerina Language                                                                 | Swan Lake Beta4       |
 | [Github API](https://docs.github.com/en/graphql)                                   | v4.0                  |
 
 ## Report Issues
