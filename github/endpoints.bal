@@ -19,7 +19,7 @@ import ballerina/http;
 # Ballerina GitHub connector provides the capability to access GitHub GraphQL API.
 # This connector lets you to get authorized access to GitHub data in a personal or organization
 # account. 
-@display { label: "GitHub Client", iconPath:"resources/github.svg" }
+@display { label: "GitHub Client", iconPath:"icon.png" }
 public isolated client class Client {
     final string authToken;
     final http:Client githubGraphQlClient;
