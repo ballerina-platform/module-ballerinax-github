@@ -5,6 +5,7 @@ version = "2.0.0"
 export= ["github", "github.webhook"]
 authors = ["Ballerina"]
 keywords = ["IT Operations/Source Control", "Cost/Freemium"]
+icon = "icon.png"
 repository = "https://github.com/ballerina-platform/module-ballerinax-github"
 license = ["Apache-2.0"]
 
