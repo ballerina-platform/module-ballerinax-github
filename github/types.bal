@@ -75,6 +75,12 @@ public type User record {
     string? name?;
 };
 
+public type ViewrRwcord record {
+    User viewer;
+};
+public type Resp record {
+    ViewrRwcord data;
+};
 # Represent GitHub repository owner
 #
 # + id - ID
@@ -233,6 +239,7 @@ public type Branch record {
 # + url - The HTTP URL for this issue
 # + viewerDidAuthor - Did the viewer author this comment.
 # + viewerCanUpdate - Check if the current viewer can update this object.
+# + issueComments - Comments in an issue
 public type Issue record {
     Actor? author?;
     string body?;
@@ -260,6 +267,7 @@ public type Issue record {
     string url?;
     boolean viewerDidAuthor?;
     boolean viewerCanUpdate?;
+    IssueComment[] issueComments?;
 };
 
 # Represent GitHub issue comment.
@@ -377,40 +385,41 @@ public type Ref record {
 
 # Represent GitHub pull request.
 #
-# + additions - The number of additions in this pull request.
-# + author - The actor who authored the comment.
-# + baseRef - Identifies the base Ref associated with the pull request.
-# + baseRefName - Identifies the name of the base Ref associated with the pull request, even if the ref has been deleted.
-# + body - The body as Markdown.
-# + bodyHTML - The body rendered to HTML.
-# + bodyText - The body rendered to text.
-# + changedFiles - The number of changed files in this pull request.
-# + checksResourcePath - The HTTP path for the checks of this pull request.
-# + checksUrl - The HTTP URL for the checks of this pull request.
-# + closed - `true` if the pull request is closed
-# + closedAt - Identifies the date and time when the object was closed.
-# + createdAt - Identifies the date and time when the object was created.
-# + createdViaEmail - Check if this comment was created via an email reply.
-# + databaseId - Identifies the primary key from the database.
-# + deletions - The number of deletions in this pull request.
-# + editor - The actor who edited this pull request's body.
-# + headRef - Identifies the head Ref associated with the pull request.
-# + headRefName - Identifies the name of the head Ref associated with the pull request, even if the ref has been deleted.
-# + headRepositoryOwner - The owner of the repository associated with this pull request's head Ref.
-# + id - ID
-# + isDraft - Identifies if the pull request is a draft.
-# + lastEditedAt - The moment the editor made the last edit
-# + locked - `true` if the pull request is locked
-# + merged - Whether or not the pull request was merged.
-# + mergedBy - The actor who merged the pull request.
-# + number - Identifies the pull request number.
-# + publishedAt - Identifies when the comment was published at.
-# + resourcePath - The HTTP path for this pull request.
-# + revertUrl - The HTTP URL for reverting this pull request.
-# + state - Identifies the state of the pull request.
-# + title - Identifies the pull request title.
-# + updatedAt - Identifies the date and time when the object was last updated.
-# + url - The HTTP URL for this pull request.
+# + additions - The number of additions in this pull request.  
+# + author - The actor who authored the comment.  
+# + baseRef - Identifies the base Ref associated with the pull request.  
+# + baseRefName - Identifies the name of the base Ref associated with the pull request, even if the ref has been deleted.  
+# + body - The body as Markdown.  
+# + bodyHTML - The body rendered to HTML.  
+# + bodyText - The body rendered to text.  
+# + changedFiles - The number of changed files in this pull request.  
+# + checksResourcePath - The HTTP path for the checks of this pull request.  
+# + checksUrl - The HTTP URL for the checks of this pull request.  
+# + closed - `true` if the pull request is closed  
+# + closedAt - Identifies the date and time when the object was closed.  
+# + createdAt - Identifies the date and time when the object was created.  
+# + createdViaEmail - Check if this comment was created via an email reply.  
+# + databaseId - Identifies the primary key from the database.  
+# + deletions - The number of deletions in this pull request.  
+# + editor - The actor who edited this pull request's body.  
+# + headRef - Identifies the head Ref associated with the pull request.  
+# + headRefName - Identifies the name of the head Ref associated with the pull request, even if the ref has been deleted.  
+# + headRepositoryOwner - The owner of the repository associated with this pull request's head Ref.  
+# + id - ID  
+# + isDraft - Identifies if the pull request is a draft.  
+# + lastEditedAt - The moment the editor made the last edit  
+# + locked - `true` if the pull request is locked  
+# + merged - Whether or not the pull request was merged.  
+# + mergedBy - The actor who merged the pull request.  
+# + number - Identifies the pull request number.  
+# + publishedAt - Identifies when the comment was published at.  
+# + resourcePath - The HTTP path for this pull request.  
+# + revertUrl - The HTTP URL for reverting this pull request.  
+# + state - Identifies the state of the pull request.  
+# + title - Identifies the pull request title.  
+# + updatedAt - Identifies the date and time when the object was last updated.  
+# + url - The HTTP URL for this pull request.  
+# + pullRequestReviews - PR review comments
 public type PullRequest record {
     int additions?;
     Actor? author?;
@@ -446,6 +455,7 @@ public type PullRequest record {
     string title?;
     string updatedAt?;
     string url?;
+    PullRequestReview[] pullRequestReviews?;
 };
 
 # Represent GitHub pull request review state.
@@ -470,6 +480,15 @@ public enum PullRequestReviewState {
 public enum ProjectState {
     PROJECT_OPEN = "OPEN",
     PROJECT_CLOSED = "CLOSED"
+}
+
+# Represent GitHub account owner type .
+#
+# + USER - The user type.
+# + ORGANIZATION - The organization type.
+public enum OwnerType {
+    GITHUB_USER = "user" ,
+    GITHUB_ORGANIZATION = "organization"
 }
 
 # Represent GitHub pull request review
@@ -1159,7 +1178,7 @@ public type AddLabelsToLabelableInput record {
 # + issueNumber - Issue number
 # + labelNames - Repository label name
 # + clientMutationId - A unique identifier for the client performing the mutation. 
-public type AddIssueLabelsInput record {
+public type AddLabelsInput record {
     @display { label: "Repository Owner Name" }
     string repositoryOwnerName;
     @display { label: "Repository Name" }
@@ -1303,7 +1322,8 @@ public type UpdatePullRequestInputPayload record {
 # + PULL_REQUEST_CLOSED - A pull request that has been closed without being merged.
 public enum PullRequestState {
     PULL_REQUEST_OPEN="OPEN",
-    PULL_REQUEST_CLOSED="CLOSED"
+    PULL_REQUEST_CLOSED="CLOSED",
+    PULL_REQUEST_MERGED = "MERGED"
 }
 
 # Represent GitHub pull request review create input payload.
@@ -1502,4 +1522,72 @@ public type DeleteProjectInput record {
     string projectId;
     @display { label: "Client Mutation Id" }
     string clientMutationId?;
+};
+public type SearchResultPayload record {
+    int codeCount;
+    int discussionCount;
+    int issueCount;
+    int repositoryCount;
+    int userCount;
+    int wikiCount;
+    PageInfo pageInfo;
+    Issue[]|User[]|Organization[]|Repository[] nodes;
+};
+public type SearchResult record {
+    int codeCount;
+    int discussionCount;
+    int issueCount;
+    int repositoryCount;
+    int userCount;
+    int wikiCount;
+    PageInfo pageInfo;
+    Issue[]|User[]|Organization[]|Repository[] results;
+};
+public type SearchCount record {
+    int codeCount;
+    int discussionCount;
+    int issueCount;
+    int repositoryCount;
+    int userCount;
+    int wikiCount;
+};
+
+public enum SearchType {
+    SEARCH_TYPE_DISCUSSION = "DISCUSSION", 
+    SEARCH_TYPE_ISSUE = "ISSUE",
+    SEARCH_TYPE_REPOSITORY = "REPOSITORY",
+    SEARCH_TYPE_USER = "USER"
+}
+
+public type IssueFilters record {
+    string assignee?;
+    string createdBy?;
+    string[] labels?;
+    string mentioned?;
+    string milestone?;
+    string since?;// iso utc string 
+    IssueState[] states?;
+    boolean viewerSubscribed?;
+};
+
+public type Error ClientError|ServerError;
+
+public type ClientError distinct error<record {| anydata body?; |}>;
+
+public type ServerError distinct error<record {| json? data?; GraphQLClientError[] errors; map<json>? extensions?; |}>;
+
+// GraphQL error representation (Generic)
+
+public type GraphQLClientErrorArray GraphQLClientError[];
+ 
+public type GraphQLClientError record {
+   string message;
+   GraphQLClientSourceLocation[] locations?;
+   anydata[] path?;
+   map<anydata> extensions?;
+};
+
+public type GraphQLClientSourceLocation record {
+   int line?;
+   int column?;
 };

@@ -16,101 +16,12 @@
 
 import ballerina/http;
 import ballerina/regex;
-import ballerina/lang.'string as strings;
-//import ballerina/io;
 
 # Construct the request by adding the payload and authorization tokens.
 # + request - HTTP request object
 # + stringQuery - GraphQL API query
 isolated function constructRequest(http:Request request, json stringQuery) {
     request.setJsonPayload(stringQuery);
-}
-
-# Validate the HTTP response and return payload or error.
-# + response - HTTP response object or HTTP Connector error
-# + return - `json` payload of the response or Connector error
-isolated function getValidatedResponse(http:Response|http:PayloadType|error response) returns @tainted json | error {
-
-    if (response is http:Response) {
-        var jsonPayload = response.getJsonPayload();
-        if (jsonPayload is json) {
-            string[] payLoadKeys = [];
-            map<json> mapJsonPayload = <map<json>> jsonPayload;
-            payLoadKeys = mapJsonPayload.keys();
-            //Check all the keys in the payload to see if an error is returned.
-            foreach var key in payLoadKeys {
-                if (strings:equalsIgnoreCaseAscii(GIT_ERRORS, key)) {
-                    var errorList = mapJsonPayload[GIT_ERRORS];
-                    if (errorList is json[]) {
-                        int i = 0;
-                        foreach var singleError in errorList {
-                            map<json> mapSingleerror = <map<json>> singleError;
-                            string errorMessage = mapSingleerror[GIT_MESSAGE].toString();
-                            string errMessage = string ` ${GITHUB_ERROR_CODE} : ${errorMessage}`;
-                            error err = error(errMessage, message = errorMessage);
-                            return err;
-                        }
-                    } else {
-                        string errorMessage = string ` ${GITHUB_ERROR_CODE} : Error occurred while accessing the Json payload of the response.`;
-                        error err = error(errorMessage,
-                        message = "Error occurred while accessing the Json payload of the response.");
-                        return err;
-                    }
-                }
-
-                if (strings:equalsIgnoreCaseAscii(GIT_MESSAGE, key)) {
-                    string errorMessage = string ` ${GITHUB_ERROR_CODE} : ${mapJsonPayload[GIT_MESSAGE].toString()}`;
-                    error err = error(errorMessage, message = mapJsonPayload[GIT_MESSAGE].toString());
-                    return err;
-                }
-            }
-
-            //If no error is returned, then check if the response contains the requested data.
-            string[] keySet = [];
-            var data = mapJsonPayload[GIT_DATA];
-            if (data is map<json>) {
-                keySet = data.keys();
-            }
-            map<json> mapJsondata = <map<json>> data;
-            string keyInData = keySet[INDEX_ZERO];
-            map<json> output = <map<json>> mapJsondata[keyInData];
-            return jsonPayload;
-        } else {
-            string errorMessage = string `${GITHUB_ERROR_CODE}: Entity body is not json compatible since the received content-type is : null`;
-            error err = error(errorMessage,
-            message = "Entity body is not json compatible since the received content-type is : null");
-            return err;
-        }
-    } else {
-        string errorMessage = string ` ${GITHUB_ERROR_CODE} : HTTP Connector Error`;
-        error err = error(errorMessage, message = "HTTP Connector Error");
-        return err;
-    }
-}
-
-# Validate the REST HTTP response and return payload or error.
-# + response - HTTP response object or HTTP Connector error
-# + return - `json` payload of the response or Connector error
-isolated function getValidatedRestResponse(http:Response|http:PayloadType|error response) returns json | error {
-    if (response is http:Response) {
-        var payload = response.getJsonPayload();
-        if (payload is json) {
-            map<json> mapPayload = <map<json>> payload;
-            if (mapPayload["message"] == null) {
-                return <@untainted>payload;
-            } else {
-                error err = error(GITHUB_ERROR_CODE, message = mapPayload["message"].toString());
-                return <@untainted>err;
-            }
-        } else {
-            error err = error(GITHUB_ERROR_CODE,
-            message = "Entity body is not json compatible since the received content-type is : null");
-            return err;
-        }
-    } else {
-        error err = error(GITHUB_ERROR_CODE, message = "HTTP Connector Error");
-        return err;
-    }
 }
 
 # Set Auth header
@@ -140,49 +51,47 @@ isolated function split(string receiver, string delimeter, int index) returns st
 
 // GraphQL Query Formulation Methods
 
-isolated function getFormulatedStringQueryForGetAuthenticatedUser() returns string {
-    return string `{"query":"${GET_AUTHENTICATED_USER_QUERY}"}`;
+isolated function getFormulatedStringQueryForGetUser(string? username = ()) returns string {
+    if username is string {
+        return string `{"variables":{"userName":"${username}"},"query":"`
+                      + string `${GET_USER}"}`;
+    } else {
+        return string `{"query":"${GET_AUTHENTICATED_USER_QUERY}"}`;
+    }
 }
 
 isolated function getFormulatedStringQueryForGetRepository(string username, string repositoryName) returns string {
     return string `{"variables":{"owner":"${username}", "name":"${repositoryName}"},"query":"${GET_REPOSIOTRY}"}`;
 }
 
-isolated function getFormulatedStringQueryForGetAuthenticatedUserRepositoryList(int perPageCount, 
-                                                                                string? lastPageCursor=()) 
-                                                                                returns string {
-
-    if (lastPageCursor is string){
-        return string `{"variables":{"perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},
-                        "query":"${GET_REPOSITORY_LIST_FOR_AUTHENTICATED_USER}"}`;
-    }else{
-        return string `{"variables":{"perPageCount":${perPageCount}, "lastPageCursor":null},
-                        "query":"${GET_REPOSITORY_LIST_FOR_AUTHENTICATED_USER}"}`;
-    }
-}
-
-isolated function getFormulatedStringQueryForGetUserRepositoryList(string username, int perPageCount, 
-                                                                   string? lastPageCursor=()) returns string {
-
-    if (lastPageCursor is string){
-        return string `{"variables":{"username":"${username}", "perPageCount":${perPageCount}, 
-                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_LIST_FOR_USER}"}`;
-    }else{
-        return string `{"variables":{"username":"${username}", "perPageCount":${perPageCount}, "lastPageCursor":null},
-                        "query":"${GET_REPOSITORY_LIST_FOR_USER}"}`;
-    }
-}
-
-isolated function getFormulatedStringQueryForGetOrganizationRepositoryList(string organizationName, int perPageCount,
-                                                                           string? lastPageCursor=()) returns string {
-
-    if (lastPageCursor is string){
-        return string `{"variables":{"organizationName":"${organizationName}", "perPageCount":${perPageCount}, 
-                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_LIST_FOR_ORGANIZATION}"}`;
-    }else{
-        return string `{"variables":{"organizationName":"${organizationName}", "perPageCount":${perPageCount}, 
-                        "lastPageCursor":null},"query":"${GET_REPOSITORY_LIST_FOR_ORGANIZATION}"}`;
-    }
+isolated function getFormulatedStringQueryForGetRepositoryList(int perPageCount, boolean isOrganization,
+                                                               string? owner, string? lastPageCursor=()) 
+                                                               returns string {
+    if (owner is string && isOrganization) {
+        if (lastPageCursor is string){
+            return string `{"variables":{"organizationName":"${owner}", "perPageCount":${perPageCount}, 
+                            "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_LIST_FOR_ORGANIZATION}"}`;
+        }else{
+            return string `{"variables":{"organizationName":"${owner}", "perPageCount":${perPageCount}, 
+                            "lastPageCursor":null},"query":"${GET_REPOSITORY_LIST_FOR_ORGANIZATION}"}`;
+        }
+    } else if (owner is string && !isOrganization) {
+        if (lastPageCursor is string){
+            return string `{"variables":{"username":"${owner}", "perPageCount":${perPageCount}, 
+                            "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_LIST_FOR_USER}"}`;
+        }else{
+            return string `{"variables":{"username":"${owner}", "perPageCount":${perPageCount}, "lastPageCursor":null},
+                            "query":"${GET_REPOSITORY_LIST_FOR_USER}"}`;
+        }
+    } else {
+        if (lastPageCursor is string){
+            return string `{"variables":{"perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},
+                            "query":"${GET_REPOSITORY_LIST_FOR_AUTHENTICATED_USER}"}`;
+        }else{
+            return string `{"variables":{"perPageCount":${perPageCount}, "lastPageCursor":null},
+                            "query":"${GET_REPOSITORY_LIST_FOR_AUTHENTICATED_USER}"}`;
+        }
+    }    
 }
 
 isolated function getFormulatedStringQueryForCreateRepository(CreateRepositoryInput createRepositoryInput) 
@@ -197,31 +106,31 @@ isolated function getFormulatedStringQueryForUpdateRepository(UpdateRepositoryIn
                     "query":"${UPDATE_REPOSITORY}"}`;
 }
 
-isolated function getFormulatedStringQueryForGetRepositoryCollaboratorList(string username, string repositoryName, 
+isolated function getFormulatedStringQueryForGetCollaboratorList(string username, string repositoryName, 
                                                                            int perPageCount, string? lastPageCursor=()) 
                                                                            returns string {
     if (lastPageCursor is string){
         return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
                         "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},
-                        "query":"${LIST_REPOSITORY_COLLOBORATORS}"}`;
+                        "query":"${LIST_COLLOBORATORS}"}`;
     }else{
         return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
                         "perPageCount":${perPageCount}, "lastPageCursor":null},
-                        "query":"${LIST_REPOSITORY_COLLOBORATORS}"}`;
+                        "query":"${LIST_COLLOBORATORS}"}`;
     }
 }
 
-isolated function getFormulatedStringQueryForGetRepositoryBranchList(string username, string repositoryName, 
+isolated function getFormulatedStringQueryForGetBranches(string username, string repositoryName, 
                                                                      int perPageCount, string? lastPageCursor=()) 
                                                                      returns string {
     if (lastPageCursor is string){
         return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
                         "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},
-                        "query":"${GET_BRANCH_LIST_OF_A_REPOSITORY}"}`;
+                        "query":"${GET_BRANCH_LIST}"}`;
     }else{
         return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
                         "perPageCount":${perPageCount}, "lastPageCursor":null},
-                        "query":"${GET_BRANCH_LIST_OF_A_REPOSITORY}"}`;
+                        "query":"${GET_BRANCH_LIST}"}`;
     }
 }
 
@@ -241,17 +150,17 @@ isolated function getFormulatedStringQueryForGetIssueListAssignedToUser(string r
     }
 }
 
-isolated function getFormulatedStringQueryForGetIssueList(string repositoryOwnerName, string repositoryName, 
-                                                          string[] state, int perPageCount, 
-                                                          string? lastPageCursor = ()) returns string {
+isolated function getFormulatedStringQueryForGetIssueList(string repositoryOwnerName, string repositoryName,
+                                                          int perPageCount, string? lastPageCursor, 
+                                                          IssueFilters issueFilters) returns string {
     if (lastPageCursor is string){
         return string `{"variables":{"owner":"${repositoryOwnerName}","name":"${repositoryName}",
-                        "states":${state.toBalString()}, "perPageCount":${perPageCount}, 
+                        "issueFilters":${issueFilters.toBalString()}, "perPageCount":${perPageCount}, 
                         "lastPageCursor":"${lastPageCursor}"},"query":" ${GET_ISSUE_LIST}"}`;
     }else{
         return string `{"variables":{"owner":"${repositoryOwnerName}","name":"${repositoryName}",
-                        "states":${state.toBalString()}, "perPageCount":${perPageCount}, "lastPageCursor":null},
-                        "query":" ${GET_ISSUE_LIST}"}`;
+                        "issueFilters":${issueFilters.toBalString()}, "perPageCount":${perPageCount},
+                        "lastPageCursor":null},"query":" ${GET_ISSUE_LIST}"}`;
     }
 
 }
@@ -265,7 +174,7 @@ isolated function getFormulatedStringQueryForUpdateIssue( UpdateIssueInputPayloa
 }
 
 
-isolated function getFormulatedStringQueryForGetRepositoryIssue(string repositoryOwnerName, string repositoryName, 
+isolated function getFormulatedStringQueryForGetIssue(string repositoryOwnerName, string repositoryName, 
                                                                 int issueNumber) returns string {
     return string `{"variables":{"owner":"${repositoryOwnerName}", "name":"${repositoryName}", 
                     "issueNumber":${issueNumber}},"query":"${GET_ISSUE}"}`;
@@ -351,21 +260,7 @@ isolated function getFormulatedStringQueryForRemoveLabelsFromLabelable(RemoveLab
                     "query":"${REMOVE_LABELS_TO_LABELABLE}"}`;
 }
 
-isolated function getFormulatedStringQueryForGetIssueListWithLabel(string username, string repositoryName, 
-                                                                   string labelName, int perPageCount, 
-                                                                   string? lastPageCursor=()) returns string {
-    if (lastPageCursor is string){
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
-                        "labelName":"${labelName}", "perPageCount":${perPageCount}, 
-                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_ISSUES_WITH_LABEL}"}`;
-    }else{
-        return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
-                        "labelName":"${labelName}", "perPageCount":${perPageCount}, "lastPageCursor":null},
-                        "query":"${GET_REPOSITORY_ISSUES_WITH_LABEL}"}`;
-    }
-}
-
-isolated function getFormulatedStringQueryForGetMilestoneListOfARepository(string username, string repositoryName, 
+isolated function getFormulatedStringQueryForGetMilestones(string username, string repositoryName, 
                                                                            int perPageCount, string? lastPageCursor=())
                                                                            returns string {
     if (lastPageCursor is string){
@@ -453,17 +348,29 @@ isolated function getFormulatedStringQueryForDeletePullRequestReview(DeletePullR
 
 
 
-isolated function getFormulatedStringQueryForOrgProjectList(string organizationName, ProjectState state, 
+isolated function getFormulatedStringQueryForOrgProjectList(string organizationName, ProjectState? state, 
                                                             int perPageCount, string? lastPageCursor=()) 
                                                             returns string {
     if (lastPageCursor is string){
-        return string `{"variables":{"organization":"${organizationName}", "states":${state.toBalString()}, 
+        if (state is ProjectState) {
+            return string `{"variables":{"organization":"${organizationName}", "states":${state.toBalString()}, 
                         "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},
                         "query":"${GET_ORGANIZATION_PROJECT_LIST}"}`;
+        } else {
+            return string `{"variables":{"organization":"${organizationName}", "states":null, 
+                        "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},
+                        "query":"${GET_ORGANIZATION_PROJECT_LIST}"}`;
+        }
     }else{
-        return string `{"variables":{"organization":"${organizationName}", "states":${state.toBalString()}, 
+        if (state is ProjectState) {
+            return string `{"variables":{"organization":"${organizationName}", "states":${state.toBalString()}, 
                         "perPageCount":${perPageCount}, "lastPageCursor":null},
                         "query":"${GET_ORGANIZATION_PROJECT_LIST}"}`;
+        } else {
+            return string `{"variables":{"organization":"${organizationName}", "states":null, 
+                        "perPageCount":${perPageCount}, "lastPageCursor":null},
+                        "query":"${GET_ORGANIZATION_PROJECT_LIST}"}`;
+        }
     }
 }
 
@@ -489,17 +396,31 @@ isolated function getFormulatedStringQueryForDeleteProject(DeleteProjectInput de
 }
 
 isolated function getFormulatedStringQueryForRepositoryProjectList(string repositoryOwner, string repositoryName, 
-                                                                   ProjectState state, int perPageCount, 
+                                                                   ProjectState? state, int perPageCount, 
                                                                    string? lastPageCursor=()) returns string {
 
     if (lastPageCursor is string){
-        return string `{"variables":{"owner":"${repositoryOwner}","repository":"${repositoryName}",` +
+        if (state is ProjectState){
+            return string `{"variables":{"owner":"${repositoryOwner}","repository":"${repositoryName}",` +
                 string `"states":${state.toBalString()},"perPageCount":${perPageCount}, 
                 "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_PROJECT_LIST}"}`;
+        } else {
+            return string `{"variables":{"owner":"${repositoryOwner}","repository":"${repositoryName}",` +
+                string `"states":null,"perPageCount":${perPageCount}, 
+                "lastPageCursor":"${lastPageCursor}"},"query":"${GET_REPOSITORY_PROJECT_LIST}"}`;
+        }
+        
     }else{
-        return string `{"variables":{"owner":"${repositoryOwner}","repository":"${repositoryName}",` +
+        if (state is ProjectState){
+            return string `{"variables":{"owner":"${repositoryOwner}","repository":"${repositoryName}",` +
                string `"states":${state.toBalString()},"perPageCount":${perPageCount}, "lastPageCursor":null},
                "query":"${GET_REPOSITORY_PROJECT_LIST}"}`;
+        } else {
+            return string `{"variables":{"owner":"${repositoryOwner}","repository":"${repositoryName}",` +
+               string `"states":null,"perPageCount":${perPageCount}, "lastPageCursor":null},
+               "query":"${GET_REPOSITORY_PROJECT_LIST}"}`;
+        }
+        
     }
 }
 
@@ -585,9 +506,17 @@ isolated function getFormulatedStringQueryForGetUserOwnerId(string userName) ret
                       + string `${GET_USER_OWNER_ID}"}`;
 }
 
-isolated function getFormulatedStringQueryForGetOrganizationOwnerId(string organizationName) returns string {
-    return string `{"variables":{"organizationName":"${organizationName}"},"query":"`
-                      + string `${GET_ORG_OWNER_ID}"}`;
+isolated function getFormulatedStringQueryForSearch(string searchQuery, SearchType searchType, int perPageCount,
+                                                    string? lastPageCursor) returns string {
+    if lastPageCursor is string {
+        return string `{"variables":{"searchQuery":"${searchQuery}", "searchType": ${searchType.toBalString()},
+                    "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"`
+                      + string `${SEARCH}"}`;
+    } else {
+        return string `{"variables":{"searchQuery":"${searchQuery}", "searchType": ${searchType.toBalString()},
+                    "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"`
+                      + string `${SEARCH}"}`;
+    }                                                        
 }
 
 // get resource id utl functions
@@ -595,115 +524,131 @@ isolated function getFormulatedStringQueryForGetOrganizationOwnerId(string organ
 isolated function getRepositoryId(string repositoryOwnerName, string repositoryName, string accessToken, 
                                   http:Client graphQlClient) returns @tainted string|error {
     string stringQuery = getFormulatedStringQueryForGetRepositoryId(repositoryOwnerName, repositoryName);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var repo = gitData[GIT_REPOSITORY];
-            if (repo is map<json>) {
-                json repoId = repo["id"];
-                return repoId.toBalString();
-            }
+    if graphQlData is map<json> {
+        var repo = graphQlData.get(GIT_REPOSITORY);
+        if (repo is map<json>) {
+            json repoId = repo.get(GIT_ID);
+            return repoId.toBalString();
         }
+        return error ClientError ("GitHub Client Error", body=repo);
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing git repository response");
-    return err;
+    return graphQlData;
 }
 
 isolated function getIssueId(string repositoryOwnerName, string repositoryName, int issueNumber, string accessToken,
                              http:Client graphQlClient) returns @tainted string|error {
     string stringQuery = getFormulatedStringQueryForGetIssueId(repositoryOwnerName, repositoryName, issueNumber);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var repo = gitData[GIT_REPOSITORY];
-            if (repo is map<json>) {
-                var issue = repo["issue"];
-                if(issue is map<json>){
-                    json issueId = issue["id"];
-                    return issueId.toBalString();
-                }
+    if graphQlData is map<json> {
+        var repo = graphQlData.get(GIT_REPOSITORY);
+        if (repo is map<json>) {
+            var issue = repo.get(GIT_ISSUE);
+            if issue is map<json> {
+                json issueId = issue.get(GIT_ID);
+                return issueId.toBalString();
             }
+            return error ClientError ("GitHub Client Error", body=issue); 
         }
+        return error ClientError ("GitHub Client Error", body=repo);
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing git repository response");
-    return err;
+    return graphQlData;
 }
 
 isolated function getPullRequestId(string repositoryOwnerName, string repositoryName, int pullRequestNumber, 
                                    string accessToken, http:Client graphQlClient) returns @tainted string|error {
     string stringQuery = getFormulatedStringQueryForGetPullRequestId(repositoryOwnerName, repositoryName, 
                                                                      pullRequestNumber);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var repo = gitData[GIT_REPOSITORY];
-            if (repo is map<json>) {
-                var pr = repo["pullRequest"];
-                if(pr is map<json>){
-                    json prId = pr["id"];
-                    return prId.toBalString();
-                }
+    if graphQlData is map<json> {
+        var repo = graphQlData.get(GIT_REPOSITORY);
+        if (repo is map<json>) {
+            var pr = repo.get(GIT_PULL_REQUEST);
+            if pr is map<json> {
+                json prId = pr.get(GIT_ID);
+                return prId.toBalString();
             }
+            return error ClientError ("GitHub Client Error", body=pr); 
         }
+        return error ClientError ("GitHub Client Error", body=repo);
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing git repository response");
-    return err;
+    return graphQlData;
 }
 
 isolated function getUserId(string userName, string accessToken, http:Client graphQlClient) 
                             returns @tainted string|error {
     string stringQuery = getFormulatedStringQueryForGetUserOwnerId(userName);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if(gitData is map<json>){
-            var user = gitData[GIT_USER];
-            if(user is map<json>){
-                json userId = user[GIT_ID];
-                return userId.toBalString();
-            }
-
+    if graphQlData is map<json> {
+        var user = graphQlData.get(GIT_USER);
+        if (user is map<json>) {
+             json userId = user.get(GIT_ID);
+             return userId.toBalString();
         }
-
+        return error ClientError ("GitHub Client Error", body=user);
     }
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing user response");
-    return err;
-} 
+    return graphQlData;
+}
 
+isolated function getGraphQlData(http:Client githubGraphQlClient, string authToken, string stringQuery)
+                                 returns map<json>|Error {
+
+    json | error convertedQuery = stringToJson(stringQuery);    
+    if convertedQuery is error {
+        return error ClientError("GitHub Client Error", convertedQuery);
+    }
+    //Set headers and payload to the request
+    http:Request request = new;
+    setHeader(request, authToken);    
+    constructRequest(request, <@untainted> convertedQuery.cloneReadOnly());
+    
+    json|http:ClientError httpResponse = githubGraphQlClient->post(EMPTY_STRING, request);
+
+      do {
+         if httpResponse is http:ClientError {
+            if (httpResponse is http:ApplicationResponseError) {
+               anydata data = check httpResponse.detail().get("body").ensureType(anydata);
+               return error ClientError("GitHub Client Error", body = data);
+            }
+            return error ClientError("GitHub Client Error", httpResponse);
+         } else {
+            map<json> responseMap = <map<json>> httpResponse;
+
+            if (responseMap.hasKey("errors")) {
+               GraphQLClientError[] errors = check responseMap.get("errors").cloneWithType(GraphQLClientErrorArray);
+               
+               if (responseMap.hasKey("data") && !responseMap.hasKey("extensions")) {
+                  return error ServerError("GitHub Server Error", data = responseMap.get("data"), errors = errors);
+               } else if (responseMap.hasKey("extensions") && !responseMap.hasKey("data")) {
+                  map<json>? extensionsMap = 
+                     (responseMap.get("extensions") is ()) ? () : <map<json>> responseMap.get("extensions");
+                  return error ServerError("GitHub Server Error", errors = errors, extensions = extensionsMap);
+               } else if (responseMap.hasKey("data") && responseMap.hasKey("extensions")) {
+                  map<json>? extensionsMap = 
+                     (responseMap.get("extensions") is ()) ? () : <map<json>> responseMap.get("extensions") ;
+                  return error ServerError("GitHub Server Error", data = responseMap.get("data"), errors = errors, 
+                     extensions = extensionsMap);
+               } else {
+                  return error ServerError("GitHub Server Error", errors = errors);
+               }
+            } else {
+               json responseData = responseMap.get("data");
+               if (responseMap.hasKey("extensions")) {
+                  responseData = check responseData.mergeJson({ "extensions" : responseMap.get("extensions") });
+               }
+
+               if responseData is map<json> {
+                   return responseData;
+               } else {
+                   return error ClientError ("GitHub Client Error", body = responseData);
+               }
+            }
+         }
+      } on fail var e {
+         return error ClientError("GitHub Client Error", e);
+      }
+}

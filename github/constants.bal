@@ -82,6 +82,7 @@ final string GIT_UPDATE_PROJECT = "updateProject";
 final string GIT_ID = "id";
 final string GIT_ADD_PULL_REQUEST_REVIEW = "addPullRequestReview";
 final string GIT_PULL_REQUEST_REVIEW = "pullRequestReview";
+final string GIT_SEARCH = "search";
 
 // Error Codes
 final string GITHUB_ERROR_CODE = "(ballerinax/github)GithubError";

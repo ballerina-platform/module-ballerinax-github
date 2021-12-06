@@ -132,7 +132,7 @@ public function generateInputData() returns error?{
 
     log:printInfo("SampleDataGenerator -> LabelListData, LabelData, AddLabelsToLabelableInputData");
 
-    github:Label labelIdResponse = checkpanic githubClient->getRepositoryLabel(githubUserName, sampleRepo1, "bug");
+    github:Label labelIdResponse = checkpanic githubClient->getLabel(githubUserName, sampleRepo1, "bug");
     github:AddLabelsToLabelableInput addLabelInput = {
         labelableId: createdIssueId,
         labelIds: [labelIdResponse.id],
@@ -674,7 +674,7 @@ public function generateUserData() returns error? {
     check io:fileWriteJson(userDataJson, validatedJson);
 
     log:printInfo("SampleDataGenerator -> UserListData");
-    github:UserList usrList = check githubClient->getOrganizationMemberList(testOrganizationName, perPageCount);
+    github:UserList usrList = check githubClient->getOrganizationMembers(testOrganizationName, perPageCount);
     string arrayOfUserList = SQUARE_BRACKET_LEFT + usrList.toJsonString() + COMMA + usrList.toJsonString() + COMMA 
                             + usrList.toJsonString() + SQUARE_BRACKET_RIGHT;
     string preparedJsonUserList = "{"+"\"ballerinax/github:"+connecterVersion+":UserList\""+":"+arrayOfUserList+"}";          
@@ -930,7 +930,7 @@ public function createPullRequestReview() returns error?{
 public function generatePullRequestListData() returns error? {
     log:printInfo("SampleDataGenerator -> PullRequestData, PullRequestListData");
 
-    var response9_1 = githubClient->getRepositoryPullRequestList(githubUserName, sampleRepo1, github:PULL_REQUEST_OPEN, perPageCount);
+    var response9_1 = githubClient->getPullRequests(githubUserName, sampleRepo1, github:PULL_REQUEST_OPEN, perPageCount);
 
     if(response9_1 is github:PullRequestList){
 

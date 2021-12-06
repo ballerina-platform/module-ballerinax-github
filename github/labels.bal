@@ -20,75 +20,49 @@ import ballerina/http;
 isolated function createLabel(CreateLabelInput createLabelInput, string accessToken, http:Client graphQlClient) 
                               returns @tainted error? {
     string stringQuery = getFormulatedStringQueryForCreateLabel(createLabelInput);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
-
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-    _ = check getValidatedResponse(response);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+    if graphQlData is Error {
+        return graphQlData;
+    }
+    return ;
 }
 
-isolated function getRepositoryLabel(string repositoryOwnerName, string repositoryName, string labelName, 
+isolated function getLabel(string repositoryOwnerName, string repositoryName, string labelName, 
                                      string accessToken, http:Client graphQlClient) returns @tainted Label|error {
     string stringQuery = getFormulatedStringQueryForGetLabel(repositoryOwnerName, repositoryName, labelName);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var viewer = gitData[GIT_REPOSITORY];
-            if (viewer is map<json>) {
-                var label = viewer[GIT_LABEL];
-                if (label is ()) {
-                    error err = error(GITHUB_ERROR_CODE+string `: No such label '${labelName}' exists.`, message = string `: No such label '${labelName}' exists.`);
-                    return err;
-                }
-                Label labelObj = check label.cloneWithType(Label);
-                return labelObj;
+    if graphQlData is map<json> {
+        var repository = graphQlData.get(GIT_REPOSITORY);
+        if (repository is map<json>) {
+            var label = repository.get(GIT_LABEL);
+            if(label is map<json>){
+                Label|error labelObj = label.cloneWithType(Label);
+                return labelObj is Label? labelObj: error ClientError ("GitHub Client Error", labelObj);
             }
+            return error ClientError ("GitHub Client Error", body=label);
         }
+        return error ClientError ("GitHub Client Error", body=repository);
     }
-    error err = error(GITHUB_ERROR_CODE+ " Error parsing git label response", message = "Error parsing git label response");
-    return err;
+    return graphQlData;
 }
 
-isolated function getLabelsInIssue(string repositoryOwnerName, string repositoryName, int issueNumber, 
+isolated function getLabels(string repositoryOwnerName, string repositoryName, int issueNumber, 
                                    int perPageCount, string accessToken, http:Client graphQlClient, 
                                    string? nextPageToken=()) returns @tainted LabelList|error {
     string stringQuery = getFormulatedStringQueryForGetAllLabelsForAIssue(repositoryOwnerName, repositoryName, 
                                                                           issueNumber, perPageCount, nextPageToken);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var viewer = gitData[GIT_REPOSITORY];
-            if (viewer is map<json>) {
-                var issue = viewer[GIT_ISSUE];
-                if(issue is map<json>){
-                    var labels = issue[GIT_LABELS];
-                    if(labels is map<json>){
-                        LabelListPayload labelListResponse = check labels.cloneWithType(LabelListPayload);
+    if graphQlData is map<json> {
+        var repository = graphQlData.get(GIT_REPOSITORY);
+        if (repository is map<json>) {
+            var issue = repository.get(GIT_ISSUE);
+            if(issue is map<json>){
+                var labels = issue.get(GIT_LABELS);
+                if(labels is map<json>){
+                    LabelListPayload|error labelListResponse = labels.cloneWithType(LabelListPayload);
+                    if labelListResponse is LabelListPayload {
                         LabelList labelList = {
                             labels: labelListResponse.nodes,
                             pageInfo: labelListResponse.pageInfo,
@@ -96,23 +70,26 @@ isolated function getLabelsInIssue(string repositoryOwnerName, string repository
                         };
                         return labelList;
                     }
+                    return error ClientError ("GitHub Client Error", labelListResponse);
                 }
+                return error ClientError ("GitHub Client Error", body=labels);
             }
+            return error ClientError ("GitHub Client Error", body=issue);
         }
+        return error ClientError ("GitHub Client Error", body=repository);
     }
-    error err = error(GITHUB_ERROR_CODE+ "Error parsing git issue label list response", message = "Error parsing git issue label list response");
-    return err;
+    return graphQlData;
 }
 
-isolated function addIssueLabels(AddIssueLabelsInput addIssueLabelsInput, string accessToken, 
+isolated function addLabels(AddLabelsInput addLabelsInput, string accessToken, 
                                        http:Client graphQlClient) returns @tainted LabelList|error {
 
-    Issue issue = check getRepositoryIssue(addIssueLabelsInput.repositoryOwnerName, addIssueLabelsInput.repositoryName, 
-                           addIssueLabelsInput.issueNumber, accessToken, graphQlClient);
+    Issue issue = check getIssue(addLabelsInput.repositoryOwnerName, addLabelsInput.repositoryName, 
+                           addLabelsInput.issueNumber, accessToken, graphQlClient);
 
     string[] labelIds = [];
-    foreach string labelName in addIssueLabelsInput.labelNames {
-        Label label = check getRepositoryLabel(addIssueLabelsInput.repositoryOwnerName, addIssueLabelsInput.repositoryName, labelName, accessToken, graphQlClient);
+    foreach string labelName in addLabelsInput.labelNames {
+        Label label = check getLabel(addLabelsInput.repositoryOwnerName, addLabelsInput.repositoryName, labelName, accessToken, graphQlClient);
         labelIds.push(label.id);
     }
     
@@ -121,31 +98,22 @@ isolated function addIssueLabels(AddIssueLabelsInput addIssueLabelsInput, string
         labelIds: labelIds
     };
 
-    if (!(addIssueLabelsInput?.clientMutationId is ())) { 
-        addLabelsToLabelableInput["clientMutationId"] = <string>addIssueLabelsInput?.clientMutationId;
+    if (!(addLabelsInput?.clientMutationId is ())) { 
+        addLabelsToLabelableInput["clientMutationId"] = <string>addLabelsInput?.clientMutationId;
     }
 
     string stringQuery = getFormulatedStringQueryForAddLabelsToLabelable(addLabelsToLabelableInput);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+        map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var addLableToLabelable = gitData[GIT_ADD_LABLE_TO_LABELABLE];
-            if (addLableToLabelable is map<json>) {
-                var labelable = addLableToLabelable[GIT_LABELABLE];
-                if(labelable is map<json>){
-                    var labels = labelable[GIT_LABELS];
-                    if(labels is map<json>){
-                        LabelListPayload labelListResponse = check labels.cloneWithType(LabelListPayload);
+    if graphQlData is map<json> {
+        var addLableToLabelable = graphQlData.get(GIT_ADD_LABLE_TO_LABELABLE);
+        if (addLableToLabelable is map<json>) {
+            var labelable = addLableToLabelable.get(GIT_LABELABLE);
+            if(labelable is map<json>){
+                var labels = labelable.get(GIT_LABELS);
+                if(labels is map<json>){
+                    LabelListPayload|error labelListResponse = labels.cloneWithType(LabelListPayload);
+                    if labelListResponse is LabelListPayload {
                         LabelList labelList = {
                             labels: labelListResponse.nodes,
                             pageInfo: labelListResponse.pageInfo,
@@ -153,24 +121,26 @@ isolated function addIssueLabels(AddIssueLabelsInput addIssueLabelsInput, string
                         };
                         return labelList;
                     }
+                    return error ClientError ("GitHub Client Error", labelListResponse);
                 }
+                return error ClientError ("GitHub Client Error", body=labels);
             }
+            return error ClientError ("GitHub Client Error", body=labelable);
         }
+        return error ClientError ("GitHub Client Error", body=addLableToLabelable);
     }
-
-    error err = error(GITHUB_ERROR_CODE+ " Error parsing git label list response", message = "Error parsing git label list response");
-    return err;
+    return graphQlData;
 }
 
-isolated function removeLabelFromLabelable(RemoveIssueLabelInput removeIssueLabelInput, 
+isolated function removeLabel(RemoveIssueLabelInput removeIssueLabelInput, 
                                            string accessToken, http:Client graphQlClient) returns @tainted error? {
 
-    Issue issue = check getRepositoryIssue(removeIssueLabelInput.repositoryOwnerName, removeIssueLabelInput.repositoryName, 
+    Issue issue = check getIssue(removeIssueLabelInput.repositoryOwnerName, removeIssueLabelInput.repositoryName, 
                            removeIssueLabelInput.issueNumber, accessToken, graphQlClient);    
 
     string[] labelIds = [];
     foreach string labelName in removeIssueLabelInput.labelNames {
-        Label label = check getRepositoryLabel(removeIssueLabelInput.repositoryOwnerName, removeIssueLabelInput.repositoryName, labelName, accessToken, graphQlClient);
+        Label label = check getLabel(removeIssueLabelInput.repositoryOwnerName, removeIssueLabelInput.repositoryName, labelName, accessToken, graphQlClient);
         labelIds.push(label.id);
     }                                                                  
 
@@ -184,13 +154,9 @@ isolated function removeLabelFromLabelable(RemoveIssueLabelInput removeIssueLabe
     }
 
     string stringQuery = getFormulatedStringQueryForRemoveLabelsFromLabelable(removeLabelsFromLabelable);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
-
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    _ = check getValidatedResponse(response);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+    if graphQlData is Error {
+        return graphQlData;
+    }
+    return ;
 }

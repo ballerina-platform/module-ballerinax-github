@@ -34,157 +34,29 @@ public isolated client class Client {
         self.githubGraphQlClient = check new(GIT_GRAPHQL_API_URL, config);
     }
 
-    # Get authenticated user
+    # Get user
     #
-    # + return - `User` record if successful else `error`
-    @display { label: "Get Authenticated User" }
-    remote isolated function getAuthenticatedUser()  returns @display {label: "Authenticated User"} 
-                                                  @tainted User|error {
+    # + username - GitHub username
+    # + return - `github:User` record if successful else `github:Error`
+    @display { label: "Get User" }
+    remote isolated function getUser(string? username = ())  returns @tainted User|Error {
 
-        string stringQuery = getFormulatedStringQueryForGetAuthenticatedUser();
-        http:Request request = new;
-        setHeader(request, self.authToken);
-        json convertedQuery = check stringToJson(stringQuery);
-        //Set headers and payload to the request
-        constructRequest(request, <@untainted> convertedQuery.cloneReadOnly());
+        string stringQuery = getFormulatedStringQueryForGetUser(username);
+        map<json>|Error graphQlData = getGraphQlData(self.githubGraphQlClient, self.authToken, stringQuery);
 
-        http:Response response = check self.githubGraphQlClient->post(EMPTY_STRING, request);
-
-        //Check for empty payloads and errors
-        json validatedResponse = check getValidatedResponse(response);
-
-        if (validatedResponse is map<json>) {
-            var gitData = validatedResponse[GIT_DATA];
-            if (gitData is map<json>) {
-                var viewer = gitData[GIT_VIEWER];
-                if (viewer is map<json>) {
-                    User user = check viewer.cloneWithType(User);
-                    return user;
-                }
+        if graphQlData is map<json> {
+            var user = username is () ? graphQlData[GIT_VIEWER] : graphQlData[GIT_USER];
+            if user is map<json>{
+                 User|error result = user.cloneWithType();
+                 return result is User? result : error ClientError ("GitHub Client Error", result);
+            } else {
+                return error ClientError("GitHub Client Error", body = user);
             }
+        } else {
+            return graphQlData;
         }
-        error err = error(GITHUB_ERROR_CODE, message = "Error parsing git user response");
-        return err;
     }
-
-    # Get User Id
-    # 
-    # + userName - GitHub username
-    # 
-    # + return - User Id
-    @display { label: "Get User Id" }
-    remote isolated function getUserId(@display {label: "User name"} string userName) 
-                                       returns @display {label: "User Id"} @tainted string|error {
-        return getUserId(userName, self.authToken, self.githubGraphQlClient);
-    }
-
-    # Get user repository
-    # 
-    # + username - GitHub repository owner name
-    # + repositoryName - GitHub repository name
-    # 
-    # + return - `Repository` record if successful else `error`
-    @display { label: "Get Repository" }
-    remote isolated function getUserRepository(@display {label: "Repository Owner Name"} string username, 
-                                               @display {label: "Repository Name"} string repositoryName) 
-                                               returns @display {label: "Repository"} @tainted Repository|error {
-        return getUserRepository(username, repositoryName, self.authToken, self.githubGraphQlClient);
-    }
-
-
-    // Repositories
-
-    # Get authenticated user repository list
-    # 
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
-    # 
-    # + return - `RepositoryList` record if successful else `error`
-    @display { label: "Get Repositories" }
-    remote isolated function getAuthenticatedUserRepositoryList(@display {label: "Per Page Count"} int perPageCount, 
-                                                                @display {label: "Next Page Cursor"} 
-                                                                string? nextPageCursor=()) 
-                                                                returns @display {label: "Repository List"} 
-                                                                @tainted RepositoryList|error {
-        return getAuthenticatedUserRepositoryList(perPageCount, self.authToken, self.githubGraphQlClient, 
-                                                  nextPageCursor);
-
-    }
-
-    # Get user repository list
-    # 
-    # + username - Repository owner name
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
-    # 
-    # + return - `RepositoryList` record if successful else `error`
-    @display { label: "Get User Repositories" }
-    remote isolated function getUserRepositoryList(@display {label: "Repository Owner Name"} string username, 
-                                                   @display {label: "Per Page Count"} int perPageCount, 
-                                                   @display {label: "Next Page Cursor"} string? nextPageCursor = ())
-                                                   returns @display {label: "Repository List"} @tainted 
-                                                   RepositoryList|error {
-        return getUserRepositoryList(username, perPageCount, self.authToken, self.githubGraphQlClient, nextPageCursor);
-    }
-
-    # Get organization repository list
-    # 
-    # + organizationName - Organization GitHub username
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
-    # 
-    # + return - `RepositoryList` record if successful else `error`
-    @display { label: "Get Organization Repositories" }
-    remote isolated function getOrganizationRepositoryList(@display {label: "Organization Name"} 
-                                                           string organizationName, 
-                                                           @display {label: "Per Page Count"} int perPageCount,
-                                                           @display {label: "Next Page Cursor"} 
-                                                           string? nextPageCursor = ()) 
-                                                           returns @display {label: "Repository List"} 
-                                                           @tainted RepositoryList|error {
-        return getOrganizationRepositoryList(organizationName, perPageCount, self.authToken, self.githubGraphQlClient, 
-                                             nextPageCursor);
-    }
-
-    # Get repository collaborator list
-    # 
-    # + ownerName - Repository owner username
-    # + repositoryName - Repository name
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
-    # 
-    # + return - `CollaboratorList` record if successful else `error`
-    @display { label: "Get Collaborators" }
-    remote isolated function getRepositoryCollobaratorList(@display {label: "Repository Owner Name"} string ownerName,
-                                                           @display {label: "Repository Name"} string repositoryName,
-                                                           @display {label: "Per Page Count"} int perPageCount, 
-                                                           @display {label: "Next Page Cursor"} 
-                                                           string? nextPageCursor = ()) 
-                                                           returns @display {label: "Collaborator List"} @tainted 
-                                                           CollaboratorList|error {
-        return getRepositoryCollobaratorList(ownerName, repositoryName, perPageCount, self.authToken, 
-                                             self.githubGraphQlClient, nextPageCursor);
-
-    }
-
-    # Get repository branch list
-    # 
-    # + ownerName - Repository owner name
-    # + repositoryName - Repository name
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
-    # 
-    # + return - `BranchList` record if success else `error`
-    @display { label: "Get Branch List" }
-    remote isolated function getRepositoryBranchList(@display {label: "Repository Owner Name"} string ownerName,
-                                                     @display {label: "Repository Name"} string repositoryName, 
-                                                     @display {label: "Per Page Count"} int perPageCount, 
-                                                     @display {label: "Next Page Cursor"} string? nextPageCursor = ())
-                                                     returns @display {label: "Branch List"} 
-                                                     @tainted BranchList|error {
-        return getRepositoryBranchList(ownerName, repositoryName, perPageCount, self.authToken, self.githubGraphQlClient, 
-                                       nextPageCursor);
-    }
+    //Repositories
 
     # Create repository
     # 
@@ -192,194 +64,153 @@ public isolated client class Client {
     # 
     # + return - `error` if not successful
     @display { label: "Create Repository" }
-    remote isolated function createRepository(@display {label: "Create Repository Input"} 
-                                              @tainted CreateRepositoryInput createRepositoryInput)
-                                              returns @tainted error? {
+    remote isolated function createRepository(CreateRepositoryInput createRepositoryInput) returns error? {
         return createRepository(createRepositoryInput, self.authToken, self.githubGraphQlClient);
     }
 
     # Update repository
     # 
     # + updateRepositoryInput - Update repository input
-    # + repositoryOwnerName - Repository owner name
+    # + owner - Repository owner name
     # + repositoryName - Repository name
     # 
     # + return - `error` if not successful
     @display { label: "Update Repository" }
-    remote isolated function updateRepository(@display {label: "Update Repository Input"} 
-                                              @tainted UpdateRepositoryInput updateRepositoryInput, 
-                                              @display {label: "Repository Owner Name"} string repositoryOwnerName,
-                                              @display {label: "Repository Name"} string repositoryName) 
-                                              returns @tainted error? {
-        return  updateRepository(updateRepositoryInput, repositoryOwnerName, repositoryName, self.authToken, 
+    remote isolated function updateRepository(UpdateRepositoryInput updateRepositoryInput, string owner,
+                                              string repositoryName) returns @tainted error? {
+        return  updateRepository(updateRepositoryInput, owner, repositoryName, self.authToken, 
                                  self.githubGraphQlClient);
     }
 
-
-    // Issues
-
-    # Get repository issue list assigned to user
+    # Get repository
     # 
-    # + repositoryOwnerName - Repository owner name
-    # + repositoryName - Repository name
-    # + assignee - Issue assignee username
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
+    # + owner - GitHub repository owner name
+    # + repositoryName - GitHub repository name
     # 
-    # + return - `IssueList` record if successful else `error`
-    @display { label: "Get Issues Assigned To User" }
-    remote isolated function getRepositoryIssueListAssignedToUser(@display {label: "Repository Owner Name"} 
-                                                                  string repositoryOwnerName, 
-                                                                  @display {label: "Repository Name"} 
-                                                                  string repositoryName, 
-                                                                  @display {label: "Assignee User Name"} 
-                                                                  string assignee, 
-                                                                  @display {label: "Per Page Count"} int perPageCount,
-                                                                  @display {label: "Next Page Cursor"} 
-                                                                  string? nextPageCursor = ()) 
-                                                                  returns @display {label: "Issue List"} 
-                                                                  @tainted IssueList|error {
-        return getRepositoryIssueListAssignedToUser(repositoryOwnerName, repositoryName, assignee, perPageCount, 
-                                                    self.authToken, self.githubGraphQlClient, nextPageCursor);
-
+    # + return - `github:Repository` record if successful else `github:Error`
+    @display { label: "Get Repository" }
+    remote isolated function getRepository(string owner, string repositoryName) returns Repository|Error {
+        return getRepository(owner, repositoryName, self.authToken, self.githubGraphQlClient);
     }
 
-    # Get repository issue list
+    # Get repositories
     # 
-    # + repositoryOwnerName - Repository owner name
-    # + repositoryName - Repository name
-    # + states - Array of issue states
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
+    # + owner - Repo Owner
+    # + isOrganization - Is Organization
     # 
-    # + return - `IssueList` record if successful else `error`
-    @display { label: "Get Issues" }
-    remote isolated function getRepositoryIssueList(@display {label: "Repository Owner Name"} 
-                                                    string repositoryOwnerName, 
-                                                    @display {label: "Repository Name"} string repositoryName, 
-                                                    @display {label: "Issue States"} IssueState[] states, 
-                                                    @display {label: "Per Page Count"} int perPageCount, 
-                                                    @display {label: "Next Page Cursor"} string? nextPageCursor = ())
-                                                    returns @display {label: "Issue List"} @tainted IssueList|error {
-        return getRepositoryIssueList(repositoryOwnerName, repositoryName, states, perPageCount, self.authToken, 
-                                      self.githubGraphQlClient, nextPageCursor);
+    # + return - `github:stream<Repository, error?>` record if successful else `error`
+    @display { label: "Get Repositories" }
+    remote isolated function getRepositories(string? owner=(), boolean isOrganization=false) 
+                                             returns stream<Repository,error?>|error {
+
+        RepositoryStream repositoryStream = check new RepositoryStream (self.githubGraphQlClient,self.authToken, owner,
+                                                                        isOrganization);
+        return new stream<Repository,error?>(repositoryStream);        
     }
 
+    # Get collaborators
+    # 
+    # + owner - Repository owner username
+    # + repositoryName - Repository name
+    # 
+    # + return - `github:stream<User,error?>` record if successful else `error`
+    @display { label: "Get Collaborators" }
+    remote isolated function getCollaborators(string owner, string repositoryName) returns stream<User,error?>|error {
+                                    
+        CollaboratorStream collaboratorStream = check new CollaboratorStream (self.githubGraphQlClient,self.authToken,
+                                                                              owner, repositoryName);
+        return new stream<User,error?>(collaboratorStream);
+    }
+
+    # Get repository branches
+    # 
+    # + owner - Repository owner name
+    # + repositoryName - Repository name
+    # 
+    # + return - `github:stream<Branch,error?>` record if success else `error`
+    @display { label: "Get Branches" }
+    remote isolated function getBranches(string owner, string repositoryName) returns stream<Branch,error?>|error {
+        BranchStream branchStream = check new BranchStream (self.githubGraphQlClient,self.authToken, owner,
+                                                            repositoryName);
+        return new stream<Branch,error?>(branchStream);
+    }
+
+    // Issues 
     # Create issue
     # 
     # + createIssueInput - `CreateIssueInput` record
-    # + repositoryOwnerName - Repository owner name
+    # + owner - Repository owner name
     # + repositoryName - Repository name
     # 
-    # + return - `Issue` record if successful else `error`
+    # + return - `github:Issue` record if successful else `error`
     @display { label: "Create Issue" }
-    remote isolated function createIssue(@display {label: "Create Issue Input"} @tainted 
-                                         CreateIssueInput createIssueInput, 
-                                         @display {label: "Repository Owner Name"} string repositoryOwnerName, 
-                                         @display {label: "Repository Name"} string repositoryName) 
-                                         returns @display {label: "Issue"} @tainted Issue|error {
-        return createIssue(createIssueInput, repositoryOwnerName, repositoryName, self.authToken, self.githubGraphQlClient);
+    remote isolated function createIssue(CreateIssueInput createIssueInput, string owner, string repositoryName) 
+                                         returns Issue|error {
+        return createIssue(createIssueInput, owner, repositoryName, self.authToken, self.githubGraphQlClient);
     }
 
     # Update issue
     # 
     # + updateIssueInput - `UpdateIssueInput` record
-    # + repositoryOwnerName - Repository owner name
+    # + owner - Repository owner name
     # + repositoryName - Repository name
     # + issueNumber - Issue number of the issue to be updated
     # 
-    # + return - `Issue` record if successful else `error`
+    # + return - `github:Issue` record if successful else `error`
     @display { label: "Update Issue" }
-    remote isolated function updateIssue(@display {label: "Update Issue Input"} @tainted 
-                                         UpdateIssueInput updateIssueInput,
-                                         @display {label: "Repository Owner Name"} string repositoryOwnerName, 
-                                         @display {label: "Repository Name"} string repositoryName, 
-                                         @display {label: "Issue Number"} int issueNumber) 
-                                         returns @display {label: "Issue"} @tainted Issue|error {
-        return  updateIssue(updateIssueInput, repositoryOwnerName, repositoryName, issueNumber, self.authToken, 
+    remote isolated function updateIssue(UpdateIssueInput updateIssueInput, string owner, string repositoryName, 
+                                         int issueNumber) returns Issue|error {
+        return  updateIssue(updateIssueInput, owner, repositoryName, issueNumber, self.authToken, 
                             self.githubGraphQlClient);
     }
 
-    # Get repository issue
+    # Get issue
     # 
-    # + repositoryOwnerName - Repository owner name
+    # + owner - Repository owner name
     # + repositoryName - repositoryName
     # + issueNumber - Issue number
     # 
-    # + return - `Issue` record if successful else `error`
+    # + return - `github:Issue` record if successful else `error`
     @display { label: "Get Issue" }
-    remote isolated function getRepositoryIssue(@display {label: "Repository Owner Name"} string repositoryOwnerName,
-                                                @display {label: "Repository Name"} string repositoryName, 
-                                                @display {label: "Issue Number"} int issueNumber) 
-                                                returns @display {label: "Issue"} @tainted Issue|error {
-        return getRepositoryIssue(repositoryOwnerName, repositoryName, issueNumber, self.authToken, self.githubGraphQlClient);
+    remote isolated function getIssue(string owner, string repositoryName, int issueNumber) returns Issue|error {
+        return getIssue(owner, repositoryName, issueNumber, self.authToken, self.githubGraphQlClient);
     }
 
-    # Get repository issue comment list
+    # Get issues
     # 
-    # + repositoryOwnerName - Repository owner name
+    # + owner - Repository owner name
     # + repositoryName - Repository name
-    # + issueNumber - Issue number
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
+    # + issueFilters - Filters to filter issues
     # 
-    # + return - `IssueCommentList` if successful else `error`
-    @display { label: "Get Issue Comments" }
-    remote isolated function getRepositoryIssueCommentList(@display {label: "Repository Owner Name"} 
-                                                           string repositoryOwnerName, 
-                                                           @display {label: "Repository Name"} string repositoryName, 
-                                                           @display {label: "Issue Number"} int issueNumber, 
-                                                           @display {label: "Per Page Count"}int perPageCount, 
-                                                           @display {label: "Next Page Cursor"} 
-                                                           string? nextPageCursor=()) 
-                                                           returns @display {label: "Issue Comment List"} 
-                                                           @tainted IssueCommentList|error {
-        return getRepositoryIssueCommentList(repositoryOwnerName, repositoryName, issueNumber, perPageCount, 
-                                             self.authToken, self.githubGraphQlClient, nextPageCursor);
+    # + return - `github:IssueList` record if successful else `error`
+    @display { label: "Get Issues" }
+    remote isolated function getIssues(string owner, string repositoryName, IssueFilters issueFilters = {})
+                                       returns stream<Issue,error?>|error {
+        IssueStream issueStream = check new IssueStream (self.githubGraphQlClient,self.authToken, owner,
+                                                            repositoryName, issueFilters);
+        return new stream<Issue,error?>(issueStream);
     }
-
-    # Get issue with label
-    # 
-    # + repositoryOwnerName - Repository owner name
-    # + repositoryName - Repository name
-    # + labelName - Label name
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
-    # 
-    # + return - `IssueList` record if successful else `error`
-    @display { label: "Get Issues With Label" }
-    remote isolated function getIssuesWithLabel(@display {label: "Repository Owner Name"} string repositoryOwnerName,
-                                                @display {label: "Repository Name"} string repositoryName, 
-                                                @display {label: "Label Name"} string labelName, 
-                                                @display {label: "Per Page Count"} int perPageCount, 
-                                                @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
-                                                returns @display {label: "Issue List"} @tainted IssueList|error {
-        return getIssuesWithLabel(repositoryOwnerName, repositoryName, labelName, perPageCount, self.authToken, 
-                                  self.githubGraphQlClient, nextPageCursor);
-    }
-
 
     // Comments
 
-    # Add issue comment
+    # Add comment
     # 
     # + addIssueCommentInput - `AddIssueCommentInput` record
     # 
-    # + return - `IssueComment` if successful else `error`
-    @display { label: "Add Issue Comment" }
-    remote isolated function addComment(@display {label: "Add Comment Input"} AddIssueCommentInput addIssueCommentInput)
-                                        returns @display {label: "Issue Comment"} @tainted IssueComment|error {
+    # + return - `github:IssueComment` if successful else `error`
+    @display { label: "Add IComment" }
+    remote isolated function addComment(AddIssueCommentInput addIssueCommentInput)
+                                        returns IssueComment|error {
         return addComment(addIssueCommentInput, self.authToken, self.githubGraphQlClient);
     }
 
-    # Update issue comment
+    # Update comment
     # 
     # + updateCommentInput - `UpdateIssueCommentInput` record
     # 
     # + return - `error` if un-successful
-    @display { label: "Update Issue Comment" }
-    remote isolated function updateComment(@display {label: "Update Comment Input"} 
-                                           UpdateIssueCommentInput updateCommentInput) returns @tainted error? {
+    @display { label: "Update Comment" }
+    remote isolated function updateComment(UpdateIssueCommentInput updateCommentInput) returns error? {
         return updateComment(updateCommentInput, self.authToken, self.githubGraphQlClient);
     }
 
@@ -388,12 +219,10 @@ public isolated client class Client {
     # + deleteCommentInput - `DeleteCommentInput` record
     # 
     # + return - `error` if un-successful
-    @display { label: "Delete Issue Comment" }
-    remote isolated function deleteComment(@display {label: "Delete Comment Input"} 
-                                           DeleteIssueCommentInput deleteCommentInput) returns @tainted error? {
+    @display { label: "Delete Comment" }
+    remote isolated function deleteComment(DeleteIssueCommentInput deleteCommentInput) returns error? {
         return deleteComment(deleteCommentInput, self.authToken, self.githubGraphQlClient);
     }
-
 
     //Labels
 
@@ -402,50 +231,14 @@ public isolated client class Client {
     //     return createLabel(createLabelInput, self.accessToken, self.githubGraphQlClient);
     // }
 
-    # Get repository label
-    # 
-    # + repositoryOwnerName - Repository owner name
-    # + repositoryName - Repository name
-    # + labelName - Label name
-    # 
-    # + return - `Label` record if successful else `error`
-    @display { label: "Get Label" }
-    remote isolated function getRepositoryLabel(@display {label: "Repository Owner Name"} string repositoryOwnerName,
-                                                @display {label: "Repository Name"} string repositoryName, 
-                                                @display {label: "Label Name"} string labelName) 
-                                                returns @display {label: "Label"} @tainted Label|error {
-        return getRepositoryLabel(repositoryOwnerName, repositoryName, labelName, self.authToken, self.githubGraphQlClient);
-    }
-
-    # Get labels in an issue
-    # 
-    # + repositoryOwnerName - Repository owner name
-    # + repositoryName - Repository name
-    # + issueNumber - Issue number
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
-    # 
-    # + return - `LabelList` record if successful else `error`
-    @display { label: "Get Labels In Issue" }
-    remote isolated function getLabelsInIssue(@display {label: "Repository Owner Name"} string repositoryOwnerName,
-                                             @display {label: "Repository Name"} string repositoryName, 
-                                             @display {label: "Issue Number"} int issueNumber, 
-                                             @display {label: "Per Page Count"} int perPageCount, 
-                                             @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
-                                             returns @display {label: "Label List"} @tainted LabelList|error {
-        return getLabelsInIssue(repositoryOwnerName, repositoryName, issueNumber, perPageCount, self.authToken, 
-                                self.githubGraphQlClient, nextPageCursor);
-    }
-
     # Add labels to an issue
     # 
-    # + addIssueLabelsInput - `AddIssueLabelInput` record
+    # + addLabelsInput - `AddIssueLabelInput` record
     # 
-    # + return - `LabelList` record if successful else `error`
-    @display { label: "Add Labels To Issue" }
-    remote isolated function addIssueLabels(@display {label: "Add Issue Labels Input"} AddIssueLabelsInput 
-                                            addIssueLabelsInput) returns @display {label: "Label List"} @tainted LabelList|error {
-        return addIssueLabels(addIssueLabelsInput, self.authToken, self.githubGraphQlClient);
+    # + return - `github:LabelList` record if successful else `error`
+    @display { label: "Add Labels" }
+    remote isolated function addLabels( AddLabelsInput  addLabelsInput) returns LabelList|error {
+        return addLabels(addLabelsInput, self.authToken, self.githubGraphQlClient);
     }
 
     # Remove issue labeles
@@ -454,172 +247,143 @@ public isolated client class Client {
     # 
     # + return - `error` if failed
     @display { label: "Remove Issue Labels" }
-    remote isolated function removeLabelFromLabelable(@display {label: "Remove Issue Label Input"} 
-                                                      RemoveIssueLabelInput removeIssueLabelInput) 
-                                                      returns @tainted error? {
-        return removeLabelFromLabelable(removeIssueLabelInput, self.authToken, self.githubGraphQlClient);
+    remote isolated function removeLabel(RemoveIssueLabelInput removeIssueLabelInput) returns  error? {
+        return removeLabel(removeIssueLabelInput, self.authToken, self.githubGraphQlClient);
+    }
+
+    # Get repository label
+    # 
+    # + owner - Repository owner name
+    # + repositoryName - Repository name
+    # + labelName - Label name
+    # 
+    # + return - `Label` record if successful else `error`
+    @display { label: "Get Label" }
+    remote isolated function getLabel(string owner, string repositoryName, string labelName) 
+                                                returns Label|error {
+        return getLabel(owner, repositoryName, labelName, self.authToken, self.githubGraphQlClient);
+    }
+
+    # Get labels in an issue
+    # 
+    # + owner - Repository owner name
+    # + repositoryName - Repository name
+    # + issueNumber - Issue number
+    # 
+    # + return - `LabelList` record if successful else `error`
+    @display { label: "Get Labels" }
+    remote isolated function getLabels(string owner, string repositoryName,  int issueNumber) 
+                                             returns stream<Label, error?> | error {
+
+        LabelStream labelStream = check new LabelStream(self.githubGraphQlClient, self.authToken, owner,
+                                                        repositoryName, issueNumber);
+        return new stream<Label,error?>(labelStream);
     }
 
     // Milestones
 
-    # Get repository milestone list
+    # Get milestone
     # 
-    # + repositoryOwnerName - Repository owner name
-    # + repositoryName - Repository name
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
-    # 
-    # + return - `MilestoneList` record if successful else `error`
-    @display { label: "Get Milestones" }
-    remote isolated function getRepositoryMilestoneList(@display {label: "Repository Owner Name"} 
-                                                        string repositoryOwnerName, @display {label: "Repository Name"}
-                                                        string repositoryName, 
-                                                        @display {label: "Per Page Count"} int perPageCount, 
-                                                        @display {label: "Next Page Cursor"} string? nextPageCursor=())
-                                                        returns @display {label: "Milestone List"} @tainted 
-                                                        MilestoneList|error {
-        return getRepositoryMilestoneList(repositoryOwnerName, repositoryName, perPageCount, self.authToken, 
-                                          self.githubGraphQlClient, nextPageCursor);
-    }
-
-    # Get repository milestone
-    # 
-    # + repositoryOwnerName - Repository owner name
+    # + owner - Repository owner name
     # + repositoryName - Repository name
     # + milestoneNumber - Milestone number
     # 
-    # + return - `Milestone` record if successful elese `error`
+    # + return - `github:Milestone` record if successful elese `error`
     @display { label: "Get Milestone" }
-    remote isolated function getRepositoryMilestone(@display {label: "Repository Owner Name"} 
-                                                    string repositoryOwnerName, 
-                                                    @display {label: "Repository Name"} string repositoryName, 
-                                                    @display {label: "Milestone Number"} int milestoneNumber) 
-                                                    returns @display {label: "Milestone"} @tainted Milestone|error {
-        return getRepositoryMilestone(repositoryOwnerName, repositoryName, milestoneNumber, self.authToken, 
+    remote isolated function getMilestone(string owner, string repositoryName, int milestoneNumber)
+                                          returns Milestone|error {
+        return getMilestone(owner, repositoryName, milestoneNumber, self.authToken, 
                                       self.githubGraphQlClient);
+    }
+    # Get milestones
+    # 
+    # + owner - Repository owner name
+    # + repositoryName - Repository name
+    # 
+    # + return - `github:stream<Milestone,error?>` record if successful else `error`
+    @display { label: "Get Milestones" }
+    remote isolated function getMilestones(string owner, string repositoryName)
+                                           returns stream<Milestone,error?> | error {
+
+        MilestoneStream milestoneStream = check new MilestoneStream (self.githubGraphQlClient,self.authToken, owner,
+                                                                     repositoryName);
+        return new stream<Milestone,error?>(milestoneStream);
     }
 
     //Pul Requests
 
-    # Get pull requests 
-    # 
-    # + repositoryOwnerName - Repository owner name
-    # + repositoryName - Repository name
-    # + pullRequestNumber - Pull request number
-    # 
-    # + return - `PullRequest` record if successful else `error`
-    @display { label: "Get Pull Request" }
-    remote isolated function getPullRequest(@display {label: "Repository Owner Name"} string repositoryOwnerName, 
-                                            @display {label: "Repository Name"} string repositoryName, 
-                                            @display {label: "Pull Request Number"} int pullRequestNumber) 
-                                            returns @display {label: "Pull Request"} @tainted PullRequest|error {
-        return getPullRequest(repositoryOwnerName, repositoryName, pullRequestNumber, self.authToken, 
-                              self.githubGraphQlClient);
-    }
-
-    # Get repository pull request list
-    # 
-    # + repositoryOwnerName - Repository owner name
-    # + repositoryName - Repository name
-    # + state - `Pull request state`
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
-    # 
-    # + return - `PullRequestList` record if successful else `error`
-    @display { label: "Get Pull Requests" }
-    remote isolated function getRepositoryPullRequestList(@display {label: "Repository Owner Name"} 
-                                                          string repositoryOwnerName, 
-                                                          @display {label: "Repository Name"} string repositoryName, 
-                                                          @display {label: "Pull Request State"} 
-                                                          PullRequestState state, 
-                                                          @display {label: "Per Page Count"} int perPageCount, 
-                                                          @display {label: "Next Page Cursor"} 
-                                                          string? nextPageCursor=()) 
-                                                          returns @display {label: "Pull Request List"} @tainted 
-                                                          PullRequestList|error {
-        return getRepositoryPullRequestList(repositoryOwnerName, repositoryName, state, perPageCount, self.authToken, 
-                                            self.githubGraphQlClient, nextPageCursor);
-    }
-
     # Create pull request
     # 
     # + createPullRequestInput - `CreatePullRequestInput` record
-    # + repositoryOwnerName - Repository owner name
+    # + owner - Repository owner name
     # + repositoryName - Repository name
     # 
     # + return - `PullRequest` record if success or else `error`
     @display { label: "Create Pull Request" }
-    remote isolated function createPullRequest(@display {label: "Create Pull Request Input"} 
-                                               @tainted CreatePullRequestInput createPullRequestInput, 
-                                               @display {label: "Repository Owner Name"} string repositoryOwnerName, 
-                                               @display {label: "Repository Name"} string repositoryName) 
-                                               returns @display {label: "Pull Request"} @tainted PullRequest|error {
-        return createPullRequest(createPullRequestInput, repositoryOwnerName, repositoryName, self.authToken, 
+    remote isolated function createPullRequest(CreatePullRequestInput createPullRequestInput,string owner, 
+                                               string repositoryName) returns PullRequest|error {
+        return createPullRequest(createPullRequestInput, owner, repositoryName, self.authToken, 
                                  self.githubGraphQlClient);
     }
 
     # Update pull request
     # 
     # + updatePullRequestInput - `UpdatePullRequestInput` record if successful else `error`
-    # + repositoryOwnerName - Repository owner name
+    # + owner - Repository owner name
     # + repositoryName - Repository name
     # + pullRequestNumber - Pull request number
     # 
     # + return - `PullRequest` record if successful else `error`
     @display { label: "Update Pull Request" }
-    remote isolated function updatePullRequest(@display {label: "Update Pull Request Input"} @tainted 
-                                               UpdatePullRequestInput updatePullRequestInput, 
-                                               @display {label: "Repository Owner Name"} string repositoryOwnerName, 
-                                               @display {label: "Repository Name"} string repositoryName, 
-                                               @display {label: "Pull Request Number"} int pullRequestNumber) 
-                                               returns @display {label: "Pull Request"} @tainted PullRequest|error {
-        return updatePullRequest(updatePullRequestInput, repositoryOwnerName, repositoryName, pullRequestNumber, 
+    remote isolated function updatePullRequest(UpdatePullRequestInput updatePullRequestInput, string owner, 
+                                              string repositoryName, int pullRequestNumber) returns PullRequest|error {
+        return updatePullRequest(updatePullRequestInput, owner, repositoryName, pullRequestNumber, 
                                  self.authToken, self.githubGraphQlClient);
     }
 
-    # Get pull request review comment list
+    # Get pull requests 
     # 
-    # + repositoryOwnerName - Repository owner name
+    # + owner - Repository owner name
     # + repositoryName - Repository name
     # + pullRequestNumber - Pull request number
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
     # 
-    # + return - `PullRequestReviewList` record if successful or else `error`
-    @display { label: "Get Pull Request Review Comments" }
-    remote isolated function getPullRequestReviewCommentList(@display {label: "Repository Owner Name"} 
-                                                             string repositoryOwnerName, 
-                                                             @display {label: "Repository Name"} string repositoryName, 
-                                                             @display {label: "Pull Request Number"} 
-                                                             int pullRequestNumber, 
-                                                             @display {label: "Per Page Count"} int perPageCount, 
-                                                             @display {label: "Next Page Cursor"} 
-                                                             string? nextPageCursor=()) 
-                                                             returns @display {label: "Pull Request Review List"}
-                                                             @tainted PullRequestReviewList|error {
-        return getPullRequestReviewCommentList(repositoryOwnerName, repositoryName, pullRequestNumber, perPageCount, 
-                                               self.authToken, self.githubGraphQlClient, nextPageCursor);
+    # + return - `PullRequest` record if successful else `error`
+    @display { label: "Get Pull Request" }
+    remote isolated function getPullRequest(string owner, string repositoryName, int pullRequestNumber) 
+                                            returns PullRequest|error {
+        return getPullRequest(owner, repositoryName, pullRequestNumber, self.authToken, 
+                              self.githubGraphQlClient);
+    }
 
+    # Get repository pull request list
+    # 
+    # + owner - Repository owner name
+    # + repositoryName - Repository name
+    # + state - `Pull request state`
+    # 
+    # + return - `PullRequestList` record if successful else `error`
+    @display { label: "Get Pull Requests" }
+    remote isolated function getPullRequests(string owner, string repositoryName, PullRequestState state) 
+                                                          returns stream<PullRequest, error?> | error {
+        
+        PullRequestStream pullRequestStream = check new PullRequestStream (self.githubGraphQlClient, self.authToken,
+                                                                           owner, repositoryName, state);
+        return new stream<PullRequest,error?>(pullRequestStream);
     }
 
     # Create pull request review 
     # 
     # + addPullRequestReviewInput - `AddPullRequestReviewInput` record
-    # + repositoryOwnerName - Repository owner name
+    # + owner - Repository owner name
     # + repositoryName - Repository name
     # + pullRequestNumber - Pull request number
     # 
     # + return - `PullRequestReview` record
     @display {label: "Create Pull Request Review"}
-    remote isolated function createPullRequestReview(@display {label: "Add Pull Request Review Input"} @tainted 
-                                                     AddPullRequestReviewInput addPullRequestReviewInput, 
-                                                     @display {label: "Repository Owner Name"} 
-                                                     string repositoryOwnerName, 
-                                                     @display {label: "Repository Name"} string repositoryName,  
-                                                     @display {label: "Pull Request Number"} int pullRequestNumber) 
-                                                     returns @display {label: "Pull Request Review"} @tainted 
-                                                     PullRequestReview|error {
-         return createPullRequestReview(addPullRequestReviewInput, repositoryOwnerName, repositoryName, 
+    remote isolated function createPullRequestReview(AddPullRequestReviewInput addPullRequestReviewInput, 
+                                                     string owner, string repositoryName,  int pullRequestNumber) 
+                                                     returns PullRequestReview|error {
+         return createPullRequestReview(addPullRequestReviewInput, owner, repositoryName, 
                                         pullRequestNumber, self.authToken, self.githubGraphQlClient);
     }
 
@@ -629,9 +393,8 @@ public isolated client class Client {
     # 
     # + return - `error` if failed.
     @display {label: "Update Pull Request Review"}
-    remote isolated function updatePullRequestReview(@display {label: "Update Pull Request Review"} 
-                                                     UpdatePullRequestReviewInput updatePullRequestReviewInput) 
-                                                     returns @tainted error? {
+    remote isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePullRequestReviewInput) 
+                                                     returns error? {
         return updatePullRequestReview(updatePullRequestReviewInput, self.authToken, self.githubGraphQlClient);
     }
 
@@ -641,33 +404,13 @@ public isolated client class Client {
     # 
     # + return - `error` if failed
     @display {label: "Delete Pull Request Review"}
-    remote isolated function deletePendingPullRequestReview(@display {label: "Delete Pull Request Review Input"}
-                                                            DeletePullRequestReviewInput deletePullRequestReview) 
-                                                            returns @tainted error? {
+    remote isolated function deletePendingPullRequestReview(DeletePullRequestReviewInput deletePullRequestReview) 
+                                                            returns error? {
         return deletePendingPullRequestReview(deletePullRequestReview, self.authToken, self.githubGraphQlClient);
     }
 
 
     // Projects
-
-    # Get organization project list
-    # 
-    # + organizationName - Organization name
-    # + state - Project state
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
-    # 
-    # + return - `ProjectList` record if successful 
-    @display { label: "Get Organization Projects" }
-    remote isolated function getOrganizationProjectList(@display {label: "Organization Name"} string organizationName, 
-                                                        @display {label: "Project State"} ProjectState state, 
-                                                        @display {label: "Per Page Count"} int perPageCount, 
-                                                        @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
-                                                        returns @display {label: "Project List"} @tainted 
-                                                        ProjectList|error {
-        return getOrganizationProjectList(organizationName, state, perPageCount, self.authToken, self.githubGraphQlClient, 
-                                          nextPageCursor);
-    }
 
     # Create project
     # 
@@ -675,23 +418,9 @@ public isolated client class Client {
     # 
     # + return - `Project` record if successful else `error`
     @display { label: "Create Project" }
-    remote isolated function createProject(@display {label: "Create Project Input"} 
-                                           CreateRepositoryProjectInput createRepositoryProjectInput) 
-                                           returns @display {label: "Project"} @tainted Project|error {
+    remote isolated function createProject(CreateRepositoryProjectInput createRepositoryProjectInput) 
+                                           returns Project|error {
         return createProject(createRepositoryProjectInput, self.authToken, self.githubGraphQlClient);
-    }
-
-    # Get user project
-    # 
-    # + username - Project owner name
-    # + projectNumber - Project number
-    # 
-    # + return - `Project`
-    @display { label: "Get Project" }
-    remote isolated function getUserProject(@display {label: "Project Owner Name"} string username, 
-                                            @display {label: "Project Number"} int projectNumber) 
-                                            returns @display {label: "Project"} @tainted Project|error {
-        return getUserProject(username, projectNumber, self.authToken, self.githubGraphQlClient);
     }
 
     # Update project
@@ -700,9 +429,8 @@ public isolated client class Client {
     # 
     # + return - `Project` record if successful or else `error`
     @display { label: "Update Project" }
-    remote isolated function updateProject(@display {label: "Update Project Input"} 
-                                           UpdateProjectInput updateProjectInput) 
-                                           returns @display {label: "Project"} @tainted Project|error {
+    remote isolated function updateProject(UpdateProjectInput updateProjectInput) 
+                                           returns Project|error {
         return updateProject(updateProjectInput, self.authToken, self.githubGraphQlClient);
     }
 
@@ -712,102 +440,99 @@ public isolated client class Client {
     # 
     # + return - `error` if failed
     @display { label: "Delete Project" }
-    remote isolated function deleteProject(@display {label: "Delete Project Input"} 
-                                           DeleteProjectInput deleteProjectInput) returns @tainted error? {
+    remote isolated function deleteProject(DeleteProjectInput deleteProjectInput) returns  error? {
         return deleteProject(deleteProjectInput, self.authToken, self.githubGraphQlClient);
+    }
+
+    # Get user project
+    # 
+    # + username - Project owner name
+    # + projectNumber - Project number
+    # 
+    # + return - `Project`
+    @display { label: "Get Project" }
+    remote isolated function getProject(string username, int projectNumber) 
+                                            returns Project|error {
+        return getProject(username, projectNumber, self.authToken, self.githubGraphQlClient);
     }
 
     # Get Repository project list
     # 
-    # + repositoryOwner - Repository owner name
+    # + owner - Repository owner name
+    # + ownerType - OwnerType : user or organization
     # + repositoryName - Repository name
     # + state - Project state
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
     # 
     # + return - `ProjectList` record if successful or else `error`
     @display { label: "Get Repository Projects" }
-    remote isolated function getRepositoryProjectList(@display {label: "Repository Owner Name"} string repositoryOwner, 
-                                                      @display {label: "Repository Name"} string repositoryName, 
-                                                      @display {label: "Project State"} ProjectState state, 
-                                                      @display {label: "Per Page Count"} int perPageCount, 
-                                                      @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
-                                                      returns @display {label: "Project List"} @tainted 
-                                                      ProjectList|error {
-        return getRepositoryProjectList(repositoryOwner, repositoryName, state, perPageCount, self.authToken, 
-                                        self.githubGraphQlClient, nextPageCursor);
-    }
-
-    # Get user project list
-    # 
-    # + username - Project owner name
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
-    # 
-    # + return - `ProjectList` record if successful or else `error`
-    @display { label: "Get User Projects" }
-    remote isolated function getUserProjectList(@display {label: "Project Owner Name"} string username, 
-                                                @display {label: "Per Page Count"} int perPageCount, 
-                                                @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
-                                                returns @display {label: "Project List"} @tainted ProjectList|error {
-        return getUserProjectList(username, perPageCount, self.authToken, self.githubGraphQlClient, nextPageCursor);
+    remote isolated function getProjects(string owner, OwnerType ownerType, string? repositoryName = (), 
+                                         ProjectState? state = ()) returns stream <Project, error?>|error {
+        ProjectStream projectStream = check new ProjectStream(self.githubGraphQlClient, self.authToken, owner,
+                                                        ownerType, repositoryName, state);
+        return new stream<Project, error?>(projectStream);
     }
 
 
-    // Organizations
-
-    # Get a organization
-    # 
-    # + organizationName - Organization name
-    # 
-    # + return - `Organization` record if successful or else `error`
-    @display { label: "Get Organization" }
-    remote isolated function getOrganization(@display {label: "Organization Name"} string organizationName) 
-                                             returns @display {label: "Organization"} @tainted Organization|error {
-        return getOrganization(organizationName, self.authToken, self.githubGraphQlClient);
-    }
 
     # Get user organization list
     # 
-    # + username - Organization username
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
+    # + owner - Organization username
+    # + ownerType - OwnerType : user or organization
     # 
     # + return - `OrganizationList` record or else `error`
     @display { label: "Get User Organization List" }
-    remote isolated function getUserOrganizationList(@display {label: "Organization Username"} string username, 
-                                                     @display {label: "Per Page Count"} int perPageCount, 
-                                                     @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
-                                                     returns @display {label: "Organization List"} @tainted 
-                                                     OrganizationList|error {
-        return getUserOrganizationList(username, perPageCount, self.authToken, self.githubGraphQlClient, 
-                                       nextPageCursor);
+    remote isolated function getOrganizations(string owner,OwnerType ownerType) 
+                                              returns stream<Organization, error?>|error {
+        OrganizationStream organizationStream = check new OrganizationStream(self.githubGraphQlClient, self.authToken,
+                                                                             owner, ownerType);
+        return new stream<Organization, error?> (organizationStream);
     }
 
     # Get organization member list
     # 
     # + organizationName - Organization username
-    # + perPageCount - Per page record count
-    # + nextPageCursor - Next page token
     # 
     # + return - `UserList` record if successful or else `error`
     @display { label: "Get Organization Members" }
-    remote isolated function getOrganizationMemberList(@display {label: "Organization Name"} string organizationName, 
-                                                       @display {label: "Per Page Count"} int perPageCount, 
-                                                       @display {label: "Next Page Cursor"} string? nextPageCursor=()) 
-                                                       returns @display {label: "User List"} @tainted UserList|error {
-        return getOrganizationMemberList(organizationName, perPageCount, self.authToken, self.githubGraphQlClient, 
-                                         nextPageCursor);
+    remote isolated function getOrganizationMembers(string organizationName) returns stream<User,error?>|error {
+        OrganizationMemberStream organizationMemberStream = check new OrganizationMemberStream(self.githubGraphQlClient,
+                                                                                               self.authToken,
+                                                                                               organizationName);
+        return new stream<User,error?>(organizationMemberStream);
     }
 
-    # Get organization Id
-    # 
-    # + organizationName - Organization username
-    # 
-    # + return - Organization Id
-    @display { label: "Get Organization Id" }
-    remote isolated function getOrganizationOwnerId(@display {label: "Organization Name"} string organizationName) 
-                                                    returns @display {label: "Organization Id"} @tainted string|error {
-        return getOrganizationOwnerId(organizationName, self.authToken, self.githubGraphQlClient);
+    # Search
+    #
+    # + searchQuery - The search string to look for
+    # + searchType - The types of search items to search within
+    # + perPageCount - Number of elements to be returned
+    # + lastPageCursor - Next page curser
+    # + return - `github:SearchResult` record if successful or else `error`
+    remote isolated function search(string searchQuery, SearchType searchType, int perPageCount,
+                                                    string? lastPageCursor=()) returns SearchResult | error {
+
+        string stringQuery = getFormulatedStringQueryForSearch(searchQuery, searchType, perPageCount, lastPageCursor);
+        map<json>|Error graphQlData = getGraphQlData(self.githubGraphQlClient, self.authToken, stringQuery);
+
+        if graphQlData is map<json> {
+            var searchResult = graphQlData.get(GIT_SEARCH);
+            if (searchResult is map<json>) {
+                SearchResultPayload payload = check searchResult.cloneWithType(SearchResultPayload);
+
+                    SearchResult searchResponse = {
+                                results: payload.nodes,
+                                pageInfo: payload.pageInfo,
+                                codeCount: payload.codeCount,
+                                discussionCount: payload.discussionCount,
+                                issueCount: payload.issueCount,
+                                repositoryCount: payload.repositoryCount,
+                                userCount: payload.userCount,
+                                wikiCount: payload.wikiCount
+                            };
+                            return searchResponse; 
+            }
+            return error ClientError ("GitHub Client Error", body=searchResult);
+        }
+        return graphQlData;
     }
 }

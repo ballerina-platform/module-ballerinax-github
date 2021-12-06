@@ -18,7 +18,7 @@ import ballerina/http;
 
 isolated function addComment(AddIssueCommentInput addIssueCommentInput, string accessToken, http:Client graphQlClient)
                              returns @tainted IssueComment|error {
-   Issue issue = check getRepositoryIssue(addIssueCommentInput.repositoryOwnerName, addIssueCommentInput.repositoryName,
+   Issue issue = check getIssue(addIssueCommentInput.repositoryOwnerName, addIssueCommentInput.repositoryName,
              addIssueCommentInput.issueNumber, accessToken, graphQlClient);
 
     AddCommentInput addCommentInput = {
@@ -31,57 +31,44 @@ isolated function addComment(AddIssueCommentInput addIssueCommentInput, string a
     }
 
     string stringQuery = getFormulatedStringQueryForAddComment(addCommentInput);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var addComment = gitData[GIT_ADD_COMMENT];
-            if (addComment is map<json>) {
-                var commentEdge = addComment[GIT_COMMENT_EDGE];
-                if(commentEdge is map<json>){
-                    var node = commentEdge[GIT_NODE];
-                    IssueComment issueComment = check node.cloneWithType(IssueComment);
-                    return issueComment;
+    if graphQlData is map<json> {
+        var addComment = graphQlData.get(GIT_ADD_COMMENT);
+        if (addComment is map<json>) {
+            var commentEdge = addComment.get(GIT_COMMENT_EDGE);
+            if(commentEdge is map<json>){
+                var node = commentEdge.get(GIT_NODE);
+                if node is map<json> {
+                    IssueComment|error issueComment = node.cloneWithType(IssueComment);
+                    return issueComment is IssueComment? issueComment:
+                        error ClientError ("GitHub Client Error", issueComment);
                 }
+                return error ClientError ("GitHub Client Error", body=node);
             }
+            return error ClientError ("GitHub Client Error", body=commentEdge);
         }
+        return error ClientError ("GitHub Client Error", body=addComment);
     }
-
-    error err = error(GITHUB_ERROR_CODE, message = "Error parsing git issue comment response");
-    return err;
+    return graphQlData;
 }
 
 isolated function updateComment(UpdateIssueCommentInput updateCommentInput, string accessToken, 
                                 http:Client graphQlClient) returns @tainted error? {
     string stringQuery = getFormulatedStringQueryForUpdateIssueComment(updateCommentInput);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
-
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-    _ = check getValidatedResponse(response);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+    if graphQlData is Error {
+        return graphQlData;
+    }
+    return ;
 }
 
 isolated function deleteComment(DeleteIssueCommentInput deleteCommentInput, string accessToken, 
                                 http:Client graphQlClient) returns @tainted error? {
     string stringQuery = getFormulatedStringQueryForDeleteIssueComment(deleteCommentInput);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
-
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-    _ = check getValidatedResponse(response);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+    if graphQlData is Error {
+        return graphQlData;
+    }
+    return ;
 }

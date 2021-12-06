@@ -30,7 +30,7 @@ isolated function createIssue(@tainted CreateIssueInput createIssueInput, string
     string[] labelIds = [];
     if (!(createIssueInput?.labelNames is ())) { 
         foreach string labelName in <string[]>createIssueInput?.labelNames {
-            Label label = check getRepositoryLabel(repositoryOwnerName, repositoryName, labelName, accessToken, graphQlClient);
+            Label label = check getLabel(repositoryOwnerName, repositoryName, labelName, accessToken, graphQlClient);
             labelIds.push(label.id);
         }
         createIssueInputPayload["labelIds"] = labelIds;
@@ -39,7 +39,7 @@ isolated function createIssue(@tainted CreateIssueInput createIssueInput, string
     string[] assigneeIds = [];
     if (!(createIssueInput?.assigneeNames is ())) { 
         foreach string assigneeName in <string[]>createIssueInput?.assigneeNames {
-            string userId = check getUserId(repositoryOwnerName, accessToken, graphQlClient);
+            string userId = check getUserId(assigneeName, accessToken, graphQlClient);
             assigneeIds.push(userId);
         }
         createIssueInputPayload["assigneeIds"] = assigneeIds;
@@ -66,32 +66,22 @@ isolated function createIssue(@tainted CreateIssueInput createIssueInput, string
     }
 
     string stringQuery = getFormulatedStringQueryForCreateIssue(createIssueInputPayload);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var viewer = gitData[GIT_CREATE_ISSUE];
-            if (viewer is map<json>) {
-                var issue = viewer[GIT_ISSUE];
-                Issue issueObj = check issue.cloneWithType(Issue);
-                return issueObj;
-
-            }
+    if graphQlData is map<json> {
+        var createIssue = graphQlData.get(GIT_CREATE_ISSUE);
+        if (createIssue is map<json>) {
+            var issue = createIssue.get(GIT_ISSUE);
+            if issue is map<json> {
+                Issue|error issueObj = issue.cloneWithType(Issue);
+                return issueObj is Issue? issueObj: error ClientError ("GitHub Client Error", issueObj);
+            }              
+            return error ClientError ("GitHub Client Error", body=issue);
         }
+        return error ClientError ("GitHub Client Error", body=createIssue);
     }
-
-    error err = error(GITHUB_ERROR_CODE+ " Error parsing git issue response", message = "Error parsing git issue response");
-    return err;
-
+    return graphQlData;
 }
 
 isolated function updateIssue(@tainted UpdateIssueInput updateIssueInput, string repositoryOwnerName, string repositoryName,  
@@ -131,7 +121,7 @@ isolated function updateIssue(@tainted UpdateIssueInput updateIssueInput, string
     string[] labelIds = [];
     if (!(updateIssueInput?.labelNames is ())) { 
         foreach string labelName in <string[]>updateIssueInput?.labelNames {
-            Label label = check getRepositoryLabel(repositoryOwnerName, repositoryName, labelName, accessToken, graphQlClient);
+            Label label = check getLabel(repositoryOwnerName, repositoryName, labelName, accessToken, graphQlClient);
             labelIds.push(label.id);
         }
         updateIssueInputPayload["labelIds"] = labelIds;
@@ -140,148 +130,113 @@ isolated function updateIssue(@tainted UpdateIssueInput updateIssueInput, string
     string[] assigneeIds = [];
     if (!(updateIssueInput?.assigneeNames is ())) { 
         foreach string assigneeName in <string[]>updateIssueInput?.assigneeNames {
-            string userId = check getUserId(repositoryOwnerName, accessToken, graphQlClient);
+            string userId = check getUserId(assigneeName, accessToken, graphQlClient);
             assigneeIds.push(userId);
         }
         updateIssueInputPayload["assigneeIds"] = assigneeIds;
     }
 
-    
-
     string stringQuery = getFormulatedStringQueryForUpdateIssue(updateIssueInputPayload);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var viewer = gitData[GIT_UPDATE_ISSUE];
-            if (viewer is map<json>) {
-                var issue = viewer[GIT_ISSUE];
-                Issue issueObj = check issue.cloneWithType(Issue);
-                return issueObj;
-            }
+    if graphQlData is map<json> {
+        var updateIssue = graphQlData.get(GIT_UPDATE_ISSUE);
+        if (updateIssue is map<json>) {
+            var issue = updateIssue.get(GIT_ISSUE);
+            if issue is map<json> {
+                Issue|error issueObj = issue.cloneWithType(Issue);
+                return issueObj is Issue? issueObj: error ClientError ("GitHub Client Error", issueObj);
+            }              
+            return error ClientError ("GitHub Client Error", body=issue);
         }
+        return error ClientError ("GitHub Client Error", body=updateIssue);
     }
-
-    error err = error(GITHUB_ERROR_CODE+ " Error parsing git issue response", message = "Error parsing git issue response");
-    return err;
+    return graphQlData;
 }
 
-isolated function getRepositoryIssue(string repositoryOwnerName, string repositoryName, int issueNumber, 
+isolated function getIssue(string repositoryOwnerName, string repositoryName, int issueNumber, 
                                      string accessToken, http:Client graphQlClient) returns @tainted Issue|error {
-    string stringQuery = getFormulatedStringQueryForGetRepositoryIssue(repositoryOwnerName, repositoryName, 
+    string stringQuery = getFormulatedStringQueryForGetIssue(repositoryOwnerName, repositoryName, 
                                                                        issueNumber);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
+    if graphQlData is map<json> {
+        var repository = graphQlData.get(GIT_REPOSITORY);
+        if (repository is map<json>) {
+            var issue = repository.get(GIT_ISSUE);
+            if(issue is map<json>){
+                Issue|error issueObj = issue.cloneWithType(Issue);
+                if issueObj is error {
+                    return error ClientError ("GitHub Client Error", issueObj);
+                }
+                IssueCommentList issueCommentList = check getIssueCommentList(repositoryOwnerName, 
+                                                                                        repositoryName,
+                                                                                        issueNumber,
+                                                                                        100, 
+                                                                                        accessToken,
+                                                                                        graphQlClient);
+                IssueComment[] issueComments = [];
+                boolean hasIssueCommentListNextPage = issueCommentList.pageInfo.hasNextPage;
+                string? nextPageCursor= issueCommentList.pageInfo.endCursor;
 
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
+                foreach IssueComment comment in issueCommentList.issueComments {
+                    issueComments.push(comment);
+                }
+                while (hasIssueCommentListNextPage) {
+                    issueCommentList = check getIssueCommentList(repositoryOwnerName, 
+                                                                                        repositoryName,
+                                                                                        issueNumber,
+                                                                                        100, 
+                                                                                        accessToken,
+                                                                                        graphQlClient,
+                                                                                        nextPageCursor);
+                    hasIssueCommentListNextPage = issueCommentList.pageInfo.hasNextPage;
+                    nextPageCursor= issueCommentList.pageInfo.endCursor;
 
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var viewer = gitData[GIT_REPOSITORY];
-            if (viewer is map<json>) {
-                var issue = viewer[GIT_ISSUE];
-                Issue issueObj = check issue.cloneWithType(Issue);
+                    foreach IssueComment comment in issueCommentList.issueComments {
+                        issueComments.push(comment);
+                    }
+                }
+                issueObj.issueComments = issueComments;
                 return issueObj;
             }
+            return error ClientError ("GitHub Client Error", body=issue);
         }
+        return error ClientError ("GitHub Client Error", body=repository);
     }
-    error err = error(GITHUB_ERROR_CODE+ " Error parsing git repository issue response", message = "Error parsing git repository issue response");
-    return err;
+    return graphQlData;
 }
 
-isolated function getRepositoryIssueCommentList(string repositoryOwnerName, string repositoryName, int issueNumber, 
+isolated function getIssueCommentList(string repositoryOwnerName, string repositoryName, int issueNumber, 
                                                 int perPageCount, string accessToken, http:Client graphQlClient, 
                                                 string? nextPageCursor=()) returns @tainted IssueCommentList|error {
     string stringQuery = getFormulatedStringQueryForGetIssueCommentList(repositoryOwnerName, repositoryName, 
                                                                         issueNumber, perPageCount, nextPageCursor);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var viewer = gitData[GIT_REPOSITORY];
-            if (viewer is map<json>) {
-                var issue = viewer[GIT_ISSUE];
-                if(issue is map<json>){
-                    var comments = issue[GIT_COMMENTS];
-                    if(comments is map<json>){
-                        IssueCommentListPayload issueCommentListResponse = check comments.cloneWithType(IssueCommentListPayload);
+    if graphQlData is map<json> {
+        var repository = graphQlData.get(GIT_REPOSITORY);
+        if (repository is map<json>) {
+            var issue = repository.get(GIT_ISSUE);
+            if(issue is map<json>){
+                var comments = issue.get(GIT_COMMENTS);
+                if(comments is map<json>){
+                    IssueCommentListPayload|error commentListResponse = comments.cloneWithType(IssueCommentListPayload);
+                    if commentListResponse is IssueCommentListPayload {
                         IssueCommentList issueCommentList = {
-                            issueComments: issueCommentListResponse.nodes,
-                            pageInfo: issueCommentListResponse.pageInfo,
-                            totalCount: issueCommentListResponse.totalCount
+                            issueComments: commentListResponse.nodes,
+                            pageInfo: commentListResponse.pageInfo,
+                            totalCount: commentListResponse.totalCount
                         };
                         return issueCommentList;
                     }
+                    return error ClientError ("GitHub Client Error", commentListResponse);
                 }
+                return error ClientError ("GitHub Client Error", body=comments);
             }
+            return error ClientError ("GitHub Client Error", body=issue);
         }
+        return error ClientError ("GitHub Client Error", body=repository);
     }
-    error err = error(GITHUB_ERROR_CODE+ " Error parsing git issue comment list response", message = "Error parsing git issue comment list response");
-    return err;
-}
-
-isolated function getIssuesWithLabel(string repositoryOwnerName, string repositoryName, string labelName, 
-                                     int perPageCount, string accessToken, http:Client graphQlClient, 
-                                     string? nextPageCursor=()) returns @tainted IssueList|error {
-    string stringQuery = getFormulatedStringQueryForGetIssueListWithLabel(repositoryOwnerName, repositoryName, labelName, perPageCount, nextPageCursor);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
-
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var repository = gitData[GIT_REPOSITORY];
-            if(repository is map<json>){
-                var label = repository[GIT_LABEL];
-                if (label is map<json>) {
-                    var issues = label[GIT_ISSUES];
-                    if(issues is map<json>){
-                        IssueListPayload issueListResponse = check issues.cloneWithType(IssueListPayload);
-                        IssueList issueList = {
-                            issues: issueListResponse.nodes,
-                            pageInfo: issueListResponse.pageInfo,
-                            totalCount: issueListResponse.totalCount
-                        };
-                        return issueList;
-                    }
-                }
-            }
-
-        }
-    }
-    error err = error(GITHUB_ERROR_CODE+ " Error parsing git issue list response", message = "Error parsing git issue list response");
-    return err;
+    return graphQlData;
 }

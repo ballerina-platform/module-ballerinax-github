@@ -37,7 +37,7 @@ Create a `github:ConnectionConfig` using your GitHub personal access token and a
 ### Step 3: Invoke connector operation
 - Get All Open Pull Requests In A Repository
 ```ballerina
-    github:PullRequestList response = check githubClient->getRepositoryPullRequestList(<GitHub_Username>, <GitHub_Repository_Name>, github:PULL_REQUEST_OPEN, <Per_Page_Count>);
+    github:PullRequestList response = check githubClient->getPullRequests(<GitHub_Username>, <GitHub_Repository_Name>, github:PULL_REQUEST_OPEN, <Per_Page_Count>);
 ```
 - Use `bal run` command to compile and run the Ballerina program.    
 

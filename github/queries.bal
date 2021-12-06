@@ -250,7 +250,12 @@ final string PULL_REQUEST_FIELDS =        "                     id,\n"+
                                           "                     url,\n";
 
 
-
+final string SEARCH_COUNT = "codeCount,\n"+
+                            "discussionCount,\n"+
+                            "issueCount,\n"+
+                            "repositoryCount,\n"+
+                            "userCount,\n"+
+                            "wikiCount,\n";
 
 final string GET_AUTHENTICATED_USER_QUERY = "query { \n"+
                                             "    viewer {              \n"+
@@ -258,26 +263,30 @@ final string GET_AUTHENTICATED_USER_QUERY = "query { \n"+
                                             "    }                     \n"+
                                             "}";
 
-
+final string GET_USER = "query($userName: String!){\n"+
+                        "  user(login: $userName){\n"+
+                               USER +
+                        "  }\n"+
+                        "}";
 
 
 final string GET_REPOSIOTRY = "query($owner: String!, $name: String!) {   \n"+
-                                            "    repository(owner:$owner, name:$name) { \n"+
-                                                REPOSITORY_FIELDS +
-                                            "    }\n"+
-                                            "}";
+                              "    repository(owner:$owner, name:$name) { \n"+
+                                  REPOSITORY_FIELDS +
+                              "    }\n"+
+                              "}";
 
 
 final string GET_REPOSITORY_LIST_FOR_AUTHENTICATED_USER = "query($perPageCount: Int!, $lastPageCursor: String) { \n"+
-                                            "    viewer {                    \n"+
-                                            "       repositories(first:$perPageCount, after:$lastPageCursor){ \n"+
-                                            "           nodes{               \n"+
-                                                            REPOSITORY_FIELDS +
-                                            "           }                     \n"+
-                                                        PAGE_INFO_AND_TOTAL_COUNT+
-                                            "       }                         \n"+
-                                            "    }                            \n"+
-                                            "}";
+                                                          "    viewer {                    \n"+
+                                                          "       repositories(first:$perPageCount, after:$lastPageCursor){ \n"+
+                                                          "           nodes{               \n"+
+                                                                          REPOSITORY_FIELDS +
+                                                          "           }                     \n"+
+                                                                      PAGE_INFO_AND_TOTAL_COUNT+
+                                                          "       }                         \n"+
+                                                          "    }                            \n"+
+                                                          "}";
 
 final string GET_REPOSITORY_LIST_FOR_USER = "query($username: String!, $perPageCount: Int!, $lastPageCursor: String) { \n"+
                                             "    user(login: $username) {                    \n"+
@@ -291,41 +300,41 @@ final string GET_REPOSITORY_LIST_FOR_USER = "query($username: String!, $perPageC
                                             "}";
 
 final string GET_REPOSITORY_LIST_FOR_ORGANIZATION = "query($organizationName: String!, $perPageCount: Int!, $lastPageCursor: String) { \n"+
-                                            "    organization(login: $organizationName) {                    \n"+
-                                            "       repositories(first:$perPageCount, after:$lastPageCursor){ \n"+
-                                            "           nodes{               \n"+
-                                                        REPOSITORY_FIELDS+
-                                            "           }                     \n"+
-                                                        PAGE_INFO_AND_TOTAL_COUNT+
-                                            "       }                         \n"+
-                                            "    }                            \n"+
-                                            "}";
+                                                    "    organization(login: $organizationName) {                    \n"+
+                                                    "       repositories(first:$perPageCount, after:$lastPageCursor){ \n"+
+                                                    "           nodes{               \n"+
+                                                                REPOSITORY_FIELDS+
+                                                    "           }                     \n"+
+                                                                PAGE_INFO_AND_TOTAL_COUNT+
+                                                    "       }                         \n"+
+                                                    "    }                            \n"+
+                                                    "}";
 
 
 
-final string LIST_REPOSITORY_COLLOBORATORS = "query($username: String!, $repositoryName: String!, $perPageCount: Int!, $lastPageCursor: String){ \n"+
-                                             "  repository(owner: $username, name: $repositoryName){\n"+
-                                             "      collaborators(first: $perPageCount, after: $lastPageCursor){ \n"+
-                                             "          nodes{ \n"+
-                                                            USER+
-                                             "          },\n"+
-                                                        PAGE_INFO_AND_TOTAL_COUNT+
-                                             "     }\n"+
-                                             "  }\n"+
-                                             "}";
+final string LIST_COLLOBORATORS = "query($username: String!, $repositoryName: String!, $perPageCount: Int!, $lastPageCursor: String){ \n"+
+                                  "  repository(owner: $username, name: $repositoryName){\n"+
+                                  "      collaborators(first: $perPageCount, after: $lastPageCursor){ \n"+
+                                  "          nodes{ \n"+
+                                                 USER+
+                                  "          },\n"+
+                                             PAGE_INFO_AND_TOTAL_COUNT+
+                                  "     }\n"+
+                                  "  }\n"+
+                                  "}";
 
-final string GET_BRANCH_LIST_OF_A_REPOSITORY = "query($username: String!, $repositoryName: String!, $perPageCount: Int!, $lastPageCursor: String){\n"+
-                                               "  repository(owner: $username, name: $repositoryName){\n"+
-                                               "    refs(first:$perPageCount, after: $lastPageCursor, refPrefix: \\\"refs/heads/\\\"){\n"+
-                                               "        nodes{\n"+
-                                               "            name,\n"+
-                                               "            id\n"+
-                                               "            prefix"+
-                                               "        },\n"+
-                                                        PAGE_INFO_AND_TOTAL_COUNT+
-                                               "    }\n"+
-                                               "  }\n"+
-                                               "}";
+final string GET_BRANCH_LIST = "query($username: String!, $repositoryName: String!, $perPageCount: Int!, $lastPageCursor: String){\n"+
+                               "  repository(owner: $username, name: $repositoryName){\n"+
+                               "    refs(first:$perPageCount, after: $lastPageCursor, refPrefix: \\\"refs/heads/\\\"){\n"+
+                               "        nodes{\n"+
+                               "            name,\n"+
+                               "            id\n"+
+                               "            prefix"+
+                               "        },\n"+
+                                        PAGE_INFO_AND_TOTAL_COUNT+
+                               "    }\n"+
+                               "  }\n"+
+                               "}";
 
 final string GET_ISSUE_LIST_ASSIGNED_TO_USER = "query($owner:String!, $name:String!, $assignee: String!, $perPageCount: Int!, $lastPageCursor: String){\n"+
                                              "  repository(owner: $owner, name: $name){\n"+
@@ -338,9 +347,9 @@ final string GET_ISSUE_LIST_ASSIGNED_TO_USER = "query($owner:String!, $name:Stri
                                              "  }\n"+
                                              "}";
 
-final string GET_ISSUE_LIST = "query($owner:String!, $name:String!, $perPageCount: Int!, $states:[IssueState!] $lastPageCursor: String){\n"+
+final string GET_ISSUE_LIST = "query($owner:String!, $name:String!, $perPageCount: Int!, $issueFilters:IssueFilters, $lastPageCursor: String){\n"+
                                              "  repository(owner: $owner, name: $name){\n"+
-                                             "      issues(first: $perPageCount, after: $lastPageCursor, states:$states){\n"+
+                                             "      issues(first: $perPageCount, after: $lastPageCursor, filterBy: $issueFilters){\n"+
                                              "          nodes{\n"+
                                                             ISSUE_FIELDS+
                                              "          },\n"+
@@ -407,21 +416,6 @@ final string GET_ALL_LABELS_FOR_A_ISSUE = "query($username:String!, $repositoryN
                                           "         }\n"+
                                           "     }"+
                                           "}";
-
-
-final string GET_REPOSITORY_ISSUES_WITH_LABEL = "query($username: String!, $repositoryName: String!, $labelName: String!, $perPageCount: Int!, $lastPageCursor: String){\n"+
-                                                "   repository(owner: $username, name: $repositoryName){\n"+
-                                                "       label(name: $labelName){\n"+
-                                                "           issues(first: $perPageCount, after: $lastPageCursor){\n"+
-                                                "               nodes{\n"+
-                                                                    ISSUE_FIELDS+
-                                                "               },\n"+
-                                                                PAGE_INFO_AND_TOTAL_COUNT+
-                                                "           }\n"+
-                                                "       }\n"+
-                                                "   }\n"+
-                                                "}";
-
 
 final string LIST_MILESTONES = "query($username: String!, $repositoryName: String!, $perPageCount: Int!, $lastPageCursor: String){\n"+
                                "  repository(owner: $username, name: $repositoryName){\n"+
@@ -633,14 +627,33 @@ final string GET_PROJECT_ID = "query($repositoryOwnerName: String!, $repositoryN
                                  "  }\n"+
                                  "}";
 
-final string GET_ORG_OWNER_ID = "query($organizationName: String!){\n"+
-                                 "  organization(login: $organizationName){\n"+
-                                 "     id\n"+
-                                 "  }\n"+
-                                 "}";
-
 final string GET_USER_OWNER_ID = "query($userName: String!){\n"+
                                  "  user(login: $userName){\n"+
                                  "     id\n"+
                                  "  }\n"+
                                  "}";
+
+final string SEARCH =   "query ($searchQuery: String!, $searchType: SearchType!, $perPageCount: Int, $lastPageCursor: String) {\n"+
+                        "   search(query: $searchQuery, type: $searchType, first: $perPageCount, after: $lastPageCursor) {\n"+
+                                SEARCH_COUNT +
+                                PAGE_INFO +
+                        "       nodes{\n"+
+                                    //
+                        "           ... on Issue {\n"+
+                                        ISSUE_FIELDS +
+                        "           }\n"+
+                        "           ... on Organization {\n"+
+                                        ORGANIZATION_FILEDS +
+                        "           }\n"+
+                        "           ... on PullRequest {\n"+
+                                        PULL_REQUEST_FIELDS +
+                        "           }\n"+
+                        "           ... on Repository {\n"+
+                                        REPOSITORY_FIELDS +
+                        "           }\n"+
+                        "           ... on User {\n"+
+                                        USER +
+                        "           }\n"+
+                        "       }\n"+
+                        "   }\n"+
+                        "}";
