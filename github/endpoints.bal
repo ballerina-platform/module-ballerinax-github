@@ -84,7 +84,7 @@ public isolated client class Client {
 
     # Get repository
     # 
-    # + owner - GitHub repository owner name
+    # + owner - Repository owner name
     # + repositoryName - GitHub repository name
     # 
     # + return - `github:Repository` record if successful else `github:Error`
@@ -95,8 +95,8 @@ public isolated client class Client {
 
     # Get repositories
     # 
-    # + owner - Repo Owner
-    # + isOrganization - Is Organization
+    # + owner - Repository owner name
+    # + isOrganization - Represents if the owner is an organization or not
     # 
     # + return - `github:stream<Repository,Error?>` record if successful else `github:Error`
     @display { label: "Get Repositories" }
@@ -110,7 +110,7 @@ public isolated client class Client {
 
     # Get collaborators
     # 
-    # + owner - Repository owner username
+    # + owner - Repository owner name
     # + repositoryName - Repository name
     # 
     # + return - `github:stream<User,Error?>` record if successful else `github:Error`
@@ -182,7 +182,7 @@ public isolated client class Client {
     # + repositoryName - Repository name
     # + issueFilters - Filters to filter issues
     # 
-    # + return - `github:IssueList` record if successful else `github:Error`
+    # + return - `github:stream<Issue,Error?>` record if successful else `github:Error`
     @display { label: "Get Issues" }
     remote isolated function getIssues(string owner, string repositoryName, IssueFilters issueFilters = {})
                                        returns stream<Issue,Error?>|Error {
@@ -198,7 +198,7 @@ public isolated client class Client {
     # + addIssueCommentInput - `AddIssueCommentInput` record
     # 
     # + return - `github:IssueComment` if successful else `github:Error`
-    @display { label: "Add IComment" }
+    @display { label: "Add Comment" }
     remote isolated function addComment(AddIssueCommentInput addIssueCommentInput)
                                         returns IssueComment|Error {
         return addComment(addIssueCommentInput, self.authToken, self.githubGraphQlClient);
@@ -214,7 +214,7 @@ public isolated client class Client {
         return updateComment(updateCommentInput, self.authToken, self.githubGraphQlClient);
     }
 
-    # Delete issue comment
+    # Delete comment
     # 
     # + deleteCommentInput - `DeleteCommentInput` record
     # 
@@ -231,7 +231,7 @@ public isolated client class Client {
     //     return createLabel(createLabelInput, self.accessToken, self.githubGraphQlClient);
     // }
 
-    # Add labels to an issue
+    # Add labels
     # 
     # + addLabelsInput - `AddIssueLabelInput` record
     # 
@@ -241,36 +241,36 @@ public isolated client class Client {
         return addLabels(addLabelsInput, self.authToken, self.githubGraphQlClient);
     }
 
-    # Remove issue labeles
+    # Remove labeles
     # 
     # + removeIssueLabelInput - `RemoveIssueLabelInput` record
     # 
     # + return - `github:Error` if failed
-    @display { label: "Remove Issue Labels" }
+    @display { label: "Remove Labels" }
     remote isolated function removeLabel(RemoveIssueLabelInput removeIssueLabelInput) returns  Error? {
         return removeLabel(removeIssueLabelInput, self.authToken, self.githubGraphQlClient);
     }
 
-    # Get repository label
+    # Get label
     # 
     # + owner - Repository owner name
     # + repositoryName - Repository name
     # + labelName - Label name
     # 
-    # + return - `Label` record if successful else `github:Error`
+    # + return - `github:Label` record if successful else `github:Error`
     @display { label: "Get Label" }
     remote isolated function getLabel(string owner, string repositoryName, string labelName) 
                                                 returns Label|Error {
         return getLabel(owner, repositoryName, labelName, self.authToken, self.githubGraphQlClient);
     }
 
-    # Get labels in an issue
+    # Get labels
     # 
     # + owner - Repository owner name
     # + repositoryName - Repository name
     # + issueNumber - Issue number
     # 
-    # + return - `LabelList` record if successful else `github:Error`
+    # + return - `github:stream<Label,Error?>` record if successful else `github:Error`
     @display { label: "Get Labels" }
     remote isolated function getLabels(string owner, string repositoryName,  int issueNumber) 
                                              returns stream<Label,Error?>|Error {
@@ -318,7 +318,7 @@ public isolated client class Client {
     # + owner - Repository owner name
     # + repositoryName - Repository name
     # 
-    # + return - `PullRequest` record if success or else `github:Error`
+    # + return - `github:PullRequest` record if success or else `github:Error`
     @display { label: "Create Pull Request" }
     remote isolated function createPullRequest(CreatePullRequestInput createPullRequestInput,string owner, 
                                                string repositoryName) returns PullRequest|Error {
@@ -333,7 +333,7 @@ public isolated client class Client {
     # + repositoryName - Repository name
     # + pullRequestNumber - Pull request number
     # 
-    # + return - `PullRequest` record if successful else `github:Error`
+    # + return - `github:PullRequest` record if successful else `github:Error`
     @display { label: "Update Pull Request" }
     remote isolated function updatePullRequest(UpdatePullRequestInput updatePullRequestInput, string owner, 
                                               string repositoryName, int pullRequestNumber) returns PullRequest|Error {
@@ -341,13 +341,13 @@ public isolated client class Client {
                                  self.authToken, self.githubGraphQlClient);
     }
 
-    # Get pull requests 
+    # Get pull request
     # 
     # + owner - Repository owner name
     # + repositoryName - Repository name
     # + pullRequestNumber - Pull request number
     # 
-    # + return - `PullRequest` record if successful else `github:Error`
+    # + return - `github:PullRequest` record if successful else `github:Error`
     @display { label: "Get Pull Request" }
     remote isolated function getPullRequest(string owner, string repositoryName, int pullRequestNumber) 
                                             returns PullRequest|Error {
@@ -355,13 +355,13 @@ public isolated client class Client {
                               self.githubGraphQlClient);
     }
 
-    # Get repository pull request list
+    # Get pull requests
     # 
     # + owner - Repository owner name
     # + repositoryName - Repository name
     # + state - `Pull request state`
     # 
-    # + return - `PullRequestList` record if successful else `github:Error`
+    # + return - `github:stream<PullRequest,Error?>` record if successful else `github:Error`
     @display { label: "Get Pull Requests" }
     remote isolated function getPullRequests(string owner, string repositoryName, PullRequestState state) 
                                                           returns stream<PullRequest,Error?>|Error {
@@ -378,7 +378,7 @@ public isolated client class Client {
     # + repositoryName - Repository name
     # + pullRequestNumber - Pull request number
     # 
-    # + return - `PullRequestReview` record
+    # + return - `github:PullRequestReview` record if successful else `github:Error`
     @display {label: "Create Pull Request Review"}
     remote isolated function createPullRequestReview(AddPullRequestReviewInput addPullRequestReviewInput, 
                                                      string owner, string repositoryName,  int pullRequestNumber) 
@@ -416,7 +416,7 @@ public isolated client class Client {
     # 
     # + createRepositoryProjectInput - `CreateRepositoryProjectInput` record
     # 
-    # + return - `Project` record if successful else `github:Error`
+    # + return - `github:Project` record if successful else `github:Error`
     @display { label: "Create Project" }
     remote isolated function createProject(CreateRepositoryProjectInput createRepositoryProjectInput) 
                                            returns Project|Error {
@@ -427,7 +427,7 @@ public isolated client class Client {
     # 
     # + updateProjectInput - `UpdateProjectInput`
     # 
-    # + return - `Project` record if successful or else `github:Error`
+    # + return - `github:Project` record if successful or else `github:Error`
     @display { label: "Update Project" }
     remote isolated function updateProject(UpdateProjectInput updateProjectInput) 
                                            returns Project|Error {
@@ -444,55 +444,55 @@ public isolated client class Client {
         return deleteProject(deleteProjectInput, self.authToken, self.githubGraphQlClient);
     }
 
-    # Get user project
+    # Get project
     # 
     # + username - Project owner name
     # + projectNumber - Project number
     # 
-    # + return - `Project`
+    # + return - `github:Project` record if successful or else `github:Error`
     @display { label: "Get Project" }
     remote isolated function getProject(string username, int projectNumber) 
                                             returns Project|Error {
         return getProject(username, projectNumber, self.authToken, self.githubGraphQlClient);
     }
 
-    # Get Repository project list
+    # Get Repository projects
     # 
     # + owner - Repository owner name
-    # + ownerType - OwnerType : user or organization
+    # + ownerType - Repository owner type : user or organization
     # + repositoryName - Repository name
     # + state - Project state
     # 
-    # + return - `ProjectList` record if successful or else `github:Error`
-    @display { label: "Get Repository Projects" }
+    # + return - `github:stream<Project,Error?>` record if successful or else `github:Error`
+    @display { label: "Get Projects" }
     remote isolated function getProjects(string owner, OwnerType ownerType, string? repositoryName = (), 
-                                         ProjectState? state = ()) returns stream <Project, Error?>|Error {
+                                         ProjectState? state = ()) returns stream<Project,Error?>|Error {
         ProjectStream projectStream = check new ProjectStream(self.githubGraphQlClient, self.authToken, owner,
                                                         ownerType, repositoryName, state);
-        return new stream<Project, Error?>(projectStream);
+        return new stream<Project,Error?>(projectStream);
     }
 
 
 
-    # Get user organization list
+    # Get organizations
     # 
-    # + owner - Organization username
+    # + owner - Organization owner name
     # + ownerType - OwnerType : user or organization
     # 
-    # + return - `OrganizationList` record or else `github:Error`
-    @display { label: "Get User Organization List" }
+    # + return - `github:stream<Organization,Error?>` record or else `github:Error`
+    @display { label: "Get Organizations" }
     remote isolated function getOrganizations(string owner,OwnerType ownerType) 
-                                              returns stream<Organization, Error?>|Error {
+                                              returns stream<Organization,Error?>|Error {
         OrganizationStream organizationStream = check new OrganizationStream(self.githubGraphQlClient, self.authToken,
                                                                              owner, ownerType);
-        return new stream<Organization, Error?> (organizationStream);
+        return new stream<Organization,Error?> (organizationStream);
     }
 
-    # Get organization member list
+    # Get organization members
     # 
     # + organizationName - Organization username
     # 
-    # + return - `UserList` record if successful or else `github:Error`
+    # + return - `github:stream<User,Error?>` record if successful or else `github:Error`
     @display { label: "Get Organization Members" }
     remote isolated function getOrganizationMembers(string organizationName) returns stream<User,Error?>|Error {
         OrganizationMemberStream organizationMemberStream = check new OrganizationMemberStream(self.githubGraphQlClient,
@@ -508,6 +508,7 @@ public isolated client class Client {
     # + perPageCount - Number of elements to be returned
     # + lastPageCursor - Next page curser
     # + return - `github:SearchResult` record if successful or else `github:Error`
+    @display { label: "Search" }
     remote isolated function search(string searchQuery, SearchType searchType, int perPageCount,
                                                     string? lastPageCursor=()) returns SearchResult|Error {
 
