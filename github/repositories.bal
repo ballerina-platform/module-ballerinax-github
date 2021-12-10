@@ -16,94 +16,45 @@
 
 import ballerina/http;
 
-isolated function getUserRepository(string username, string repositoryName, string accessToken, 
-                                    http:Client graphQlClient) returns @tainted Repository|error {
+isolated function getRepository(string username, string repositoryName, string accessToken, 
+                                    http:Client graphQlClient) returns @tainted Repository|Error {
+
     string stringQuery = getFormulatedStringQueryForGetRepository(username, repositoryName);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var viewer = gitData[GIT_REPOSITORY];
-            if (viewer is map<json>) {
-                Repository repository = check viewer.cloneWithType(Repository);
-                return repository;
-            }
+    if graphQlData is map<json> {
+        var repository = graphQlData[GIT_REPOSITORY];
+        if (repository is map<json>) {
+            Repository|error result = repository.cloneWithType(Repository);
+            return result is Repository? result : error ClientError ("GitHub Client Error", result);
         }
-    }
-    error err = error(GITHUB_ERROR_CODE+ " Error parsing git repository response", message = "Error parsing git repository response");
-    return err;
+        return error ClientError("GitHub Client Error", body = repository);
+    } 
+    return graphQlData;
 }
 
-isolated function getAuthenticatedUserRepositoryList(int perPageCount, string accessToken, http:Client graphQlClient, 
-                                                     string? nextPageCursor=()) returns @tainted RepositoryList|error {
-        string stringQuery = getFormulatedStringQueryForGetAuthenticatedUserRepositoryList(perPageCount, 
-                                                                                           nextPageCursor);
-        http:Request request = new;
-        setHeader(request, accessToken);
-        json convertedQuery = check stringToJson(stringQuery);
-        //Set headers and payload to the request
-        constructRequest(request, <@untainted> convertedQuery);
+isolated function getRepositoryList(int perPageCount, string accessToken, http:Client graphQlClient, 
+                                    boolean isOrganization, string? owner, string? nextPageCursor = ()) 
+                                    returns @tainted RepositoryList|Error {
+    string stringQuery = getFormulatedStringQueryForGetRepositoryList(perPageCount, isOrganization, owner,
+                                                                      nextPageCursor);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-        http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-        //Check for empty payloads and errors
-        json validatedResponse = check getValidatedResponse(response);
-
-        if (validatedResponse is map<json>) {
-            var gitData = validatedResponse[GIT_DATA];
-            if (gitData is map<json>) {
-                var viewer = gitData[GIT_VIEWER];
-                if (viewer is map<json>) {
-                    var repositories = viewer[GIT_REPOSITORIES];
-                    if(repositories is map<json>){
-                        RepositoryListPayload repositoryListResponse = check repositories.cloneWithType(RepositoryListPayload);
-                        RepositoryList repositoryList = {
-                            repositories: repositoryListResponse.nodes,
-                            pageInfo: repositoryListResponse.pageInfo,
-                            totalCount: repositoryListResponse.totalCount
-                        };
-                        return repositoryList;
-                    }
-                }
-            }
+    if graphQlData is map<json> {
+        json repoOwner; 
+        if (owner is string && isOrganization) {
+            repoOwner = graphQlData[GIT_ORGANIZATION];
+        } else if (owner is string && !isOrganization) {
+            repoOwner = graphQlData[GIT_USER];
+        } else {
+            repoOwner = graphQlData[GIT_VIEWER];
         }
-        error err = error(GITHUB_ERROR_CODE+ " Error parsing git repository list response", message = "Error parsing git repository list response");
-        return err;
-    }
-
-isolated function getUserRepositoryList(string username, int perPageCount, string accessToken, 
-                                        http:Client graphQlClient, string? nextPageCursor = ()) 
-                                        returns @tainted RepositoryList|error {
-    string stringQuery = getFormulatedStringQueryForGetUserRepositoryList(username, perPageCount, nextPageCursor);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
-
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var viewer = gitData[GIT_USER];
-            if (viewer is map<json>) {
-                var repositories = viewer[GIT_REPOSITORIES];
-                if(repositories is map<json>){
-                    RepositoryListPayload repositoryListResponse = check repositories.cloneWithType(RepositoryListPayload);
+        
+        if (repoOwner is map<json>) {
+            var repositories = repoOwner[GIT_REPOSITORIES];
+            if(repositories is map<json>){
+                RepositoryListPayload|error repositoryListResponse = repositories.cloneWithType(RepositoryListPayload);
+                if repositoryListResponse is RepositoryListPayload {
                     RepositoryList repositoryList = {
                         repositories: repositoryListResponse.nodes,
                         pageInfo: repositoryListResponse.pageInfo,
@@ -111,114 +62,63 @@ isolated function getUserRepositoryList(string username, int perPageCount, strin
                     };
                     return repositoryList;
                 }
+                return error ClientError ("GitHub Client Error", repositoryListResponse);
+            } else {
+                return error ClientError("GitHub Client Error", body = repositories);
             }
+        } else {
+            return error ClientError("GitHub Client Error", body = repoOwner);
         }
+    } else {
+        return graphQlData;
     }
-    error err = error(GITHUB_ERROR_CODE+ "Error parsing git repository list response", message = "Error parsing git repository list response");
-    return err;
 }
 
-isolated function getOrganizationRepositoryList(string organizationName, int perPageCount, string accessToken, 
-                                                http:Client graphQlClient, string? nextPageCursor = ()) 
-                                                returns @tainted RepositoryList|error {
-    string stringQuery = getFormulatedStringQueryForGetOrganizationRepositoryList(organizationName, perPageCount, 
-                                                                                  nextPageCursor);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
-
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var viewer = gitData[GIT_ORGANIZATION];
-            if (viewer is map<json>) {
-                var repositories = viewer[GIT_REPOSITORIES];
-                if(repositories is map<json>){
-                    RepositoryListPayload repositoryListResponse = check repositories.cloneWithType(RepositoryListPayload);
-                    RepositoryList repositoryList = {
-                        repositories: repositoryListResponse.nodes,
-                        pageInfo: repositoryListResponse.pageInfo,
-                        totalCount: repositoryListResponse.totalCount
-                    };
-                    return repositoryList;
-                }
-            }
-        }
-    }
-    error err = error(GITHUB_ERROR_CODE+ " Error parsing git repository list response", message = "Error parsing git repository list response");
-    return err;
-}
-
-isolated function getRepositoryCollobaratorList(string ownerName, string repositoryName, int perPageCount, 
+isolated function getCollaborators(string owner, string repositoryName, int perPageCount, 
                                                 string accessToken, http:Client graphQlClient, 
                                                 string? nextPageCursor = ()) 
-                                                returns @tainted CollaboratorList|error {
-    string stringQuery = getFormulatedStringQueryForGetRepositoryCollaboratorList(ownerName, repositoryName, 
-                                                                                  perPageCount, nextPageCursor);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+                                                returns @tainted CollaboratorList|Error {
+    string stringQuery = getFormulatedStringQueryForGetCollaboratorList(owner, repositoryName, perPageCount,
+                                                                        nextPageCursor);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var viewer = gitData[GIT_REPOSITORY];
-            if (viewer is map<json>) {
-                var repositories = viewer[GIT_COLLABORATORS];
-                if(repositories is map<json>){
-                    CollaboratorListPayload collaboratorListResponse = check repositories.cloneWithType(CollaboratorListPayload);
+    if graphQlData is map<json> {
+        var repository = graphQlData.get(GIT_REPOSITORY);
+        if (repository is map<json>) {
+            var collaborators = repository.get(GIT_COLLABORATORS);
+            if(collaborators is map<json>){
+                CollaboratorListPayload|error payload = collaborators.cloneWithType(CollaboratorListPayload);
+                if payload is CollaboratorListPayload {
                     CollaboratorList collaboratorList = {
-                        collaborators: collaboratorListResponse.nodes,
-                        pageInfo: collaboratorListResponse.pageInfo,
-                        totalCount: collaboratorListResponse.totalCount
+                        collaborators: payload.nodes,
+                        pageInfo: payload.pageInfo,
+                        totalCount: payload.totalCount
                     };
                     return collaboratorList;
                 }
+                return error ClientError ("GitHub Client Error", payload);
             }
+            return error ClientError ("GitHub Client Error", body=collaborators);
         }
+        return error ClientError ("GitHub Client Error", body=repository);
     }
-    error err = error(GITHUB_ERROR_CODE+ " Error parsing git collaborator list response", message = "Error parsing git collaborator list response");
-    return err;
+    return graphQlData;
 }
 
-isolated function getRepositoryBranchList(string ownerName, string repositoryName, int perPageCount, 
+isolated function getBranches(string ownerName, string repositoryName, int perPageCount, 
                                           string accessToken, http:Client graphQlClient, string? nextPageCursor = ()) 
-                                          returns @tainted BranchList|error {
-    string stringQuery = getFormulatedStringQueryForGetRepositoryBranchList(ownerName, repositoryName, perPageCount, 
+                                          returns @tainted BranchList|Error {
+    string stringQuery = getFormulatedStringQueryForGetBranches(ownerName, repositoryName, perPageCount, 
                                                                             nextPageCursor);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var viewer = gitData[GIT_REPOSITORY];
-            if (viewer is map<json>) {
-                var repositories = viewer[GIT_REFS];
-                if(repositories is map<json>){
-                    BranchListPayload branchListResponse = check repositories.cloneWithType(BranchListPayload);
+    if graphQlData is map<json> {
+        var repository = graphQlData.get(GIT_REPOSITORY);
+        if (repository is map<json>) {
+            var branches = repository.get(GIT_REFS);
+            if(branches is map<json>){
+                BranchListPayload|error branchListResponse = branches.cloneWithType(BranchListPayload);
+                if branchListResponse is BranchListPayload {
                     BranchList branchList = {
                         branches: branchListResponse.nodes,
                         pageInfo: branchListResponse.pageInfo,
@@ -226,58 +126,45 @@ isolated function getRepositoryBranchList(string ownerName, string repositoryNam
                     };
                     return branchList;
                 }
+                return error ClientError ("GitHub Client Error", branchListResponse);
             }
+            return error ClientError ("GitHub Client Error", body=branches);
         }
+        return error ClientError ("GitHub Client Error", body=repository);
     }
-    error err = error(GITHUB_ERROR_CODE+" Error parsing git branch list response", message = "Error parsing git branch list response");
-    return err;
+    return graphQlData;
 }
 
 isolated function updateRepository(@tainted UpdateRepositoryInput updateRepositoryInput, string repositoryOwnerName, 
                                    string repositoryName, string accessToken, http:Client graphQlClient) 
-                                   returns @tainted error? {
+                                   returns @tainted Error? {
     if(updateRepositoryInput?.repositoryId is ()) {
         updateRepositoryInput["repositoryId"] = check getRepositoryId(repositoryOwnerName, repositoryName, accessToken,
                                                                       graphQlClient);
     }
     string stringQuery = getFormulatedStringQueryForUpdateRepository(updateRepositoryInput);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
-
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    _ = check getValidatedResponse(response);
+    
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+    if graphQlData is Error {
+        return graphQlData;
+    }
+    return ;
 }
 
-isolated function getRepositoryIssueListAssignedToUser(string repositoryOwnerName, string repositoryName, 
-                                                       string assignee, int perPageCount, string accessToken,
-                                                        http:Client graphQlClient, string? nextPageCursor = ()) 
-                                                        returns @tainted IssueList|error {
-    string stringQuery = getFormulatedStringQueryForGetIssueListAssignedToUser(repositoryOwnerName, repositoryName, 
-                                                                               assignee, perPageCount, nextPageCursor);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+isolated function getIssues(string repositoryOwnerName, string repositoryName, int perPageCount,
+                                         string accessToken, http:Client graphQlClient, string? nextPageCursor,
+                                         IssueFilters issueFilters) returns @tainted IssueList|Error {
+    string stringQuery = getFormulatedStringQueryForGetIssueList(repositoryOwnerName, repositoryName, 
+                                                                 perPageCount, nextPageCursor, issueFilters);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var viewer = gitData[GIT_REPOSITORY];
-            if (viewer is map<json>) {
-                var issues = viewer[GIT_ISSUES];
-                if(issues is map<json>){
-                    IssueListPayload issueListResponse = check issues.cloneWithType(IssueListPayload);
+    if graphQlData is map<json> {
+        var repository = graphQlData.get(GIT_REPOSITORY);
+        if (repository is map<json>) {
+            var issues = repository.get(GIT_ISSUES);
+            if(issues is map<json>){
+                IssueListPayload|error issueListResponse = issues.cloneWithType(IssueListPayload);
+                if issueListResponse is IssueListPayload {
                     IssueList issueList = {
                         issues: issueListResponse.nodes,
                         pageInfo: issueListResponse.pageInfo,
@@ -285,53 +172,17 @@ isolated function getRepositoryIssueListAssignedToUser(string repositoryOwnerNam
                     };
                     return issueList;
                 }
+                return error ClientError ("GitHub Client Error", issueListResponse);
             }
+            return error ClientError ("GitHub Client Error", body=issues);
         }
+        return error ClientError ("GitHub Client Error", body=repository);
     }
-    error err = error(GITHUB_ERROR_CODE+ "Error parsing git issue list response", message = "Error parsing git issue list response");
-    return err;
+    return graphQlData;
 }
 
-isolated function getRepositoryIssueList(string repositoryOwnerName, string repositoryName, IssueState[] states, 
-                                         int perPageCount, string accessToken, http:Client graphQlClient, 
-                                         string? nextPageCursor = ()) returns @tainted IssueList|error {
-    string stringQuery = getFormulatedStringQueryForGetIssueList(repositoryOwnerName, repositoryName, states, 
-                                                                 perPageCount, nextPageCursor);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
-
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var viewer = gitData[GIT_REPOSITORY];
-            if (viewer is map<json>) {
-                var issues = viewer[GIT_ISSUES];
-                if(issues is map<json>){
-                    IssueListPayload issueListResponse = check issues.cloneWithType(IssueListPayload);
-                    IssueList issueList = {
-                        issues: issueListResponse.nodes,
-                        pageInfo: issueListResponse.pageInfo,
-                        totalCount: issueListResponse.totalCount
-                    };
-                    return issueList;
-                }
-            }
-        }
-    }
-    error err = error(GITHUB_ERROR_CODE+ "Error parsing git repository issue list response", message = "Error parsing git repository issue list response");
-    return err;
-}
-
-isolated function createRepository(@tainted CreateRepositoryInput createRepositoryInput, string accessToken, http:Client graphQlClient) 
-                                   returns @tainted error? {
+isolated function createRepository(@tainted CreateRepositoryInput createRepositoryInput, string accessToken,
+                                   http:Client graphQlClient) returns @tainted Error? {
 
     if (createRepositoryInput?.template is ()){
         createRepositoryInput["template"] = false;
@@ -344,14 +195,10 @@ isolated function createRepository(@tainted CreateRepositoryInput createReposito
     }
 
     string stringQuery = getFormulatedStringQueryForCreateRepository(createRepositoryInput);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    _ = check getValidatedResponse(response);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+    if graphQlData is Error {
+        return graphQlData;
+    }
+    return ;
 }

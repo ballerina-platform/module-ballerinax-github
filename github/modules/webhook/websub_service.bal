@@ -142,7 +142,7 @@ isolated service class WebSubService {
     remote isolated function onEventNotification(websub:ContentDistributionMessage event) returns error? {
         GitHubEvent|error eventPayload = event.content.cloneWithType(GitHubEvent);
         if ((eventPayload is PingEvent)) {
-            Repository repository = eventPayload.repository;
+            _ = eventPayload.repository;
             int hookId = eventPayload.hook_id;
             string fullName = eventPayload.repository.full_name;
             string deleteWebhookEndpoint = "/repos/"+fullName+"/hooks/"+hookId.toString();

@@ -16,33 +16,20 @@
 
 import ballerina/http;
 
-isolated function getRepositoryMilestoneList(string repositoryOwnerName, string repositoryName, int perPageCount, 
+isolated function getMilestones(string repositoryOwnerName, string repositoryName, int perPageCount, 
                                              string accessToken, http:Client graphQlClient, string? nextPageCursor=()) 
-                                             returns @tainted MilestoneList|error {
-    string stringQuery = getFormulatedStringQueryForGetMilestoneListOfARepository(repositoryOwnerName, repositoryName,
-                                                                                  perPageCount, nextPageCursor);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+                                             returns @tainted MilestoneList|Error {
+    string stringQuery = getFormulatedStringQueryForGetMilestones(repositoryOwnerName, repositoryName, perPageCount,
+                                                                  nextPageCursor);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var repository = gitData[GIT_REPOSITORY];
-            if(repository is map<json>){
-                var milestones = repository[GIT_MILESTONES];
+    if graphQlData is map<json> {
+        var repository = graphQlData.get(GIT_REPOSITORY);
+        if (repository is map<json>) {
+            var milestones = repository.get(GIT_MILESTONES);
+            if(milestones is map<json>){
                 MilestoneListPayload|error milestoneListResponse = milestones.cloneWithType(MilestoneListPayload);
-                
-                if(milestoneListResponse is error){
-                    return error(GITHUB_ERROR_CODE+"Error parsing milestone list response", message = "Error parsing milestone list response");
-                }else {
+                if  milestoneListResponse is MilestoneListPayload {
                     MilestoneList milestoneList = {
                         milestones: milestoneListResponse.nodes,
                         pageInfo: milestoneListResponse.pageInfo,
@@ -50,45 +37,32 @@ isolated function getRepositoryMilestoneList(string repositoryOwnerName, string 
                     };
                     return milestoneList;
                 }
+                return error ClientError ("GitHub Client Error", milestoneListResponse);
             }
-
+            return error ClientError ("GitHub Client Error", body=milestones);
         }
+        return error ClientError ("GitHub Client Error", body=repository);
     }
-    error err = error(GITHUB_ERROR_CODE+ " Error parsing milestone list response", message = "Error parsing milestone list response");
-    return err;
+    return graphQlData;
 }
 
-isolated function getRepositoryMilestone(string repositoryOwnerName, string repositoryName, int milestoneNumber, 
+isolated function getMilestone(string repositoryOwnerName, string repositoryName, int milestoneNumber, 
                                          string accessToken, http:Client graphQlClient) returns @tainted 
-                                         Milestone|error {
+                                         Milestone|Error {
     string stringQuery = getFormulatedStringQueryForGetAMilestone(repositoryOwnerName, repositoryName, milestoneNumber);
-    http:Request request = new;
-    setHeader(request, accessToken);
-    json convertedQuery = check stringToJson(stringQuery);
-    //Set headers and payload to the request
-    constructRequest(request, <@untainted> convertedQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
-    http:Response response = check graphQlClient->post(EMPTY_STRING, request);
-
-    //Check for empty payloads and errors
-    json validatedResponse = check getValidatedResponse(response);
-
-    if (validatedResponse is map<json>) {
-        var gitData = validatedResponse[GIT_DATA];
-        if (gitData is map<json>) {
-            var repository = gitData[GIT_REPOSITORY];
-            if (repository is map<json>) {
-                var milestone = repository[GIT_MILESTONE];
-                if (milestone is ()) {
-                    error err = error(GITHUB_ERROR_CODE+string `: Could not resolve to a milestone with the number ${milestoneNumber}.`, message = string `: Could not resolve to a milestone with the number ${milestoneNumber}.`);
-                    return err;
-                }
-                Milestone milestoneObj = check milestone.cloneWithType(Milestone);
-                return milestoneObj;
+    if graphQlData is map<json> {
+        var repository = graphQlData.get(GIT_REPOSITORY);
+        if (repository is map<json>) {
+            var milestone = repository.get(GIT_MILESTONE);
+            if(milestone is map<json>){
+                Milestone|error milestoneObj = milestone.cloneWithType(Milestone);
+                return milestoneObj is Milestone? milestoneObj: error ClientError ("GitHub Client Error", milestoneObj);
             }
-
+            return error ClientError ("GitHub Client Error", body=milestone);
         }
+        return error ClientError ("GitHub Client Error", body=repository);
     }
-    error err = error(GITHUB_ERROR_CODE+ " Error parsing git repository milestone response", message = "Error parsing git repository milestone response");
-    return err;
+    return graphQlData;
 }
