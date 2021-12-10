@@ -17,7 +17,7 @@
 import ballerina/http;
 
 isolated function getPullRequest(string owner, string repositoryName, int pullRequestNumber, 
-                                 string accessToken, http:Client graphQlClient) returns @tainted PullRequest|error {
+                                 string accessToken, http:Client graphQlClient) returns @tainted PullRequest|Error {
     string stringQuery = getFormulatedStringQueryForGetAPullRequest(owner, repositoryName, 
                                                                     pullRequestNumber);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -72,7 +72,7 @@ isolated function getPullRequest(string owner, string repositoryName, int pullRe
 isolated function getPullRequests(string repositoryOwnerName, string repositoryName, 
                                                PullRequestState state, int perPageCount, string accessToken, 
                                                http:Client graphQlClient, string? nextPageCursor=()) 
-                                               returns @tainted PullRequestList|error {
+                                               returns @tainted PullRequestList|Error {
     string stringQuery = getFormulatedStringQueryForGetPullRequestList(repositoryOwnerName, repositoryName, state,
                                                                        perPageCount, nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -102,7 +102,7 @@ isolated function getPullRequests(string repositoryOwnerName, string repositoryN
 
 isolated function createPullRequest(@tainted CreatePullRequestInput createPullRequestInput, string repositoryOwnerName, 
                                     string repositoryName, string accessToken, http:Client graphQlClient) 
-                                    returns @tainted PullRequest|error {
+                                    returns @tainted PullRequest|Error {
     if(createPullRequestInput?.repositoryId is ()) {
         createPullRequestInput["repositoryId"] = check getRepositoryId(repositoryOwnerName, repositoryName, 
                                                                        accessToken, graphQlClient);
@@ -127,66 +127,68 @@ isolated function createPullRequest(@tainted CreatePullRequestInput createPullRe
 
 isolated function updatePullRequest(@tainted UpdatePullRequestInput updatePullRequestInput, string repositoryOwnerName, 
                                     string repositoryName,  int pullRequestNumber, string accessToken, 
-                                    http:Client graphQlClient) returns @tainted PullRequest|error {
+                                    http:Client graphQlClient) returns @tainted PullRequest|Error {
     
     UpdatePullRequestInputPayload updatePullRequestInputPayload = {};
-                                            
-    if(updatePullRequestInput?.pullRequestId is ()) {
-        updatePullRequestInputPayload["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName, 
-        pullRequestNumber, accessToken, graphQlClient);
-    }
-
-    string[] assigneeIds = [];
-    if (!(updatePullRequestInput?.assigneeNames is ())) { 
-        foreach string assigneeName in <string[]>updatePullRequestInput?.assigneeNames {
-            string userId = check getUserId(assigneeName, accessToken, graphQlClient);
-            assigneeIds.push(userId);
+    do {
+        if(updatePullRequestInput?.pullRequestId is ()) {
+            updatePullRequestInputPayload["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName, 
+            pullRequestNumber, accessToken, graphQlClient);
         }
-        updatePullRequestInputPayload["assigneeIds"] = assigneeIds;
-    }
 
-    string[] labelIds = [];
-    if (!(updatePullRequestInput?.labelNames is ())) { 
-        foreach string labelName in <string[]>updatePullRequestInput?.labelNames {
-            Label label = check getLabel(repositoryOwnerName, repositoryName, labelName, accessToken, graphQlClient);
-            labelIds.push(label.id);
+        string[] assigneeIds = [];
+        if (!(updatePullRequestInput?.assigneeNames is ())) { 
+            foreach string assigneeName in <string[]>updatePullRequestInput?.assigneeNames {
+                string userId = check getUserId(assigneeName, accessToken, graphQlClient);
+                assigneeIds.push(userId);
+            }
+            updatePullRequestInputPayload["assigneeIds"] = assigneeIds;
         }
-        updatePullRequestInputPayload["labelIds"] = labelIds;
-    }
 
-    if(updatePullRequestInput?.pullRequestId is ()) {
-        updatePullRequestInputPayload["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName, 
-        pullRequestNumber, accessToken, graphQlClient);
-    }
+        string[] labelIds = [];
+        if (!(updatePullRequestInput?.labelNames is ())) { 
+            foreach string labelName in <string[]>updatePullRequestInput?.labelNames {
+                Label label = check getLabel(repositoryOwnerName, repositoryName, labelName, accessToken, graphQlClient);
+                labelIds.push(label.id);
+            }
+            updatePullRequestInputPayload["labelIds"] = labelIds;
+        }
 
-    if (!(updatePullRequestInput?.title is ())) { 
-        updatePullRequestInputPayload["title"] = <string>updatePullRequestInput?.title;
-    }
+        if(updatePullRequestInput?.pullRequestId is ()) {
+            updatePullRequestInputPayload["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName, 
+            pullRequestNumber, accessToken, graphQlClient);
+        }
 
-    if (!(updatePullRequestInput?.body is ())) { 
-        updatePullRequestInputPayload["body"] = <string>updatePullRequestInput?.body;
-    }
+        if (!(updatePullRequestInput?.title is ())) { 
+            updatePullRequestInputPayload["title"] = <string>updatePullRequestInput?.title;
+        }
 
-    if (!(updatePullRequestInput?.milestoneId is ())) { 
-        updatePullRequestInputPayload["milestoneId"] = <string>updatePullRequestInput?.milestoneId;
-    }
+        if (!(updatePullRequestInput?.body is ())) { 
+            updatePullRequestInputPayload["body"] = <string>updatePullRequestInput?.body;
+        }
 
-    if (!(updatePullRequestInput?.state is ())) { 
-        updatePullRequestInputPayload["state"] = <PullRequestState>updatePullRequestInput?.state;
-    }
+        if (!(updatePullRequestInput?.milestoneId is ())) { 
+            updatePullRequestInputPayload["milestoneId"] = <string>updatePullRequestInput?.milestoneId;
+        }
 
-    if (!(updatePullRequestInput?.projectIds is ())) { 
-        updatePullRequestInputPayload["projectIds"] = <string[]>updatePullRequestInput?.projectIds;
-    }
+        if (!(updatePullRequestInput?.state is ())) { 
+            updatePullRequestInputPayload["state"] = <PullRequestState>updatePullRequestInput?.state;
+        }
 
-    if (!(updatePullRequestInput?.baseRefName is ())) { 
-        updatePullRequestInputPayload["baseRefName"] = <string>updatePullRequestInput?.baseRefName;
-    }
+        if (!(updatePullRequestInput?.projectIds is ())) { 
+            updatePullRequestInputPayload["projectIds"] = <string[]>updatePullRequestInput?.projectIds;
+        }
 
-    if (!(updatePullRequestInput?.clientMutationId is ())) { 
-        updatePullRequestInputPayload["clientMutationId"] = <string>updatePullRequestInput?.clientMutationId;
-    }
+        if (!(updatePullRequestInput?.baseRefName is ())) { 
+            updatePullRequestInputPayload["baseRefName"] = <string>updatePullRequestInput?.baseRefName;
+        }
 
+        if (!(updatePullRequestInput?.clientMutationId is ())) { 
+            updatePullRequestInputPayload["clientMutationId"] = <string>updatePullRequestInput?.clientMutationId;
+        }
+    } on fail var e {
+        return error ClientError("GraphQL Client Error", e);
+    }
 
     string stringQuery = getFormulatedStringQueryForUpdatePullRequest(updatePullRequestInputPayload);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -209,7 +211,7 @@ isolated function updatePullRequest(@tainted UpdatePullRequestInput updatePullRe
 isolated function getPullRequestReviewCommentList(string repositoryOwnerName, string repositoryName, 
                                                   int pullRequestNumber, int perPageCount, string accessToken, 
                                                   http:Client graphQlClient, string? nextPageCursor=()) 
-                                                  returns @tainted PullRequestReviewList|error {
+                                                  returns @tainted PullRequestReviewList|Error {
     string stringQuery = getFormulatedStringQueryForGetReviewListForRepository(repositoryOwnerName, repositoryName, 
                                                                                pullRequestNumber, perPageCount, 
                                                                                nextPageCursor);
@@ -245,7 +247,7 @@ isolated function getPullRequestReviewCommentList(string repositoryOwnerName, st
  isolated function createPullRequestReview(@tainted AddPullRequestReviewInput addPullRequestReviewInput, 
                                            string repositoryOwnerName, string repositoryName,  int pullRequestNumber, 
                                            string accessToken, http:Client graphQlClient) 
-                                           returns @tainted PullRequestReview|error {
+                                           returns @tainted PullRequestReview|Error {
     if (addPullRequestReviewInput?.pullRequestId is ()) {
         addPullRequestReviewInput["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName, 
                                                                             pullRequestNumber, accessToken, 
@@ -270,7 +272,7 @@ isolated function getPullRequestReviewCommentList(string repositoryOwnerName, st
 }
 
 isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePullRequestReviewInput, 
-                                          string accessToken, http:Client graphQlClient) returns @tainted error? {
+                                          string accessToken, http:Client graphQlClient) returns @tainted Error? {
 
     string stringQuery = getFormulatedStringQueryForUpdatePullRequestReview(updatePullRequestReviewInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -282,7 +284,7 @@ isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePul
 
 isolated function deletePendingPullRequestReview(DeletePullRequestReviewInput deletePullRequestReview, 
                                                  string accessToken, http:Client graphQlClient) 
-                                                 returns @tainted error? {
+                                                 returns @tainted Error? {
     string stringQuery = getFormulatedStringQueryForDeletePullRequestReview(deletePullRequestReview);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {

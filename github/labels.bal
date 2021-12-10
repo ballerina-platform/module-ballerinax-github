@@ -18,7 +18,7 @@ import ballerina/http;
 
 // mutation is in preview state
 isolated function createLabel(CreateLabelInput createLabelInput, string accessToken, http:Client graphQlClient) 
-                              returns @tainted error? {
+                              returns @tainted Error? {
     string stringQuery = getFormulatedStringQueryForCreateLabel(createLabelInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {
@@ -28,7 +28,7 @@ isolated function createLabel(CreateLabelInput createLabelInput, string accessTo
 }
 
 isolated function getLabel(string repositoryOwnerName, string repositoryName, string labelName, 
-                                     string accessToken, http:Client graphQlClient) returns @tainted Label|error {
+                                     string accessToken, http:Client graphQlClient) returns @tainted Label|Error {
     string stringQuery = getFormulatedStringQueryForGetLabel(repositoryOwnerName, repositoryName, labelName);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
@@ -49,7 +49,7 @@ isolated function getLabel(string repositoryOwnerName, string repositoryName, st
 
 isolated function getLabels(string repositoryOwnerName, string repositoryName, int issueNumber, 
                                    int perPageCount, string accessToken, http:Client graphQlClient, 
-                                   string? nextPageToken=()) returns @tainted LabelList|error {
+                                   string? nextPageToken=()) returns @tainted LabelList|Error {
     string stringQuery = getFormulatedStringQueryForGetAllLabelsForAIssue(repositoryOwnerName, repositoryName, 
                                                                           issueNumber, perPageCount, nextPageToken);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -82,7 +82,7 @@ isolated function getLabels(string repositoryOwnerName, string repositoryName, i
 }
 
 isolated function addLabels(AddLabelsInput addLabelsInput, string accessToken, 
-                                       http:Client graphQlClient) returns @tainted LabelList|error {
+                                       http:Client graphQlClient) returns @tainted LabelList|Error {
 
     Issue issue = check getIssue(addLabelsInput.repositoryOwnerName, addLabelsInput.repositoryName, 
                            addLabelsInput.issueNumber, accessToken, graphQlClient);
@@ -133,7 +133,7 @@ isolated function addLabels(AddLabelsInput addLabelsInput, string accessToken,
 }
 
 isolated function removeLabel(RemoveIssueLabelInput removeIssueLabelInput, 
-                                           string accessToken, http:Client graphQlClient) returns @tainted error? {
+                                           string accessToken, http:Client graphQlClient) returns @tainted Error? {
 
     Issue issue = check getIssue(removeIssueLabelInput.repositoryOwnerName, removeIssueLabelInput.repositoryName, 
                            removeIssueLabelInput.issueNumber, accessToken, graphQlClient);    

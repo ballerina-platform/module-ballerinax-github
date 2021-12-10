@@ -27,7 +27,7 @@ class CollaboratorStream {
     private final string repositoryName;
 
     isolated function init(http:Client githubGraphQlClient, string authToken, string ownerName, string repositoryName)
-                           returns error? {
+                           returns Error? {
         self.githubGraphQlClient = githubGraphQlClient;
         self.authToken = authToken;
         self.ownerName = ownerName;
@@ -35,7 +35,7 @@ class CollaboratorStream {
         self.currentEntries = check self.fetchCollaborators();
     }
 
-    public isolated function next() returns @tainted record {| User value; |}|error? {
+    public isolated function next() returns @tainted record {| User value; |}|Error? {
         if (self.index < self.currentEntries.length()) {
             record {| User value; |} collaborator = {value: self.currentEntries[self.index]};
             self.index += 1;
@@ -51,7 +51,7 @@ class CollaboratorStream {
         return;
     }
 
-    isolated function fetchCollaborators() returns @tainted User[]|error {
+    isolated function fetchCollaborators() returns @tainted User[]|Error {
         int perPageCount = 100;
         CollaboratorList response = check getCollaborators(self.ownerName,
                                                                         self.repositoryName,
@@ -76,7 +76,7 @@ class BranchStream {
     private final string repositoryName;
 
     isolated function init(http:Client githubGraphQlClient, string authToken, string ownerName, string repositoryName)
-                           returns error? {
+                           returns Error? {
         self.githubGraphQlClient = githubGraphQlClient;
         self.authToken = authToken;
         self.ownerName = ownerName;
@@ -84,7 +84,7 @@ class BranchStream {
         self.currentEntries = check self.fetchBranches();
     }
 
-    public isolated function next() returns @tainted record {| Branch value; |}|error? {
+    public isolated function next() returns @tainted record {| Branch value; |}|Error? {
         if (self.index < self.currentEntries.length()) {
             record {| Branch value; |} branch = {value: self.currentEntries[self.index]};
             self.index += 1;
@@ -100,7 +100,7 @@ class BranchStream {
         return;
     }
 
-    isolated function fetchBranches() returns @tainted Branch[]|error {
+    isolated function fetchBranches() returns @tainted Branch[]|Error {
         int perPageCount = 100;
         BranchList response = check getBranches(self.ownerName,
                                                             self.repositoryName,
@@ -126,7 +126,7 @@ class LabelStream {
     private final int issueNumber;
 
     isolated function init(http:Client githubGraphQlClient, string authToken, string ownerName, string repositoryName,
-                           int issueNumber) returns error? {
+                           int issueNumber) returns Error? {
         self.githubGraphQlClient = githubGraphQlClient;
         self.authToken = authToken;
         self.ownerName = ownerName;
@@ -135,7 +135,7 @@ class LabelStream {
         self.currentEntries = check self.fetchLabels();
     }
 
-    public isolated function next() returns @tainted record {| Label value; |}|error? {
+    public isolated function next() returns @tainted record {| Label value; |}|Error? {
         if (self.index < self.currentEntries.length()) {
             record {| Label value; |} label = {value: self.currentEntries[self.index]};
             self.index += 1;
@@ -151,7 +151,7 @@ class LabelStream {
         return;
     }
 
-    isolated function fetchLabels() returns @tainted Label[]|error {
+    isolated function fetchLabels() returns @tainted Label[]|Error {
         int perPageCount = 100;
         LabelList response = check getLabels(self.ownerName,
                                                     self.repositoryName,
@@ -177,7 +177,7 @@ class MilestoneStream {
     private final string repositoryName;
 
     isolated function init(http:Client githubGraphQlClient, string authToken, string ownerName, string repositoryName)
-                           returns error? {
+                           returns Error? {
         self.githubGraphQlClient = githubGraphQlClient;
         self.authToken = authToken;
         self.ownerName = ownerName;
@@ -185,7 +185,7 @@ class MilestoneStream {
         self.currentEntries = check self.fetchMilestones();
     }
 
-    public isolated function next() returns @tainted record {| Milestone value; |}|error? {
+    public isolated function next() returns @tainted record {| Milestone value; |}|Error? {
         if (self.index < self.currentEntries.length()) {
             record {| Milestone value; |} milestone = {value: self.currentEntries[self.index]};
             self.index += 1;
@@ -201,7 +201,7 @@ class MilestoneStream {
         return;
     }
 
-    isolated function fetchMilestones() returns @tainted Milestone[]|error {
+    isolated function fetchMilestones() returns @tainted Milestone[]|Error {
         int perPageCount = 100;
         MilestoneList response = check getMilestones(self.ownerName,
                                                             self.repositoryName,
@@ -227,7 +227,7 @@ class PullRequestStream {
     private final PullRequestState state;
 
     isolated function init(http:Client githubGraphQlClient, string authToken, string ownerName, string repositoryName,
-                           PullRequestState state) returns error? {
+                           PullRequestState state) returns Error? {
         self.githubGraphQlClient = githubGraphQlClient;
         self.authToken = authToken;
         self.ownerName = ownerName;
@@ -236,7 +236,7 @@ class PullRequestStream {
         self.currentEntries = check self.fetchPullRequests();
     }
 
-    public isolated function next() returns @tainted record {| PullRequest value; |}|error? {
+    public isolated function next() returns @tainted record {| PullRequest value; |}|Error? {
         if (self.index < self.currentEntries.length()) {
             record {| PullRequest value; |} pullRequest = {value: self.currentEntries[self.index]};
             self.index += 1;
@@ -252,7 +252,7 @@ class PullRequestStream {
         return;
     }
 
-    isolated function fetchPullRequests() returns @tainted PullRequest[]|error {
+    isolated function fetchPullRequests() returns @tainted PullRequest[]|Error {
         int perPageCount = 100;
         PullRequestList response = check getPullRequests(self.ownerName,
                                                             self.repositoryName,
@@ -277,14 +277,14 @@ class OrganizationMemberStream {
     private final string organizationName;
 
     isolated function init(http:Client githubGraphQlClient, string authToken, string organizationName)
-                           returns error? {
+                           returns Error? {
         self.githubGraphQlClient = githubGraphQlClient;
         self.authToken = authToken;
         self.organizationName = organizationName;
         self.currentEntries = check self.fetchOrganizationMembers();
     }
 
-    public isolated function next() returns @tainted record {| User value; |}|error? {
+    public isolated function next() returns @tainted record {| User value; |}|Error? {
         if (self.index < self.currentEntries.length()) {
             record {| User value; |} organizationMember = {value: self.currentEntries[self.index]};
             self.index += 1;
@@ -300,7 +300,7 @@ class OrganizationMemberStream {
         return;
     }
 
-    isolated function fetchOrganizationMembers() returns @tainted User[]|error {
+    isolated function fetchOrganizationMembers() returns @tainted User[]|Error {
         int perPageCount = 100;
         UserList response = check getOrganizationMembers(self.organizationName,
                                                             perPageCount,
@@ -324,7 +324,7 @@ class RepositoryStream {
     private final boolean isOrganization;
 
     isolated function init(http:Client githubGraphQlClient, string authToken, string? owner, boolean isOrganization)
-                           returns error? {
+                           returns Error? {
         self.githubGraphQlClient = githubGraphQlClient;
         self.authToken = authToken;
         self.owner = owner;
@@ -332,7 +332,7 @@ class RepositoryStream {
         self.currentEntries = check self.fetchRepositories();
     }
 
-    public isolated function next() returns @tainted record {| Repository value; |}|error? {
+    public isolated function next() returns @tainted record {| Repository value; |}|Error? {
         if (self.index < self.currentEntries.length()) {
             record {| Repository value; |} repository = {value: self.currentEntries[self.index]};
             self.index += 1;
@@ -348,7 +348,7 @@ class RepositoryStream {
         return;
     }
 
-    isolated function fetchRepositories() returns @tainted Repository[]|error {
+    isolated function fetchRepositories() returns @tainted Repository[]|Error {
         int perPageCount = 100;
         RepositoryList response = check getRepositoryList(perPageCount, self.authToken, self.githubGraphQlClient,
                                                           self.isOrganization, self.owner, self.nextPageCursor);
@@ -371,7 +371,7 @@ class ProjectStream {
     private final ProjectState? state;
 
     isolated function init(http:Client githubGraphQlClient, string authToken, string owner, OwnerType ownerType,
-                           string? repository, ProjectState? state) returns error? {
+                           string? repository, ProjectState? state) returns Error? {
         self.githubGraphQlClient = githubGraphQlClient;
         self.authToken = authToken;
         self.owner = owner;
@@ -381,7 +381,7 @@ class ProjectStream {
         self.currentEntries = check self.fetchProjects();
     }
 
-    public isolated function next() returns @tainted record {| Project value; |}|error? {
+    public isolated function next() returns @tainted record {| Project value; |}|Error? {
         if (self.index < self.currentEntries.length()) {
             record {| Project value; |} project = {value: self.currentEntries[self.index]};
             self.index += 1;
@@ -397,7 +397,7 @@ class ProjectStream {
         return;
     }
 
-    isolated function fetchProjects() returns @tainted Project[]|error {
+    isolated function fetchProjects() returns @tainted Project[]|Error {
         int perPageCount = 100;
         string? repository = self.repository;
         ProjectList response;
@@ -430,7 +430,7 @@ class OrganizationStream {
     private final OwnerType ownerType;
 
     isolated function init(http:Client githubGraphQlClient, string authToken, string owner, OwnerType ownerType)
-                           returns error? {
+                           returns Error? {
         self.githubGraphQlClient = githubGraphQlClient;
         self.authToken = authToken;
         self.owner = owner;
@@ -438,7 +438,7 @@ class OrganizationStream {
         self.currentEntries = check self.fetchOrganizations();
     }
 
-    public isolated function next() returns @tainted record {| Organization value; |}|error? {
+    public isolated function next() returns @tainted record {| Organization value; |}|Error? {
         if (self.index < self.currentEntries.length()) {
             record {| Organization value; |} organization = {value: self.currentEntries[self.index]};
             self.index += 1;
@@ -454,7 +454,7 @@ class OrganizationStream {
         return;
     }
 
-    isolated function fetchOrganizations() returns @tainted Organization[]|error {
+    isolated function fetchOrganizations() returns @tainted Organization[]|Error {
         int perPageCount = 100;
         if ( self.ownerType is GITHUB_USER) {
             OrganizationList response = check getUserOrganizationList(self.owner, perPageCount, self.authToken, 
@@ -481,7 +481,7 @@ class IssueStream {
     private final IssueFilters issueFilters;
 
     isolated function init(http:Client githubGraphQlClient, string authToken, string owner,
-                           string repository, IssueFilters issueFilters) returns error? {
+                           string repository, IssueFilters issueFilters) returns Error? {
         self.githubGraphQlClient = githubGraphQlClient;
         self.authToken = authToken;
         self.owner = owner;
@@ -490,7 +490,7 @@ class IssueStream {
         self.currentEntries = check self.fetchIssues();
     }
 
-    public isolated function next() returns @tainted record {| Issue value; |}|error? {
+    public isolated function next() returns @tainted record {| Issue value; |}|Error? {
         if (self.index < self.currentEntries.length()) {
             record {| Issue value; |} issue = {value: self.currentEntries[self.index]};
             self.index += 1;
@@ -506,7 +506,7 @@ class IssueStream {
         return;
     }
 
-    isolated function fetchIssues() returns @tainted Issue[]|error {
+    isolated function fetchIssues() returns @tainted Issue[]|Error {
         int perPageCount = 100;
         IssueList response = check getIssues(self.owner, self.repository, perPageCount, self.authToken,
                                                          self.githubGraphQlClient, self.nextPageCursor, self.issueFilters);

@@ -62,9 +62,9 @@ public isolated client class Client {
     # 
     # + createRepositoryInput - Create repository input
     # 
-    # + return - `error` if not successful
+    # + return - `github:Error` if not successful
     @display { label: "Create Repository" }
-    remote isolated function createRepository(CreateRepositoryInput createRepositoryInput) returns error? {
+    remote isolated function createRepository(CreateRepositoryInput createRepositoryInput) returns Error? {
         return createRepository(createRepositoryInput, self.authToken, self.githubGraphQlClient);
     }
 
@@ -74,10 +74,10 @@ public isolated client class Client {
     # + owner - Repository owner name
     # + repositoryName - Repository name
     # 
-    # + return - `error` if not successful
+    # + return - `github:Error` if not successful
     @display { label: "Update Repository" }
     remote isolated function updateRepository(UpdateRepositoryInput updateRepositoryInput, string owner,
-                                              string repositoryName) returns @tainted error? {
+                                              string repositoryName) returns @tainted Error? {
         return  updateRepository(updateRepositoryInput, owner, repositoryName, self.authToken, 
                                  self.githubGraphQlClient);
     }
@@ -98,14 +98,14 @@ public isolated client class Client {
     # + owner - Repo Owner
     # + isOrganization - Is Organization
     # 
-    # + return - `github:stream<Repository, error?>` record if successful else `error`
+    # + return - `github:stream<Repository,Error?>` record if successful else `github:Error`
     @display { label: "Get Repositories" }
     remote isolated function getRepositories(string? owner=(), boolean isOrganization=false) 
-                                             returns stream<Repository,error?>|error {
+                                             returns stream<Repository,Error?>|Error {
 
         RepositoryStream repositoryStream = check new RepositoryStream (self.githubGraphQlClient,self.authToken, owner,
                                                                         isOrganization);
-        return new stream<Repository,error?>(repositoryStream);        
+        return new stream<Repository,Error?>(repositoryStream);        
     }
 
     # Get collaborators
@@ -113,13 +113,13 @@ public isolated client class Client {
     # + owner - Repository owner username
     # + repositoryName - Repository name
     # 
-    # + return - `github:stream<User,error?>` record if successful else `error`
+    # + return - `github:stream<User,Error?>` record if successful else `github:Error`
     @display { label: "Get Collaborators" }
-    remote isolated function getCollaborators(string owner, string repositoryName) returns stream<User,error?>|error {
+    remote isolated function getCollaborators(string owner, string repositoryName) returns stream<User,Error?>|Error {
                                     
         CollaboratorStream collaboratorStream = check new CollaboratorStream (self.githubGraphQlClient,self.authToken,
                                                                               owner, repositoryName);
-        return new stream<User,error?>(collaboratorStream);
+        return new stream<User,Error?>(collaboratorStream);
     }
 
     # Get repository branches
@@ -127,12 +127,12 @@ public isolated client class Client {
     # + owner - Repository owner name
     # + repositoryName - Repository name
     # 
-    # + return - `github:stream<Branch,error?>` record if success else `error`
+    # + return - `github:stream<Branch,Error?>` record if success else `github:Error`
     @display { label: "Get Branches" }
-    remote isolated function getBranches(string owner, string repositoryName) returns stream<Branch,error?>|error {
+    remote isolated function getBranches(string owner, string repositoryName) returns stream<Branch,Error?>|Error {
         BranchStream branchStream = check new BranchStream (self.githubGraphQlClient,self.authToken, owner,
                                                             repositoryName);
-        return new stream<Branch,error?>(branchStream);
+        return new stream<Branch,Error?>(branchStream);
     }
 
     // Issues 
@@ -142,10 +142,10 @@ public isolated client class Client {
     # + owner - Repository owner name
     # + repositoryName - Repository name
     # 
-    # + return - `github:Issue` record if successful else `error`
+    # + return - `github:Issue` record if successful else `github:Error`
     @display { label: "Create Issue" }
     remote isolated function createIssue(CreateIssueInput createIssueInput, string owner, string repositoryName) 
-                                         returns Issue|error {
+                                         returns Issue|Error {
         return createIssue(createIssueInput, owner, repositoryName, self.authToken, self.githubGraphQlClient);
     }
 
@@ -156,10 +156,10 @@ public isolated client class Client {
     # + repositoryName - Repository name
     # + issueNumber - Issue number of the issue to be updated
     # 
-    # + return - `github:Issue` record if successful else `error`
+    # + return - `github:Issue` record if successful else `github:Error`
     @display { label: "Update Issue" }
     remote isolated function updateIssue(UpdateIssueInput updateIssueInput, string owner, string repositoryName, 
-                                         int issueNumber) returns Issue|error {
+                                         int issueNumber) returns Issue|Error {
         return  updateIssue(updateIssueInput, owner, repositoryName, issueNumber, self.authToken, 
                             self.githubGraphQlClient);
     }
@@ -170,9 +170,9 @@ public isolated client class Client {
     # + repositoryName - repositoryName
     # + issueNumber - Issue number
     # 
-    # + return - `github:Issue` record if successful else `error`
+    # + return - `github:Issue` record if successful else `github:Error`
     @display { label: "Get Issue" }
-    remote isolated function getIssue(string owner, string repositoryName, int issueNumber) returns Issue|error {
+    remote isolated function getIssue(string owner, string repositoryName, int issueNumber) returns Issue|Error {
         return getIssue(owner, repositoryName, issueNumber, self.authToken, self.githubGraphQlClient);
     }
 
@@ -182,13 +182,13 @@ public isolated client class Client {
     # + repositoryName - Repository name
     # + issueFilters - Filters to filter issues
     # 
-    # + return - `github:IssueList` record if successful else `error`
+    # + return - `github:IssueList` record if successful else `github:Error`
     @display { label: "Get Issues" }
     remote isolated function getIssues(string owner, string repositoryName, IssueFilters issueFilters = {})
-                                       returns stream<Issue,error?>|error {
+                                       returns stream<Issue,Error?>|Error {
         IssueStream issueStream = check new IssueStream (self.githubGraphQlClient,self.authToken, owner,
                                                             repositoryName, issueFilters);
-        return new stream<Issue,error?>(issueStream);
+        return new stream<Issue,Error?>(issueStream);
     }
 
     // Comments
@@ -197,10 +197,10 @@ public isolated client class Client {
     # 
     # + addIssueCommentInput - `AddIssueCommentInput` record
     # 
-    # + return - `github:IssueComment` if successful else `error`
+    # + return - `github:IssueComment` if successful else `github:Error`
     @display { label: "Add IComment" }
     remote isolated function addComment(AddIssueCommentInput addIssueCommentInput)
-                                        returns IssueComment|error {
+                                        returns IssueComment|Error {
         return addComment(addIssueCommentInput, self.authToken, self.githubGraphQlClient);
     }
 
@@ -208,9 +208,9 @@ public isolated client class Client {
     # 
     # + updateCommentInput - `UpdateIssueCommentInput` record
     # 
-    # + return - `error` if un-successful
+    # + return - `github:Error` if un-successful
     @display { label: "Update Comment" }
-    remote isolated function updateComment(UpdateIssueCommentInput updateCommentInput) returns error? {
+    remote isolated function updateComment(UpdateIssueCommentInput updateCommentInput) returns Error? {
         return updateComment(updateCommentInput, self.authToken, self.githubGraphQlClient);
     }
 
@@ -218,16 +218,16 @@ public isolated client class Client {
     # 
     # + deleteCommentInput - `DeleteCommentInput` record
     # 
-    # + return - `error` if un-successful
+    # + return - `github:Error` if un-successful
     @display { label: "Delete Comment" }
-    remote isolated function deleteComment(DeleteIssueCommentInput deleteCommentInput) returns error? {
+    remote isolated function deleteComment(DeleteIssueCommentInput deleteCommentInput) returns Error? {
         return deleteComment(deleteCommentInput, self.authToken, self.githubGraphQlClient);
     }
 
     //Labels
 
     // mutation is in preview state
-    // remote isolated function createLabel(CreateLabelInput createLabelInput) returns error? {
+    // remote isolated function createLabel(CreateLabelInput createLabelInput) returns Error? {
     //     return createLabel(createLabelInput, self.accessToken, self.githubGraphQlClient);
     // }
 
@@ -235,9 +235,9 @@ public isolated client class Client {
     # 
     # + addLabelsInput - `AddIssueLabelInput` record
     # 
-    # + return - `github:LabelList` record if successful else `error`
+    # + return - `github:LabelList` record if successful else `github:Error`
     @display { label: "Add Labels" }
-    remote isolated function addLabels( AddLabelsInput  addLabelsInput) returns LabelList|error {
+    remote isolated function addLabels( AddLabelsInput  addLabelsInput) returns LabelList|Error {
         return addLabels(addLabelsInput, self.authToken, self.githubGraphQlClient);
     }
 
@@ -245,9 +245,9 @@ public isolated client class Client {
     # 
     # + removeIssueLabelInput - `RemoveIssueLabelInput` record
     # 
-    # + return - `error` if failed
+    # + return - `github:Error` if failed
     @display { label: "Remove Issue Labels" }
-    remote isolated function removeLabel(RemoveIssueLabelInput removeIssueLabelInput) returns  error? {
+    remote isolated function removeLabel(RemoveIssueLabelInput removeIssueLabelInput) returns  Error? {
         return removeLabel(removeIssueLabelInput, self.authToken, self.githubGraphQlClient);
     }
 
@@ -257,10 +257,10 @@ public isolated client class Client {
     # + repositoryName - Repository name
     # + labelName - Label name
     # 
-    # + return - `Label` record if successful else `error`
+    # + return - `Label` record if successful else `github:Error`
     @display { label: "Get Label" }
     remote isolated function getLabel(string owner, string repositoryName, string labelName) 
-                                                returns Label|error {
+                                                returns Label|Error {
         return getLabel(owner, repositoryName, labelName, self.authToken, self.githubGraphQlClient);
     }
 
@@ -270,14 +270,14 @@ public isolated client class Client {
     # + repositoryName - Repository name
     # + issueNumber - Issue number
     # 
-    # + return - `LabelList` record if successful else `error`
+    # + return - `LabelList` record if successful else `github:Error`
     @display { label: "Get Labels" }
     remote isolated function getLabels(string owner, string repositoryName,  int issueNumber) 
-                                             returns stream<Label, error?> | error {
+                                             returns stream<Label,Error?>|Error {
 
         LabelStream labelStream = check new LabelStream(self.githubGraphQlClient, self.authToken, owner,
                                                         repositoryName, issueNumber);
-        return new stream<Label,error?>(labelStream);
+        return new stream<Label,Error?>(labelStream);
     }
 
     // Milestones
@@ -288,10 +288,10 @@ public isolated client class Client {
     # + repositoryName - Repository name
     # + milestoneNumber - Milestone number
     # 
-    # + return - `github:Milestone` record if successful elese `error`
+    # + return - `github:Milestone` record if successful elese `github:Error`
     @display { label: "Get Milestone" }
     remote isolated function getMilestone(string owner, string repositoryName, int milestoneNumber)
-                                          returns Milestone|error {
+                                          returns Milestone|Error {
         return getMilestone(owner, repositoryName, milestoneNumber, self.authToken, 
                                       self.githubGraphQlClient);
     }
@@ -300,14 +300,14 @@ public isolated client class Client {
     # + owner - Repository owner name
     # + repositoryName - Repository name
     # 
-    # + return - `github:stream<Milestone,error?>` record if successful else `error`
+    # + return - `github:stream<Milestone,Error?>` record if successful else `github:Error`
     @display { label: "Get Milestones" }
     remote isolated function getMilestones(string owner, string repositoryName)
-                                           returns stream<Milestone,error?> | error {
+                                           returns stream<Milestone,Error?>|Error {
 
         MilestoneStream milestoneStream = check new MilestoneStream (self.githubGraphQlClient,self.authToken, owner,
                                                                      repositoryName);
-        return new stream<Milestone,error?>(milestoneStream);
+        return new stream<Milestone,Error?>(milestoneStream);
     }
 
     //Pul Requests
@@ -318,25 +318,25 @@ public isolated client class Client {
     # + owner - Repository owner name
     # + repositoryName - Repository name
     # 
-    # + return - `PullRequest` record if success or else `error`
+    # + return - `PullRequest` record if success or else `github:Error`
     @display { label: "Create Pull Request" }
     remote isolated function createPullRequest(CreatePullRequestInput createPullRequestInput,string owner, 
-                                               string repositoryName) returns PullRequest|error {
+                                               string repositoryName) returns PullRequest|Error {
         return createPullRequest(createPullRequestInput, owner, repositoryName, self.authToken, 
                                  self.githubGraphQlClient);
     }
 
     # Update pull request
     # 
-    # + updatePullRequestInput - `UpdatePullRequestInput` record if successful else `error`
+    # + updatePullRequestInput - `UpdatePullRequestInput` record if successful else `github:Error`
     # + owner - Repository owner name
     # + repositoryName - Repository name
     # + pullRequestNumber - Pull request number
     # 
-    # + return - `PullRequest` record if successful else `error`
+    # + return - `PullRequest` record if successful else `github:Error`
     @display { label: "Update Pull Request" }
     remote isolated function updatePullRequest(UpdatePullRequestInput updatePullRequestInput, string owner, 
-                                              string repositoryName, int pullRequestNumber) returns PullRequest|error {
+                                              string repositoryName, int pullRequestNumber) returns PullRequest|Error {
         return updatePullRequest(updatePullRequestInput, owner, repositoryName, pullRequestNumber, 
                                  self.authToken, self.githubGraphQlClient);
     }
@@ -347,10 +347,10 @@ public isolated client class Client {
     # + repositoryName - Repository name
     # + pullRequestNumber - Pull request number
     # 
-    # + return - `PullRequest` record if successful else `error`
+    # + return - `PullRequest` record if successful else `github:Error`
     @display { label: "Get Pull Request" }
     remote isolated function getPullRequest(string owner, string repositoryName, int pullRequestNumber) 
-                                            returns PullRequest|error {
+                                            returns PullRequest|Error {
         return getPullRequest(owner, repositoryName, pullRequestNumber, self.authToken, 
                               self.githubGraphQlClient);
     }
@@ -361,14 +361,14 @@ public isolated client class Client {
     # + repositoryName - Repository name
     # + state - `Pull request state`
     # 
-    # + return - `PullRequestList` record if successful else `error`
+    # + return - `PullRequestList` record if successful else `github:Error`
     @display { label: "Get Pull Requests" }
     remote isolated function getPullRequests(string owner, string repositoryName, PullRequestState state) 
-                                                          returns stream<PullRequest, error?> | error {
+                                                          returns stream<PullRequest,Error?>|Error {
         
         PullRequestStream pullRequestStream = check new PullRequestStream (self.githubGraphQlClient, self.authToken,
                                                                            owner, repositoryName, state);
-        return new stream<PullRequest,error?>(pullRequestStream);
+        return new stream<PullRequest,Error?>(pullRequestStream);
     }
 
     # Create pull request review 
@@ -382,7 +382,7 @@ public isolated client class Client {
     @display {label: "Create Pull Request Review"}
     remote isolated function createPullRequestReview(AddPullRequestReviewInput addPullRequestReviewInput, 
                                                      string owner, string repositoryName,  int pullRequestNumber) 
-                                                     returns PullRequestReview|error {
+                                                     returns PullRequestReview|Error {
          return createPullRequestReview(addPullRequestReviewInput, owner, repositoryName, 
                                         pullRequestNumber, self.authToken, self.githubGraphQlClient);
     }
@@ -391,10 +391,10 @@ public isolated client class Client {
     # 
     # + updatePullRequestReviewInput - `UpdatePullRequestReviewInput` record
     # 
-    # + return - `error` if failed.
+    # + return - `github:Error` if failed.
     @display {label: "Update Pull Request Review"}
     remote isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePullRequestReviewInput) 
-                                                     returns error? {
+                                                     returns Error? {
         return updatePullRequestReview(updatePullRequestReviewInput, self.authToken, self.githubGraphQlClient);
     }
 
@@ -402,10 +402,10 @@ public isolated client class Client {
     # 
     # + deletePullRequestReview - `DeletePullRequestReviewInput` record
     # 
-    # + return - `error` if failed
+    # + return - `github:Error` if failed
     @display {label: "Delete Pull Request Review"}
     remote isolated function deletePendingPullRequestReview(DeletePullRequestReviewInput deletePullRequestReview) 
-                                                            returns error? {
+                                                            returns Error? {
         return deletePendingPullRequestReview(deletePullRequestReview, self.authToken, self.githubGraphQlClient);
     }
 
@@ -416,10 +416,10 @@ public isolated client class Client {
     # 
     # + createRepositoryProjectInput - `CreateRepositoryProjectInput` record
     # 
-    # + return - `Project` record if successful else `error`
+    # + return - `Project` record if successful else `github:Error`
     @display { label: "Create Project" }
     remote isolated function createProject(CreateRepositoryProjectInput createRepositoryProjectInput) 
-                                           returns Project|error {
+                                           returns Project|Error {
         return createProject(createRepositoryProjectInput, self.authToken, self.githubGraphQlClient);
     }
 
@@ -427,10 +427,10 @@ public isolated client class Client {
     # 
     # + updateProjectInput - `UpdateProjectInput`
     # 
-    # + return - `Project` record if successful or else `error`
+    # + return - `Project` record if successful or else `github:Error`
     @display { label: "Update Project" }
     remote isolated function updateProject(UpdateProjectInput updateProjectInput) 
-                                           returns Project|error {
+                                           returns Project|Error {
         return updateProject(updateProjectInput, self.authToken, self.githubGraphQlClient);
     }
 
@@ -438,9 +438,9 @@ public isolated client class Client {
     # 
     # + deleteProjectInput - `DeleteProjectInput` record
     # 
-    # + return - `error` if failed
+    # + return - `github:Error` if failed
     @display { label: "Delete Project" }
-    remote isolated function deleteProject(DeleteProjectInput deleteProjectInput) returns  error? {
+    remote isolated function deleteProject(DeleteProjectInput deleteProjectInput) returns  Error? {
         return deleteProject(deleteProjectInput, self.authToken, self.githubGraphQlClient);
     }
 
@@ -452,7 +452,7 @@ public isolated client class Client {
     # + return - `Project`
     @display { label: "Get Project" }
     remote isolated function getProject(string username, int projectNumber) 
-                                            returns Project|error {
+                                            returns Project|Error {
         return getProject(username, projectNumber, self.authToken, self.githubGraphQlClient);
     }
 
@@ -463,13 +463,13 @@ public isolated client class Client {
     # + repositoryName - Repository name
     # + state - Project state
     # 
-    # + return - `ProjectList` record if successful or else `error`
+    # + return - `ProjectList` record if successful or else `github:Error`
     @display { label: "Get Repository Projects" }
     remote isolated function getProjects(string owner, OwnerType ownerType, string? repositoryName = (), 
-                                         ProjectState? state = ()) returns stream <Project, error?>|error {
+                                         ProjectState? state = ()) returns stream <Project, Error?>|Error {
         ProjectStream projectStream = check new ProjectStream(self.githubGraphQlClient, self.authToken, owner,
                                                         ownerType, repositoryName, state);
-        return new stream<Project, error?>(projectStream);
+        return new stream<Project, Error?>(projectStream);
     }
 
 
@@ -479,26 +479,26 @@ public isolated client class Client {
     # + owner - Organization username
     # + ownerType - OwnerType : user or organization
     # 
-    # + return - `OrganizationList` record or else `error`
+    # + return - `OrganizationList` record or else `github:Error`
     @display { label: "Get User Organization List" }
     remote isolated function getOrganizations(string owner,OwnerType ownerType) 
-                                              returns stream<Organization, error?>|error {
+                                              returns stream<Organization, Error?>|Error {
         OrganizationStream organizationStream = check new OrganizationStream(self.githubGraphQlClient, self.authToken,
                                                                              owner, ownerType);
-        return new stream<Organization, error?> (organizationStream);
+        return new stream<Organization, Error?> (organizationStream);
     }
 
     # Get organization member list
     # 
     # + organizationName - Organization username
     # 
-    # + return - `UserList` record if successful or else `error`
+    # + return - `UserList` record if successful or else `github:Error`
     @display { label: "Get Organization Members" }
-    remote isolated function getOrganizationMembers(string organizationName) returns stream<User,error?>|error {
+    remote isolated function getOrganizationMembers(string organizationName) returns stream<User,Error?>|Error {
         OrganizationMemberStream organizationMemberStream = check new OrganizationMemberStream(self.githubGraphQlClient,
                                                                                                self.authToken,
                                                                                                organizationName);
-        return new stream<User,error?>(organizationMemberStream);
+        return new stream<User,Error?>(organizationMemberStream);
     }
 
     # Search
@@ -507,9 +507,9 @@ public isolated client class Client {
     # + searchType - The types of search items to search within
     # + perPageCount - Number of elements to be returned
     # + lastPageCursor - Next page curser
-    # + return - `github:SearchResult` record if successful or else `error`
+    # + return - `github:SearchResult` record if successful or else `github:Error`
     remote isolated function search(string searchQuery, SearchType searchType, int perPageCount,
-                                                    string? lastPageCursor=()) returns SearchResult | error {
+                                                    string? lastPageCursor=()) returns SearchResult|Error {
 
         string stringQuery = getFormulatedStringQueryForSearch(searchQuery, searchType, perPageCount, lastPageCursor);
         map<json>|Error graphQlData = getGraphQlData(self.githubGraphQlClient, self.authToken, stringQuery);
@@ -517,8 +517,8 @@ public isolated client class Client {
         if graphQlData is map<json> {
             var searchResult = graphQlData.get(GIT_SEARCH);
             if (searchResult is map<json>) {
-                SearchResultPayload payload = check searchResult.cloneWithType(SearchResultPayload);
-
+                SearchResultPayload|error payload = searchResult.cloneWithType(SearchResultPayload);
+                if payload is SearchResultPayload {
                     SearchResult searchResponse = {
                                 results: payload.nodes,
                                 pageInfo: payload.pageInfo,
@@ -529,7 +529,9 @@ public isolated client class Client {
                                 userCount: payload.userCount,
                                 wikiCount: payload.wikiCount
                             };
-                            return searchResponse; 
+                    return searchResponse;
+                }
+                return error ClientError ("GitHub Client Error", payload);     
             }
             return error ClientError ("GitHub Client Error", body=searchResult);
         }

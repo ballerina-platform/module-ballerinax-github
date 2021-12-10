@@ -41,5 +41,3 @@ Create a `github:ConnectionConfig` using your GitHub personal access token and a
 ```
 - Use `bal run` command to compile and run the Ballerina program.    
 
-
-**[You can find a list of samples here](https://github.com/ballerina-platform/module-ballerinax-github/tree/master/github/samples)**

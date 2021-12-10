@@ -522,7 +522,7 @@ isolated function getFormulatedStringQueryForSearch(string searchQuery, SearchTy
 // get resource id utl functions
 
 isolated function getRepositoryId(string repositoryOwnerName, string repositoryName, string accessToken, 
-                                  http:Client graphQlClient) returns @tainted string|error {
+                                  http:Client graphQlClient) returns @tainted string|Error {
     string stringQuery = getFormulatedStringQueryForGetRepositoryId(repositoryOwnerName, repositoryName);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
@@ -538,7 +538,7 @@ isolated function getRepositoryId(string repositoryOwnerName, string repositoryN
 }
 
 isolated function getIssueId(string repositoryOwnerName, string repositoryName, int issueNumber, string accessToken,
-                             http:Client graphQlClient) returns @tainted string|error {
+                             http:Client graphQlClient) returns @tainted string|Error {
     string stringQuery = getFormulatedStringQueryForGetIssueId(repositoryOwnerName, repositoryName, issueNumber);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
@@ -558,7 +558,7 @@ isolated function getIssueId(string repositoryOwnerName, string repositoryName, 
 }
 
 isolated function getPullRequestId(string repositoryOwnerName, string repositoryName, int pullRequestNumber, 
-                                   string accessToken, http:Client graphQlClient) returns @tainted string|error {
+                                   string accessToken, http:Client graphQlClient) returns @tainted string|Error {
     string stringQuery = getFormulatedStringQueryForGetPullRequestId(repositoryOwnerName, repositoryName, 
                                                                      pullRequestNumber);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -579,7 +579,7 @@ isolated function getPullRequestId(string repositoryOwnerName, string repository
 }
 
 isolated function getUserId(string userName, string accessToken, http:Client graphQlClient) 
-                            returns @tainted string|error {
+                            returns @tainted string|Error {
     string stringQuery = getFormulatedStringQueryForGetUserOwnerId(userName);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 

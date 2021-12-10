@@ -18,7 +18,7 @@ import ballerina/http;
 
 isolated function getMilestones(string repositoryOwnerName, string repositoryName, int perPageCount, 
                                              string accessToken, http:Client graphQlClient, string? nextPageCursor=()) 
-                                             returns @tainted MilestoneList|error {
+                                             returns @tainted MilestoneList|Error {
     string stringQuery = getFormulatedStringQueryForGetMilestones(repositoryOwnerName, repositoryName, perPageCount,
                                                                   nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -48,7 +48,7 @@ isolated function getMilestones(string repositoryOwnerName, string repositoryNam
 
 isolated function getMilestone(string repositoryOwnerName, string repositoryName, int milestoneNumber, 
                                          string accessToken, http:Client graphQlClient) returns @tainted 
-                                         Milestone|error {
+                                         Milestone|Error {
     string stringQuery = getFormulatedStringQueryForGetAMilestone(repositoryOwnerName, repositoryName, milestoneNumber);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 

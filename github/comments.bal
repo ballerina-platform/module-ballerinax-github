@@ -17,7 +17,7 @@
 import ballerina/http;
 
 isolated function addComment(AddIssueCommentInput addIssueCommentInput, string accessToken, http:Client graphQlClient)
-                             returns @tainted IssueComment|error {
+                             returns @tainted IssueComment|Error {
    Issue issue = check getIssue(addIssueCommentInput.repositoryOwnerName, addIssueCommentInput.repositoryName,
              addIssueCommentInput.issueNumber, accessToken, graphQlClient);
 
@@ -54,7 +54,7 @@ isolated function addComment(AddIssueCommentInput addIssueCommentInput, string a
 }
 
 isolated function updateComment(UpdateIssueCommentInput updateCommentInput, string accessToken, 
-                                http:Client graphQlClient) returns @tainted error? {
+                                http:Client graphQlClient) returns @tainted Error? {
     string stringQuery = getFormulatedStringQueryForUpdateIssueComment(updateCommentInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {
@@ -64,7 +64,7 @@ isolated function updateComment(UpdateIssueCommentInput updateCommentInput, stri
 }
 
 isolated function deleteComment(DeleteIssueCommentInput deleteCommentInput, string accessToken, 
-                                http:Client graphQlClient) returns @tainted error? {
+                                http:Client graphQlClient) returns @tainted Error? {
     string stringQuery = getFormulatedStringQueryForDeleteIssueComment(deleteCommentInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {

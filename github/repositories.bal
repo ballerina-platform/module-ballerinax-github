@@ -77,7 +77,7 @@ isolated function getRepositoryList(int perPageCount, string accessToken, http:C
 isolated function getCollaborators(string owner, string repositoryName, int perPageCount, 
                                                 string accessToken, http:Client graphQlClient, 
                                                 string? nextPageCursor = ()) 
-                                                returns @tainted CollaboratorList|error {
+                                                returns @tainted CollaboratorList|Error {
     string stringQuery = getFormulatedStringQueryForGetCollaboratorList(owner, repositoryName, perPageCount,
                                                                         nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -107,7 +107,7 @@ isolated function getCollaborators(string owner, string repositoryName, int perP
 
 isolated function getBranches(string ownerName, string repositoryName, int perPageCount, 
                                           string accessToken, http:Client graphQlClient, string? nextPageCursor = ()) 
-                                          returns @tainted BranchList|error {
+                                          returns @tainted BranchList|Error {
     string stringQuery = getFormulatedStringQueryForGetBranches(ownerName, repositoryName, perPageCount, 
                                                                             nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -137,7 +137,7 @@ isolated function getBranches(string ownerName, string repositoryName, int perPa
 
 isolated function updateRepository(@tainted UpdateRepositoryInput updateRepositoryInput, string repositoryOwnerName, 
                                    string repositoryName, string accessToken, http:Client graphQlClient) 
-                                   returns @tainted error? {
+                                   returns @tainted Error? {
     if(updateRepositoryInput?.repositoryId is ()) {
         updateRepositoryInput["repositoryId"] = check getRepositoryId(repositoryOwnerName, repositoryName, accessToken,
                                                                       graphQlClient);
@@ -153,7 +153,7 @@ isolated function updateRepository(@tainted UpdateRepositoryInput updateReposito
 
 isolated function getIssues(string repositoryOwnerName, string repositoryName, int perPageCount,
                                          string accessToken, http:Client graphQlClient, string? nextPageCursor,
-                                         IssueFilters issueFilters) returns @tainted IssueList|error {
+                                         IssueFilters issueFilters) returns @tainted IssueList|Error {
     string stringQuery = getFormulatedStringQueryForGetIssueList(repositoryOwnerName, repositoryName, 
                                                                  perPageCount, nextPageCursor, issueFilters);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -182,7 +182,7 @@ isolated function getIssues(string repositoryOwnerName, string repositoryName, i
 }
 
 isolated function createRepository(@tainted CreateRepositoryInput createRepositoryInput, string accessToken,
-                                   http:Client graphQlClient) returns @tainted error? {
+                                   http:Client graphQlClient) returns @tainted Error? {
 
     if (createRepositoryInput?.template is ()){
         createRepositoryInput["template"] = false;

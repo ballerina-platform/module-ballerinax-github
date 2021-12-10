@@ -17,7 +17,7 @@
 import ballerina/http;
 
 isolated function getOrganization(string organizationName, string accessToken, http:Client graphQlClient) 
-                                  returns @tainted Organization|error {
+                                  returns @tainted Organization|Error {
     string stringQuery = getFormulatedStringQueryForGetAnOrganization(organizationName);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
@@ -34,7 +34,7 @@ isolated function getOrganization(string organizationName, string accessToken, h
 
 isolated function getUserOrganizationList(string username, int perPageCount, string accessToken, 
                                           http:Client graphQlClient, string? nextPageCursor=()) 
-                                          returns @tainted OrganizationList|error {
+                                          returns @tainted OrganizationList|Error {
     string stringQuery = getFormulatedStringQueryForGetUserOrganizationList(username, perPageCount, nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
@@ -63,7 +63,7 @@ isolated function getUserOrganizationList(string username, int perPageCount, str
 
 isolated function getOrganizationMembers(string organizationName, int perPageCount, string accessToken, 
                                             http:Client graphQlClient, string? nextPageCursor=()) 
-                                            returns @tainted UserList|error {
+                                            returns @tainted UserList|Error {
     string stringQuery = getFormulatedStringQueryForGetOrganizationMemberList(organizationName, perPageCount, 
                                                                               nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);

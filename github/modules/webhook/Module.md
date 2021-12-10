@@ -65,4 +65,3 @@ The remote functions can be provided as follows.
 ### Step 5: Run the service 
 Use `bal run` command to compile and run the Ballerina program.    
 
-**[You can find a list of samples here](https://github.com/ballerina-platform/module-ballerinax-github/tree/master/github/samples/listener)**
