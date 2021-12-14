@@ -23,10 +23,10 @@ For more information, go to the module(s).
 
         > **Note:** Set the JAVA_HOME environment variable to the path name of the directory in which you installed JDK.
 
-2. Download and install [Ballerina Swan Lake Beta3](https://ballerina.io/). 
+2. Download and install [Ballerina Swan Lake](https://ballerina.io/). 
 
 ## Building the Source
-Execute the commands below to build from the source after installing Ballerina Swan Lake Beta2 version:
+Execute the commands below to build from the source after installing Ballerina Swan Lake:
 
 * To build the package:
     ```    
