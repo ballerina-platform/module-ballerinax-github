@@ -1,7 +1,8 @@
 [package]
+distribution = "slbeta6"
 org = "ballerinax"
 name = "github"
-version = "2.0.0"
+version = "3.0.0"
 export= ["github", "github.webhook"]
 authors = ["Ballerina"]
 keywords = ["IT Operations/Source Control", "Cost/Freemium"]
@@ -13,7 +14,7 @@ license = ["Apache-2.0"]
 observabilityIncluded = true
 
 [[platform.java11.dependency]]
-path = "../java-wrapper/build/libs/java-wrapper-0.99.15-SNAPSHOT.jar"
+path = "../java-wrapper/build/libs/java-wrapper-3.0.0.jar"
 groupId = "io.ballerinax.webhook"
 artifactId = "java-wrapper"
-version = "0.99.15-SNAPSHOT"
+version = "3.0.0"
