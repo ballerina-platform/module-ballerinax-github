@@ -1531,7 +1531,7 @@ public type SearchResultPayload record {
     int userCount;
     int wikiCount;
     PageInfo pageInfo;
-    Issue[]|User[]|Organization[]|Repository[] nodes;
+    (Issue|User|Organization|Repository)[] nodes;
 };
 public type SearchResult record {
     int codeCount;
@@ -1541,7 +1541,7 @@ public type SearchResult record {
     int userCount;
     int wikiCount;
     PageInfo pageInfo;
-    Issue[]|User[]|Organization[]|Repository[] results;
+    (Issue|User|Organization|Repository)[] results;
 };
 public type SearchCount record {
     int codeCount;
