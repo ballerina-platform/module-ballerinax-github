@@ -591,7 +591,7 @@ public isolated client class Client {
                         }
                     }
                 } else {
-                    return error ClientError ("GitHub Client Error", body=nodes);
+                    return error ClientError ("GitHub Client Error", body = nodes);
                 }  
             }
             return error ClientError ("GitHub Client Error", body=searchResult);
