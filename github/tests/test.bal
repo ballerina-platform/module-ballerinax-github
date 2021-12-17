@@ -705,7 +705,7 @@ function testGetOrganizationMembersList() returns @tainted Error? {
 }
 function testSearch() returns @tainted Error? {
     log:printInfo("githubClient -> search()");
-    SearchResult response = check githubClient-> search("wso2",SEARCH_TYPE_USER, 10);
+    SearchResult response = check githubClient-> search("connector-",SEARCH_TYPE_USER, 10);
     var result = response.results;
-    test:assertTrue(result is User[]|Organization[]);    
+    test:assertTrue(result is User[]);    
 }
