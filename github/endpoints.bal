@@ -514,7 +514,7 @@ public isolated client class Client {
     remote isolated function search(string searchQuery, SearchType searchType, int perPageCount,
                                                     string? lastPageCursor=()) returns SearchResult|Error {
 
-        SearchType querySearchType = searchType is SEARCH_TYPE_ORGANIZATION? SEARCH_TYPE_USER : searchType;                                                      
+        SearchType querySearchType = searchType is SEARCH_TYPE_ORGANIZATION ? SEARCH_TYPE_USER : searchType;                                                      
         string stringQuery = getFormulatedStringQueryForSearch(searchQuery, querySearchType, perPageCount,
                                                                lastPageCursor);
         map<json>|Error graphQlData = getGraphQlData(self.githubGraphQlClient, self.authToken, stringQuery);
@@ -526,7 +526,7 @@ public isolated client class Client {
                 // issue resolved. https://github.com/ballerina-platform/ballerina-lang/issues/34377
                 json nodes = searchResult.get(GIT_NODES);
                 if nodes is json[] {
-                    if nodes.length()>0 {
+                    if nodes.length() > 0 {
                         do {
                             User[] users = [];
                             Organization[] orgs = [];
@@ -556,9 +556,9 @@ public isolated client class Client {
                                 }
                             }
                             SearchResult searchResponse = {
-                                results: searchType is SEARCH_TYPE_ISSUE? issues:
-                                         searchType is SEARCH_TYPE_REPOSITORY? repos:
-                                         searchType is SEARCH_TYPE_USER? users : orgs,
+                                results: searchType is SEARCH_TYPE_ISSUE ? issues :
+                                         searchType is SEARCH_TYPE_REPOSITORY ? repos :
+                                         searchType is SEARCH_TYPE_USER ? users : orgs,
                                 pageInfo: check searchResult.get(GIT_PAGE_INFO).cloneWithType(PageInfo),
                                 codeCount: <int> searchResult.get(GIT_CODE_COUNT),
                                 discussionCount: <int> searchResult.get(GIT_DISCUSSION_COUNT),
@@ -574,9 +574,9 @@ public isolated client class Client {
                     } else {
                         do {
                             SearchResult searchResponse = {
-                                results: searchType is SEARCH_TYPE_USER? <User[]>[]: 
-                                         searchType is SEARCH_TYPE_ISSUE? <Issue[]>[]:
-                                         searchType is SEARCH_TYPE_REPOSITORY? <Repository[]>[]: <Organization[]>[],
+                                results: searchType is SEARCH_TYPE_USER ? <User[]>[] : 
+                                         searchType is SEARCH_TYPE_ISSUE ? <Issue[]>[] :
+                                         searchType is SEARCH_TYPE_REPOSITORY ? <Repository[]>[] : <Organization[]>[],
                                 pageInfo: check searchResult.get(GIT_PAGE_INFO).cloneWithType(PageInfo),
                                 codeCount: <int> searchResult.get(GIT_CODE_COUNT),
                                 discussionCount: <int> searchResult.get(GIT_DISCUSSION_COUNT),
@@ -591,10 +591,10 @@ public isolated client class Client {
                         }
                     }
                 } else {
-                    return error ClientError ("GitHub Client Error", body = nodes);
+                    return error ClientError("GitHub Client Error", body = nodes);
                 }  
             }
-            return error ClientError ("GitHub Client Error", body=searchResult);
+            return error ClientError("GitHub Client Error", body=searchResult);
         }
         return graphQlData;
     }
