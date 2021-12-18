@@ -1553,7 +1553,7 @@ public type SearchCount record {
 };
 
 public enum SearchType {
-    SEARCH_TYPE_DISCUSSION = "DISCUSSION", 
+    SEARCH_TYPE_ORGANIZATION = "ORG", 
     SEARCH_TYPE_ISSUE = "ISSUE",
     SEARCH_TYPE_REPOSITORY = "REPOSITORY",
     SEARCH_TYPE_USER = "USER"

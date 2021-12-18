@@ -19,7 +19,7 @@ import ballerina/http;
 # Ballerina GitHub connector provides the capability to access GitHub GraphQL API.
 # This connector lets you to get authorized access to GitHub data in a personal or organization
 # account. 
-@display { label: "GitHub Client", iconPath:"icon.png" }
+@display { label: "GitHub", iconPath:"icon.png" }
 public isolated client class Client {
     final string authToken;
     final http:Client githubGraphQlClient;
@@ -504,7 +504,9 @@ public isolated client class Client {
     # Search
     #
     # + searchQuery - The search string to look for
-    # + searchType - The types of search items to search within
+    # + searchType - The types of search items to search within. Either one of the following can be used: 
+    #                `github:SEARCH_TYPE_USER`, `github:SEARCH_TYPE_ORGANIZATION`, `github:SEARCH_TYPE_ISSUE`,
+    #                `github:SEARCH_TYPE_REPOSITORY`.
     # + perPageCount - Number of elements to be returned
     # + lastPageCursor - Next page curser
     # + return - `github:SearchResult` record if successful or else `github:Error`
@@ -512,29 +514,87 @@ public isolated client class Client {
     remote isolated function search(string searchQuery, SearchType searchType, int perPageCount,
                                                     string? lastPageCursor=()) returns SearchResult|Error {
 
-        string stringQuery = getFormulatedStringQueryForSearch(searchQuery, searchType, perPageCount, lastPageCursor);
+        SearchType querySearchType = searchType is SEARCH_TYPE_ORGANIZATION ? SEARCH_TYPE_USER : searchType;                                                      
+        string stringQuery = getFormulatedStringQueryForSearch(searchQuery, querySearchType, perPageCount,
+                                                               lastPageCursor);
         map<json>|Error graphQlData = getGraphQlData(self.githubGraphQlClient, self.authToken, stringQuery);
 
         if graphQlData is map<json> {
             var searchResult = graphQlData.get(GIT_SEARCH);
             if (searchResult is map<json>) {
-                SearchResultPayload|error payload = searchResult.cloneWithType(SearchResultPayload);
-                if payload is SearchResultPayload {
-                    SearchResult searchResponse = {
-                                results: payload.nodes,
-                                pageInfo: payload.pageInfo,
-                                codeCount: payload.codeCount,
-                                discussionCount: payload.discussionCount,
-                                issueCount: payload.issueCount,
-                                repositoryCount: payload.repositoryCount,
-                                userCount: payload.userCount,
-                                wikiCount: payload.wikiCount
+                //Here get search results nodes is handling manually. This can be re implemented after the following
+                // issue resolved. https://github.com/ballerina-platform/ballerina-lang/issues/34377
+                json nodes = searchResult.get(GIT_NODES);
+                if nodes is json[] {
+                    if nodes.length() > 0 {
+                        do {
+                            User[] users = [];
+                            Organization[] orgs = [];
+                            Issue[] issues = [];
+                            Repository[] repos = [];
+                            match querySearchType {
+                                SEARCH_TYPE_USER => {
+                                    foreach json node in nodes {
+                                        if node is map<json> {
+                                            int numberOfFields = 0;
+                                            numberOfFields = node.keys().length();
+                                            if numberOfFields > 12 {
+                                                User user = check node.cloneWithType();
+                                                users.push(user);
+                                            } else {
+                                                Organization org = check node.cloneWithType();
+                                                orgs.push(org);
+                                            }
+                                        }
+                                    }
+                                }
+                                SEARCH_TYPE_ISSUE => {
+                                    issues = check nodes.cloneWithType();
+                                }
+                                SEARCH_TYPE_REPOSITORY => {
+                                    repos = check nodes.cloneWithType();
+                                }
+                            }
+                            SearchResult searchResponse = {
+                                results: searchType is SEARCH_TYPE_ISSUE ? issues :
+                                         searchType is SEARCH_TYPE_REPOSITORY ? repos :
+                                         searchType is SEARCH_TYPE_USER ? users : orgs,
+                                pageInfo: check searchResult.get(GIT_PAGE_INFO).cloneWithType(PageInfo),
+                                codeCount: <int> searchResult.get(GIT_CODE_COUNT),
+                                discussionCount: <int> searchResult.get(GIT_DISCUSSION_COUNT),
+                                issueCount: <int> searchResult.get(GIT_ISSUE_COUNT),
+                                repositoryCount: <int> searchResult.get(GIT_REPO_COUNT),
+                                userCount: <int> searchResult.get(GIT_USER_COUNT),
+                                wikiCount: <int> searchResult.get(GIT_WIKI_COUNT)
                             };
-                    return searchResponse;
-                }
-                return error ClientError ("GitHub Client Error", payload);     
+                            return searchResponse;
+                        } on fail var e {
+                            return error ClientError("GitHub Client Error in search result conversion.", e);
+                        }
+                    } else {
+                        do {
+                            SearchResult searchResponse = {
+                                results: searchType is SEARCH_TYPE_USER ? <User[]>[] : 
+                                         searchType is SEARCH_TYPE_ISSUE ? <Issue[]>[] :
+                                         searchType is SEARCH_TYPE_REPOSITORY ? <Repository[]>[] : <Organization[]>[],
+                                pageInfo: check searchResult.get(GIT_PAGE_INFO).cloneWithType(PageInfo),
+                                codeCount: <int> searchResult.get(GIT_CODE_COUNT),
+                                discussionCount: <int> searchResult.get(GIT_DISCUSSION_COUNT),
+                                issueCount: <int> searchResult.get(GIT_ISSUE_COUNT),
+                                repositoryCount: <int> searchResult.get(GIT_REPO_COUNT),
+                                userCount: <int> searchResult.get(GIT_USER_COUNT),
+                                wikiCount: <int> searchResult.get(GIT_WIKI_COUNT)
+                            };
+                            return searchResponse;
+                        } on fail var e {
+                            return error ClientError("GitHub Client Error in empty search result conversion.", e);
+                        }
+                    }
+                } else {
+                    return error ClientError("GitHub Client Error", body = nodes);
+                }  
             }
-            return error ClientError ("GitHub Client Error", body=searchResult);
+            return error ClientError("GitHub Client Error", body=searchResult);
         }
         return graphQlData;
     }
