@@ -199,10 +199,12 @@ isolated service class WebSubService {
             check self.handlePullRequestReviewEvent(self.adaptor, eventPayload);
         } else if (eventPayload is PullRequestReviewCommentEvent) {
             check self.handlePullRequestReviewCommentEvent(self.adaptor, eventPayload);
-        } else {
+        } else if (eventPayload is error) {
             log:printDebug("Incoming event payload: " + event.content.toBalString());
             log:printDebug("Unsupported event received. Associated conversion error: " + eventPayload.message(), 
                 'error = eventPayload);
+        } else {
+            log:printDebug("Incoming event payload: " + event.content.toBalString());
         }
     }
 
