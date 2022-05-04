@@ -95,7 +95,9 @@ final string PAGE_INFO_AND_TOTAL_COUNT =   "           pageInfo{          \n"+
                                            "           },                  \n"+
                                            "           totalCount\n";
 
-
+final string LANGUAGE_FIELDS   =    "color\n"+
+                                    "id\n"+
+                                    "name\n";
 final string REPOSITORY_FIELDS =            "       createdAt\n"+
                                             "       databaseId\n"+
                                             "       deleteBranchOnMerge\n"+
@@ -276,6 +278,16 @@ final string GET_REPOSIOTRY = "query($owner: String!, $name: String!) {   \n"+
                               "    }\n"+
                               "}";
 
+final string GET_LANGUAGE_LIST = "query($owner: String!, $name: String!, $perPageCount: Int!, $lastPageCursor: String) { \n"+
+                                 "    repository(owner:$owner, name:$name) { \n"+
+                                 "      languages(first:$perPageCount, after:$lastPageCursor) { \n"+
+                                 "          nodes{ \n"+
+                                                LANGUAGE_FIELDS +
+                                 "          }\n"+
+                                            PAGE_INFO_AND_TOTAL_COUNT+
+                                 "      }\n"+   
+                                 "    }\n"+
+                                 "}";
 
 final string GET_REPOSITORY_LIST_FOR_AUTHENTICATED_USER = "query($perPageCount: Int!, $lastPageCursor: String) { \n"+
                                                           "    viewer {                    \n"+

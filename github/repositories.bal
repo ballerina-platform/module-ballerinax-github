@@ -26,7 +26,32 @@ isolated function getRepository(string username, string repositoryName, string a
         var repository = graphQlData[GIT_REPOSITORY];
         if (repository is map<json>) {
             Repository|error result = repository.cloneWithType(Repository);
-            return result is Repository? result : error ClientError ("GitHub Client Error", result);
+            if result is error {
+                return error ClientError ("GitHub Client Error", result);
+            }
+            LanguageList languageList = check getLanguageList(username, repositoryName, 100, accessToken, 
+                                                              graphQlClient);
+
+            Language[] languages = [];
+            boolean hasNextPage = languageList.pageInfo.hasNextPage;
+            string? nextPageCursor = languageList.pageInfo.endCursor;
+
+            foreach Language language in languageList.languages {
+                languages.push(language);
+            }
+
+            while (hasNextPage) {
+                languageList = check getLanguageList(username, repositoryName, 100, accessToken, graphQlClient,
+                                                     nextPageCursor);
+                hasNextPage = languageList.pageInfo.hasNextPage;
+                nextPageCursor = languageList.pageInfo.endCursor;
+
+                foreach Language language in languageList.languages {
+                    languages.push(language);
+                }
+            }
+            result.languages = languages;
+            return result;
         }
         return error ClientError("GitHub Client Error", body = repository);
     } 
@@ -201,4 +226,33 @@ isolated function createRepository(@tainted CreateRepositoryInput createReposito
         return graphQlData;
     }
     return ;
+}
+
+isolated function getLanguageList(string owner, string repositoryName, int perPageCount, string accessToken,
+                                  http:Client graphQlClient, string? nextPageCursor=()) returns LanguageList|Error {
+
+    string stringQuery = getFormulatedStringQueryForGetLanguages(owner, repositoryName, perPageCount, nextPageCursor);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+
+    if graphQlData is map<json> {
+        var repository = graphQlData.get(GIT_REPOSITORY);
+        if (repository is map<json>) {
+            var languages = repository.get(GIT_LANGUAGES);
+                if(languages is map<json>){
+                    LanguageListPayload|error languageListResponse = languages.cloneWithType();
+                    if languageListResponse is LanguageListPayload {
+                        LanguageList languageList = {
+                            languages: languageListResponse.nodes,
+                            pageInfo: languageListResponse.pageInfo,
+                            totalCount: languageListResponse.totalCount
+                        };
+                        return languageList;
+                    }
+                    return error ClientError ("GitHub Client Error", languageListResponse);
+                }
+                return error ClientError ("GitHub Client Error", body=languages);
+        }
+        return error ClientError ("GitHub Client Error", body=repository);
+    }
+    return graphQlData;
 }

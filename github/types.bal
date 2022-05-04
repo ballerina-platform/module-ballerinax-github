@@ -111,49 +111,50 @@ public type Actor record {
 
 # Represent GitHub repository.
 #
-# + createdAt - Identifies the date and time when the object was created.
-# + databaseId - Identifies the primary key from the database.
-# + deleteBranchOnMerge - Whether or not branches are automatically deleted when merged in this repository.
-# + description - The description of the repository.
-# + descriptionHTML - The description of the repository rendered to HTML.
-# + diskUsage - The number of kilobytes this repository occupies on disk.
-# + forkCount - Returns how many forks there are of this repository in the whole network.
-# + hasIssuesEnabled - Indicates if the repository has issues feature enabled.
-# + hasProjectsEnabled - Indicates if the repository has the Projects feature enabled.
-# + hasWikiEnabled - Indicates if the repository has wiki feature enabled.
-# + homepageUrl - The repository's URL.
-# + id - ID
-# + isArchived - Indicates if the repository is unmaintained.
-# + isBlankIssuesEnabled - Returns true if blank issue creation is allowed
-# + isDisabled - Returns whether or not this repository disabled.
-# + isEmpty - Returns whether or not this repository is empty.
-# + isFork - Identifies if the repository is a fork.
-# + isInOrganization - Indicates if a repository is either owned by an organization, or is a private fork of an organization repository.
-# + isLocked - Indicates if the repository has been locked or not.
-# + isMirror - Identifies if the repository is a mirror.
-# + isPrivate - Identifies if the repository is private or internal.
-# + isSecurityPolicyEnabled - Returns true if this repository has a security policy
-# + isTemplate - Identifies if the repository is a template that can be used to generate new repositories.
-# + isUserConfigurationRepository - Is this repository a user configuration repository?
-# + mergeCommitAllowed - Whether or not PRs are merged with a merge commit on this repository.
-# + mirrorUrl - The repository's original mirror URL.
-# + name - The name of the repository.
-# + nameWithOwner - The repository's name with owner.
-# + owner - The User owner of the repository.
-# + projectsResourcePath - The HTTP path listing the repository's projects
-# + projectsUrl - The HTTP URL listing the repository's projects
-# + pushedAt - Identifies when the repository was last pushed to.
-# + rebaseMergeAllowed - Whether or not rebase-merging is enabled on this repository.
-# + resourcePath - The HTTP path for this repository
-# + securityPolicy - The security policy URL.
-# + sshUrl - The SSH URL to clone this repository
-# + stargazerCount - Returns a count of how many stargazers there are on this object
-# + tempCloneToken - Temporary authentication token for cloning this repository.
-# + updatedAt - Identifies the date and time when the object was last updated.
-# + url - The HTTP URL for this repository
-# + viewerCanAdminister - Indicates whether the viewer has admin permissions on this repository.
-# + viewerCanCreateProjects - Can the current viewer create new projects on this owner.
-# + viewerCanSubscribe - Check if the viewer is able to change their subscription status for the repository.
+# + createdAt - Identifies the date and time when the object was created.  
+# + databaseId - Identifies the primary key from the database.  
+# + deleteBranchOnMerge - Whether or not branches are automatically deleted when merged in this repository.  
+# + description - The description of the repository.  
+# + descriptionHTML - The description of the repository rendered to HTML.  
+# + diskUsage - The number of kilobytes this repository occupies on disk.  
+# + forkCount - Returns how many forks there are of this repository in the whole network.  
+# + hasIssuesEnabled - Indicates if the repository has issues feature enabled.  
+# + hasProjectsEnabled - Indicates if the repository has the Projects feature enabled.  
+# + hasWikiEnabled - Indicates if the repository has wiki feature enabled.  
+# + homepageUrl - The repository's URL.  
+# + id - ID  
+# + isArchived - Indicates if the repository is unmaintained.  
+# + isBlankIssuesEnabled - Returns true if blank issue creation is allowed  
+# + isDisabled - Returns whether or not this repository disabled.  
+# + isEmpty - Returns whether or not this repository is empty.  
+# + isFork - Identifies if the repository is a fork.  
+# + isInOrganization - Indicates if a repository is either owned by an organization, or is a private fork of an organization repository.  
+# + isLocked - Indicates if the repository has been locked or not.  
+# + isMirror - Identifies if the repository is a mirror.  
+# + isPrivate - Identifies if the repository is private or internal.  
+# + isSecurityPolicyEnabled - Returns true if this repository has a security policy  
+# + isTemplate - Identifies if the repository is a template that can be used to generate new repositories.  
+# + isUserConfigurationRepository - Is this repository a user configuration repository?  
+# + mergeCommitAllowed - Whether or not PRs are merged with a merge commit on this repository.  
+# + mirrorUrl - The repository's original mirror URL.  
+# + name - The name of the repository.  
+# + nameWithOwner - The repository's name with owner.  
+# + owner - The User owner of the repository.  
+# + projectsResourcePath - The HTTP path listing the repository's projects  
+# + projectsUrl - The HTTP URL listing the repository's projects  
+# + pushedAt - Identifies when the repository was last pushed to.  
+# + rebaseMergeAllowed - Whether or not rebase-merging is enabled on this repository.  
+# + resourcePath - The HTTP path for this repository  
+# + securityPolicy - The security policy URL.  
+# + sshUrl - The SSH URL to clone this repository  
+# + stargazerCount - Returns a count of how many stargazers there are on this object  
+# + tempCloneToken - Temporary authentication token for cloning this repository.  
+# + updatedAt - Identifies the date and time when the object was last updated.  
+# + url - The HTTP URL for this repository  
+# + viewerCanAdminister - Indicates whether the viewer has admin permissions on this repository.  
+# + viewerCanCreateProjects - Can the current viewer create new projects on this owner.  
+# + viewerCanSubscribe - Check if the viewer is able to change their subscription status for the repository.  
+# + languages - A list containing a breakdown of the language composition of the repository.
 public type Repository record {
   string createdAt;
   int? databaseId?;
@@ -198,6 +199,7 @@ public type Repository record {
   boolean viewerCanAdminister?;
   boolean viewerCanCreateProjects?;
   boolean viewerCanSubscribe?;
+  Language[] languages?;
 };
 
 # Represent GitHub branch.
@@ -1568,6 +1570,39 @@ public type IssueFilters record {
     string since?;// iso utc string 
     IssueState[] states?;
     boolean viewerSubscribed?;
+};
+
+# Represents a given language found in repositories
+#
+# + name - The name of the current language
+# + id - The Id of the current language  
+# + colour - The color defined for the current language
+public type Language record {
+    string name;
+    string id?;
+    string colour?;
+};
+
+# Represents a list of languages with pagination information by GitHub
+#
+# + nodes - List of languages  
+# + pageInfo - Information to aid in pagination
+# + totalCount - Identifies the total count of items in the connection
+public type LanguageListPayload record {
+    Language[] nodes;
+    PageInfo pageInfo;
+    int totalCount;
+};
+
+# Represents a list of languages with pagination information
+#
+# + languages - List of languages 
+# + pageInfo - Information to aid in pagination
+# + totalCount - Identifies the total count of items in the connection
+public type LanguageList record {
+    Language[] languages;
+    PageInfo pageInfo;
+    int totalCount;
 };
 
 public type Error ClientError|ServerError;

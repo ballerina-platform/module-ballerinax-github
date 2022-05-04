@@ -709,3 +709,17 @@ function testSearch() returns @tainted Error? {
     var result = response.results;
     test:assertTrue(result is User[]);    
 }
+
+@test:Config{
+    enable: true
+}
+function testGetLanguagesFromRepository() returns Error? {
+    log:printInfo("Testing language list in a given repository");
+    Repository response = check githubClient->getRepository(testUsername, testUserRepositoryName);
+    Language[]? languageList = response?.languages;
+    if languageList is Language[] {
+        test:assertTrue(languageList.length()> 0, "Failed to get language list");
+    }else {
+        test:assertFail("Language list is empty");
+    }
+}

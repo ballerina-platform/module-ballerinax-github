@@ -70,6 +70,7 @@ final string GIT_COMMENT_EDGE = "commentEdge";
 final string GIT_LABEL = "label";
 final string GIT_LABELS = "labels";
 final string GIT_LABELABLE = "labelable";
+final string GIT_LANGUAGES = "languages";
 final string GIT_ADD_LABLE_TO_LABELABLE = "addLabelsToLabelable";
 final string GIT_MILESTONES = "milestones";
 final string GIT_MILESTONE = "milestone";

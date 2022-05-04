@@ -60,6 +60,12 @@ isolated function getFormulatedStringQueryForGetUser(string? username = ()) retu
     }
 }
 
+isolated function getFormulatedStringQueryForGetLanguages(string username, string repositoryName, int perPageCount, 
+                                                          string? lastPageCursor=()) returns string{
+    return  string`{"variables":{"owner":"${username}", "name":"${repositoryName}", "perPageCount":${perPageCount}, 
+                            "lastPageCursor":null},"query":"${GET_LANGUAGE_LIST}"}`;
+}
+
 isolated function getFormulatedStringQueryForGetRepository(string username, string repositoryName) returns string {
     return string `{"variables":{"owner":"${username}", "name":"${repositoryName}"},"query":"${GET_REPOSIOTRY}"}`;
 }
