@@ -16,44 +16,48 @@
 
 import ballerina/http;
 
-isolated function getPullRequest(string owner, string repositoryName, int pullRequestNumber, 
-                                 string accessToken, http:Client graphQlClient) returns @tainted PullRequest|Error {
-    string stringQuery = getFormulatedStringQueryForGetAPullRequest(owner, repositoryName, 
+isolated function getPullRequest(string owner, string repositoryName, int pullRequestNumber,
+                                string accessToken, http:Client graphQlClient) returns @tainted PullRequest|Error {
+    string stringQuery = getFormulatedStringQueryForGetAPullRequest(owner, repositoryName,
                                                                     pullRequestNumber);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var repository = graphQlData.get(GIT_REPOSITORY);
-        if (repository is map<json>) {
-            var pr = repository.get(GIT_PULL_REQUEST);
-            if(pr is map<json>){
+        json repository = graphQlData.get(GIT_REPOSITORY);
+        if repository is map<json> {
+            json pr = repository.get(GIT_PULL_REQUEST);
+            if pr is map<json> {
                 PullRequest|error pullRequestObj = pr.cloneWithType(PullRequest);
                 if pullRequestObj is error {
-                    return error ClientError ("GitHub Client Error", pullRequestObj);
+                    return error ClientError("GitHub Client Error", pullRequestObj);
                 }
-                PullRequestReviewList reviewCommentList = check getPullRequestReviewCommentList(owner, 
+
+                pullRequestObj.lastCommit = check getLastCommit(owner, repositoryName, pullRequestNumber, accessToken,
+                                                                graphQlClient);
+
+                PullRequestReviewList reviewCommentList = check getPullRequestReviewCommentList(owner,
                                                                                                 repositoryName,
                                                                                                 pullRequestNumber,
-                                                                                                100, 
+                                                                                                100,
                                                                                                 accessToken,
                                                                                                 graphQlClient);
                 PullRequestReview[] reviewComments = [];
                 boolean hasPRCommentListNextPage = reviewCommentList.pageInfo.hasNextPage;
-                string? nextPageCursor= reviewCommentList.pageInfo.endCursor;
+                string? nextPageCursor = reviewCommentList.pageInfo.endCursor;
 
                 foreach PullRequestReview comment in reviewCommentList.pullRequestReviews {
                     reviewComments.push(comment);
                 }
                 while (hasPRCommentListNextPage) {
-                    reviewCommentList = check getPullRequestReviewCommentList(owner, 
-                                                                              repositoryName,
-                                                                              pullRequestNumber,
-                                                                              100, 
-                                                                              accessToken,
-                                                                              graphQlClient,
-                                                                              nextPageCursor);
+                    reviewCommentList = check getPullRequestReviewCommentList(owner,
+                                                                            repositoryName,
+                                                                            pullRequestNumber,
+                                                                            100,
+                                                                            accessToken,
+                                                                            graphQlClient,
+                                                                            nextPageCursor);
                     hasPRCommentListNextPage = reviewCommentList.pageInfo.hasNextPage;
-                    nextPageCursor= reviewCommentList.pageInfo.endCursor;
+                    nextPageCursor = reviewCommentList.pageInfo.endCursor;
 
                     foreach PullRequestReview comment in reviewCommentList.pullRequestReviews {
                         reviewComments.push(comment);
@@ -62,26 +66,26 @@ isolated function getPullRequest(string owner, string repositoryName, int pullRe
                 pullRequestObj.pullRequestReviews = reviewComments;
                 return pullRequestObj;
             }
-            return error ClientError ("GitHub Client Error", body=pr);
+            return error ClientError("GitHub Client Error", body = pr);
         }
-        return error ClientError ("GitHub Client Error", body=repository);
+        return error ClientError("GitHub Client Error", body = repository);
     }
     return graphQlData;
 }
 
-isolated function getPullRequests(string repositoryOwnerName, string repositoryName, 
-                                               PullRequestState state, int perPageCount, string accessToken, 
-                                               http:Client graphQlClient, string? nextPageCursor=()) 
-                                               returns @tainted PullRequestList|Error {
+isolated function getPullRequests(string repositoryOwnerName, string repositoryName,
+                                                PullRequestState state, int perPageCount, string accessToken,
+                                                http:Client graphQlClient, string? nextPageCursor = ())
+                                                returns @tainted PullRequestList|Error {
     string stringQuery = getFormulatedStringQueryForGetPullRequestList(repositoryOwnerName, repositoryName, state,
-                                                                       perPageCount, nextPageCursor);
+                                                                        perPageCount, nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var repository = graphQlData.get(GIT_REPOSITORY);
-        if (repository is map<json>) {
-            var pullRequests = repository.get(GIT_PULL_REQUESTS);
-            if(pullRequests is map<json>){
+        json repository = graphQlData.get(GIT_REPOSITORY);
+        if repository is map<json> {
+            json pullRequests = repository.get(GIT_PULL_REQUESTS);
+            if pullRequests is map<json> {
                 PullRequestListPayload|error pullRequestListResp = pullRequests.cloneWithType(PullRequestListPayload);
                 if pullRequestListResp is PullRequestListPayload {
                     PullRequestList pullRequestList = {
@@ -91,53 +95,53 @@ isolated function getPullRequests(string repositoryOwnerName, string repositoryN
                     };
                     return pullRequestList;
                 }
-                return error ClientError ("GitHub Client Error", pullRequestListResp);
+                return error ClientError("GitHub Client Error", pullRequestListResp);
             }
-            return error ClientError ("GitHub Client Error", body=pullRequests);
+            return error ClientError("GitHub Client Error", body = pullRequests);
         }
-        return error ClientError ("GitHub Client Error", body=repository);
+        return error ClientError("GitHub Client Error", body = repository);
     }
     return graphQlData;
 }
 
-isolated function createPullRequest(@tainted CreatePullRequestInput createPullRequestInput, string repositoryOwnerName, 
-                                    string repositoryName, string accessToken, http:Client graphQlClient) 
+isolated function createPullRequest(@tainted CreatePullRequestInput createPullRequestInput, string repositoryOwnerName,
+                                    string repositoryName, string accessToken, http:Client graphQlClient)
                                     returns @tainted PullRequest|Error {
-    if(createPullRequestInput?.repositoryId is ()) {
-        createPullRequestInput["repositoryId"] = check getRepositoryId(repositoryOwnerName, repositoryName, 
-                                                                       accessToken, graphQlClient);
+    if createPullRequestInput?.repositoryId is () {
+        createPullRequestInput["repositoryId"] = check getRepositoryId(repositoryOwnerName, repositoryName,
+                                                                        accessToken, graphQlClient);
     }
     string stringQuery = getFormulatedStringQueryForCreatePullRequest(createPullRequestInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var createPullRequests = graphQlData.get(GIT_CREATE_PULL_REQUESTS);
-        if (createPullRequests is map<json>) {
-            var pullRequest = createPullRequests.get(GIT_PULL_REQUEST);
-            if(pullRequest is map<json>){
+        json createPullRequests = graphQlData.get(GIT_CREATE_PULL_REQUESTS);
+        if createPullRequests is map<json> {
+            json pullRequest = createPullRequests.get(GIT_PULL_REQUEST);
+            if pullRequest is map<json> {
                 PullRequest|error pr = pullRequest.cloneWithType(PullRequest);
-                return pr is PullRequest? pr: error ClientError ("GitHub Client Error", pr);
+                return pr is PullRequest ? pr : error ClientError("GitHub Client Error", pr);
             }
-            return error ClientError ("GitHub Client Error", body=pullRequest);
+            return error ClientError("GitHub Client Error", body = pullRequest);
         }
-        return error ClientError ("GitHub Client Error", body=createPullRequests);
+        return error ClientError("GitHub Client Error", body = createPullRequests);
     }
     return graphQlData;
 }
 
-isolated function updatePullRequest(@tainted UpdatePullRequestInput updatePullRequestInput, string repositoryOwnerName, 
-                                    string repositoryName,  int pullRequestNumber, string accessToken, 
+isolated function updatePullRequest(@tainted UpdatePullRequestInput updatePullRequestInput, string repositoryOwnerName,
+                                    string repositoryName, int pullRequestNumber, string accessToken,
                                     http:Client graphQlClient) returns @tainted PullRequest|Error {
-    
+
     UpdatePullRequestInputPayload updatePullRequestInputPayload = {};
     do {
-        if(updatePullRequestInput?.pullRequestId is ()) {
-            updatePullRequestInputPayload["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName, 
+        if updatePullRequestInput?.pullRequestId is () {
+            updatePullRequestInputPayload["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName,
             pullRequestNumber, accessToken, graphQlClient);
         }
 
         string[] assigneeIds = [];
-        if (!(updatePullRequestInput?.assigneeNames is ())) { 
+        if !(updatePullRequestInput?.assigneeNames is ()) {
             foreach string assigneeName in <string[]>updatePullRequestInput?.assigneeNames {
                 string userId = check getUserId(assigneeName, accessToken, graphQlClient);
                 assigneeIds.push(userId);
@@ -146,7 +150,7 @@ isolated function updatePullRequest(@tainted UpdatePullRequestInput updatePullRe
         }
 
         string[] labelIds = [];
-        if (!(updatePullRequestInput?.labelNames is ())) { 
+        if !(updatePullRequestInput?.labelNames is ()) {
             foreach string labelName in <string[]>updatePullRequestInput?.labelNames {
                 Label label = check getLabel(repositoryOwnerName, repositoryName, labelName, accessToken, graphQlClient);
                 labelIds.push(label.id);
@@ -154,36 +158,36 @@ isolated function updatePullRequest(@tainted UpdatePullRequestInput updatePullRe
             updatePullRequestInputPayload["labelIds"] = labelIds;
         }
 
-        if(updatePullRequestInput?.pullRequestId is ()) {
-            updatePullRequestInputPayload["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName, 
+        if updatePullRequestInput?.pullRequestId is () {
+            updatePullRequestInputPayload["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName,
             pullRequestNumber, accessToken, graphQlClient);
         }
 
-        if (!(updatePullRequestInput?.title is ())) { 
+        if !(updatePullRequestInput?.title is ()) {
             updatePullRequestInputPayload["title"] = <string>updatePullRequestInput?.title;
         }
 
-        if (!(updatePullRequestInput?.body is ())) { 
+        if !(updatePullRequestInput?.body is ()) {
             updatePullRequestInputPayload["body"] = <string>updatePullRequestInput?.body;
         }
 
-        if (!(updatePullRequestInput?.milestoneId is ())) { 
+        if !(updatePullRequestInput?.milestoneId is ()) {
             updatePullRequestInputPayload["milestoneId"] = <string>updatePullRequestInput?.milestoneId;
         }
 
-        if (!(updatePullRequestInput?.state is ())) { 
+        if !(updatePullRequestInput?.state is ()) {
             updatePullRequestInputPayload["state"] = <PullRequestState>updatePullRequestInput?.state;
         }
 
-        if (!(updatePullRequestInput?.projectIds is ())) { 
+        if !(updatePullRequestInput?.projectIds is ()) {
             updatePullRequestInputPayload["projectIds"] = <string[]>updatePullRequestInput?.projectIds;
         }
 
-        if (!(updatePullRequestInput?.baseRefName is ())) { 
+        if !(updatePullRequestInput?.baseRefName is ()) {
             updatePullRequestInputPayload["baseRefName"] = <string>updatePullRequestInput?.baseRefName;
         }
 
-        if (!(updatePullRequestInput?.clientMutationId is ())) { 
+        if !(updatePullRequestInput?.clientMutationId is ()) {
             updatePullRequestInputPayload["clientMutationId"] = <string>updatePullRequestInput?.clientMutationId;
         }
     } on fail var e {
@@ -194,101 +198,140 @@ isolated function updatePullRequest(@tainted UpdatePullRequestInput updatePullRe
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var updatePullRequests = graphQlData.get(GIT_UPDATE_PULL_REQUESTS);
-        if (updatePullRequests is map<json>) {
-            var pullRequest = updatePullRequests.get(GIT_PULL_REQUEST);
-            if(pullRequest is map<json>){
+        json updatePullRequests = graphQlData.get(GIT_UPDATE_PULL_REQUESTS);
+        if updatePullRequests is map<json> {
+            json pullRequest = updatePullRequests.get(GIT_PULL_REQUEST);
+            if pullRequest is map<json> {
                 PullRequest|error pr = pullRequest.cloneWithType(PullRequest);
-                return pr is PullRequest? pr: error ClientError ("GitHub Client Error", pr);
+                return pr is PullRequest ? pr : error ClientError("GitHub Client Error", pr);
             }
-            return error ClientError ("GitHub Client Error", body=pullRequest);
+            return error ClientError("GitHub Client Error", body = pullRequest);
         }
-        return error ClientError ("GitHub Client Error", body=updatePullRequests);
+        return error ClientError("GitHub Client Error", body = updatePullRequests);
     }
     return graphQlData;
 }
 
-isolated function getPullRequestReviewCommentList(string repositoryOwnerName, string repositoryName, 
-                                                  int pullRequestNumber, int perPageCount, string accessToken, 
-                                                  http:Client graphQlClient, string? nextPageCursor=()) 
-                                                  returns @tainted PullRequestReviewList|Error {
-    string stringQuery = getFormulatedStringQueryForGetReviewListForRepository(repositoryOwnerName, repositoryName, 
-                                                                               pullRequestNumber, perPageCount, 
-                                                                               nextPageCursor);
+isolated function getPullRequestReviewCommentList(string repositoryOwnerName, string repositoryName,
+                                                int pullRequestNumber, int perPageCount, string accessToken,
+                                                http:Client graphQlClient, string? nextPageCursor = ())
+                                                returns @tainted PullRequestReviewList|Error {
+    string stringQuery = getFormulatedStringQueryForGetReviewListForRepository(repositoryOwnerName, repositoryName,
+                                                                                pullRequestNumber, perPageCount,
+                                                                                nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var repository = graphQlData.get(GIT_REPOSITORY);
-        if (repository is map<json>) {
-            var pullRequest = repository.get(GIT_PULL_REQUEST);
-            if(pullRequest is map<json>){
-                var comments = pullRequest.get(GIT_REVIEWS);
-                if(comments is map<json>){
+        json repository = graphQlData.get(GIT_REPOSITORY);
+        if repository is map<json> {
+            json pullRequest = repository.get(GIT_PULL_REQUEST);
+            if pullRequest is map<json> {
+                json comments = pullRequest.get(GIT_REVIEWS);
+                if comments is map<json> {
                     PullRequestReviewListPayload|error reviews = comments.cloneWithType(PullRequestReviewListPayload);
                     if reviews is PullRequestReviewListPayload {
                         PullRequestReviewList pullRequestReviewList = {
                             pullRequestReviews: reviews.nodes,
                             pageInfo: reviews.pageInfo,
-                            totalCount: reviews.totalCount 
+                            totalCount: reviews.totalCount
                         };
                         return pullRequestReviewList;
                     }
-                    return error ClientError ("GitHub Client Error", reviews);
+                    return error ClientError("GitHub Client Error", reviews);
                 }
-                return error ClientError ("GitHub Client Error", body=comments);
+                return error ClientError("GitHub Client Error", body = comments);
             }
-            return error ClientError ("GitHub Client Error", body=pullRequest);
+            return error ClientError("GitHub Client Error", body = pullRequest);
         }
-        return error ClientError ("GitHub Client Error", body=repository);
+        return error ClientError("GitHub Client Error", body = repository);
     }
     return graphQlData;
 }
 
- isolated function createPullRequestReview(@tainted AddPullRequestReviewInput addPullRequestReviewInput, 
-                                           string repositoryOwnerName, string repositoryName,  int pullRequestNumber, 
-                                           string accessToken, http:Client graphQlClient) 
-                                           returns @tainted PullRequestReview|Error {
-    if (addPullRequestReviewInput?.pullRequestId is ()) {
-        addPullRequestReviewInput["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName, 
-                                                                            pullRequestNumber, accessToken, 
+isolated function createPullRequestReview(@tainted AddPullRequestReviewInput addPullRequestReviewInput,
+                                            string repositoryOwnerName, string repositoryName, int pullRequestNumber,
+                                            string accessToken, http:Client graphQlClient)
+                                            returns @tainted PullRequestReview|Error {
+    if addPullRequestReviewInput?.pullRequestId is () {
+        addPullRequestReviewInput["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName,
+                                                                            pullRequestNumber, accessToken,
                                                                             graphQlClient);
     }
     string stringQuery = getFormulatedStringQueryForAddPullRequestReview(addPullRequestReviewInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var addPullRequestReview = graphQlData.get(GIT_ADD_PULL_REQUEST_REVIEW);
-        if (addPullRequestReview is map<json>) {
-            var pullRequestReview = addPullRequestReview.get(GIT_PULL_REQUEST_REVIEW);
-            if(pullRequestReview is map<json>){
+        json addPullRequestReview = graphQlData.get(GIT_ADD_PULL_REQUEST_REVIEW);
+        if addPullRequestReview is map<json> {
+            json pullRequestReview = addPullRequestReview.get(GIT_PULL_REQUEST_REVIEW);
+            if pullRequestReview is map<json> {
                 PullRequestReview|error review = pullRequestReview.cloneWithType(PullRequestReview);
-                return review is PullRequestReview? review: error ClientError ("GitHub Client Error", review);
+                return review is PullRequestReview ? review : error ClientError("GitHub Client Error", review);
             }
-            return error ClientError ("GitHub Client Error", body=pullRequestReview);
+            return error ClientError("GitHub Client Error", body = pullRequestReview);
         }
-        return error ClientError ("GitHub Client Error", body=addPullRequestReview);
+        return error ClientError("GitHub Client Error", body = addPullRequestReview);
     }
     return graphQlData;
 }
 
-isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePullRequestReviewInput, 
-                                          string accessToken, http:Client graphQlClient) returns @tainted Error? {
+isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePullRequestReviewInput,
+                                        string accessToken, http:Client graphQlClient) returns @tainted Error? {
 
     string stringQuery = getFormulatedStringQueryForUpdatePullRequestReview(updatePullRequestReviewInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {
         return graphQlData;
     }
-    return ;
+    return;
 }
 
-isolated function deletePendingPullRequestReview(DeletePullRequestReviewInput deletePullRequestReview, 
-                                                 string accessToken, http:Client graphQlClient) 
-                                                 returns @tainted Error? {
+isolated function deletePendingPullRequestReview(DeletePullRequestReviewInput deletePullRequestReview,
+                                                string accessToken, http:Client graphQlClient)
+                                                returns @tainted Error? {
     string stringQuery = getFormulatedStringQueryForDeletePullRequestReview(deletePullRequestReview);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {
         return graphQlData;
     }
-    return ;
+    return;
+}
+
+isolated function getLastCommit(string owner, string repositoryName, int pullRequestNumber, string accessToken,
+                                        http:Client graphQlClient) returns Commit|Error {
+
+    string stringQuery = getFormulatedStringQueryForGetLastCommit(owner, repositoryName, pullRequestNumber);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+
+    if graphQlData is map<json> {
+        json repository = graphQlData.get(GIT_REPOSITORY);
+        if repository is map<json> {
+            json pullRequest = repository.get(GIT_PULL_REQUEST);
+            if pullRequest is map<json> {
+                json commits = pullRequest.get(GIT_COMMITS);
+                if commits is map<json> {
+                    json commitList = commits.get(GIT_NODES);
+                    if commitList is json[] {
+                        json gitCommit = commitList[0];
+                        if gitCommit is map<json> {
+                            json lastCommit = gitCommit.get(GIT_COMMIT);
+                            if lastCommit is map<json> {
+                                Commit|error result = lastCommit.cloneWithType();
+                                return result is Commit ? result : error ClientError("GitHub Client Error while" +
+                                                                                    " clone with type.", result);
+                            }
+                            return error ClientError("GitHub Client Error while getting last commit",
+                                                     body = lastCommit);
+                        }
+                        return error ClientError("GitHub Client Error while getting commit object.", body = gitCommit);
+                    }
+                    return error ClientError("GitHub Client Error while getting commit lists", body = commitList);
+                }
+                return error ClientError("GitHub Client Erro while getting commit nodes.", body = commits);
+            }
+            return error ClientError("GitHub Client Errorwhile getting pull request", body = pullRequest);
+        }
+        return error ClientError("GitHub Client Error while getting repository.", body = repository);
+    }
+    return graphQlData;
 }

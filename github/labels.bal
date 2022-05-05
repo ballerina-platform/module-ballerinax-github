@@ -17,50 +17,50 @@
 import ballerina/http;
 
 // mutation is in preview state
-isolated function createLabel(CreateLabelInput createLabelInput, string accessToken, http:Client graphQlClient) 
-                              returns @tainted Error? {
+isolated function createLabel(CreateLabelInput createLabelInput, string accessToken, http:Client graphQlClient)
+                            returns @tainted Error? {
     string stringQuery = getFormulatedStringQueryForCreateLabel(createLabelInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {
         return graphQlData;
     }
-    return ;
+    return;
 }
 
-isolated function getLabel(string repositoryOwnerName, string repositoryName, string labelName, 
-                                     string accessToken, http:Client graphQlClient) returns @tainted Label|Error {
+isolated function getLabel(string repositoryOwnerName, string repositoryName, string labelName,
+                                    string accessToken, http:Client graphQlClient) returns @tainted Label|Error {
     string stringQuery = getFormulatedStringQueryForGetLabel(repositoryOwnerName, repositoryName, labelName);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var repository = graphQlData.get(GIT_REPOSITORY);
+        json repository = graphQlData.get(GIT_REPOSITORY);
         if (repository is map<json>) {
-            var label = repository.get(GIT_LABEL);
-            if(label is map<json>){
+            json label = repository.get(GIT_LABEL);
+            if (label is map<json>) {
                 Label|error labelObj = label.cloneWithType(Label);
-                return labelObj is Label? labelObj: error ClientError ("GitHub Client Error", labelObj);
+                return labelObj is Label ? labelObj : error ClientError("GitHub Client Error", labelObj);
             }
-            return error ClientError ("GitHub Client Error", body=label);
+            return error ClientError("GitHub Client Error", body = label);
         }
-        return error ClientError ("GitHub Client Error", body=repository);
+        return error ClientError("GitHub Client Error", body = repository);
     }
     return graphQlData;
 }
 
-isolated function getLabels(string repositoryOwnerName, string repositoryName, int issueNumber, 
-                                   int perPageCount, string accessToken, http:Client graphQlClient, 
-                                   string? nextPageToken=()) returns @tainted LabelList|Error {
-    string stringQuery = getFormulatedStringQueryForGetAllLabelsForAIssue(repositoryOwnerName, repositoryName, 
-                                                                          issueNumber, perPageCount, nextPageToken);
+isolated function getLabels(string repositoryOwnerName, string repositoryName, int issueNumber,
+                                    int perPageCount, string accessToken, http:Client graphQlClient,
+                                    string? nextPageToken = ()) returns @tainted LabelList|Error {
+    string stringQuery = getFormulatedStringQueryForGetAllLabelsForAIssue(repositoryOwnerName, repositoryName,
+                                                                        issueNumber, perPageCount, nextPageToken);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var repository = graphQlData.get(GIT_REPOSITORY);
+        json repository = graphQlData.get(GIT_REPOSITORY);
         if (repository is map<json>) {
-            var issue = repository.get(GIT_ISSUE);
-            if(issue is map<json>){
-                var labels = issue.get(GIT_LABELS);
-                if(labels is map<json>){
+            json issue = repository.get(GIT_ISSUE);
+            if (issue is map<json>) {
+                json labels = issue.get(GIT_LABELS);
+                if (labels is map<json>) {
                     LabelListPayload|error labelListResponse = labels.cloneWithType(LabelListPayload);
                     if labelListResponse is LabelListPayload {
                         LabelList labelList = {
@@ -70,48 +70,48 @@ isolated function getLabels(string repositoryOwnerName, string repositoryName, i
                         };
                         return labelList;
                     }
-                    return error ClientError ("GitHub Client Error", labelListResponse);
+                    return error ClientError("GitHub Client Error", labelListResponse);
                 }
-                return error ClientError ("GitHub Client Error", body=labels);
+                return error ClientError("GitHub Client Error", body = labels);
             }
-            return error ClientError ("GitHub Client Error", body=issue);
+            return error ClientError("GitHub Client Error", body = issue);
         }
-        return error ClientError ("GitHub Client Error", body=repository);
+        return error ClientError("GitHub Client Error", body = repository);
     }
     return graphQlData;
 }
 
-isolated function addLabels(AddLabelsInput addLabelsInput, string accessToken, 
-                                       http:Client graphQlClient) returns @tainted LabelList|Error {
+isolated function addLabels(AddLabelsInput addLabelsInput, string accessToken,
+                                        http:Client graphQlClient) returns @tainted LabelList|Error {
 
-    Issue issue = check getIssue(addLabelsInput.repositoryOwnerName, addLabelsInput.repositoryName, 
-                           addLabelsInput.issueNumber, accessToken, graphQlClient);
+    Issue issue = check getIssue(addLabelsInput.repositoryOwnerName, addLabelsInput.repositoryName,
+                            addLabelsInput.issueNumber, accessToken, graphQlClient);
 
     string[] labelIds = [];
     foreach string labelName in addLabelsInput.labelNames {
         Label label = check getLabel(addLabelsInput.repositoryOwnerName, addLabelsInput.repositoryName, labelName, accessToken, graphQlClient);
         labelIds.push(label.id);
     }
-    
+
     AddLabelsToLabelableInput addLabelsToLabelableInput = {
         labelableId: issue.id,
         labelIds: labelIds
     };
 
-    if (!(addLabelsInput?.clientMutationId is ())) { 
+    if (!(addLabelsInput?.clientMutationId is ())) {
         addLabelsToLabelableInput["clientMutationId"] = <string>addLabelsInput?.clientMutationId;
     }
 
     string stringQuery = getFormulatedStringQueryForAddLabelsToLabelable(addLabelsToLabelableInput);
-        map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var addLableToLabelable = graphQlData.get(GIT_ADD_LABLE_TO_LABELABLE);
+        json addLableToLabelable = graphQlData.get(GIT_ADD_LABLE_TO_LABELABLE);
         if (addLableToLabelable is map<json>) {
-            var labelable = addLableToLabelable.get(GIT_LABELABLE);
-            if(labelable is map<json>){
-                var labels = labelable.get(GIT_LABELS);
-                if(labels is map<json>){
+            json labelable = addLableToLabelable.get(GIT_LABELABLE);
+            if (labelable is map<json>) {
+                json labels = labelable.get(GIT_LABELS);
+                if (labels is map<json>) {
                     LabelListPayload|error labelListResponse = labels.cloneWithType(LabelListPayload);
                     if labelListResponse is LabelListPayload {
                         LabelList labelList = {
@@ -121,35 +121,35 @@ isolated function addLabels(AddLabelsInput addLabelsInput, string accessToken,
                         };
                         return labelList;
                     }
-                    return error ClientError ("GitHub Client Error", labelListResponse);
+                    return error ClientError("GitHub Client Error", labelListResponse);
                 }
-                return error ClientError ("GitHub Client Error", body=labels);
+                return error ClientError("GitHub Client Error", body = labels);
             }
-            return error ClientError ("GitHub Client Error", body=labelable);
+            return error ClientError("GitHub Client Error", body = labelable);
         }
-        return error ClientError ("GitHub Client Error", body=addLableToLabelable);
+        return error ClientError("GitHub Client Error", body = addLableToLabelable);
     }
     return graphQlData;
 }
 
-isolated function removeLabel(RemoveIssueLabelInput removeIssueLabelInput, 
-                                           string accessToken, http:Client graphQlClient) returns @tainted Error? {
+isolated function removeLabel(RemoveIssueLabelInput removeIssueLabelInput,
+                                            string accessToken, http:Client graphQlClient) returns @tainted Error? {
 
-    Issue issue = check getIssue(removeIssueLabelInput.repositoryOwnerName, removeIssueLabelInput.repositoryName, 
-                           removeIssueLabelInput.issueNumber, accessToken, graphQlClient);    
+    Issue issue = check getIssue(removeIssueLabelInput.repositoryOwnerName, removeIssueLabelInput.repositoryName,
+                            removeIssueLabelInput.issueNumber, accessToken, graphQlClient);
 
     string[] labelIds = [];
     foreach string labelName in removeIssueLabelInput.labelNames {
         Label label = check getLabel(removeIssueLabelInput.repositoryOwnerName, removeIssueLabelInput.repositoryName, labelName, accessToken, graphQlClient);
         labelIds.push(label.id);
-    }                                                                  
+    }
 
     RemoveLabelsFromLabelableInput removeLabelsFromLabelable = {
         labelableId: issue.id,
         labelIds: labelIds
     };
 
-    if (!(removeIssueLabelInput?.clientMutationId is ())) { 
+    if (!(removeIssueLabelInput?.clientMutationId is ())) {
         removeLabelsFromLabelable["clientMutationId"] = <string>removeIssueLabelInput?.clientMutationId;
     }
 
@@ -158,5 +158,5 @@ isolated function removeLabel(RemoveIssueLabelInput removeIssueLabelInput,
     if graphQlData is Error {
         return graphQlData;
     }
-    return ;
+    return;
 }

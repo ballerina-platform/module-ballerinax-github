@@ -456,6 +456,18 @@ function testGetPullRequest() returns @tainted Error? {
      }
 }
 
+@test:Config{
+    groups: ["network-calls"],
+    enable: true,
+    dependsOn: [testGetPullRequest]
+}
+function testLastCommit() returns Error? {
+    log:printInfo("Testing Last commit part from githubClient->getPullRequest");
+    PullRequest pullRequest = check githubClient->getPullRequest(testUsername, testUserRepositoryName,
+                                                                 createdPullRequestNumber);
+    test:assertTrue(pullRequest.lastCommit is Commit, "Issue in fetching last commit");
+}
+
 @test:Config {
     groups: ["network-calls"],
     enable: true
@@ -469,7 +481,7 @@ function testGetPullRequestList() returns @tainted Error? {
 @test:Config {
     groups: ["network-calls"],
     enable: true,
-    dependsOn: [testCreatePullRequest]
+    dependsOn: [testLastCommit]
 }
 function testUpdatePullRequest() returns @tainted Error? {
     log:printInfo("githubClient -> updatePullRequest()");
@@ -489,7 +501,8 @@ function testUpdatePullRequest() returns @tainted Error? {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: true
+    enable: true,
+    dependsOn: [testUpdatePullRequest]
 }
 function testUpdatePullRequestToClose() returns @tainted Error? {
     log:printInfo("githubClient -> updatePullRequest()");
