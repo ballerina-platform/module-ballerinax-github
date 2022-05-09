@@ -17,16 +17,16 @@
 import ballerina/http;
 
 isolated function addComment(AddIssueCommentInput addIssueCommentInput, string accessToken, http:Client graphQlClient)
-                             returns @tainted IssueComment|Error {
-   Issue issue = check getIssue(addIssueCommentInput.repositoryOwnerName, addIssueCommentInput.repositoryName,
-             addIssueCommentInput.issueNumber, accessToken, graphQlClient);
+                            returns @tainted IssueComment|Error {
+    Issue issue = check getIssue(addIssueCommentInput.repositoryOwnerName, addIssueCommentInput.repositoryName,
+            addIssueCommentInput.issueNumber, accessToken, graphQlClient);
 
     AddCommentInput addCommentInput = {
         subjectId: issue.id,
         body: addIssueCommentInput.body
     };
 
-    if (!(addIssueCommentInput?.clientMutationId is ())) { 
+    if (!(addIssueCommentInput?.clientMutationId is ())) {
         addCommentInput["clientMutationId"] = <string>addIssueCommentInput?.clientMutationId;
     }
 
@@ -34,41 +34,41 @@ isolated function addComment(AddIssueCommentInput addIssueCommentInput, string a
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var addComment = graphQlData.get(GIT_ADD_COMMENT);
+        json addComment = graphQlData.get(GIT_ADD_COMMENT);
         if (addComment is map<json>) {
-            var commentEdge = addComment.get(GIT_COMMENT_EDGE);
-            if(commentEdge is map<json>){
-                var node = commentEdge.get(GIT_NODE);
+            json commentEdge = addComment.get(GIT_COMMENT_EDGE);
+            if (commentEdge is map<json>) {
+                json node = commentEdge.get(GIT_NODE);
                 if node is map<json> {
                     IssueComment|error issueComment = node.cloneWithType(IssueComment);
-                    return issueComment is IssueComment? issueComment:
-                        error ClientError ("GitHub Client Error", issueComment);
+                    return issueComment is IssueComment ? issueComment :
+                        error ClientError("GitHub Client Error", issueComment);
                 }
-                return error ClientError ("GitHub Client Error", body=node);
+                return error ClientError("GitHub Client Error", body = node);
             }
-            return error ClientError ("GitHub Client Error", body=commentEdge);
+            return error ClientError("GitHub Client Error", body = commentEdge);
         }
-        return error ClientError ("GitHub Client Error", body=addComment);
+        return error ClientError("GitHub Client Error", body = addComment);
     }
     return graphQlData;
 }
 
-isolated function updateComment(UpdateIssueCommentInput updateCommentInput, string accessToken, 
+isolated function updateComment(UpdateIssueCommentInput updateCommentInput, string accessToken,
                                 http:Client graphQlClient) returns @tainted Error? {
     string stringQuery = getFormulatedStringQueryForUpdateIssueComment(updateCommentInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {
         return graphQlData;
     }
-    return ;
+    return;
 }
 
-isolated function deleteComment(DeleteIssueCommentInput deleteCommentInput, string accessToken, 
+isolated function deleteComment(DeleteIssueCommentInput deleteCommentInput, string accessToken,
                                 http:Client graphQlClient) returns @tainted Error? {
     string stringQuery = getFormulatedStringQueryForDeleteIssueComment(deleteCommentInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {
         return graphQlData;
     }
-    return ;
+    return;
 }

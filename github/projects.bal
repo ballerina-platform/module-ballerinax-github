@@ -16,39 +16,39 @@
 
 import ballerina/http;
 
-isolated function getOrganizationProjectList(string organizationName, ProjectState? state, int perPageCount, 
-                                             string accessToken, http:Client graphQlClient, string? nextPageCursor=()) 
-                                             returns @tainted ProjectList|Error {
-    string stringQuery = getFormulatedStringQueryForOrgProjectList(organizationName, state, perPageCount, 
-                                                                   nextPageCursor);
+isolated function getOrganizationProjectList(string organizationName, ProjectState? state, int perPageCount,
+                                            string accessToken, http:Client graphQlClient, string? nextPageCursor = ())
+                                            returns @tainted ProjectList|Error {
+    string stringQuery = getFormulatedStringQueryForOrgProjectList(organizationName, state, perPageCount,
+                                                                    nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var org = graphQlData.get(GIT_ORGANIZATION);
+        json org = graphQlData.get(GIT_ORGANIZATION);
         if (org is map<json>) {
-            var projects = org.get(GIT_PROJECTS);
-            if(projects is map<json>){
+            json projects = org.get(GIT_PROJECTS);
+            if (projects is map<json>) {
                 ProjectListPayload|error projectListResponse = projects.cloneWithType(ProjectListPayload);
                 if projectListResponse is ProjectListPayload {
                     ProjectList projectList = {
                         projects: projectListResponse.nodes,
                         pageInfo: projectListResponse.pageInfo,
-                        totalCount: projectListResponse.totalCount 
+                        totalCount: projectListResponse.totalCount
                     };
                     return projectList;
                 }
-                return error ClientError ("GitHub Client Error", projectListResponse);
+                return error ClientError("GitHub Client Error", projectListResponse);
             }
-            return error ClientError ("GitHub Client Error", body=projects);
+            return error ClientError("GitHub Client Error", body = projects);
         }
-        return error ClientError ("GitHub Client Error", body=org);
+        return error ClientError("GitHub Client Error", body = org);
     }
     return graphQlData;
 }
 
-isolated function createProject(CreateRepositoryProjectInput createRepositoryProjectInput, string accessToken, http:Client graphQlClient) 
+isolated function createProject(CreateRepositoryProjectInput createRepositoryProjectInput, string accessToken, http:Client graphQlClient)
                                 returns @tainted Project|Error {
-    
+
     string userId = check getUserId(createRepositoryProjectInput.ownerName, accessToken, graphQlClient);
 
     CreateProjectInput createProjectInput = {
@@ -57,7 +57,7 @@ isolated function createProject(CreateRepositoryProjectInput createRepositoryPro
     };
     do {
         string[] repositoryIds = [];
-        if (!(createRepositoryProjectInput?.repositoryNames is ())) { 
+        if (!(createRepositoryProjectInput?.repositoryNames is ())) {
             foreach string repositoryName in <string[]>createRepositoryProjectInput?.repositoryNames {
                 Repository repository = check getRepository(createRepositoryProjectInput.ownerName, repositoryName, accessToken, graphQlClient);
                 repositoryIds.push(repository.id);
@@ -65,15 +65,15 @@ isolated function createProject(CreateRepositoryProjectInput createRepositoryPro
             createProjectInput["repositoryIds"] = repositoryIds;
         }
 
-        if (!(createRepositoryProjectInput?.body is ())) { 
+        if (!(createRepositoryProjectInput?.body is ())) {
             createProjectInput["body"] = <string>createRepositoryProjectInput?.body;
         }
 
-        if (!(createRepositoryProjectInput?.template is ())) { 
+        if (!(createRepositoryProjectInput?.template is ())) {
             createProjectInput["template"] = <ProjectTemplate>createRepositoryProjectInput?.template;
         }
 
-        if (!(createRepositoryProjectInput?.clientMutationId is ())) { 
+        if (!(createRepositoryProjectInput?.clientMutationId is ())) {
             createProjectInput["clientMutationId"] = <string>createRepositoryProjectInput?.clientMutationId;
         }
     } on fail var e {
@@ -81,131 +81,131 @@ isolated function createProject(CreateRepositoryProjectInput createRepositoryPro
     }
 
     string stringQuery = getFormulatedStringQueryForCreateProject(createProjectInput);
-    
+
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var createProject = graphQlData.get(GIT_CREATE_PROJECT);
+        json createProject = graphQlData.get(GIT_CREATE_PROJECT);
         if (createProject is map<json>) {
-            var project = createProject.get(GIT_PROJECT);
+            json project = createProject.get(GIT_PROJECT);
             if project is map<json> {
                 Project|error createdProject = project.cloneWithType(Project);
-                return createdProject is Project? createdProject : 
-                    error ClientError ("GitHub Client Error", createdProject);
-            }              
-            return error ClientError ("GitHub Client Error", body=project);
+                return createdProject is Project ? createdProject :
+                    error ClientError("GitHub Client Error", createdProject);
+            }
+            return error ClientError("GitHub Client Error", body = project);
         }
-        return error ClientError ("GitHub Client Error", body=createProject);
+        return error ClientError("GitHub Client Error", body = createProject);
     }
     return graphQlData;
 }
 
-isolated function getProject(string username, int projectNumber, string accessToken, http:Client graphQlClient) 
-                                 returns @tainted Project|Error {
+isolated function getProject(string username, int projectNumber, string accessToken, http:Client graphQlClient)
+                                returns @tainted Project|Error {
     string stringQuery = getFormulatedStringQueryForGetAProject(username, projectNumber);
-        map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var user = graphQlData.get(GIT_USER);
+        json user = graphQlData.get(GIT_USER);
         if (user is map<json>) {
-            var project = user.get(GIT_PROJECT);
+            json project = user.get(GIT_PROJECT);
             if project is map<json> {
                 Project|error userProject = project.cloneWithType(Project);
-                return userProject is Project? userProject : 
-                    error ClientError ("GitHub Client Error", userProject);
-            }              
-            return error ClientError ("GitHub Client Error", body=project);
+                return userProject is Project ? userProject :
+                    error ClientError("GitHub Client Error", userProject);
+            }
+            return error ClientError("GitHub Client Error", body = project);
         }
-        return error ClientError ("GitHub Client Error", body=user);
+        return error ClientError("GitHub Client Error", body = user);
     }
     return graphQlData;
 }
 
-isolated function updateProject(UpdateProjectInput updateProjectInput, string accessToken, http:Client graphQlClient) 
+isolated function updateProject(UpdateProjectInput updateProjectInput, string accessToken, http:Client graphQlClient)
                                 returns @tainted Project|Error {
     string stringQuery = getFormulatedStringQueryForUpdateProject(updateProjectInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var updateProject = graphQlData.get(GIT_UPDATE_PROJECT);
+        json updateProject = graphQlData.get(GIT_UPDATE_PROJECT);
         if (updateProject is map<json>) {
-            var project = updateProject.get(GIT_PROJECT);
+            json project = updateProject.get(GIT_PROJECT);
             if project is map<json> {
                 Project|error updatedProject = project.cloneWithType(Project);
-                return updatedProject is Project? updatedProject : 
-                    error ClientError ("GitHub Client Error", updatedProject);
-            }              
-            return error ClientError ("GitHub Client Error", body=project);
+                return updatedProject is Project ? updatedProject :
+                    error ClientError("GitHub Client Error", updatedProject);
+            }
+            return error ClientError("GitHub Client Error", body = project);
         }
-        return error ClientError ("GitHub Client Error", body=updateProject);
+        return error ClientError("GitHub Client Error", body = updateProject);
     }
     return graphQlData;
 }
 
-isolated function deleteProject(DeleteProjectInput deleteProjectInput, string accessToken, http:Client graphQlClient) 
+isolated function deleteProject(DeleteProjectInput deleteProjectInput, string accessToken, http:Client graphQlClient)
                                 returns @tainted Error? {
     string stringQuery = getFormulatedStringQueryForDeleteProject(deleteProjectInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {
         return graphQlData;
     }
-    return ;
+    return;
 }
 
-isolated function getRepositoryProjectList(string repositoryOwner, string repositoryName, ProjectState? state, 
-                                           int perPageCount, string accessToken, http:Client graphQlClient, 
-                                           string? nextPageCursor=()) returns @tainted ProjectList|Error {
-    string stringQuery = getFormulatedStringQueryForRepositoryProjectList(repositoryOwner, repositoryName, state, 
-                                                                          perPageCount, nextPageCursor);
+isolated function getRepositoryProjectList(string repositoryOwner, string repositoryName, ProjectState? state,
+                                            int perPageCount, string accessToken, http:Client graphQlClient,
+                                            string? nextPageCursor = ()) returns @tainted ProjectList|Error {
+    string stringQuery = getFormulatedStringQueryForRepositoryProjectList(repositoryOwner, repositoryName, state,
+                                                                        perPageCount, nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var repo = graphQlData.get(GIT_REPOSITORY);
+        json repo = graphQlData.get(GIT_REPOSITORY);
         if (repo is map<json>) {
-            var projects = repo.get(GIT_PROJECTS);
-            if(projects is map<json>){
+            json projects = repo.get(GIT_PROJECTS);
+            if (projects is map<json>) {
                 ProjectListPayload|error projectListResponse = projects.cloneWithType(ProjectListPayload);
                 if projectListResponse is ProjectListPayload {
                     ProjectList projectList = {
                         projects: projectListResponse.nodes,
                         pageInfo: projectListResponse.pageInfo,
-                        totalCount: projectListResponse.totalCount 
+                        totalCount: projectListResponse.totalCount
                     };
                     return projectList;
                 }
-                return error ClientError ("GitHub Client Error", projectListResponse);
+                return error ClientError("GitHub Client Error", projectListResponse);
             }
-            return error ClientError ("GitHub Client Error", body=projects);
+            return error ClientError("GitHub Client Error", body = projects);
         }
-        return error ClientError ("GitHub Client Error", body=repo);
+        return error ClientError("GitHub Client Error", body = repo);
     }
     return graphQlData;
 }
 
 isolated function getUserProjectList(string username, int perPageCount, string accessToken, http:Client graphQlClient,
-                                     string? nextPageCursor=()) returns @tainted ProjectList|Error {
+                                    string? nextPageCursor = ()) returns @tainted ProjectList|Error {
     string stringQuery = getFormulatedStringQueryForGetUserProjectList(username, perPageCount, nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
-        var user = graphQlData.get(GIT_USER);
+        json user = graphQlData.get(GIT_USER);
         if (user is map<json>) {
-            var projects = user.get(GIT_PROJECTS);
-            if(projects is map<json>){
+            json projects = user.get(GIT_PROJECTS);
+            if (projects is map<json>) {
                 ProjectListPayload|error projectListResponse = projects.cloneWithType(ProjectListPayload);
                 if projectListResponse is ProjectListPayload {
                     ProjectList projectList = {
                         projects: projectListResponse.nodes,
                         pageInfo: projectListResponse.pageInfo,
-                        totalCount: projectListResponse.totalCount 
+                        totalCount: projectListResponse.totalCount
                     };
                     return projectList;
                 }
-                return error ClientError ("GitHub Client Error", projectListResponse);
+                return error ClientError("GitHub Client Error", projectListResponse);
             }
-            return error ClientError ("GitHub Client Error", body=projects);
+            return error ClientError("GitHub Client Error", body = projects);
         }
-        return error ClientError ("GitHub Client Error", body=user);
+        return error ClientError("GitHub Client Error", body = user);
     }
     return graphQlData;
 }

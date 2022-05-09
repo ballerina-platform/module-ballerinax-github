@@ -20,6 +20,8 @@ final string GIT_GRAPHQL_API_URL = "https://api.github.com/graphql";
 // String constants
 final string GIT_CARDS = "cards";
 final string GIT_COLUMNS = "columns";
+final string GIT_COMMIT = "commit";
+final string GIT_COMMITS = "commits";
 final string GIT_DATA = "data";
 final string GIT_EDGES = "edges";
 final string GIT_END_CURSOR = "endCursor";
@@ -70,6 +72,7 @@ final string GIT_COMMENT_EDGE = "commentEdge";
 final string GIT_LABEL = "label";
 final string GIT_LABELS = "labels";
 final string GIT_LABELABLE = "labelable";
+final string GIT_LANGUAGES = "languages";
 final string GIT_ADD_LABLE_TO_LABELABLE = "addLabelsToLabelable";
 final string GIT_MILESTONES = "milestones";
 final string GIT_MILESTONE = "milestone";

@@ -78,9 +78,11 @@ public type User record {
 public type ViewrRwcord record {
     User viewer;
 };
+
 public type Resp record {
     ViewrRwcord data;
 };
+
 # Represent GitHub repository owner
 #
 # + id - ID
@@ -103,101 +105,103 @@ public type RepositoryOwner record {
 # + url - The HTTP URL for this actor.
 # + avatarUrl - A URL pointing to the actor's public avatar.
 public type Actor record {
-   string login;
-   string resourcePath?;
-   string url?;
-   string avatarUrl?;
+    string login;
+    string resourcePath?;
+    string url?;
+    string avatarUrl?;
 };
 
 # Represent GitHub repository.
 #
-# + createdAt - Identifies the date and time when the object was created.
-# + databaseId - Identifies the primary key from the database.
-# + deleteBranchOnMerge - Whether or not branches are automatically deleted when merged in this repository.
-# + description - The description of the repository.
-# + descriptionHTML - The description of the repository rendered to HTML.
-# + diskUsage - The number of kilobytes this repository occupies on disk.
-# + forkCount - Returns how many forks there are of this repository in the whole network.
-# + hasIssuesEnabled - Indicates if the repository has issues feature enabled.
-# + hasProjectsEnabled - Indicates if the repository has the Projects feature enabled.
-# + hasWikiEnabled - Indicates if the repository has wiki feature enabled.
-# + homepageUrl - The repository's URL.
-# + id - ID
-# + isArchived - Indicates if the repository is unmaintained.
-# + isBlankIssuesEnabled - Returns true if blank issue creation is allowed
-# + isDisabled - Returns whether or not this repository disabled.
-# + isEmpty - Returns whether or not this repository is empty.
-# + isFork - Identifies if the repository is a fork.
-# + isInOrganization - Indicates if a repository is either owned by an organization, or is a private fork of an organization repository.
-# + isLocked - Indicates if the repository has been locked or not.
-# + isMirror - Identifies if the repository is a mirror.
-# + isPrivate - Identifies if the repository is private or internal.
-# + isSecurityPolicyEnabled - Returns true if this repository has a security policy
-# + isTemplate - Identifies if the repository is a template that can be used to generate new repositories.
-# + isUserConfigurationRepository - Is this repository a user configuration repository?
-# + mergeCommitAllowed - Whether or not PRs are merged with a merge commit on this repository.
-# + mirrorUrl - The repository's original mirror URL.
-# + name - The name of the repository.
-# + nameWithOwner - The repository's name with owner.
-# + owner - The User owner of the repository.
-# + projectsResourcePath - The HTTP path listing the repository's projects
-# + projectsUrl - The HTTP URL listing the repository's projects
-# + pushedAt - Identifies when the repository was last pushed to.
-# + rebaseMergeAllowed - Whether or not rebase-merging is enabled on this repository.
-# + resourcePath - The HTTP path for this repository
-# + securityPolicy - The security policy URL.
-# + sshUrl - The SSH URL to clone this repository
-# + stargazerCount - Returns a count of how many stargazers there are on this object
-# + tempCloneToken - Temporary authentication token for cloning this repository.
-# + updatedAt - Identifies the date and time when the object was last updated.
-# + url - The HTTP URL for this repository
-# + viewerCanAdminister - Indicates whether the viewer has admin permissions on this repository.
-# + viewerCanCreateProjects - Can the current viewer create new projects on this owner.
-# + viewerCanSubscribe - Check if the viewer is able to change their subscription status for the repository.
+# + createdAt - Identifies the date and time when the object was created.  
+# + databaseId - Identifies the primary key from the database.  
+# + deleteBranchOnMerge - Whether or not branches are automatically deleted when merged in this repository.  
+# + description - The description of the repository.  
+# + descriptionHTML - The description of the repository rendered to HTML.  
+# + diskUsage - The number of kilobytes this repository occupies on disk.  
+# + forkCount - Returns how many forks there are of this repository in the whole network.  
+# + hasIssuesEnabled - Indicates if the repository has issues feature enabled.  
+# + hasProjectsEnabled - Indicates if the repository has the Projects feature enabled.  
+# + hasWikiEnabled - Indicates if the repository has wiki feature enabled.  
+# + homepageUrl - The repository's URL.  
+# + id - ID  
+# + isArchived - Indicates if the repository is unmaintained.  
+# + isBlankIssuesEnabled - Returns true if blank issue creation is allowed  
+# + isDisabled - Returns whether or not this repository disabled.  
+# + isEmpty - Returns whether or not this repository is empty.  
+# + isFork - Identifies if the repository is a fork.  
+# + isInOrganization - Indicates if a repository is either owned by an organization, or is a private fork of an organization repository.  
+# + isLocked - Indicates if the repository has been locked or not.  
+# + isMirror - Identifies if the repository is a mirror.  
+# + isPrivate - Identifies if the repository is private or internal.  
+# + isSecurityPolicyEnabled - Returns true if this repository has a security policy  
+# + isTemplate - Identifies if the repository is a template that can be used to generate new repositories.  
+# + isUserConfigurationRepository - Is this repository a user configuration repository?  
+# + mergeCommitAllowed - Whether or not PRs are merged with a merge commit on this repository.  
+# + mirrorUrl - The repository's original mirror URL.  
+# + name - The name of the repository.  
+# + nameWithOwner - The repository's name with owner.  
+# + owner - The User owner of the repository.  
+# + projectsResourcePath - The HTTP path listing the repository's projects  
+# + projectsUrl - The HTTP URL listing the repository's projects  
+# + pushedAt - Identifies when the repository was last pushed to.  
+# + rebaseMergeAllowed - Whether or not rebase-merging is enabled on this repository.  
+# + resourcePath - The HTTP path for this repository  
+# + securityPolicy - The security policy URL.  
+# + sshUrl - The SSH URL to clone this repository  
+# + stargazerCount - Returns a count of how many stargazers there are on this object  
+# + tempCloneToken - Temporary authentication token for cloning this repository.  
+# + updatedAt - Identifies the date and time when the object was last updated.  
+# + url - The HTTP URL for this repository  
+# + viewerCanAdminister - Indicates whether the viewer has admin permissions on this repository.  
+# + viewerCanCreateProjects - Can the current viewer create new projects on this owner.  
+# + viewerCanSubscribe - Check if the viewer is able to change their subscription status for the repository.  
+# + languages - A list containing a breakdown of the language composition of the repository.
 public type Repository record {
-  string createdAt;
-  int? databaseId?;
-  boolean deleteBranchOnMerge?;
-  string? description?;
-  string descriptionHTML?;
-  int? diskUsage?;
-  int forkCount?;
-  boolean hasIssuesEnabled?;
-  boolean hasProjectsEnabled?;
-  boolean hasWikiEnabled?;
-  string? homepageUrl?;
-  string id;
-  boolean isArchived?;
-  boolean isBlankIssuesEnabled?;
-  boolean isDisabled?;
-  boolean isEmpty?;
-  boolean isFork?;
-  boolean isInOrganization?;
-  boolean isLocked?;
-  boolean isMirror?;
-  boolean isPrivate?;
-  boolean? isSecurityPolicyEnabled?;
-  boolean isTemplate?;
-  boolean isUserConfigurationRepository?;
-  boolean mergeCommitAllowed?;
-  string? mirrorUrl?;
-  string name;
-  string nameWithOwner;
-  RepositoryOwner owner;
-  string projectsResourcePath?;
-  string projectsUrl?;
-  string? pushedAt?;
-  boolean rebaseMergeAllowed?;
-  string resourcePath?;
-  string? securityPolicy?;
-  string sshUrl?;
-  int stargazerCount?;
-  string? tempCloneToken?;
-  string updatedAt?;
-  string url?;
-  boolean viewerCanAdminister?;
-  boolean viewerCanCreateProjects?;
-  boolean viewerCanSubscribe?;
+    string createdAt;
+    int? databaseId?;
+    boolean deleteBranchOnMerge?;
+    string? description?;
+    string descriptionHTML?;
+    int? diskUsage?;
+    int forkCount?;
+    boolean hasIssuesEnabled?;
+    boolean hasProjectsEnabled?;
+    boolean hasWikiEnabled?;
+    string? homepageUrl?;
+    string id;
+    boolean isArchived?;
+    boolean isBlankIssuesEnabled?;
+    boolean isDisabled?;
+    boolean isEmpty?;
+    boolean isFork?;
+    boolean isInOrganization?;
+    boolean isLocked?;
+    boolean isMirror?;
+    boolean isPrivate?;
+    boolean? isSecurityPolicyEnabled?;
+    boolean isTemplate?;
+    boolean isUserConfigurationRepository?;
+    boolean mergeCommitAllowed?;
+    string? mirrorUrl?;
+    string name;
+    string nameWithOwner;
+    RepositoryOwner owner;
+    string projectsResourcePath?;
+    string projectsUrl?;
+    string? pushedAt?;
+    boolean rebaseMergeAllowed?;
+    string resourcePath?;
+    string? securityPolicy?;
+    string sshUrl?;
+    int stargazerCount?;
+    string? tempCloneToken?;
+    string updatedAt?;
+    string url?;
+    boolean viewerCanAdminister?;
+    boolean viewerCanCreateProjects?;
+    boolean viewerCanSubscribe?;
+    Language[] languages?;
 };
 
 # Represent GitHub branch.
@@ -206,9 +210,9 @@ public type Repository record {
 # + name - Name of the branch
 # + prefix - GitHub reference prefix
 public type Branch record {
-  string id;
-  string name;
-  string prefix;
+    string id;
+    string name;
+    string prefix;
 };
 
 # Represent GitHub issue.
@@ -419,6 +423,7 @@ public type Ref record {
 # + title - Identifies the pull request title.  
 # + updatedAt - Identifies the date and time when the object was last updated.  
 # + url - The HTTP URL for this pull request.  
+# + lastCommit - Commit details of the last commit
 # + pullRequestReviews - PR review comments
 public type PullRequest record {
     int additions?;
@@ -455,6 +460,7 @@ public type PullRequest record {
     string title?;
     string updatedAt?;
     string url?;
+    Commit lastCommit?;
     PullRequestReview[] pullRequestReviews?;
 };
 
@@ -487,7 +493,7 @@ public enum ProjectState {
 # + USER - The user type.
 # + ORGANIZATION - The organization type.
 public enum OwnerType {
-    GITHUB_USER = "user" ,
+    GITHUB_USER = "user",
     GITHUB_ORGANIZATION = "organization"
 }
 
@@ -589,7 +595,6 @@ public type RepositoryList record {
     PageInfo pageInfo;
     int totalCount;
 };
-
 
 # Represent GitHub collaborator list.
 #
@@ -770,7 +775,7 @@ public type PullRequestReviewList record {
 };
 
 # Represent GitHub project list.
-# 
+#
 # + nodes - Project list
 # + pageInfo - Response pagination info.
 # + totalCount - Total projects count.
@@ -781,7 +786,7 @@ public type ProjectListPayload record {
 };
 
 # Represent GitHub project list.
-# 
+#
 # + projects - Project list
 # + pageInfo - Response pagination info.
 # + totalCount - Total projects count.
@@ -836,8 +841,8 @@ public type UserList record {
 };
 
 # Represents the Github Client Connector Endpoint configuration.
-# 
-@display{label: "Connection Config"}
+#
+@display {label: "Connection Config"}
 public type ConnectionConfig record {|
     # Configurations related to client authentication
     http:BearerTokenConfig auth;
@@ -867,12 +872,12 @@ public type ConnectionConfig record {|
     http:CookieConfig? cookieConfig = ();
     # Configurations associated with inbound response size limits
     http:ResponseLimitConfigs responseLimits = {};
-    #SSL/TLS-related options
+    # SSL/TLS-related options
     http:ClientSecureSocket? secureSocket = ();
 |};
 
 # Represent repository visibility types
-# 
+#
 # + PRIVATE_REPOSITORY - The repository is visible only to anyone
 # + PUBLIC_REPOSITORY - The repository is visible only to those with explicit access.
 # + INTERNAL_REPOSITORY - The repository is visible only to users in the same business.
@@ -918,23 +923,23 @@ public type CreateRepositoryInput record {
 # + repositoryId - The ID of the repository to update.
 # + template - Whether this repository should be marked as a template such that anyone who can access it can create new repositories with the same files and directory structure.
 public type UpdateRepositoryInput record {
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
-    @display { label: "Description" }
+    @display {label: "Description"}
     string description?;
-    @display { label: "Has Issues Enabled" }
+    @display {label: "Has Issues Enabled"}
     boolean hasIssuesEnabled?;
-    @display { label: "Has Project Boards Enabled" }
+    @display {label: "Has Project Boards Enabled"}
     boolean hasProjectsEnabled?;
-    @display { label: "Has Wiki Enabled" }
+    @display {label: "Has Wiki Enabled"}
     boolean hasWikiEnabled?;
-    @display { label: "Home Page URL" }
+    @display {label: "Home Page URL"}
     string homePageUrl?;
-    @display { label: "Name" }
+    @display {label: "Name"}
     string name?;
-    @display { label: "Repository Id" }
+    @display {label: "Repository Id"}
     string repositoryId?;
-    @display { label: "Template" }
+    @display {label: "Template"}
     boolean template?;
 };
 
@@ -949,21 +954,21 @@ public type UpdateRepositoryInput record {
 # + issueTemplate - The name of an issue template in the repository, assigns labels and assignees from the template to the issue
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type CreateIssueInput record {
-    @display { label: "Title" }
+    @display {label: "Title"}
     string title;
-    @display { label: "Body" }
+    @display {label: "Body"}
     string body?;
-    @display { label: "Assignee Names" }
+    @display {label: "Assignee Names"}
     string[] assigneeNames?;
-    @display { label: "Milestone Id" }
+    @display {label: "Milestone Id"}
     string milestoneId?;
-    @display { label: "Label Names" }
+    @display {label: "Label Names"}
     string[] labelNames?;
-    @display { label: "Project Ids" }
+    @display {label: "Project Ids"}
     string[] projectIds?;
-    @display { label: "Issue Template" }
+    @display {label: "Issue Template"}
     string issueTemplate?;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1002,23 +1007,23 @@ public type CreateIssueInputPayload record {
 # + projectIds - An array of Node IDs for projects associated with this issue.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type UpdateIssueInput record {
-    @display { label: "Id" }
+    @display {label: "Id"}
     string id?;
-    @display { label: "Issue Title" }
+    @display {label: "Issue Title"}
     string title?;
-    @display { label: "Issue Description" }
+    @display {label: "Issue Description"}
     string body?;
-    @display { label: "Assignee Names" }
+    @display {label: "Assignee Names"}
     string[] assigneeNames?;
-    @display { label: "Milestone Ids" }
+    @display {label: "Milestone Ids"}
     string milestoneId?;
-    @display { label: "Label Names" }
+    @display {label: "Label Names"}
     string[] labelNames?;
-    @display { label: "State" }
+    @display {label: "State"}
     IssueState state?;
-    @display { label: "Project Ids" }
+    @display {label: "Project Ids"}
     string[] projectIds?;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1050,8 +1055,8 @@ public type UpdateIssueInputPayload record {
 # + ISSUE_OPEN - An issue that is still open
 # + ISSUE_CLOSED - An issue that has been closed
 public enum IssueState {
-    ISSUE_OPEN="OPEN",
-    ISSUE_CLOSED="CLOSED"
+    ISSUE_OPEN = "OPEN",
+    ISSUE_CLOSED = "CLOSED"
 }
 
 # Represent add comment input payload.
@@ -1072,15 +1077,15 @@ public type AddCommentInput record {
 # + body - The contents of the comment.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type AddIssueCommentInput record {
-    @display { label: "Repository Owner Name" }
+    @display {label: "Repository Owner Name"}
     string repositoryOwnerName;
-    @display { label: "Repository Name" }
+    @display {label: "Repository Name"}
     string repositoryName;
-    @display { label: "Issue Number" }
+    @display {label: "Issue Number"}
     int issueNumber;
-    @display { label: "Body" }
+    @display {label: "Body"}
     string body;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1090,11 +1095,11 @@ public type AddIssueCommentInput record {
 # + body - The updated text of the comment.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type UpdateIssueCommentInput record {
-    @display { label: "Issue Comment Id" }
+    @display {label: "Issue Comment Id"}
     string id;
-    @display { label: "Comment Text" }
+    @display {label: "Comment Text"}
     string body;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1103,9 +1108,9 @@ public type UpdateIssueCommentInput record {
 # + id - The ID of the comment to delete.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type DeleteIssueCommentInput record {
-    @display { label: "Issue Comment Id" }
+    @display {label: "Issue Comment Id"}
     string id;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1117,15 +1122,15 @@ public type DeleteIssueCommentInput record {
 # + repositoryId - Node ID of the repository where this label needs to be created
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type CreateLabelInput record {
-    @display { label: "Name" }
+    @display {label: "Name"}
     string name;
-    @display { label: "Description" }
+    @display {label: "Description"}
     string description;
-    @display { label: "Color" }
+    @display {label: "Color"}
     string color;
-    @display { label: "Repository Id" }
+    @display {label: "Repository Id"}
     string repositoryId;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1137,15 +1142,15 @@ public type CreateLabelInput record {
 # + color - Color of the label
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type UpdateLabelInput record {
-    @display { label: "Label Id" }
+    @display {label: "Label Id"}
     string id;
-    @display { label: "Name" }
+    @display {label: "Name"}
     string name?;
-    @display { label: "Description" }
+    @display {label: "Description"}
     string description?;
-    @display { label: "Color" }
+    @display {label: "Color"}
     string color?;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1154,9 +1159,9 @@ public type UpdateLabelInput record {
 # + id - Node ID of the label
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type DeleteLabelInput record {
-    @display { label: "Label Id" }
+    @display {label: "Label Id"}
     string id;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1179,15 +1184,15 @@ public type AddLabelsToLabelableInput record {
 # + labelNames - Repository label name
 # + clientMutationId - A unique identifier for the client performing the mutation. 
 public type AddLabelsInput record {
-    @display { label: "Repository Owner Name" }
+    @display {label: "Repository Owner Name"}
     string repositoryOwnerName;
-    @display { label: "Repository Name" }
+    @display {label: "Repository Name"}
     string repositoryName;
-    @display { label: "Issue Number" }
+    @display {label: "Issue Number"}
     int issueNumber;
-    @display { label: "Label Names" }
+    @display {label: "Label Names"}
     string[] labelNames;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1199,15 +1204,15 @@ public type AddLabelsInput record {
 # + labelNames - Array of existing label names of the issue to be removed
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type RemoveIssueLabelInput record {
-    @display { label: "Repository Owner Name" }
+    @display {label: "Repository Owner Name"}
     string repositoryOwnerName;
-    @display { label: "Repository Name" }
+    @display {label: "Repository Name"}
     string repositoryName;
-    @display { label: "Issue Number" }
+    @display {label: "Issue Number"}
     int issueNumber;
-    @display { label: "Label Names" }
+    @display {label: "Label Names"}
     string[] labelNames;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1233,21 +1238,21 @@ public type RemoveLabelsFromLabelableInput record {
 # + draft - Indicates whether this pull request should be a draft.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type CreatePullRequestInput record {
-    @display { label: "Repository Id" }
+    @display {label: "Repository Id"}
     string repositoryId?;
-    @display { label: "Title" }
+    @display {label: "Title"}
     string title;
-    @display { label: "Base Ref Name" }
+    @display {label: "Base Ref Name"}
     string baseRefName;
-    @display { label: "Head Ref Name" }
+    @display {label: "Head Ref Name"}
     string headRefName;
-    @display { label: "Body" }
+    @display {label: "Body"}
     string body?;
-    @display { label: "Maintainer Can Modify" }
+    @display {label: "Maintainer Can Modify"}
     boolean maintainerCanModify = false;
-    @display { label: "Fraft" }
+    @display {label: "Fraft"}
     boolean draft = false;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1265,27 +1270,27 @@ public type CreatePullRequestInput record {
 # + projectIds - An array of Node IDs for projects associated with this pull request.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type UpdatePullRequestInput record {
-    @display { label: "Pull Request Id" }
+    @display {label: "Pull Request Id"}
     string pullRequestId?;
-    @display { label: "Base Ref Name" }
+    @display {label: "Base Ref Name"}
     string baseRefName?;
-    @display { label: "Title" }
+    @display {label: "Title"}
     string title?;
-    @display { label: "Pull Request Content" }
+    @display {label: "Pull Request Content"}
     string body?;
-    @display { label: "State" }
+    @display {label: "State"}
     PullRequestState state?;
-    @display { label: "Maintainer Can Modify" }
+    @display {label: "Maintainer Can Modify"}
     boolean maintainerCanModify?;
-    @display { label: "Assignee Names" }
+    @display {label: "Assignee Names"}
     string[] assigneeNames?;
-    @display { label: "Milestone Id" }
+    @display {label: "Milestone Id"}
     string milestoneId?;
-    @display { label: "Label Names" }
+    @display {label: "Label Names"}
     string[] labelNames?;
-    @display { label: "Project Ids" }
+    @display {label: "Project Ids"}
     string[] projectIds?;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1321,8 +1326,8 @@ public type UpdatePullRequestInputPayload record {
 # + PULL_REQUEST_OPEN - A pull request that is still open.
 # + PULL_REQUEST_CLOSED - A pull request that has been closed without being merged.
 public enum PullRequestState {
-    PULL_REQUEST_OPEN="OPEN",
-    PULL_REQUEST_CLOSED="CLOSED",
+    PULL_REQUEST_OPEN = "OPEN",
+    PULL_REQUEST_CLOSED = "CLOSED",
     PULL_REQUEST_MERGED = "MERGED"
 }
 
@@ -1336,19 +1341,19 @@ public enum PullRequestState {
 # + threads - The review line comment threads.
 # + clientMutationId - A unique identifier for the client performing the mutation. A unique identifier for the client performing the mutation.
 public type AddPullRequestReviewInput record {
-    @display { label: "Pull Request Id" }
+    @display {label: "Pull Request Id"}
     string pullRequestId?;
-    @display { label: "Commit OID" }
+    @display {label: "Commit OID"}
     string commitOID?;
-    @display { label: "Body" }
+    @display {label: "Body"}
     string body?;
-    @display { label: "Event" }
+    @display {label: "Event"}
     PullRequestReviewEvent event?;
-    @display { label: "Review Comments" }
+    @display {label: "Review Comments"}
     DraftPullRequestReviewComment[] comments?;
-    @display { label: "Pull Request Review Threads" }
+    @display {label: "Pull Request Review Threads"}
     DraftPullRequestReviewThread[] threads?;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1358,11 +1363,11 @@ public type AddPullRequestReviewInput record {
 # + position - Position in the file to leave a comment on.
 # + body - Body of the comment to leave.
 public type DraftPullRequestReviewComment record {
-    @display { label: "Path" }
+    @display {label: "Path"}
     string path;
-    @display { label: "Position" }
+    @display {label: "Position"}
     int position;
-    @display { label: "Body" }
+    @display {label: "Body"}
     string body;
 };
 
@@ -1375,17 +1380,17 @@ public type DraftPullRequestReviewComment record {
 # + startSide - The side of the diff on which the start line resides.
 # + body - Body of the comment to leave.
 public type DraftPullRequestReviewThread record {
-    @display { label: "Path" }
+    @display {label: "Path"}
     string path;
-    @display { label: "Line" }
+    @display {label: "Line"}
     int line;
-    @display { label: "Side" }
+    @display {label: "Side"}
     DiffSide side = DIFF_SIDE_RIGHT;
-    @display { label: "Start Line" }
+    @display {label: "Start Line"}
     int startLine?;
-    @display { label: "Start Side" }
+    @display {label: "Start Side"}
     DiffSide startSide = DIFF_SIDE_RIGHT;
-    @display { label: "Body" }
+    @display {label: "Body"}
     string body;
 };
 
@@ -1396,10 +1401,10 @@ public type DraftPullRequestReviewThread record {
 # + PULL_REQUEST_REVIEW_REQUEST_CHANGES - Submit feedback that must be addressed before merging.
 # + PULL_REQUEST_REVIEW_DISMISS - Dismiss review so it now longer effects merging.
 public enum PullRequestReviewEvent {
-    PULL_REQUEST_REVIEW_COMMENT="COMMENT",
-    PULL_REQUEST_REVIEW_APPROVE="APPROVE",
-    PULL_REQUEST_REVIEW_REQUEST_CHANGES="REQUEST_CHANGES",
-    PULL_REQUEST_REVIEW_DISMISS="DISMISS"
+    PULL_REQUEST_REVIEW_COMMENT = "COMMENT",
+    PULL_REQUEST_REVIEW_APPROVE = "APPROVE",
+    PULL_REQUEST_REVIEW_REQUEST_CHANGES = "REQUEST_CHANGES",
+    PULL_REQUEST_REVIEW_DISMISS = "DISMISS"
 }
 
 # Represent GitHub change Diff sides.
@@ -1407,8 +1412,8 @@ public enum PullRequestReviewEvent {
 # + DIFF_SIDE_RIGHT - The right side of the diff.
 # + DIFF_SIDE_LEFT - The left side of the diff.
 public enum DiffSide {
-    DIFF_SIDE_RIGHT="RIGHT",
-    DIFF_SIDE_LEFT="LEFT"
+    DIFF_SIDE_RIGHT = "RIGHT",
+    DIFF_SIDE_LEFT = "LEFT"
 }
 
 # Represent GitHub pull request review update input payload.
@@ -1417,11 +1422,11 @@ public enum DiffSide {
 # + body - The contents of the pull request review body.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type UpdatePullRequestReviewInput record {
-    @display { label: "Pull Request Review Id" }
+    @display {label: "Pull Request Review Id"}
     string pullRequestReviewId;
-    @display { label: "Body" }
+    @display {label: "Body"}
     string body;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1430,12 +1435,11 @@ public type UpdatePullRequestReviewInput record {
 # + pullRequestReviewId - The Node ID of the pull request review to delete.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type DeletePullRequestReviewInput record {
-    @display { label: "Pull Request Review Id" }
+    @display {label: "Pull Request Review Id"}
     string pullRequestReviewId;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
-
 
 # Represent GitHub project templates.
 #
@@ -1459,17 +1463,17 @@ public enum ProjectTemplate {
 # + clientMutationId - A unique identifier for the client performing the mutation.
 # + template - The name of the GitHub-provided template.
 public type CreateRepositoryProjectInput record {
-    @display { label: "Repository Owner Name" }
+    @display {label: "Repository Owner Name"}
     string ownerName;
-    @display { label: "Project Name" }
+    @display {label: "Project Name"}
     string name;
-    @display { label: "Project Description" }
+    @display {label: "Project Description"}
     string body?;
-    @display { label: "Repository Names" }
+    @display {label: "Repository Names"}
     string[] repositoryNames?;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
-    @display { label: "Project Template" }
+    @display {label: "Project Template"}
     ProjectTemplate template?;
 };
 
@@ -1499,17 +1503,17 @@ public type CreateProjectInput record {
 # + state - Whether the project is open or closed.
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type UpdateProjectInput record {
-    @display { label: "Project Id" }
+    @display {label: "Project Id"}
     string projectId;
-    @display { label: "Project Description" }
+    @display {label: "Project Description"}
     string body?;
-    @display { label: "Project Name" }
+    @display {label: "Project Name"}
     string name?;
-    @display { label: "Is Public" }
+    @display {label: "Is Public"}
     boolean 'public?;
-    @display { label: "Project State" }
+    @display {label: "Project State"}
     ProjectState state?;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
 
@@ -1518,11 +1522,12 @@ public type UpdateProjectInput record {
 # + projectId -
 # + clientMutationId - A unique identifier for the client performing the mutation.
 public type DeleteProjectInput record {
-    @display { label: "Project Id" }
+    @display {label: "Project Id"}
     string projectId;
-    @display { label: "Client Mutation Id" }
+    @display {label: "Client Mutation Id"}
     string clientMutationId?;
 };
+
 public type SearchResultPayload record {
     int codeCount;
     int discussionCount;
@@ -1533,6 +1538,7 @@ public type SearchResultPayload record {
     PageInfo pageInfo;
     Issue[]|User[]|Organization[]|Repository[] nodes;
 };
+
 public type SearchResult record {
     int codeCount;
     int discussionCount;
@@ -1543,6 +1549,7 @@ public type SearchResult record {
     PageInfo pageInfo;
     Issue[]|User[]|Organization[]|Repository[] results;
 };
+
 public type SearchCount record {
     int codeCount;
     int discussionCount;
@@ -1553,7 +1560,7 @@ public type SearchCount record {
 };
 
 public enum SearchType {
-    SEARCH_TYPE_ORGANIZATION = "ORG", 
+    SEARCH_TYPE_ORGANIZATION = "ORG",
     SEARCH_TYPE_ISSUE = "ISSUE",
     SEARCH_TYPE_REPOSITORY = "REPOSITORY",
     SEARCH_TYPE_USER = "USER"
@@ -1565,29 +1572,95 @@ public type IssueFilters record {
     string[] labels?;
     string mentioned?;
     string milestone?;
-    string since?;// iso utc string 
+    string since?; // iso utc string 
     IssueState[] states?;
     boolean viewerSubscribed?;
 };
 
+# Represents a given language found in repositories.
+#
+# + name - The name of the current language
+# + id - The Id of the current language  
+# + colour - The color defined for the current language
+public type Language record {
+    string name;
+    string id?;
+    string colour?;
+};
+
+# Represents a list of languages with pagination information by GitHub.
+#
+# + nodes - List of languages  
+# + pageInfo - Information to aid in pagination
+# + totalCount - Identifies the total count of items in the connection
+public type LanguageListPayload record {
+    Language[] nodes;
+    PageInfo pageInfo;
+    int totalCount;
+};
+
+# Represents a list of languages with pagination information.
+#
+# + languages - List of languages 
+# + pageInfo - Information to aid in pagination
+# + totalCount - Identifies the total count of items in the connection
+public type LanguageList record {
+    Language[] languages;
+    PageInfo pageInfo;
+    int totalCount;
+};
+
+# Represents an individual commit status context.
+#
+# + context - The name of this status context
+# + state - The state of this status context
+# + targetUrl - The URL for this status context
+# + description - The description for this status context
+public type Context record {
+    string context;
+    string state;
+    string? targetUrl?;
+    string? description?;
+};
+
+# Represents a commit status.
+#
+# + state - The combined commit status
+# + contexts - The individual status contexts for this commit
+public type Status record {
+    string state;
+    Context[] contexts;
+};
+
+# Represents a Git commit
+#
+# + commitUrl - The HTTP URL for this Git object
+# + oid - The Git object ID
+# + status - Status information for this commit
+public type Commit record {
+    string commitUrl;
+    string oid;
+    Status? status?;
+};
+
 public type Error ClientError|ServerError;
 
-public type ClientError distinct error<record {| anydata body?; |}>;
+public type ClientError distinct error<record {|anydata body?;|}>;
 
-public type ServerError distinct error<record {| json? data?; GraphQLClientError[] errors; map<json>? extensions?; |}>;
+public type ServerError distinct error<record {|json? data?; GraphQLClientError[] errors; map<json>? extensions?;|}>;
 
 // GraphQL error representation (Generic)
 
 public type GraphQLClientErrorArray GraphQLClientError[];
- 
+
 public type GraphQLClientError record {
-   string message;
-   GraphQLClientSourceLocation[] locations?;
-   anydata[] path?;
-   map<anydata> extensions?;
+    string message;
+    GraphQLClientSourceLocation[] locations?;
+    anydata[] path?;
+    map<anydata> extensions?;
 };
 
 public type GraphQLClientSourceLocation record {
-   int line?;
-   int column?;
+    int line?;
+    int column?;
 };
