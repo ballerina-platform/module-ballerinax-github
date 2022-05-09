@@ -32,7 +32,7 @@ jobs:
         run: |
           ./gradlew build
       - name: Ballerina Build
-        uses: ballerina-platform/ballerina-action/@master
+        uses: ballerina-platform/ballerina-action@2201.0.2
         with:
           args:
             pack ./github
@@ -41,7 +41,7 @@ jobs:
 
       - name: Push to Staging
         if: github.event.inputs.bal_central_environment == 'STAGE'
-        uses: ballerina-platform/ballerina-action/@master
+        uses: ballerina-platform/ballerina-action@2201.0.2
         with:
           args:
             push
@@ -52,7 +52,7 @@ jobs:
       
       - name: Push to Dev
         if: github.event.inputs.bal_central_environment == 'DEV'
-        uses: ballerina-platform/ballerina-action/@master
+        uses: ballerina-platform/ballerina-action@2201.0.2
         with:
           args:
             push
