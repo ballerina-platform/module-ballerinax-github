@@ -509,12 +509,14 @@ isolated function getFormulatedStringQueryForGetUserOwnerId(string userName) ret
 
 isolated function getFormulatedStringQueryForSearch(string searchQuery, SearchType searchType, int perPageCount,
                                                     string? lastPageCursor) returns string {
+    string query = searchQuery.indexOf(string `"`) !is () ? regex:replaceAll(searchQuery, string `"`, string `\\"`) : 
+    searchQuery;
     if lastPageCursor is string {
-        return string `{"variables":{"searchQuery":"${searchQuery}", "searchType": ${searchType.toBalString()},
+        return string `{"variables":{"searchQuery":"${query}", "searchType": ${searchType.toBalString()},
                     "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"`
                     + string `${SEARCH}"}`;
     } else {
-        return string `{"variables":{"searchQuery":"${searchQuery}", "searchType": ${searchType.toBalString()},
+        return string `{"variables":{"searchQuery":"${query}", "searchType": ${searchType.toBalString()},
                     "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"`
                     + string `${SEARCH}"}`;
     }
