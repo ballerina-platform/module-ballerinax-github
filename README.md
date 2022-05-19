@@ -13,7 +13,6 @@ This connector provides operations for connecting and interacting with GitHub Gr
 
 For more information, go to the module(s).
 -  [github](github/Module.md)
--  [github.webhook](github/modules/webhook/Module.md)
 
 
 # Building from the Source

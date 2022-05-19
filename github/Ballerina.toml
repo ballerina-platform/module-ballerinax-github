@@ -2,8 +2,7 @@
 distribution = "2201.0.0"
 org = "ballerinax"
 name = "github"
-version = "3.2.1"
-export= ["github", "github.webhook"]
+version = "4.0.0"
 authors = ["Ballerina"]
 keywords = ["IT Operations/Source Control", "Cost/Freemium"]
 icon = "icon.png"
@@ -12,9 +11,3 @@ license = ["Apache-2.0"]
 
 [build-options]
 observabilityIncluded = true
-
-[[platform.java11.dependency]]
-path = "../java-wrapper/build/libs/java-wrapper-3.2.1.jar"
-groupId = "io.ballerinax.webhook"
-artifactId = "java-wrapper"
-version = "3.2.1"

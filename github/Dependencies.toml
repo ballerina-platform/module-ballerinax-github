@@ -94,9 +94,6 @@ dependencies = [
 org = "ballerina"
 name = "jballerina.java"
 version = "0.0.0"
-modules = [
-	{org = "ballerina", packageName = "jballerina.java", moduleName = "jballerina.java"}
-]
 
 [[package]]
 org = "ballerina"
@@ -159,9 +156,6 @@ version = "0.0.0"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"}
 ]
-modules = [
-	{org = "ballerina", packageName = "lang.runtime", moduleName = "lang.runtime"}
-]
 
 [[package]]
 org = "ballerina"
@@ -196,7 +190,7 @@ modules = [
 [[package]]
 org = "ballerina"
 name = "mime"
-version = "2.2.1"
+version = "2.2.2"
 dependencies = [
 	{org = "ballerina", name = "io"},
 	{org = "ballerina", name = "jballerina.java"},
@@ -218,7 +212,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "observe"
-version = "1.0.3"
+version = "1.0.4"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"}
 ]
@@ -283,27 +277,6 @@ dependencies = [
 ]
 
 [[package]]
-org = "ballerina"
-name = "websub"
-version = "2.2.1"
-dependencies = [
-	{org = "ballerina", name = "crypto"},
-	{org = "ballerina", name = "http"},
-	{org = "ballerina", name = "jballerina.java"},
-	{org = "ballerina", name = "lang.runtime"},
-	{org = "ballerina", name = "lang.string"},
-	{org = "ballerina", name = "lang.value"},
-	{org = "ballerina", name = "log"},
-	{org = "ballerina", name = "mime"},
-	{org = "ballerina", name = "regex"},
-	{org = "ballerina", name = "time"},
-	{org = "ballerina", name = "url"}
-]
-modules = [
-	{org = "ballerina", packageName = "websub", moduleName = "websub"}
-]
-
-[[package]]
 org = "ballerinai"
 name = "observe"
 version = "0.0.0"
@@ -318,21 +291,17 @@ modules = [
 [[package]]
 org = "ballerinax"
 name = "github"
-version = "3.2.1"
+version = "4.0.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
-	{org = "ballerina", name = "jballerina.java"},
-	{org = "ballerina", name = "lang.runtime"},
 	{org = "ballerina", name = "log"},
 	{org = "ballerina", name = "os"},
 	{org = "ballerina", name = "regex"},
 	{org = "ballerina", name = "test"},
-	{org = "ballerina", name = "websub"},
 	{org = "ballerinai", name = "observe"}
 ]
 modules = [
-	{org = "ballerinax", packageName = "github", moduleName = "github"},
-	{org = "ballerinax", packageName = "github", moduleName = "github.webhook"}
+	{org = "ballerinax", packageName = "github", moduleName = "github"}
 ]
 
 
