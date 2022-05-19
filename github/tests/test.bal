@@ -718,9 +718,23 @@ function testGetOrganizationMembersList() returns @tainted Error? {
 }
 function testSearch() returns @tainted Error? {
     log:printInfo("githubClient -> search()");
-    SearchResult response = check githubClient-> search("connector-",SEARCH_TYPE_USER, 10);
+    SearchResult response = check githubClient-> search("connector-", SEARCH_TYPE_USER, 10);
     var result = response.results;
     test:assertTrue(result is User[]);    
+}
+
+@test:Config {
+    groups: ["network-calls"],
+    enable: true
+}
+function testSearchMultiWordsString() returns @tainted Error? {
+    log:printInfo("githubClient -> testSearchMultiWordsString()");
+ 
+    string query = string `repo:ballerina-platform/ballerina-extended-library is:issue is:open label:
+    "Type/New Feature"`;
+    SearchResult response = check githubClient-> search(query, SEARCH_TYPE_ISSUE, 1);
+    Issue[]|User[]|Organization[]|Repository[] result = response.results;
+    test:assertTrue(result is Issue[]);    
 }
 
 @test:Config{
