@@ -75,14 +75,6 @@ public type User record {
     string? name?;
 };
 
-public type ViewrRwcord record {
-    User viewer;
-};
-
-public type Resp record {
-    ViewrRwcord data;
-};
-
 # Represent GitHub repository owner
 #
 # + id - ID
@@ -1528,17 +1520,6 @@ public type DeleteProjectInput record {
     string clientMutationId?;
 };
 
-public type SearchResultPayload record {
-    int codeCount;
-    int discussionCount;
-    int issueCount;
-    int repositoryCount;
-    int userCount;
-    int wikiCount;
-    PageInfo pageInfo;
-    Issue[]|User[]|Organization[]|Repository[] nodes;
-};
-
 public type SearchResult record {
     int codeCount;
     int discussionCount;
@@ -1548,15 +1529,6 @@ public type SearchResult record {
     int wikiCount;
     PageInfo pageInfo;
     Issue[]|User[]|Organization[]|Repository[] results;
-};
-
-public type SearchCount record {
-    int codeCount;
-    int discussionCount;
-    int issueCount;
-    int repositoryCount;
-    int userCount;
-    int wikiCount;
 };
 
 public enum SearchType {
