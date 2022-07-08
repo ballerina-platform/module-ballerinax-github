@@ -184,6 +184,18 @@ final string ISSUE_FIELDS = Author +
                                             "              url,\n" +
                                             "              viewerDidAuthor,\n";
 
+final string SEARCH_ISSUE_FIELDS = ISSUE_FIELDS +
+                                            "              labels (first: $perPageCount) {\n" +
+                                            "                 nodes{\n" +
+                                                                LABEL_FIELDS +
+                                            "                \n}," +
+                                            "                 pageInfo{\n" +
+                                            "                     startCursor,endCursor, hasNextPage, hasPreviousPage\n" +
+                                            "                 },\n" +
+                                            "                 totalCount,\n"+
+                                            "              },\n";
+
+
 final string ISSUE_COMMENT_FIELDS = Author +
                                             "              body,\n" +
                                             "              bodyHTML,\n" +
@@ -653,7 +665,7 @@ final string SEARCH = "query ($searchQuery: String!, $searchType: SearchType!, $
                         "       nodes{\n" +
                         //
                         "           ... on Issue {\n" +
-                                        ISSUE_FIELDS +
+                                        SEARCH_ISSUE_FIELDS +
                         "           }\n" +
                         "           ... on Organization {\n" +
                                         ORGANIZATION_FILEDS +

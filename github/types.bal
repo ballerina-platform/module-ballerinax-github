@@ -236,6 +236,7 @@ public type Branch record {
 # + viewerDidAuthor - Did the viewer author this comment.
 # + viewerCanUpdate - Check if the current viewer can update this object.
 # + issueComments - Comments in an issue
+# + labels - Labels in an issue
 public type Issue record {
     Actor? author?;
     string body?;
@@ -264,6 +265,18 @@ public type Issue record {
     boolean viewerDidAuthor?;
     boolean viewerCanUpdate?;
     IssueComment[] issueComments?;
+    IssueLabels? labels?;
+};
+
+# Represents a list of labels with pagination information.
+#
+# + nodes - List of Labels in the issue
+# + pageInfo - Information to aid in pagination
+# + totalCount - Identifies the total count of labels in the issue
+public type IssueLabels record {
+    Label[] nodes?;
+    PageInfo pageInfo;
+    int totalCount?;
 };
 
 # Represent GitHub issue comment.
