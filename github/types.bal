@@ -268,14 +268,12 @@ public type Issue record {
     IssueLabels? labels?;
 };
 
-# Represents a list of labels with pagination information.
+# Represents a list of labels.
 #
 # + nodes - List of Labels in the issue
-# + pageInfo - Information to aid in pagination
 # + totalCount - Identifies the total count of labels in the issue
 public type IssueLabels record {
     Label[] nodes?;
-    PageInfo pageInfo;
     int totalCount?;
 };
 

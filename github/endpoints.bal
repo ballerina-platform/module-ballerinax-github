@@ -169,11 +169,13 @@ public isolated client class Client {
     # + owner - Repository owner name
     # + repositoryName - repositoryName
     # + issueNumber - Issue number
-    #
+    # + perPageCountForLabels - Number of labels in each issue to be returned. Defaulted to 10.
+    # 
     # + return - `github:Issue` record if successful else `github:Error`
     @display {label: "Get Issue"}
-    remote isolated function getIssue(string owner, string repositoryName, int issueNumber) returns Issue|Error {
-        return getIssue(owner, repositoryName, issueNumber, self.authToken, self.githubGraphQlClient);
+    remote isolated function getIssue(string owner, string repositoryName, int issueNumber,
+                                      int perPageCountForLabels = 10) returns Issue|Error {
+        return getIssue(owner, repositoryName, issueNumber, self.authToken, self.githubGraphQlClient, perPageCountForLabels);
     }
 
     # Get issues
@@ -505,15 +507,17 @@ public isolated client class Client {
     # `github:SEARCH_TYPE_USER`, `github:SEARCH_TYPE_ORGANIZATION`, `github:SEARCH_TYPE_ISSUE`,
     # `github:SEARCH_TYPE_REPOSITORY`.
     # + perPageCount - Number of elements to be returned
+    # + perPageCountForLabels - Number of labels in each issue to be returned. Defaulted to 10.
     # + lastPageCursor - Next page curser
+    # 
     # + return - `github:SearchResult` record if successful or else `github:Error`
     @display {label: "Search"}
-    remote isolated function search(string searchQuery, SearchType searchType, int perPageCount,
-                                                    string? lastPageCursor = ()) returns SearchResult|Error {
-
+    remote isolated function search(string searchQuery, SearchType searchType, int perPageCount, 
+                                    int perPageCountForLabels = 10, string? lastPageCursor = ()) 
+                                    returns SearchResult|Error {
         SearchType querySearchType = searchType is SEARCH_TYPE_ORGANIZATION ? SEARCH_TYPE_USER : searchType;
-        string stringQuery = getFormulatedStringQueryForSearch(searchQuery, querySearchType, perPageCount,
-                                                                lastPageCursor);
+        string stringQuery = getFormulatedStringQueryForSearch(searchQuery, querySearchType, perPageCount, perPageCountForLabels,
+                                                               lastPageCursor);
         map<json>|Error graphQlData = getGraphQlData(self.githubGraphQlClient, self.authToken, stringQuery);
 
         if graphQlData is map<json> {
