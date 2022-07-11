@@ -58,6 +58,33 @@ isolated function getRepository(string username, string repositoryName, string a
     return graphQlData;
 }
 
+isolated function getRepositoryContent(string username, string repositoryName, string expression, string accessToken,
+                                    http:Client graphQlClient) returns File[]|Error {
+    string stringQuery = getFormulatedStringQueryForGetRepositoryContent(username, repositoryName, expression);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+
+    if graphQlData is map<json> {
+        json repository = graphQlData[GIT_REPOSITORY];
+        if repository is map<json> {
+            json objects = repository["object"];
+            if objects is map<json> {
+                if objects.hasKey("entries") {
+                    json entries = objects.get("entries");
+                    File[]|error result = entries.cloneWithType();
+                    if result is error {
+                        return error ClientError("GitHub Client Error", result);
+                    }
+                    return result;
+                } else {
+                    return error ClientError("Invalid folder path. Content not found");
+                }
+            }
+        }
+        return error ClientError("GitHub Client Error", body = repository);
+    }
+    return graphQlData;
+}
+
 isolated function getRepositoryList(int perPageCount, string accessToken, http:Client graphQlClient,
                                     boolean isOrganization, string? owner, string? nextPageCursor = ())
                                     returns @tainted RepositoryList|Error {

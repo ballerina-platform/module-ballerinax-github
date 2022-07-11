@@ -636,3 +636,12 @@ function testGetLanguagesFromRepository() returns error? {
         test:assertFail("Language list is empty");
     }
 }
+
+@test:Config{
+    enable: true
+}
+function testGetRepositoryContent() returns error? {
+    log:printInfo("githubClient -> testGetRepositoryContent()");
+    File[] response = check githubClient->getRepositoryContent(testUsername, testUserRepositoryName, "HEAD:");
+    test:assertTrue(response.length() > 0, "Failed to get file list");
+}
