@@ -616,11 +616,30 @@ function testSearch() returns @tainted error? {
 function testSearchMultiWordsString() returns error? {
     log:printInfo("githubClient -> testSearchMultiWordsString()");
  
-    string query = string `repo:ballerina-platform/ballerina-extended-library is:issue is:open label:
-    "Type/New Feature"`;
+    string query = string `repo:ballerina-platform/ballerina-extended-library is:issue is:open label:"Type/New Feature"`;
     SearchResult response = check githubClient-> search(query, SEARCH_TYPE_ISSUE, 1);
     Issue[]|User[]|Organization[]|Repository[] result = response.results;
     test:assertTrue(result is Issue[]);    
+}
+
+@test:Config {
+    groups: ["network-calls"],
+    enable: true
+}
+function testSearchIssueLabels() returns error? {
+    log:printInfo("githubClient -> testSearchIssueLabels()");
+ 
+    string query = string `repo:ballerina-platform/ballerina-extended-library is:issue is:open label:"Team/Connector"`;
+    SearchResult response = check githubClient-> search(query, SEARCH_TYPE_ISSUE, 1, 1);
+    Issue[]|User[]|Organization[]|Repository[] result = response.results;
+    if result is Issue[] {
+        if result.length() > 0 {
+            int labelCount = let var nodes = result[0]?.labels?.nodes in nodes is () ? 0 : nodes.length();
+            test:assertTrue(labelCount == 1);    
+        }
+    } else {
+        test:assertFail("Incorrect search results");    
+    }
 }
 
 @test:Config{

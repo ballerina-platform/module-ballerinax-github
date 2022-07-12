@@ -160,10 +160,10 @@ isolated function updateIssue(@tainted UpdateIssueInput updateIssueInput, string
     return graphQlData;
 }
 
-isolated function getIssue(string repositoryOwnerName, string repositoryName, int issueNumber,
-                                    string accessToken, http:Client graphQlClient) returns @tainted Issue|Error {
-    string stringQuery = getFormulatedStringQueryForGetIssue(repositoryOwnerName, repositoryName,
-                                                                        issueNumber);
+isolated function getIssue(string repositoryOwnerName, string repositoryName, int issueNumber, string accessToken, 
+                           http:Client graphQlClient, int perPageCountForLabels = 10) returns @tainted Issue|Error {
+    string stringQuery = getFormulatedStringQueryForGetIssue(repositoryOwnerName, repositoryName, issueNumber, 
+                                                             perPageCountForLabels);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {

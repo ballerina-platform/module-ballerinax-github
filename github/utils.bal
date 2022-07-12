@@ -194,9 +194,9 @@ isolated function getFormulatedStringQueryForUpdateIssue(UpdateIssueInputPayload
 }
 
 isolated function getFormulatedStringQueryForGetIssue(string repositoryOwnerName, string repositoryName,
-                                                                int issueNumber) returns string {
+                                                                int issueNumber, int perPageCountForLabels) returns string {
     return string `{"variables":{"owner":"${repositoryOwnerName}", "name":"${repositoryName}", 
-                    "issueNumber":${issueNumber}},"query":"${GET_ISSUE}"}`;
+                    "issueNumber":${issueNumber}, "perPageCountForLabels": ${perPageCountForLabels}},"query":"${GET_ISSUE}"}`;
 }
 
 isolated function getFormulatedStringQueryForGetIssueCommentList(string username, string repositoryName,
@@ -511,17 +511,17 @@ isolated function getFormulatedStringQueryForGetUserOwnerId(string userName) ret
                     + string `${GET_USER_OWNER_ID}"}`;
 }
 
-isolated function getFormulatedStringQueryForSearch(string searchQuery, SearchType searchType, int perPageCount,
+isolated function getFormulatedStringQueryForSearch(string searchQuery, SearchType searchType, int perPageCount, int perPageCountForLabels, 
                                                     string? lastPageCursor) returns string {
-    string query = searchQuery.indexOf(string `"`) !is () ? regex:replaceAll(searchQuery, string `"`, string `\\"`) : 
+    string query = searchQuery.indexOf(string `"`) !is () ? regex:replaceAll(searchQuery, string `"`, string `\"`) : 
     searchQuery;
     if lastPageCursor is string {
         return string `{"variables":{"searchQuery":"${query}", "searchType": ${searchType.toBalString()},
-                    "perPageCount":${perPageCount}, "lastPageCursor":"${lastPageCursor}"},"query":"`
+                    "perPageCount":${perPageCount}, "perPageCountForLabels":${perPageCountForLabels}, "lastPageCursor":"${lastPageCursor}"},"query":"`
                     + string `${SEARCH}"}`;
     } else {
         return string `{"variables":{"searchQuery":"${query}", "searchType": ${searchType.toBalString()},
-                    "perPageCount":${perPageCount}, "lastPageCursor":null},"query":"`
+                    "perPageCount":${perPageCount}, "perPageCountForLabels":${perPageCountForLabels}, "lastPageCursor":null},"query":"`
                     + string `${SEARCH}"}`;
     }
 }

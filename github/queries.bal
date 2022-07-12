@@ -183,6 +183,15 @@ final string ISSUE_FIELDS = Author +
                                             "              updatedAt,\n" +
                                             "              url,\n" +
                                             "              viewerDidAuthor,\n";
+                                            
+final string SEARCH_ISSUE_FIELDS = ISSUE_FIELDS +
+                                            "              labels (first: $perPageCountForLabels) {\n" +
+                                            "                 nodes{\n" +
+                                                                LABEL_FIELDS +
+                                            "                \n}," +
+                                            "                 totalCount,\n"+
+                                            "              },\n";
+
 
 final string ISSUE_COMMENT_FIELDS = Author +
                                             "              body,\n" +
@@ -403,10 +412,10 @@ final string GET_ISSUE_LIST = "query($owner:String!, $name:String!, $perPageCoun
                                             "  }\n" +
                                             "}";
 
-final string GET_ISSUE = "query($owner:String!, $name:String!, $issueNumber: Int!){\n" +
+final string GET_ISSUE = "query($owner:String!, $name:String!, $issueNumber: Int!, $perPageCountForLabels: Int){\n" +
                                             "  repository(owner: $owner, name: $name){\n" +
                                             "      issue(number: $issueNumber){\n" +
-                                                        ISSUE_FIELDS +
+                                                        SEARCH_ISSUE_FIELDS +
                                             "      }\n" +
                                             "  }\n" +
                                             "}";
@@ -656,14 +665,14 @@ final string GET_USER_OWNER_ID = "query($userName: String!){\n" +
                                 "  }\n" +
                                 "}";
 
-final string SEARCH = "query ($searchQuery: String!, $searchType: SearchType!, $perPageCount: Int, $lastPageCursor: String) {\n" +
+final string SEARCH = "query ($searchQuery: String!, $searchType: SearchType!, $perPageCount: Int, $lastPageCursor: String, $perPageCountForLabels: Int) {\n" +
                         "   search(query: $searchQuery, type: $searchType, first: $perPageCount, after: $lastPageCursor) {\n" +
                                 SEARCH_COUNT +
                                 PAGE_INFO +
                         "       nodes{\n" +
                         //
                         "           ... on Issue {\n" +
-                                        ISSUE_FIELDS +
+                                        SEARCH_ISSUE_FIELDS +
                         "           }\n" +
                         "           ... on Organization {\n" +
                                         ORGANIZATION_FILEDS +
