@@ -108,6 +108,20 @@ public isolated client class Client {
         return new stream<Repository, Error?>(repositoryStream);
     }
 
+    # Get repository content
+    #
+    # + owner - Repository owner name
+    # + repositoryName - GitHub repository name
+    # + expression - The expression in the form `<branch_name>:<path_to_directory>` 
+    #   Eg: "master:github" expression will list the contents on `github` folder in the master branch
+    #       "master:" expression will list the contents on root folder in the master branch
+    #
+    # + return - `github:File[]` record if successful else `github:Error`
+    @display {label: "Get Repository Content"}
+    remote isolated function getRepositoryContent(string owner, string repositoryName, string expression) returns File[]|Error {
+        return getRepositoryContent(owner, repositoryName, expression, self.authToken, self.githubGraphQlClient);
+    }
+
     # Get collaborators
     #
     # + owner - Repository owner name

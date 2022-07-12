@@ -80,6 +80,10 @@ isolated function getFormulatedStringQueryForGetRepository(string username, stri
     return string `{"variables":{"owner":"${username}", "name":"${repositoryName}"},"query":"${GET_REPOSIOTRY}"}`;
 }
 
+isolated function getFormulatedStringQueryForGetRepositoryContent(string username, string repositoryName, string expression) returns string {
+    return string `{"variables":{"owner":"${username}", "name":"${repositoryName}", "expr": "${expression}"},"query":"${GET_REPOSITORY_CONTENT}"}`;
+}
+
 isolated function getFormulatedStringQueryForGetRepositoryList(int perPageCount, boolean isOrganization,
                                                                 string? owner, string? lastPageCursor = ())
                                                                 returns string {

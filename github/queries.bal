@@ -273,6 +273,16 @@ final string SEARCH_COUNT = "codeCount,\n" +
                             "userCount,\n" +
                             "wikiCount,\n";
 
+final string REPOSITORY_ENTRY_FIELDS = "name,\n"+
+                                        "type,\n" +
+                                        "object {,\n" +
+                                        "   ... on Blob {" +
+                                        "           byteSize,\n" +
+                                        "           text,\n" +
+                                        "           isBinary,\n" +
+                                        "       }\n" +
+                                        "}";
+
 final string GET_AUTHENTICATED_USER_QUERY = "query { \n" +
                                             "    viewer {              \n" +
                                                 USER +
@@ -670,3 +680,17 @@ final string SEARCH = "query ($searchQuery: String!, $searchType: SearchType!, $
                         "       }\n" +
                         "   }\n" +
                         "}";
+
+
+// Repository content
+final string GET_REPOSITORY_CONTENT = "query($owner:String!, $name:String!, $expr: String!){\n" +
+                                "       repository(owner: $owner, name: $name){\n" +
+                                "               object(expression: $expr){\n" +
+                                "                       ... on Tree {\n" +
+                                "                               entries {\n"+
+                                                                        REPOSITORY_ENTRY_FIELDS +
+                                "                               }\n" +
+                                "                       }\n" +
+                                "               }\n" +
+                                "       }\n" +
+                                "}";

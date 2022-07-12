@@ -1636,3 +1636,25 @@ public type GraphQLClientSourceLocation record {
     int line?;
     int column?;
 };
+
+# The information and content of the file
+#
+# + name - File/Folder name 
+# + 'type - Type of the object  
+# + 'object - File content. For folders this object will be empty
+public type File record {
+    string name;
+    string 'type;
+    FileContent 'object;
+};
+
+# File content
+#
+# + byteSize - Byte size of the file  
+# + text - The text respresentation of contents inside the file  
+# + isBinary - If the file content is binary
+public type FileContent record {
+    int byteSize?;
+    string text?;
+    boolean isBinary?;
+};
