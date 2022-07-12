@@ -92,6 +92,8 @@ final string GIT_ISSUE_COUNT = "issueCount";
 final string GIT_REPO_COUNT = "repositoryCount";
 final string GIT_USER_COUNT = "userCount";
 final string GIT_WIKI_COUNT = "wikiCount";
+final string GIT_OBJECT = "object";
+final string GIT_ENTRIES = "entries";
 
 // Error Codes
 final string GITHUB_ERROR_CODE = "(ballerinax/github)GithubError";

@@ -59,17 +59,17 @@ isolated function getRepository(string username, string repositoryName, string a
 }
 
 isolated function getRepositoryContent(string username, string repositoryName, string expression, string accessToken,
-                                    http:Client graphQlClient) returns File[]|Error {
+                                        http:Client graphQlClient) returns File[]|Error {
     string stringQuery = getFormulatedStringQueryForGetRepositoryContent(username, repositoryName, expression);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json repository = graphQlData[GIT_REPOSITORY];
         if repository is map<json> {
-            json objects = repository["object"];
+            json objects = repository[GIT_OBJECT];
             if objects is map<json> {
-                if objects.hasKey("entries") {
-                    json entries = objects.get("entries");
+                if objects.hasKey(GIT_ENTRIES) {
+                    json entries = objects.get(GIT_ENTRIES);
                     File[]|error result = entries.cloneWithType();
                     if result is error {
                         return error ClientError("GitHub Client Error", result);
