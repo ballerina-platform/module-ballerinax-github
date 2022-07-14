@@ -15,6 +15,7 @@
 // under the License.
 
 import ballerina/http;
+import ballerina/log;
 
 # Ballerina GitHub connector provides the capability to access GitHub GraphQL API.
 # This connector lets you to get authorized access to GitHub data in a personal or organization
@@ -519,7 +520,7 @@ public isolated client class Client {
     # + searchQuery - The search string to look for
     # + searchType - The types of search items to search within. Either one of the following can be used: 
     # `github:SEARCH_TYPE_USER`, `github:SEARCH_TYPE_ORGANIZATION`, `github:SEARCH_TYPE_ISSUE`,
-    # `github:SEARCH_TYPE_REPOSITORY`.
+    # `github:SEARCH_TYPE_REPOSITORY`,`github:SEARCH_TYPE_PULL_REQUEST`.
     # + perPageCount - Number of elements to be returned
     # + perPageCountForLabels - Number of labels in each issue to be returned. Defaulted to 10.
     # + lastPageCursor - Next page curser
@@ -529,7 +530,8 @@ public isolated client class Client {
     remote isolated function search(string searchQuery, SearchType searchType, int perPageCount, 
                                     int perPageCountForLabels = 10, string? lastPageCursor = ()) 
                                     returns SearchResult|Error {
-        SearchType querySearchType = searchType is SEARCH_TYPE_ORGANIZATION ? SEARCH_TYPE_USER : searchType;
+        SearchType querySearchType = searchType is SEARCH_TYPE_ORGANIZATION ? SEARCH_TYPE_USER : 
+                                     searchType is SEARCH_TYPE_PULL_REQUEST ? SEARCH_TYPE_ISSUE : searchType;
         string stringQuery = getFormulatedStringQueryForSearch(searchQuery, querySearchType, perPageCount, perPageCountForLabels,
                                                                lastPageCursor);
         map<json>|Error graphQlData = getGraphQlData(self.githubGraphQlClient, self.authToken, stringQuery);
@@ -547,21 +549,13 @@ public isolated client class Client {
                             Organization[] orgs = [];
                             Issue[] issues = [];
                             Repository[] repos = [];
-                            match querySearchType {
+                            PullRequest[] prs = [];
+                            match searchType {
                                 SEARCH_TYPE_USER => {
-                                    foreach json node in nodes {
-                                        if node is map<json> {
-                                            int numberOfFields = 0;
-                                            numberOfFields = node.keys().length();
-                                            if numberOfFields > 12 {
-                                                User user = check node.cloneWithType();
-                                                users.push(user);
-                                            } else {
-                                                Organization org = check node.cloneWithType();
-                                                orgs.push(org);
-                                            }
-                                        }
-                                    }
+                                    users =  check nodes.cloneWithType();
+                                }
+                                SEARCH_TYPE_ORGANIZATION => {
+                                    orgs = check nodes.cloneWithType();
                                 }
                                 SEARCH_TYPE_ISSUE => {
                                     issues = check nodes.cloneWithType();
@@ -569,11 +563,15 @@ public isolated client class Client {
                                 SEARCH_TYPE_REPOSITORY => {
                                     repos = check nodes.cloneWithType();
                                 }
+                                SEARCH_TYPE_PULL_REQUEST => {
+                                    prs = check nodes.cloneWithType();
+                                }
                             }
                             SearchResult searchResponse = {
                                 results: searchType is SEARCH_TYPE_ISSUE ? issues :
                                         searchType is SEARCH_TYPE_REPOSITORY ? repos :
-                                        searchType is SEARCH_TYPE_USER ? users : orgs,
+                                        searchType is SEARCH_TYPE_USER ? users : 
+                                        searchType is SEARCH_TYPE_ORGANIZATION ? orgs : prs,
                                 pageInfo: check searchResult.get(GIT_PAGE_INFO).cloneWithType(PageInfo),
                                 codeCount: <int>searchResult.get(GIT_CODE_COUNT),
                                 discussionCount: <int>searchResult.get(GIT_DISCUSSION_COUNT),
@@ -584,6 +582,7 @@ public isolated client class Client {
                             };
                             return searchResponse;
                         } on fail var e {
+                            log:printError(e.detail().toString());
                             return error ClientError("GitHub Client Error in search result conversion.", e);
                         }
                     } else {
@@ -591,7 +590,8 @@ public isolated client class Client {
                             SearchResult searchResponse = {
                                 results: searchType is SEARCH_TYPE_USER ? <User[]>[] :
                                         searchType is SEARCH_TYPE_ISSUE ? <Issue[]>[] :
-                                        searchType is SEARCH_TYPE_REPOSITORY ? <Repository[]>[] : <Organization[]>[],
+                                        searchType is SEARCH_TYPE_REPOSITORY ? <Repository[]>[] :
+                                        searchType is SEARCH_TYPE_ORGANIZATION ? <Organization[]>[] : <PullRequest[]>[],
                                 pageInfo: check searchResult.get(GIT_PAGE_INFO).cloneWithType(PageInfo),
                                 codeCount: <int>searchResult.get(GIT_CODE_COUNT),
                                 discussionCount: <int>searchResult.get(GIT_DISCUSSION_COUNT),

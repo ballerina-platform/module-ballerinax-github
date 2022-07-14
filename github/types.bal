@@ -54,7 +54,7 @@ public type User record {
     string companyHTML?;
     string createdAt?;
     int? databaseId?;
-    string email?;
+    string? email?;
     boolean hasSponsorsListing?;
     string id;
     boolean isBountyHunter?;
@@ -1539,14 +1539,15 @@ public type SearchResult record {
     int userCount;
     int wikiCount;
     PageInfo pageInfo;
-    Issue[]|User[]|Organization[]|Repository[] results;
+    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] results;
 };
 
 public enum SearchType {
     SEARCH_TYPE_ORGANIZATION = "ORG",
     SEARCH_TYPE_ISSUE = "ISSUE",
     SEARCH_TYPE_REPOSITORY = "REPOSITORY",
-    SEARCH_TYPE_USER = "USER"
+    SEARCH_TYPE_USER = "USER",
+    SEARCH_TYPE_PULL_REQUEST = "PULL_REQUEST"
 }
 
 public type IssueFilters record {
