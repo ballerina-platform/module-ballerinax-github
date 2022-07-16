@@ -69,9 +69,9 @@ function testGetRepository() returns error? {
 }
 function testGetRepositories() returns error? {
     log:printInfo("Testing githubClient -> getRepositories() for authenticated user");
-    stream<Repository,Error?> response = check githubClient->getRepositories();
-    test:assertTrue(response.next() is record {| Repository value; |},
-                     msg = "Failed testGetRepositories() for authenticated user");
+    stream<Repository, Error?> response = check githubClient->getRepositories();
+    test:assertTrue(response.next() is record {|Repository value;|},
+                    msg = "Failed testGetRepositories() for authenticated user");
 }
 
 @test:Config {
@@ -80,8 +80,8 @@ function testGetRepositories() returns error? {
 }
 function testGetRepositoriesOfGivenUser() returns error? {
     log:printInfo("Testing githubClient -> getRepositories() for a given user");
-    stream<Repository,Error?> response = check githubClient->getRepositories(testUsername);
-    test:assertTrue(response.next() is record {| Repository value; |},
+    stream<Repository, Error?> response = check githubClient->getRepositories(testUsername);
+    test:assertTrue(response.next() is record {|Repository value;|},
                     msg = "Failed testGetRepositories() for a given user");
 }
 
@@ -91,8 +91,8 @@ function testGetRepositoriesOfGivenUser() returns error? {
 }
 function testGetRepositoriesOfGivenOrganization() returns error? {
     log:printInfo("Testing githubClient -> getRepositories() for a given organization");
-    stream<Repository,Error?> response = check githubClient->getRepositories(testOrganizationName, true);
-    test:assertTrue(response.next() is record {| Repository value; |},
+    stream<Repository, Error?> response = check githubClient->getRepositories(testOrganizationName, true);
+    test:assertTrue(response.next() is record {|Repository value;|},
                     msg = "Failed testGetRepositories() for a given organization");
 }
 
@@ -102,8 +102,8 @@ function testGetRepositoriesOfGivenOrganization() returns error? {
 }
 function testGetCollaborators() returns error? {
     log:printInfo("githubClient -> getCollaborators()");
-    stream<User,Error?> response = check githubClient->getCollaborators(testUsername, testUserRepositoryName);
-    test:assertTrue(response.next() is record {| User value; |});
+    stream<User, Error?> response = check githubClient->getCollaborators(testUsername, testUserRepositoryName);
+    test:assertTrue(response.next() is record {|User value;|});
 }
 
 @test:Config {
@@ -112,14 +112,14 @@ function testGetCollaborators() returns error? {
 }
 function testgetBranches() returns error? {
     log:printInfo("githubClient -> getBranches()");
-    stream<Branch,Error?> response = check githubClient->getBranches(testUsername, testUserRepositoryName);
-    test:assertTrue(response.next() is record {| Branch value; |});
+    stream<Branch, Error?> response = check githubClient->getBranches(testUsername, testUserRepositoryName);
+    test:assertTrue(response.next() is record {|Branch value;|});
 }
 
 @test:Config {
     groups: ["network-calls"],
     enable: false // This test case have been disabled as this operation cannot be run continuosly without 
-                  // deleteRepository operation which is not yet supported by the GitHub GraphQL API.
+    // deleteRepository operation which is not yet supported by the GitHub GraphQL API.
 }
 function testCreateRepository() returns error? {
     log:printInfo("githubClient -> createRepository()");
@@ -161,14 +161,15 @@ function testGetMilestone() returns error? {
     groups: ["network-calls"],
     enable: true
 }
-function testGetMilestones() returns  error? {
+function testGetMilestones() returns error? {
     log:printInfo("githubClient -> getMilestones()");
-    stream<Milestone,Error?> response = check githubClient->getMilestones(testUsername, testUserRepositoryName);
-    test:assertTrue(response.next() is record {| Milestone value; |});
+    stream<Milestone, Error?> response = check githubClient->getMilestones(testUsername, testUserRepositoryName);
+    test:assertTrue(response.next() is record {|Milestone value;|});
 }
 
 string createdProjectId = "";
 int createdProjectNumber = -1;
+
 @test:Config {
     groups: ["network-calls"],
     enable: true
@@ -187,12 +188,13 @@ function testCreateUserProject() returns error? {
 
 string createdIssueId = "";
 int createdIssueNumber = -1;
+
 @test:Config {
     groups: ["network-calls"],
     enable: true,
     dependsOn: [testGetMilestone, testCreateUserProject]
 }
-function testCreateIssue() returns error?{
+function testCreateIssue() returns error? {
     log:printInfo("githubClient -> createIssue()");
     CreateIssueInput createIssueInput = {
         title: "This is a test Issue Title",
@@ -235,7 +237,7 @@ function testUpdateIssue() returns error? {
 function testGetIssue() returns error? {
     log:printInfo("githubClient -> getIssue()");
     Issue response = check githubClient->getIssue(testUsername, testUserRepositoryName, createdIssueNumber);
-    test:assertTrue(response.number==createdIssueNumber, msg = "Failed testGetIssue()");
+    test:assertTrue(response.number == createdIssueNumber, msg = "Failed testGetIssue()");
 }
 
 @test:Config {
@@ -248,11 +250,12 @@ function testGetIssues() returns error? {
         assignee: testUsername,
         labels: ["good first issue"]
     };
-    stream<Issue,Error?> response = check githubClient->getIssues(testUsername, testUserRepositoryName, issueFilters);
-    test:assertTrue(response.next() is record {| Issue value; |});
+    stream<Issue, Error?> response = check githubClient->getIssues(testUsername, testUserRepositoryName, issueFilters);
+    test:assertTrue(response.next() is record {|Issue value;|});
 }
 
-string createdIssueCommentId="";
+string createdIssueCommentId = "";
+
 @test:Config {
     groups: ["network-calls"],
     enable: true,
@@ -306,7 +309,7 @@ function testGetRepositoryLabel() returns error? {
     log:printInfo("githubClient -> getLabel()");
     string labelName = "bug";
     Label response = check githubClient->getLabel(testUsername, testUserRepositoryName, labelName);
-    test:assertTrue(response.name=="bug", msg = "Failed testGetRepositoryLabel()");
+    test:assertTrue(response.name == "bug", msg = "Failed testGetRepositoryLabel()");
 }
 
 @test:Config {
@@ -316,8 +319,8 @@ function testGetRepositoryLabel() returns error? {
 }
 function testGetLabels() returns error? {
     log:printInfo("githubClient -> getLabels()");
-    stream<Label,Error?> response = check githubClient->getLabels(testUsername, testUserRepositoryName, createdIssueNumber);
-    test:assertTrue(response.next() is record {| Label value; |});
+    stream<Label, Error?> response = check githubClient->getLabels(testUsername, testUserRepositoryName, createdIssueNumber);
+    test:assertTrue(response.next() is record {|Label value;|});
 }
 
 @test:Config {
@@ -329,9 +332,9 @@ function testAddLabelsToLabelable() returns error? {
     log:printInfo("githubClient -> addIssueLabel()");
     AddLabelsInput addIssueLabelInput = {
         repositoryOwnerName: testUsername,
-        repositoryName: testUserRepositoryName, 
+        repositoryName: testUserRepositoryName,
         issueNumber: createdIssueNumber,
-        labelNames: ["bug"] 
+        labelNames: ["bug"]
     };
     LabelList response = check githubClient->addLabels(addIssueLabelInput);
     test:assertTrue(response.length() >= 0, msg = "Failed testGetRepositoryLabelListInIssue()");
@@ -349,13 +352,14 @@ function testRemoveLabelsFromLabelable() returns error? {
         repositoryOwnerName: testUsername,
         repositoryName: testUserRepositoryName,
         issueNumber: createdIssueNumber,
-        labelNames: ["bug"] 
+        labelNames: ["bug"]
     };
     check githubClient->removeLabel(removeIssueLabelsInput);
 }
 
-string createdPullRequestId="";
-int createdPullRequestNumber=-1;
+string createdPullRequestId = "";
+int createdPullRequestNumber = -1;
+
 @test:Config {
     groups: ["network-calls"],
     enable: true
@@ -363,10 +367,10 @@ int createdPullRequestNumber=-1;
 function testCreatePullRequest() returns error? {
     log:printInfo("githubClient -> createPullRequest()");
     CreatePullRequestInput createPullRequestInput = {
-       title: "Test PR created from Ballerina GitHub Connector",
-       baseRefName: "master",
-       headRefName: "feature/feature2",
-       body: "This is some dummy content for PR body"
+        title: "Test PR created from Ballerina GitHub Connector",
+        baseRefName: "master",
+        headRefName: "feature/feature2",
+        body: "This is some dummy content for PR body"
     };
     PullRequest response = check githubClient->createPullRequest(createPullRequestInput, testUsername, testUserRepositoryName);
     createdPullRequestId = response.id;
@@ -384,7 +388,7 @@ function testGetPullRequest() returns error? {
     test:assertTrue(response.number == createdPullRequestNumber, msg = "Failed testGetPullRequest()");
 }
 
-@test:Config{
+@test:Config {
     groups: ["network-calls"],
     enable: true,
     dependsOn: [testGetPullRequest]
@@ -392,7 +396,7 @@ function testGetPullRequest() returns error? {
 function testLastCommit() returns error? {
     log:printInfo("Testing Last commit part from githubClient->getPullRequest");
     PullRequest pullRequest = check githubClient->getPullRequest(testUsername, testUserRepositoryName,
-                                                                 createdPullRequestNumber);
+                                                                createdPullRequestNumber);
     test:assertTrue(pullRequest.lastCommit is Commit, "Issue in fetching last commit");
 }
 
@@ -402,8 +406,8 @@ function testLastCommit() returns error? {
 }
 function testGetPullRequestList() returns error? {
     log:printInfo("githubClient -> getPullRequests()");
-    stream<PullRequest,Error?> response = check githubClient->getPullRequests("ballerina-platform", "module-ballerinax-googleapis.gmail", PULL_REQUEST_MERGED);
-    test:assertTrue(response.next() is record {| PullRequest value; |});
+    stream<PullRequest, Error?> response = check githubClient->getPullRequests("ballerina-platform", "module-ballerinax-googleapis.gmail", PULL_REQUEST_MERGED);
+    test:assertTrue(response.next() is record {|PullRequest value;|});
 }
 
 @test:Config {
@@ -414,9 +418,9 @@ function testGetPullRequestList() returns error? {
 function testUpdatePullRequest() returns error? {
     log:printInfo("githubClient -> updatePullRequest()");
     UpdatePullRequestInput updatePullRequestInput = {
-       title: "Test PR created from Ballerina GitHub Connector Updated",
-       labelNames: ["bug"],
-       assigneeNames: ["MadhurangaWije"]
+        title: "Test PR created from Ballerina GitHub Connector Updated",
+        labelNames: ["bug"],
+        assigneeNames: ["MadhurangaWije"]
     };
     PullRequest response = check githubClient->updatePullRequest(updatePullRequestInput, testUsername, testUserRepositoryName, createdPullRequestNumber);
     log:printInfo(response.toString());
@@ -430,7 +434,7 @@ function testUpdatePullRequest() returns error? {
 function testUpdatePullRequestToClose() returns error? {
     log:printInfo("githubClient -> updatePullRequest()");
     UpdatePullRequestInput updatePullRequestInput = {
-       state: PULL_REQUEST_CLOSED
+        state: PULL_REQUEST_CLOSED
     };
 
     PullRequest response = check githubClient->updatePullRequest(updatePullRequestInput, testUsername, testUserRepositoryName, createdPullRequestNumber);
@@ -439,6 +443,7 @@ function testUpdatePullRequestToClose() returns error? {
 
 string createdPullRequestReviewId = "";
 string createdPullRequestReviewIdWithPendingState = "";
+
 @test:Config {
     groups: ["network-calls"],
     enable: true,
@@ -503,10 +508,9 @@ function testDeletePullRequestReview() returns error? {
 }
 function testGetOrgProjectList() returns error? {
     log:printInfo("githubClient -> getOrganizationProjectList()");
-    stream<Project,Error?> response = check githubClient->getProjects("wso2-enterprise", GITHUB_ORGANIZATION, (), PROJECT_OPEN);
-    test:assertTrue(response.next() is record {| Project value; |});
+    stream<Project, Error?> response = check githubClient->getProjects("wso2-enterprise", GITHUB_ORGANIZATION, (), PROJECT_OPEN);
+    test:assertTrue(response.next() is record {|Project value;|});
 }
-
 
 @test:Config {
     groups: ["network-calls"],
@@ -554,8 +558,8 @@ function testDeleteProject() returns error? {
 }
 function testGetRepositoryProjectList() returns error? {
     log:printInfo("githubClient -> getRepositoryProjectList()");
-    stream<Project,Error?> response = check githubClient->getProjects(testUsername, GITHUB_USER, testUserRepositoryName, PROJECT_OPEN);
-    test:assertTrue(response.next() is record {| Project value; |});
+    stream<Project, Error?> response = check githubClient->getProjects(testUsername, GITHUB_USER, testUserRepositoryName, PROJECT_OPEN);
+    test:assertTrue(response.next() is record {|Project value;|});
 }
 
 @test:Config {
@@ -564,8 +568,8 @@ function testGetRepositoryProjectList() returns error? {
 }
 function testGetUserProjectList() returns error? {
     log:printInfo("githubClient -> getUserProjectList()");
-    stream<Project,Error?> response = check githubClient->getProjects(testUsername, GITHUB_USER);
-    test:assertTrue(response.next() is record {| Project value; |});
+    stream<Project, Error?> response = check githubClient->getProjects(testUsername, GITHUB_USER);
+    test:assertTrue(response.next() is record {|Project value;|});
 }
 
 @test:Config {
@@ -574,8 +578,8 @@ function testGetUserProjectList() returns error? {
 }
 function testGetOrganization() returns error? {
     log:printInfo("githubClient -> getOrganization()");
-    stream<Organization,Error?> response = check githubClient->getOrganizations(testOrganizationName, GITHUB_ORGANIZATION);
-    test:assertTrue(response.next() is record {| Organization value; |});
+    stream<Organization, Error?> response = check githubClient->getOrganizations(testOrganizationName, GITHUB_ORGANIZATION);
+    test:assertTrue(response.next() is record {|Organization value;|});
 }
 
 @test:Config {
@@ -584,8 +588,8 @@ function testGetOrganization() returns error? {
 }
 function testGetUserOrganizationList() returns error? {
     log:printInfo("githubClient -> getUserOrganizationList()");
-    stream<Organization,Error?> response = check githubClient->getOrganizations("kasthuriraajan", GITHUB_USER);
-    test:assertTrue(response.next() is record {| Organization value; |});
+    stream<Organization, Error?> response = check githubClient->getOrganizations("kasthuriraajan", GITHUB_USER);
+    test:assertTrue(response.next() is record {|Organization value;|});
 }
 
 @test:Config {
@@ -594,8 +598,8 @@ function testGetUserOrganizationList() returns error? {
 }
 function testGetOrganizationMembersList() returns error? {
     log:printInfo("githubClient -> getOrganizationMembers()");
-    stream<User,Error?> response = check githubClient->getOrganizationMembers("ballerina-platform");
-    test:assertTrue(response.next() is record {| User value; |});
+    stream<User, Error?> response = check githubClient->getOrganizationMembers("ballerina-platform");
+    test:assertTrue(response.next() is record {|User value;|});
 }
 
 @test:Config {
@@ -604,9 +608,9 @@ function testGetOrganizationMembersList() returns error? {
 }
 function testSearch() returns @tainted error? {
     log:printInfo("githubClient -> search()");
-    SearchResult response = check githubClient-> search("connector-", SEARCH_TYPE_USER, 10);
-    Issue[]|User[]|Organization[]|Repository[] result = response.results;
-    test:assertTrue(result is User[]);    
+    SearchResult response = check githubClient->search("connector-", SEARCH_TYPE_USER, 10);
+    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
+    test:assertTrue(result is User[]);
 }
 
 @test:Config {
@@ -615,11 +619,11 @@ function testSearch() returns @tainted error? {
 }
 function testSearchMultiWordsString() returns error? {
     log:printInfo("githubClient -> testSearchMultiWordsString()");
- 
+
     string query = string `repo:ballerina-platform/ballerina-extended-library is:issue is:open label:"Type/New Feature"`;
-    SearchResult response = check githubClient-> search(query, SEARCH_TYPE_ISSUE, 1);
-    Issue[]|User[]|Organization[]|Repository[] result = response.results;
-    test:assertTrue(result is Issue[]);    
+    SearchResult response = check githubClient->search(query, SEARCH_TYPE_ISSUE, 10);
+    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
+    test:assertTrue(result is Issue[]);
 }
 
 @test:Config {
@@ -628,21 +632,74 @@ function testSearchMultiWordsString() returns error? {
 }
 function testSearchIssueLabels() returns error? {
     log:printInfo("githubClient -> testSearchIssueLabels()");
- 
+
     string query = string `repo:ballerina-platform/ballerina-extended-library is:issue is:open label:"Team/Connector"`;
-    SearchResult response = check githubClient-> search(query, SEARCH_TYPE_ISSUE, 1, 1);
-    Issue[]|User[]|Organization[]|Repository[] result = response.results;
+    SearchResult response = check githubClient->search(query, SEARCH_TYPE_ISSUE, 1, 1);
+    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
     if result is Issue[] {
         if result.length() > 0 {
-            int labelCount = let var nodes = result[0]?.labels?.nodes in nodes is () ? 0 : nodes.length();
-            test:assertTrue(labelCount == 1);    
+            int labelCount = let var nodes = result[0]?.labels?.nodes
+                in nodes is () ? 0 : nodes.length();
+            test:assertTrue(labelCount == 1);
         }
     } else {
-        test:assertFail("Incorrect search results");    
+        test:assertFail("Incorrect search results");
     }
 }
 
-@test:Config{
+@test:Config {
+    groups: ["network-calls"],
+    enable: true
+}
+function testSearchPullRequest() returns error? {
+    log:printInfo("githubClient -> testSearchPullRequest()");
+
+    string query = string `repo:ballerina-platform/ballerina-extended-library is:pr is:open`;
+    SearchResult response = check githubClient->search(query, SEARCH_TYPE_ISSUE, 10);
+    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
+    test:assertTrue(result is PullRequest[]);
+}
+
+@test:Config {
+    groups: ["network-calls"],
+    enable: true
+}
+function testSearchPullRequestComplex() returns error? {
+    log:printInfo("githubClient -> testSearchPullRequestComplex()");
+
+    string query = string `repo:ballerina-platform/ballerina-extended-library is:pr state:closed author:abeykoon created:2021-11-01..2022-07-11`;
+    SearchResult response = check githubClient->search(query, SEARCH_TYPE_PULL_REQUEST, 10);
+    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
+    test:assertTrue(result is PullRequest[]);
+}
+
+@test:Config {
+    groups: ["network-calls"],
+    enable: true
+}
+function testSearchUser() returns error? {
+    log:printInfo("githubClient -> testSearchUser()");
+
+    string query = string `mike in:name created:<2022-01-01 type:user`;
+    SearchResult response = check githubClient->search(query, SEARCH_TYPE_USER, 20);
+    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
+    test:assertTrue(result is User[]);
+}
+
+@test:Config {
+    groups: ["network-calls"],
+    enable: true
+}
+function testSearchOrganization() returns error? {
+    log:printInfo("githubClient -> testSearchOrganization()");
+
+    string query = string `data in:email type:org`;
+    SearchResult response = check githubClient->search(query, SEARCH_TYPE_ORGANIZATION, 20);
+    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
+    test:assertTrue(result is Organization[]);
+}
+
+@test:Config {
     enable: true
 }
 function testGetLanguagesFromRepository() returns error? {
@@ -656,7 +713,7 @@ function testGetLanguagesFromRepository() returns error? {
     }
 }
 
-@test:Config{
+@test:Config {
     enable: true
 }
 function testGetRepositoryContent() returns error? {
