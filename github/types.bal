@@ -1657,7 +1657,7 @@ public type GraphQLClientSourceLocation record {
 public type File record {
     string name;
     string 'type;
-    FileContent 'object;
+    FileContent? 'object;
 };
 
 # File content
@@ -1667,6 +1667,6 @@ public type File record {
 # + isBinary - If the file content is binary
 public type FileContent record {
     int byteSize?;
-    string text?;
-    boolean isBinary?;
+    string? text?;
+    boolean? isBinary?;
 };
