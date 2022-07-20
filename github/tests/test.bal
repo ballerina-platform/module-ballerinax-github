@@ -677,6 +677,29 @@ function testSearchPullRequestComplex() returns error? {
     groups: ["network-calls"],
     enable: true
 }
+function testSearchPullRequestWithRelatedIssues() returns error? {
+    log:printInfo("githubClient -> testSearchPullRequestWithRelatedIssues()");
+
+    string query = string `repo:ballerina-platform/module-ballerinax-github is:pr is:closed author:sachinira`;
+    SearchResult response = check githubClient->search(query, SEARCH_TYPE_PULL_REQUEST, 5);
+    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
+
+    if result is PullRequest[] {
+        foreach PullRequest item in result {
+            RelatedIssues issues = item?.closingIssuesReferences ?: {};
+            if issues?.nodes != [] {
+                Issue[] issueData = issues?.nodes ?: [];
+                test:assertTrue(issueData != []);
+            }
+        }
+    }
+}
+
+
+@test:Config {
+    groups: ["network-calls"],
+    enable: true
+}
 function testSearchUser() returns error? {
     log:printInfo("githubClient -> testSearchUser()");
 

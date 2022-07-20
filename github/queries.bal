@@ -184,14 +184,14 @@ final string ISSUE_FIELDS = Author +
                                             "              url,\n" +
                                             "              viewerDidAuthor,\n";
                                             
-final string SEARCH_ISSUE_FIELDS = ISSUE_FIELDS +
-                                            "              labels (first: $perPageCountForLabels) {\n" +
+final string SEARCH_ISSUE_FIELDS = ISSUE_FIELDS + SEARCH_ISSUE_LABEL_FIELDS;
+
+final string SEARCH_ISSUE_LABEL_FIELDS =    "              labels (first: $perPageCountForLabels) {\n" +
                                             "                 nodes{\n" +
                                                                 LABEL_FIELDS +
                                             "                \n}," +
                                             "                 totalCount,\n"+
                                             "              },\n";
-
 
 final string ISSUE_COMMENT_FIELDS = Author +
                                             "              body,\n" +
@@ -273,7 +273,31 @@ final string PULL_REQUEST_FIELDS = "                     id,\n" +
                                         "                     state,\n" +
                                         "                     title,\n" +
                                         "                     updatedAt,\n" +
-                                        "                     url,\n";
+                                        "                     url,\n" +
+                                        SEARCH_ISSUE_LABEL_FIELDS +
+                                        CLOSING_ISSUE_REFERENCES;
+
+final string CLOSING_ISSUE_REFERENCES = "               closingIssuesReferences(first: $perPageCountForRelatedIssues) {\n" +
+                                        "                       nodes {\n" +
+                                        "                               id\n" +
+                                        "                               url\n" +
+                                        "                               createdAt\n" +
+                                        "                               number\n" +
+                                        "                               state\n" +
+                                                                        SEARCH_ISSUE_ASSIGNEE_FIELDS +
+                                        "                       }\n" +
+                                        "               }\n";
+
+final string SEARCH_ISSUE_ASSIGNEE_FIELDS =  "                assignees(first: $perPageCountForAssignees) {\n" +
+                                        "                       edges {\n" +
+                                        "                               node {\n" +
+                                        "                                       email\n" +
+                                        "                                       login\n" +
+                                        "                                       name\n" +
+                                        "                                       url\n" +
+                                        "                               }\n" +
+                                        "                       }\n" +
+                                        "               }\n";
 
 final string SEARCH_COUNT = "codeCount,\n" +
                             "discussionCount,\n" +
@@ -665,7 +689,8 @@ final string GET_USER_OWNER_ID = "query($userName: String!){\n" +
                                 "  }\n" +
                                 "}";
 
-final string SEARCH = "query ($searchQuery: String!, $searchType: SearchType!, $perPageCount: Int, $lastPageCursor: String, $perPageCountForLabels: Int) {\n" +
+final string SEARCH = "query ($searchQuery: String!, $searchType: SearchType!, $perPageCount: Int, $lastPageCursor: String, $perPageCountForLabels: Int," +
+                      "$perPageCountForAssignees: Int, $perPageCountForRelatedIssues: Int) {\n" +
                         "   search(query: $searchQuery, type: $searchType, first: $perPageCount, after: $lastPageCursor) {\n" +
                                 SEARCH_COUNT +
                                 PAGE_INFO +
