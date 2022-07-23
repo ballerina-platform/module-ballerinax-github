@@ -273,7 +273,9 @@ final string PULL_REQUEST_FIELDS = "                     id,\n" +
                                         "                     state,\n" +
                                         "                     title,\n" +
                                         "                     updatedAt,\n" +
-                                        "                     url,\n" +
+                                        "                     url,\n";
+
+final string SEARCH_PULL_REQUEST__FIELDS = PULL_REQUEST_FIELDS +
                                         SEARCH_ISSUE_LABEL_FIELDS +
                                         CLOSING_ISSUE_REFERENCES +
                                         PULL_REQUEST_REVIEWS;
@@ -729,7 +731,7 @@ final string SEARCH = "query ($searchQuery: String!, $searchType: SearchType!, $
                                         ORGANIZATION_FILEDS +
                         "           }\n" +
                         "           ... on PullRequest {\n" +
-                                        PULL_REQUEST_FIELDS +
+                                        SEARCH_PULL_REQUEST__FIELDS +
                         "           }\n" +
                         "           ... on Repository {\n" +
                                         REPOSITORY_FIELDS +
@@ -740,7 +742,6 @@ final string SEARCH = "query ($searchQuery: String!, $searchType: SearchType!, $
                         "       }\n" +
                         "   }\n" +
                         "}";
-
 
 // Repository content
 final string GET_REPOSITORY_CONTENT = "query($owner:String!, $name:String!, $expr: String!){\n" +
