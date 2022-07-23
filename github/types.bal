@@ -273,7 +273,7 @@ public type Issue record {
 # + nodes - List of Labels in the issue
 # + totalCount - Identifies the total count of labels in the issue
 public type IssueLabels record {
-    Label[] nodes?;
+    Label[]? nodes?;
     int totalCount?;
 };
 
@@ -428,6 +428,8 @@ public type Ref record {
 # + url - The HTTP URL for this pull request.  
 # + lastCommit - Commit details of the last commit
 # + pullRequestReviews - PR review comments
+# + labels - A list of labels associated with the pull request.
+# + closingIssuesReferences - List of issues that were may be closed by this pull request.
 public type PullRequest record {
     int additions?;
     Actor? author?;
@@ -465,6 +467,17 @@ public type PullRequest record {
     string url?;
     Commit lastCommit?;
     PullRequestReview[] pullRequestReviews?;
+    IssueLabels? labels?;
+    RelatedIssues? closingIssuesReferences?; 
+};
+
+# List of issues that were may be closed by this pull request.
+#
+# + nodes - A list of issues.  
+# + totalCount - The total count of items in the connection.
+public type RelatedIssues record {
+    Issue[]? nodes?;
+    int totalCount?;
 };
 
 # Represent GitHub pull request review state.

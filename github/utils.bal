@@ -511,17 +511,22 @@ isolated function getFormulatedStringQueryForGetUserOwnerId(string userName) ret
                     + string `${GET_USER_OWNER_ID}"}`;
 }
 
-isolated function getFormulatedStringQueryForSearch(string searchQuery, SearchType searchType, int perPageCount, int perPageCountForLabels, 
-                                                    string? lastPageCursor) returns string {
+isolated function getFormulatedStringQueryForSearch(string searchQuery, SearchType searchType, int perPageCount, 
+                                                    int perPageCountForLabels, int perPageCountForAssignees, 
+                                                    int perPageCountForRelatedIssues, string? lastPageCursor) returns string {
     string query = searchQuery.indexOf(string `"`) !is () ? regex:replaceAll(searchQuery, string `"`, string `\"`) : 
     searchQuery;
     if lastPageCursor is string {
         return string `{"variables":{"searchQuery":"${query}", "searchType": ${searchType.toBalString()},
-                    "perPageCount":${perPageCount}, "perPageCountForLabels":${perPageCountForLabels}, "lastPageCursor":"${lastPageCursor}"},"query":"`
-                    + string `${SEARCH}"}`;
+                    "perPageCount":${perPageCount}, "perPageCountForLabels":${perPageCountForLabels}, 
+                    "perPageCountForAssignees":${perPageCountForAssignees}, 
+                    "perPageCountForRelatedIssues":${perPageCountForRelatedIssues}, 
+                    "lastPageCursor":"${lastPageCursor}"},"query":"`+ string `${SEARCH}"}`;
     } else {
         return string `{"variables":{"searchQuery":"${query}", "searchType": ${searchType.toBalString()},
-                    "perPageCount":${perPageCount}, "perPageCountForLabels":${perPageCountForLabels}, "lastPageCursor":null},"query":"`
+                    "perPageCount":${perPageCount}, "perPageCountForLabels":${perPageCountForLabels}, 
+                    "perPageCountForAssignees":${perPageCountForAssignees}, 
+                    "perPageCountForRelatedIssues":${perPageCountForRelatedIssues}, "lastPageCursor":null},"query":"`
                     + string `${SEARCH}"}`;
     }
 }

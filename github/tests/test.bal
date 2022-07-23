@@ -1,12 +1,12 @@
-// Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-//
-// WSO2 Inc. licenses this file to you under the Apache License,
+// Copyright (c) 2018, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
+// 
+// WSO2 LLC. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
 // in compliance with the License.
 // You may obtain a copy of the License at
-//
+// 
 // http://www.apache.org/licenses/LICENSE-2.0
-//
+// 
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -668,9 +668,31 @@ function testSearchPullRequestComplex() returns error? {
     log:printInfo("githubClient -> testSearchPullRequestComplex()");
 
     string query = string `repo:ballerina-platform/ballerina-extended-library is:pr state:closed author:abeykoon created:2021-11-01..2022-07-11`;
-    SearchResult response = check githubClient->search(query, SEARCH_TYPE_PULL_REQUEST, 10);
+    SearchResult response = check githubClient->search(query, SEARCH_TYPE_PULL_REQUEST, 5);
     Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
     test:assertTrue(result is PullRequest[]);
+}
+
+@test:Config {
+    groups: ["network-calls"],
+    enable: true
+}
+function testSearchPullRequestWithRelatedIssues() returns error? {
+    log:printInfo("githubClient -> testSearchPullRequestWithRelatedIssues()");
+
+    string query = string `repo:ballerina-platform/module-ballerinax-github is:pr is:closed author:sachinira`;
+    SearchResult response = check githubClient->search(query, SEARCH_TYPE_PULL_REQUEST, 5);
+    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
+
+    if result is PullRequest[] {
+        foreach PullRequest item in result {
+            RelatedIssues issues = item?.closingIssuesReferences ?: {};
+            if issues?.nodes != [] {
+                Issue[] issueData = issues?.nodes ?: [];
+                test:assertTrue(issueData != []);
+            }
+        }
+    }
 }
 
 @test:Config {
