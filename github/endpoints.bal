@@ -1,12 +1,12 @@
-// Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-//
-// WSO2 Inc. licenses this file to you under the Apache License,
+// Copyright (c) 2021, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
+// 
+// WSO2 LLC. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
 // in compliance with the License.
 // You may obtain a copy of the License at
-//
+// 
 // http://www.apache.org/licenses/LICENSE-2.0
-//
+// 
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -114,8 +114,8 @@ public isolated client class Client {
     # + owner - Repository owner name
     # + repositoryName - GitHub repository name
     # + expression - The expression in the form `<branch_name>:<path_to_directory>` 
-    #   Eg: "master:github" expression will list the contents on `github` folder in the master branch
-    #       "master:" expression will list the contents on root folder in the master branch
+    # Eg: "master:github" expression will list the contents on `github` folder in the master branch
+    # "master:" expression will list the contents on root folder in the master branch
     #
     # + return - `github:File[]` record if successful else `github:Error`
     @display {label: "Get Repository Content"}
@@ -185,11 +185,11 @@ public isolated client class Client {
     # + repositoryName - repositoryName
     # + issueNumber - Issue number
     # + perPageCountForLabels - Number of labels in each issue to be returned. Defaulted to 10.
-    # 
+    #
     # + return - `github:Issue` record if successful else `github:Error`
     @display {label: "Get Issue"}
     remote isolated function getIssue(string owner, string repositoryName, int issueNumber,
-                                      int perPageCountForLabels = 10) returns Issue|Error {
+                                    int perPageCountForLabels = 10) returns Issue|Error {
         return getIssue(owner, repositoryName, issueNumber, self.authToken, self.githubGraphQlClient, perPageCountForLabels);
     }
 
@@ -526,18 +526,18 @@ public isolated client class Client {
     # + perPageCountForAssignees - Number of assinees for each pull request to be returned. Defaulted to 10.
     # + perPageCountForRelatedIssues - Number of related issues for each pull request to be returned. Defaulted to 10.
     # + lastPageCursor - Next page curser
-    # 
+    #
     # + return - `github:SearchResult` record if successful or else `github:Error`
     @display {label: "Search"}
-    remote isolated function search(string searchQuery, SearchType searchType, int perPageCount, 
-                                    int perPageCountForLabels = 10, int perPageCountForAssignees = 10, 
-                                    int perPageCountForRelatedIssues = 10, string? lastPageCursor = ()) 
+    remote isolated function search(string searchQuery, SearchType searchType, int perPageCount,
+                                    int perPageCountForLabels = 10, int perPageCountForAssignees = 10,
+                                    int perPageCountForRelatedIssues = 10, string? lastPageCursor = ())
                                     returns SearchResult|Error {
-        SearchType querySearchType = searchType is SEARCH_TYPE_ORGANIZATION ? SEARCH_TYPE_USER : 
-                                     searchType is SEARCH_TYPE_PULL_REQUEST ? SEARCH_TYPE_ISSUE : searchType;
-        string stringQuery = getFormulatedStringQueryForSearch(searchQuery, querySearchType, perPageCount, 
-                                                               perPageCountForLabels, perPageCountForAssignees, 
-                                                               perPageCountForRelatedIssues, lastPageCursor);
+        SearchType querySearchType = searchType is SEARCH_TYPE_ORGANIZATION ? SEARCH_TYPE_USER :
+                                    searchType is SEARCH_TYPE_PULL_REQUEST ? SEARCH_TYPE_ISSUE : searchType;
+        string stringQuery = getFormulatedStringQueryForSearch(searchQuery, querySearchType, perPageCount,
+                                                                perPageCountForLabels, perPageCountForAssignees,
+                                                                perPageCountForRelatedIssues, lastPageCursor);
         map<json>|Error graphQlData = getGraphQlData(self.githubGraphQlClient, self.authToken, stringQuery);
 
         if graphQlData is map<json> {
@@ -556,7 +556,7 @@ public isolated client class Client {
                             PullRequest[] prs = [];
                             match searchType {
                                 SEARCH_TYPE_USER => {
-                                    users =  check nodes.cloneWithType();
+                                    users = check nodes.cloneWithType();
                                 }
                                 SEARCH_TYPE_ORGANIZATION => {
                                     orgs = check nodes.cloneWithType();
@@ -568,13 +568,27 @@ public isolated client class Client {
                                     repos = check nodes.cloneWithType();
                                 }
                                 SEARCH_TYPE_PULL_REQUEST => {
-                                    prs = check nodes.cloneWithType();
+                                    foreach json item in nodes {
+                                        PullRequestReviewListPayload reviews = check (check item.reviews).cloneWithType();
+                                        PullRequestReviewList pullRequestReviewList = {
+                                            pullRequestReviews: reviews.nodes,
+                                            pageInfo: reviews.pageInfo,
+                                            totalCount: reviews.totalCount
+                                        };
+                                        PullRequest pr = check item.cloneWithType();
+                                        PullRequestReview[] reviewComments = [];
+                                        foreach PullRequestReview comment in pullRequestReviewList.pullRequestReviews {
+                                            reviewComments.push(comment);
+                                        }
+                                        pr.pullRequestReviews = reviewComments;
+                                        prs.push(pr);
+                                    }
                                 }
                             }
                             SearchResult searchResponse = {
                                 results: searchType is SEARCH_TYPE_ISSUE ? issues :
                                         searchType is SEARCH_TYPE_REPOSITORY ? repos :
-                                        searchType is SEARCH_TYPE_USER ? users : 
+                                        searchType is SEARCH_TYPE_USER ? users :
                                         searchType is SEARCH_TYPE_ORGANIZATION ? orgs : prs,
                                 pageInfo: check searchResult.get(GIT_PAGE_INFO).cloneWithType(PageInfo),
                                 codeCount: <int>searchResult.get(GIT_CODE_COUNT),

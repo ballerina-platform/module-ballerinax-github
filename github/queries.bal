@@ -1,12 +1,12 @@
-// Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-//
-// WSO2 Inc. licenses this file to you under the Apache License,
+// Copyright (c) 2021, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
+// 
+// WSO2 LLC. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
 // in compliance with the License.
 // You may obtain a copy of the License at
-//
+// 
 // http://www.apache.org/licenses/LICENSE-2.0
-//
+// 
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -275,7 +275,33 @@ final string PULL_REQUEST_FIELDS = "                     id,\n" +
                                         "                     updatedAt,\n" +
                                         "                     url,\n" +
                                         SEARCH_ISSUE_LABEL_FIELDS +
-                                        CLOSING_ISSUE_REFERENCES;
+                                        CLOSING_ISSUE_REFERENCES +
+                                        PULL_REQUEST_REVIEWS;
+
+final string PULL_REQUEST_REVIEWS =     "        reviews(first: 10) {\n" +
+                                        "               nodes {,\n" +
+                                        "               author {,\n" +
+                                        "                       login,\n" +
+                                        "                       url,\n" +
+                                        "               },\n" +
+                                        "               body,\n" +
+                                        "               bodyHTML,\n" +
+                                        "               bodyText,\n" +
+                                        "               createdAt,\n" +
+                                        "               state,\n" +
+                                        "               url,\n" +
+                                        "               id,\n" +
+                                        "               lastEditedAt,\n" +
+                                        "               publishedAt,\n" +
+                                        "       },\n" +
+                                        "       pageInfo {,\n" +
+                                        "               endCursor,\n" +
+                                        "               hasNextPage,\n" +
+                                        "               hasPreviousPage,\n" +
+                                        "               startCursor,\n" +
+                                        "       },\n" +
+                                        "       totalCount,\n" +
+                                        "}";
 
 final string CLOSING_ISSUE_REFERENCES = "               closingIssuesReferences(first: $perPageCountForRelatedIssues) {\n" +
                                         "                       nodes {\n" +
