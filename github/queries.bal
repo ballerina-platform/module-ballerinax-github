@@ -280,7 +280,7 @@ final string SEARCH_PULL_REQUEST__FIELDS = PULL_REQUEST_FIELDS +
                                         CLOSING_ISSUE_REFERENCES +
                                         PULL_REQUEST_REVIEWS;
 
-final string PULL_REQUEST_REVIEWS =     "        reviews(first: 10) {\n" +
+final string PULL_REQUEST_REVIEWS =     "        reviews(first: $perPageCountForPRReviews) {\n" +
                                         "               nodes {,\n" +
                                         "               author {,\n" +
                                         "                       login,\n" +
@@ -718,7 +718,7 @@ final string GET_USER_OWNER_ID = "query($userName: String!){\n" +
                                 "}";
 
 final string SEARCH = "query ($searchQuery: String!, $searchType: SearchType!, $perPageCount: Int, $lastPageCursor: String, $perPageCountForLabels: Int," +
-                      "$perPageCountForAssignees: Int, $perPageCountForRelatedIssues: Int) {\n" +
+                      "$perPageCountForAssignees: Int, $perPageCountForRelatedIssues: Int, $perPageCountForPRReviews: Int) {\n" +
                         "   search(query: $searchQuery, type: $searchType, first: $perPageCount, after: $lastPageCursor) {\n" +
                                 SEARCH_COUNT +
                                 PAGE_INFO +
