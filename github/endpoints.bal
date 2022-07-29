@@ -525,19 +525,22 @@ public isolated client class Client {
     # + perPageCountForLabels - Number of labels in each issue to be returned. Defaulted to 10.
     # + perPageCountForAssignees - Number of assinees for each pull request to be returned. Defaulted to 10.
     # + perPageCountForRelatedIssues - Number of related issues for each pull request to be returned. Defaulted to 10.
+    # + perPageCountForPRReviews - Number of reviews for each pull request to be returned. Defaulted to 10.
     # + lastPageCursor - Next page curser
     #
     # + return - `github:SearchResult` record if successful or else `github:Error`
     @display {label: "Search"}
     remote isolated function search(string searchQuery, SearchType searchType, int perPageCount,
                                     int perPageCountForLabels = 10, int perPageCountForAssignees = 10,
-                                    int perPageCountForRelatedIssues = 10, string? lastPageCursor = ())
+                                    int perPageCountForRelatedIssues = 10, int perPageCountForPRReviews = 10, 
+                                    string? lastPageCursor = ())
                                     returns SearchResult|Error {
         SearchType querySearchType = searchType is SEARCH_TYPE_ORGANIZATION ? SEARCH_TYPE_USER :
                                     searchType is SEARCH_TYPE_PULL_REQUEST ? SEARCH_TYPE_ISSUE : searchType;
         string stringQuery = getFormulatedStringQueryForSearch(searchQuery, querySearchType, perPageCount,
                                                                 perPageCountForLabels, perPageCountForAssignees,
-                                                                perPageCountForRelatedIssues, lastPageCursor);
+                                                                perPageCountForRelatedIssues, perPageCountForPRReviews, 
+                                                                lastPageCursor);
         map<json>|Error graphQlData = getGraphQlData(self.githubGraphQlClient, self.authToken, stringQuery);
 
         if graphQlData is map<json> {
