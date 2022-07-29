@@ -1,5 +1,5 @@
 [package]
-distribution = "2201.1.0"
+distribution = "2201.1.1"
 org = "ballerinax"
 name = "github"
 version = "4.2.0"
