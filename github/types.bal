@@ -890,6 +890,10 @@ public type ConnectionConfig record {|
     http:ResponseLimitConfigs responseLimits = {};
     # SSL/TLS-related options
     http:ClientSecureSocket? secureSocket = ();
+    # Proxy server related options
+    http:ProxyConfig? proxy = ();
+    # Enables the inbound payload validation functionalty which provided by the constraint package. Enabled by default
+    boolean validation = true;
 |};
 
 # Represent repository visibility types
