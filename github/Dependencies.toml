@@ -292,7 +292,7 @@ modules = [
 [[package]]
 org = "ballerinax"
 name = "github"
-version = "4.2.0"
+version = "4.2.1"
 dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "log"},

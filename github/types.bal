@@ -515,6 +515,7 @@ public enum OwnerType {
 
 # Represent GitHub pull request review
 #
+# + author - The actor who authored the review.  
 # + body - Identifies the pull request review body.
 # + createdAt - Identifies the date and time when the object was created.
 # + id - ID
@@ -523,6 +524,7 @@ public enum OwnerType {
 # + state - Identifies the current state of the pull request review.
 # + publishedAt - Identifies when the comment was published at.
 public type PullRequestReview record {
+    Actor? author?;
     string body?;
     string createdAt?;
     string id;
