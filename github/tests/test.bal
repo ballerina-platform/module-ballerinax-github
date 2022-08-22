@@ -31,7 +31,7 @@ ConnectionConfig gitHubConfig = {
     }
 };
 
-Client githubClient = checkpanic new (gitHubConfig);
+Client githubClient = check new (gitHubConfig);
 
 @test:Config {
     groups: ["network-calls"],

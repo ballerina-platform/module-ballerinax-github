@@ -1,8 +1,8 @@
 [package]
-distribution = "2201.1.1"
+distribution = "2201.2.0"
 org = "ballerinax"
 name = "github"
-version = "4.2.1"
+version = "4.3.0"
 authors = ["Ballerina"]
 keywords = ["IT Operations/Source Control", "Cost/Freemium"]
 icon = "icon.png"
