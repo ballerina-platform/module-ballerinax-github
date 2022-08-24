@@ -218,7 +218,7 @@ public type CertKey record {|
 public type ClientHttp1Settings record {|
     KeepAlive keepAlive = KEEPALIVE_AUTO;
     Chunking chunking = CHUNKING_AUTO;
-    ProxyConfig proxy = {};
+    ProxyConfig proxy?;
 |};
 
 # Defines the possible values for the keep-alive configuration in service and client endpoints.
