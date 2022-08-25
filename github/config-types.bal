@@ -21,7 +21,7 @@ public type ConnectionConfig record {|
     # Configurations related to client authentication
     BearerTokenConfig auth;
     # The HTTP version understood by the client
-    HttpVersion httpVersion = HTTP_V2_0;
+    HttpVersion httpVersion = HTTP_V1_1;
     # Configurations related to HTTP/1.x protocol
     ClientHttp1Settings http1Settings = {};
     # Configurations related to HTTP/2 protocol
@@ -218,7 +218,7 @@ public type CertKey record {|
 public type ClientHttp1Settings record {|
     KeepAlive keepAlive = KEEPALIVE_AUTO;
     Chunking chunking = CHUNKING_AUTO;
-    ProxyConfig proxy = {};
+    ProxyConfig proxy?;
 |};
 
 # Defines the possible values for the keep-alive configuration in service and client endpoints.
