@@ -16,6 +16,7 @@
 
 import ballerina/http;
 import ballerina/log;
+import ballerinax/'client.config;
 
 # Ballerina GitHub connector provides the capability to access GitHub GraphQL API.
 # This connector lets you to get authorized access to GitHub data in a personal or organization
@@ -31,23 +32,7 @@ public isolated client class Client {
     # + config - Configurations required to initialize the `Client`
     # + return - Error at failure of client initialization
     public isolated function init(ConnectionConfig config) returns error? {
-        http:ClientConfiguration httpClientConfig = {
-            auth: config.auth,
-            httpVersion: config.httpVersion,
-            http1Settings: {...config.http1Settings},
-            http2Settings: config.http2Settings,
-            timeout: config.timeout,
-            forwarded: config.forwarded,
-            poolConfig: config.poolConfig,
-            cache: config.cache,
-            compression: config.compression,
-            circuitBreaker: config.circuitBreaker,
-            retryConfig: config.retryConfig,
-            responseLimits: config.responseLimits,
-            secureSocket: config.secureSocket,
-            proxy: config.proxy,
-            validation: config.validation
-        };
+        http:ClientConfiguration httpClientConfig = check config:constructHTTPClientConfig(config);
         self.authToken = config.auth.token;
         self.githubGraphQlClient = check new (GIT_GRAPHQL_API_URL, httpClientConfig);
     }
