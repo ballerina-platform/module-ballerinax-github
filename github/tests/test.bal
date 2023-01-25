@@ -16,7 +16,11 @@
 
 import ballerina/log;
 import ballerina/test;
+import ballerina/http;
+import ballerina/uuid;
 import ballerina/os;
+import ballerina/mime;
+import ballerina/lang.runtime;
 
 configurable string testOrganizationName = os:getEnv("ORG_NAME");
 configurable string testUserRepositoryName = os:getEnv("USER_REPO_NAME");
@@ -24,6 +28,10 @@ configurable string testResourcePath = os:getEnv("RESOURCE_PATH");
 configurable string testIssueAssignee = os:getEnv("ISSUE_ASSIGNEE");
 configurable string testUsername = os:getEnv("GITHUB_USERNAME");
 configurable string authToken = os:getEnv("ACCESS_TOKEN");
+
+const REPO_BASE_URL = "https://api.github.com/repos/connector-ecosystem/github-connector/contents";
+const REPO_FILE_PATH = "/src/db/resources/info1.txt";
+const FEATURE_BRANCH = "feature/feature2";
 
 ConnectionConfig gitHubConfig = {
     auth: {
@@ -169,6 +177,7 @@ function testGetMilestones() returns error? {
 
 string createdProjectId = "";
 int createdProjectNumber = -1;
+int getProjectRetryCount = 0;
 
 @test:Config {
     groups: ["network-calls"],
@@ -205,9 +214,20 @@ function testCreateIssue() returns error? {
         milestoneId: milestoneId
     };
 
-    Issue response = check githubClient->createIssue(createIssueInput, testUsername, testUserRepositoryName);
-    createdIssueId = response.id;
-    createdIssueNumber = response.number;
+    Issue|Error response =  githubClient->createIssue(createIssueInput, testUsername, testUserRepositoryName);
+    if response is ClientError {
+        record {|anydata body?;|} errorDetails = response.detail();
+        log:printError("Client error received. Error detail = " + errorDetails?.body.toString());
+        return response;
+    } else if response is ServerError {
+        record {|json? data?; GraphQLClientError[] errors; map<json>? extensions?;|} errorDetails = response.detail();
+        log:printError("Server error received. Error detail = " + errorDetails.errors.toString());
+        return response;
+    } else {
+        createdIssueId = response.id;
+        createdIssueNumber = response.number;
+    }
+
 }
 
 @test:Config {
@@ -366,15 +386,45 @@ int createdPullRequestNumber = -1;
 }
 function testCreatePullRequest() returns error? {
     log:printInfo("githubClient -> createPullRequest()");
+    //push some changes to the branch before creating PR (Github limitation) 
+    check updateFeatureRepository();
     CreatePullRequestInput createPullRequestInput = {
         title: "Test PR created from Ballerina GitHub Connector",
         baseRefName: "master",
-        headRefName: "feature/feature2",
+        headRefName: FEATURE_BRANCH,
         body: "This is some dummy content for PR body"
     };
     PullRequest response = check githubClient->createPullRequest(createPullRequestInput, testUsername, testUserRepositoryName);
     createdPullRequestId = response.id;
     createdPullRequestNumber = (<int>(response?.number));
+}
+
+function updateFeatureRepository() returns error? {
+    http:BearerTokenConfig tokenConfig = {token: authToken};
+    http:ClientConfiguration httpClientConfig = {auth: tokenConfig};
+    http:Client githubDirectClient = check new (REPO_BASE_URL, httpClientConfig);
+    map<string> fileAPIHeaders = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"};
+
+    //get sha of existing file
+    json fileInfo = check githubDirectClient->get(REPO_FILE_PATH + "?ref=" + FEATURE_BRANCH, fileAPIHeaders);
+    string sha = check fileInfo.sha;
+    log:printInfo("sha of file = " + sha);
+
+    //update the file
+    http:Request updateFileRequest = new ();
+    string fileContent = "my new file contents=" + uuid:createType1AsString();
+    string encordedFileContent = check mime:base64Encode(fileContent).ensureType();
+    json payload = {
+        "message": "Update file",
+        "branch": FEATURE_BRANCH,
+        "committer": {"name": "connector-ecosystem", "email": "connector.ecosystem@gmail.com"},
+        "content": encordedFileContent,
+        "sha": sha
+    };
+    updateFileRequest.setJsonPayload(payload);
+    json _ = check githubDirectClient->put(REPO_FILE_PATH,updateFileRequest, fileAPIHeaders);
+    log:printInfo("sucessfully updated file " + REPO_BASE_URL + REPO_FILE_PATH);
+
 }
 
 @test:Config {
@@ -519,8 +569,25 @@ function testGetOrgProjectList() returns error? {
 }
 function testGetUserProject() returns error? {
     log:printInfo("githubClient -> getProject()");
-    Project response = check githubClient->getProject(testUsername, createdProjectNumber);
-    log:printInfo(response.toString());
+    getProjectRetryCount = getProjectRetryCount + 1;
+    Project|Error project = githubClient->getProject(testUsername, createdProjectNumber);
+    if project is ClientError {
+        record {|anydata body?;|} errorDetails = project.detail();
+        log:printError("Client error received. Error detail = " + errorDetails?.body.toString());
+        if(getProjectRetryCount > 3) {
+            return project;
+        } else {
+            log:printInfo("Retrying githubClient -> getProject() after 5 seconds...");
+            runtime:sleep(5);   //Github seems to add project async mannger. Sometimes immediate call does not return the project.
+            return testGetUserProject();
+        }     
+    } else if project is ServerError {
+        record {|json? data?; GraphQLClientError[] errors; map<json>? extensions?;|} errorDetails = project.detail();
+        log:printError("Server error received. Error detail = " + errorDetails.errors.toString());
+        return project;
+    } else {
+        log:printInfo(project.toString());
+    }
 }
 
 @test:Config {
