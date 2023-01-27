@@ -609,7 +609,7 @@ function testUpdateProject() returns error? {
 @test:Config {
     groups: ["network-calls"],
     enable: true,
-    dependsOn: [testUpdateProject]
+    dependsOn: [testUpdateProject, testCreateIssue]
 }
 function testDeleteProject() returns error? {
     log:printInfo("githubClient -> deleteProject()");
