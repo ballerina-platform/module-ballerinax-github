@@ -30,10 +30,12 @@ isolated function getOrganizationProjectList(string organizationName, ProjectSta
             if (projects is map<json>) {
                 ProjectListPayload|error projectListResponse = projects.cloneWithType(ProjectListPayload);
                 if projectListResponse is ProjectListPayload {
+                    Project[] projectsFromResponse = from Project? project in
+                        projectListResponse.nodes where project is Project select project;
                     ProjectList projectList = {
-                        projects: projectListResponse.nodes,
+                        projects: projectsFromResponse,
                         pageInfo: projectListResponse.pageInfo,
-                        totalCount: projectListResponse.totalCount
+                        totalCount: projectsFromResponse.length()
                     };
                     return projectList;
                 }
@@ -166,10 +168,12 @@ isolated function getRepositoryProjectList(string repositoryOwner, string reposi
             if (projects is map<json>) {
                 ProjectListPayload|error projectListResponse = projects.cloneWithType(ProjectListPayload);
                 if projectListResponse is ProjectListPayload {
+                    Project[] projectsFromResponse = from Project? project in
+                        projectListResponse.nodes where project is Project select project;
                     ProjectList projectList = {
-                        projects: projectListResponse.nodes,
+                        projects: projectsFromResponse,
                         pageInfo: projectListResponse.pageInfo,
-                        totalCount: projectListResponse.totalCount
+                        totalCount: projectsFromResponse.length()
                     };
                     return projectList;
                 }
@@ -194,10 +198,12 @@ isolated function getUserProjectList(string username, int perPageCount, string a
             if (projects is map<json>) {
                 ProjectListPayload|error projectListResponse = projects.cloneWithType(ProjectListPayload);
                 if projectListResponse is ProjectListPayload {
+                    Project[] projectsFromResponse = from Project? project in
+                        projectListResponse.nodes where project is Project select project;
                     ProjectList projectList = {
-                        projects: projectListResponse.nodes,
+                        projects: projectsFromResponse,
                         pageInfo: projectListResponse.pageInfo,
-                        totalCount: projectListResponse.totalCount
+                        totalCount: projectsFromResponse.length()
                     };
                     return projectList;
                 }

@@ -808,7 +808,7 @@ public type PullRequestReviewList record {
 # + pageInfo - Response pagination info.
 # + totalCount - Total projects count.
 public type ProjectListPayload record {
-    Project[] nodes;
+    Project?[] nodes;
     PageInfo pageInfo;
     int totalCount;
 };
