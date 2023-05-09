@@ -17,14 +17,14 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - name: Ballerina Build
-              uses: ballerina-platform/ballerina-action@nightly
+              uses: ballerina-platform/ballerina-action@2201.4.1
               with:
                   args:
                       pack ./github
               env:
                   JAVA_HOME: /usr/lib/jvm/default-jvm
             - name: Ballerina Tests
-              uses: ballerina-platform/ballerina-action@nightly
+              uses: ballerina-platform/ballerina-action@2201.4.1
               with:
                   args:
                       test --code-coverage ./github
