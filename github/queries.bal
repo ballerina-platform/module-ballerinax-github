@@ -219,6 +219,13 @@ final string LABEL_FIELDS = "                     id,\n" +
                                         "                     isDefault,\n" +
                                         "                     url\n";
 
+final string ISSUES_LABELS = "              labels (first: 10) {\n" +
+                                            "                 nodes{\n" +
+                                                                LABEL_FIELDS +
+                                            "                \n}," +
+                                            "                 totalCount,\n"+
+                                            "              },\n";
+
 final string MILESTONE_FIELDS = "                     id,\n" +
                                         "                     number,\n" +
                                         "                     closed,\n" +
@@ -458,6 +465,7 @@ final string GET_ISSUE_LIST = "query($owner:String!, $name:String!, $perPageCoun
                                             "      issues(first: $perPageCount, after: $lastPageCursor, filterBy: $issueFilters){\n" +
                                             "          nodes{\n" +
                                                             ISSUE_FIELDS +
+                                                            ISSUES_LABELS +
                                             "          },\n" +
                                                         PAGE_INFO_AND_TOTAL_COUNT +
                                             "      }\n" +
