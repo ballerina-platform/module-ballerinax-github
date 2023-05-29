@@ -1,0 +1,45 @@
+name: GraalVM Check
+
+on: 
+  schedule:
+    - cron: '30 18 * * *'
+  workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Set up GraalVM
+              uses: graalvm/setup-graalvm@v1
+              with:
+                  version: 'latest'
+                  java-version: '11'
+                  components: 'native-image'
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+            
+            - name: Check GraalVM installation
+              run: |
+                  echo "GRAALVM_HOME: ${{ env.GRAALVM_HOME }}"
+                  echo "JAVA_HOME: ${{ env.JAVA_HOME }}"
+                  native-image --version
+
+            - name: Run Ballerina tests using the native executable
+              uses: ballerina-platform/ballerina-action/@nightly
+              with:
+                  args:
+                      test --native ./github
+              env:
+                JAVA_HOME: /usr/lib/jvm/default-jvm
+                ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+                ORG_NAME: ${{ secrets.ORG_NAME }}
+                USER_REPO_NAME: ${{ secrets.REPO_NAME }}
+                ISSUE_ASSIGNEE: ${{ secrets.ASSIGNEE }}
+                RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
+                JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
+                GITHUB_TOPIC: ${{ secrets.TOPIC }}
+                GITHUB_SECRET: ${{ secrets.SECRET }}
+                GITHUB_CALLBACK: ${{ secrets.CALLBACK }}
+                GITHUB_USERNAME: ${{ secrets.USERNAME }}
