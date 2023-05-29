@@ -1,21 +1,15 @@
 name: GraalVM Check
 
-# Controls when the action will run.
 on: 
   schedule:
     - cron: '30 18 * * *'
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-    # This workflow contains a single job called "build"
     build:
-        # The type of runner that the job will run on
         runs-on: ubuntu-latest
 
-        # Steps represent a sequence of tasks that will be executed as part of the job
         steps:
-            # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
             - uses: actions/checkout@v2
 
             - name: Set up GraalVM
@@ -32,7 +26,6 @@ jobs:
                   echo "JAVA_HOME: ${{ env.JAVA_HOME }}"
                   native-image --version
 
-            # Build the ballerina project
             - name: Ballerina Build
               uses: ballerina-platform/ballerina-action/@nightly
               with:
@@ -44,7 +37,7 @@ jobs:
               uses: ballerina-platform/ballerina-action/@nightly
               with:
                   args:
-                      test --native --code-coverage ./github
+                      test --native ./github
               env:
                 ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                 ORG_NAME: ${{ secrets.ORG_NAME }}
@@ -56,20 +49,3 @@ jobs:
                 GITHUB_SECRET: ${{ secrets.SECRET }}
                 GITHUB_CALLBACK: ${{ secrets.CALLBACK }}
                 GITHUB_USERNAME: ${{ secrets.USERNAME }}
-
-            # Read the ballerina test results
-            - name: Read Ballerina Test Results
-              id: test_results
-              run: |
-                content=`cat ./github/target/report/test_results.json`                
-                content="${content//'%'/'%25'}"
-                content="${content//$'\n'/'%0A'}"
-                content="${content//$'\r'/'%0D'}"
-                echo "::set-output name=testResultsJson::$content"
-
-            # Print the code coverage information
-            - name: Code Coverage
-              run: |
-                echo "Covered Code Lines : ${{fromJson(steps.test_results.outputs.testResultsJson).coveredLines}}"
-                echo "Total Code Lines : $(expr ${{fromJson(steps.test_results.outputs.testResultsJson).missedLines}} + ${{fromJson(steps.test_results.outputs.testResultsJson).coveredLines}})"
-                echo "Code Coverage Percentage : ${{fromJson(steps.test_results.outputs.testResultsJson).coveragePercentage}}"
