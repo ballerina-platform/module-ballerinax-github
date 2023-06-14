@@ -17,13 +17,13 @@
 import ballerina/http;
 
 isolated function getOrganization(string organizationName, string accessToken, http:Client graphQlClient)
-                                returns @tainted Organization|Error {
+        returns Organization|Error {
     string stringQuery = getFormulatedStringQueryForGetAnOrganization(organizationName);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json org = graphQlData.get(GIT_ORGANIZATION);
-        if (org is map<json>) {
+        if org is map<json> {
             Organization|error organization = org.cloneWithType(Organization);
             return organization is Organization ? organization : error ClientError("GitHub Client Error", organization);
         }
@@ -33,16 +33,15 @@ isolated function getOrganization(string organizationName, string accessToken, h
 }
 
 isolated function getUserOrganizationList(string username, int perPageCount, string accessToken,
-                                        http:Client graphQlClient, string? nextPageCursor = ())
-                                        returns @tainted OrganizationList|Error {
+        http:Client graphQlClient, string? nextPageCursor = ()) returns OrganizationList|Error {
     string stringQuery = getFormulatedStringQueryForGetUserOrganizationList(username, perPageCount, nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json user = graphQlData.get(GIT_USER);
-        if (user is map<json>) {
+        if user is map<json> {
             json organizations = user.get(GIT_ORGANIZATIONS);
-            if (organizations is map<json>) {
+            if organizations is map<json> {
                 OrganizationListPayload|error orgListResponse = organizations.cloneWithType(OrganizationListPayload);
                 if orgListResponse is OrganizationListPayload {
                     OrganizationList organizationList = {
@@ -62,17 +61,16 @@ isolated function getUserOrganizationList(string username, int perPageCount, str
 }
 
 isolated function getOrganizationMembers(string organizationName, int perPageCount, string accessToken,
-                                            http:Client graphQlClient, string? nextPageCursor = ())
-                                            returns @tainted UserList|Error {
+        http:Client graphQlClient, string? nextPageCursor = ()) returns UserList|Error {
     string stringQuery = getFormulatedStringQueryForGetOrganizationMemberList(organizationName, perPageCount,
-                                                                            nextPageCursor);
+            nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json org = graphQlData.get(GIT_ORGANIZATION);
-        if (org is map<json>) {
+        if org is map<json> {
             json members = org.get(GIT_MEMBERS_WITH_ROLE);
-            if (members is map<json>) {
+            if members is map<json> {
                 UserListPayload|error userListResponse = members.cloneWithType(UserListPayload);
                 if userListResponse is UserListPayload {
                     UserList userList = {

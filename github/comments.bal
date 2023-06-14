@@ -17,7 +17,7 @@
 import ballerina/http;
 
 isolated function addComment(AddIssueCommentInput addIssueCommentInput, string accessToken, http:Client graphQlClient)
-                            returns @tainted IssueComment|Error {
+        returns IssueComment|Error {
     Issue issue = check getIssue(addIssueCommentInput.repositoryOwnerName, addIssueCommentInput.repositoryName,
             addIssueCommentInput.issueNumber, accessToken, graphQlClient);
 
@@ -26,7 +26,7 @@ isolated function addComment(AddIssueCommentInput addIssueCommentInput, string a
         body: addIssueCommentInput.body
     };
 
-    if (!(addIssueCommentInput?.clientMutationId is ())) {
+    if !(addIssueCommentInput?.clientMutationId is ()) {
         addCommentInput["clientMutationId"] = <string>addIssueCommentInput?.clientMutationId;
     }
 
@@ -35,9 +35,9 @@ isolated function addComment(AddIssueCommentInput addIssueCommentInput, string a
 
     if graphQlData is map<json> {
         json addComment = graphQlData.get(GIT_ADD_COMMENT);
-        if (addComment is map<json>) {
+        if addComment is map<json> {
             json commentEdge = addComment.get(GIT_COMMENT_EDGE);
-            if (commentEdge is map<json>) {
+            if commentEdge is map<json> {
                 json node = commentEdge.get(GIT_NODE);
                 if node is map<json> {
                     IssueComment|error issueComment = node.cloneWithType(IssueComment);
@@ -54,7 +54,7 @@ isolated function addComment(AddIssueCommentInput addIssueCommentInput, string a
 }
 
 isolated function updateComment(UpdateIssueCommentInput updateCommentInput, string accessToken,
-                                http:Client graphQlClient) returns @tainted Error? {
+        http:Client graphQlClient) returns Error? {
     string stringQuery = getFormulatedStringQueryForUpdateIssueComment(updateCommentInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {
@@ -64,7 +64,7 @@ isolated function updateComment(UpdateIssueCommentInput updateCommentInput, stri
 }
 
 isolated function deleteComment(DeleteIssueCommentInput deleteCommentInput, string accessToken,
-                                http:Client graphQlClient) returns @tainted Error? {
+        http:Client graphQlClient) returns Error? {
     string stringQuery = getFormulatedStringQueryForDeleteIssueComment(deleteCommentInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {

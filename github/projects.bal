@@ -17,21 +17,20 @@
 import ballerina/http;
 
 isolated function getOrganizationProjectList(string organizationName, ProjectState? state, int perPageCount,
-                                            string accessToken, http:Client graphQlClient, string? nextPageCursor = ())
-                                            returns @tainted ProjectList|Error {
+        string accessToken, http:Client graphQlClient, string? nextPageCursor = ()) returns ProjectList|Error {
     string stringQuery = getFormulatedStringQueryForOrgProjectList(organizationName, state, perPageCount,
-                                                                    nextPageCursor);
+            nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json org = graphQlData.get(GIT_ORGANIZATION);
-        if (org is map<json>) {
+        if org is map<json> {
             json projects = org.get(GIT_PROJECTS);
-            if (projects is map<json>) {
+            if projects is map<json> {
                 ProjectListPayload|error projectListResponse = projects.cloneWithType(ProjectListPayload);
                 if projectListResponse is ProjectListPayload {
-                    Project[] projectsFromResponse = from Project? project in
-                        projectListResponse.nodes where project is Project select project;
+                    Project[] projectsFromResponse = from Project? project in projectListResponse.nodes where project 
+                            is Project select project;
                     ProjectList projectList = {
                         projects: projectsFromResponse,
                         pageInfo: projectListResponse.pageInfo,
@@ -48,18 +47,16 @@ isolated function getOrganizationProjectList(string organizationName, ProjectSta
     return graphQlData;
 }
 
-isolated function createProject(CreateRepositoryProjectInput createRepositoryProjectInput, string accessToken, http:Client graphQlClient)
-                                returns @tainted Project|Error {
-
+isolated function createProject(CreateRepositoryProjectInput createRepositoryProjectInput, string accessToken, 
+        http:Client graphQlClient) returns Project|Error {
     string userId = check getUserId(createRepositoryProjectInput.ownerName, accessToken, graphQlClient);
-
     CreateProjectInput createProjectInput = {
         ownerId: userId,
         name: createRepositoryProjectInput.name
     };
     do {
         string[] repositoryIds = [];
-        if (!(createRepositoryProjectInput?.repositoryNames is ())) {
+        if !(createRepositoryProjectInput?.repositoryNames is ()) {
             foreach string repositoryName in <string[]>createRepositoryProjectInput?.repositoryNames {
                 Repository repository = check getRepository(createRepositoryProjectInput.ownerName, repositoryName, accessToken, graphQlClient);
                 repositoryIds.push(repository.id);
@@ -67,15 +64,15 @@ isolated function createProject(CreateRepositoryProjectInput createRepositoryPro
             createProjectInput["repositoryIds"] = repositoryIds;
         }
 
-        if (!(createRepositoryProjectInput?.body is ())) {
+        if !(createRepositoryProjectInput?.body is ()) {
             createProjectInput["body"] = <string>createRepositoryProjectInput?.body;
         }
 
-        if (!(createRepositoryProjectInput?.template is ())) {
+        if !(createRepositoryProjectInput?.template is ()) {
             createProjectInput["template"] = <ProjectTemplate>createRepositoryProjectInput?.template;
         }
 
-        if (!(createRepositoryProjectInput?.clientMutationId is ())) {
+        if !(createRepositoryProjectInput?.clientMutationId is ()) {
             createProjectInput["clientMutationId"] = <string>createRepositoryProjectInput?.clientMutationId;
         }
     } on fail var e {
@@ -88,7 +85,7 @@ isolated function createProject(CreateRepositoryProjectInput createRepositoryPro
 
     if graphQlData is map<json> {
         json createProject = graphQlData.get(GIT_CREATE_PROJECT);
-        if (createProject is map<json>) {
+        if createProject is map<json> {
             json project = createProject.get(GIT_PROJECT);
             if project is map<json> {
                 Project|error createdProject = project.cloneWithType(Project);
@@ -103,13 +100,13 @@ isolated function createProject(CreateRepositoryProjectInput createRepositoryPro
 }
 
 isolated function getProject(string username, int projectNumber, string accessToken, http:Client graphQlClient)
-                                returns @tainted Project|Error {
+        returns Project|Error {
     string stringQuery = getFormulatedStringQueryForGetAProject(username, projectNumber);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json user = graphQlData.get(GIT_USER);
-        if (user is map<json>) {
+        if user is map<json> {
             json project = user.get(GIT_PROJECT);
             if project is map<json> {
                 Project|error userProject = project.cloneWithType(Project);
@@ -124,13 +121,13 @@ isolated function getProject(string username, int projectNumber, string accessTo
 }
 
 isolated function updateProject(UpdateProjectInput updateProjectInput, string accessToken, http:Client graphQlClient)
-                                returns @tainted Project|Error {
+        returns Project|Error {
     string stringQuery = getFormulatedStringQueryForUpdateProject(updateProjectInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json updateProject = graphQlData.get(GIT_UPDATE_PROJECT);
-        if (updateProject is map<json>) {
+        if updateProject is map<json> {
             json project = updateProject.get(GIT_PROJECT);
             if project is map<json> {
                 Project|error updatedProject = project.cloneWithType(Project);
@@ -145,7 +142,7 @@ isolated function updateProject(UpdateProjectInput updateProjectInput, string ac
 }
 
 isolated function deleteProject(DeleteProjectInput deleteProjectInput, string accessToken, http:Client graphQlClient)
-                                returns @tainted Error? {
+        returns Error? {
     string stringQuery = getFormulatedStringQueryForDeleteProject(deleteProjectInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {
@@ -155,17 +152,17 @@ isolated function deleteProject(DeleteProjectInput deleteProjectInput, string ac
 }
 
 isolated function getRepositoryProjectList(string repositoryOwner, string repositoryName, ProjectState? state,
-                                            int perPageCount, string accessToken, http:Client graphQlClient,
-                                            string? nextPageCursor = ()) returns @tainted ProjectList|Error {
+        int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor = ()) returns 
+        ProjectList|Error {
     string stringQuery = getFormulatedStringQueryForRepositoryProjectList(repositoryOwner, repositoryName, state,
-                                                                        perPageCount, nextPageCursor);
+            perPageCount, nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json repo = graphQlData.get(GIT_REPOSITORY);
-        if (repo is map<json>) {
+        if repo is map<json> {
             json projects = repo.get(GIT_PROJECTS);
-            if (projects is map<json>) {
+            if projects is map<json> {
                 ProjectListPayload|error projectListResponse = projects.cloneWithType(ProjectListPayload);
                 if projectListResponse is ProjectListPayload {
                     Project[] projectsFromResponse = from Project? project in
@@ -187,19 +184,19 @@ isolated function getRepositoryProjectList(string repositoryOwner, string reposi
 }
 
 isolated function getUserProjectList(string username, int perPageCount, string accessToken, http:Client graphQlClient,
-                                    string? nextPageCursor = ()) returns @tainted ProjectList|Error {
+        string? nextPageCursor = ()) returns ProjectList|Error {
     string stringQuery = getFormulatedStringQueryForGetUserProjectList(username, perPageCount, nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json user = graphQlData.get(GIT_USER);
-        if (user is map<json>) {
+        if user is map<json> {
             json projects = user.get(GIT_PROJECTS);
-            if (projects is map<json>) {
+            if projects is map<json> {
                 ProjectListPayload|error projectListResponse = projects.cloneWithType(ProjectListPayload);
                 if projectListResponse is ProjectListPayload {
-                    Project[] projectsFromResponse = from Project? project in
-                        projectListResponse.nodes where project is Project select project;
+                    Project[] projectsFromResponse = from Project? project in projectListResponse.nodes where project is
+                            Project select project;
                     ProjectList projectList = {
                         projects: projectsFromResponse,
                         pageInfo: projectListResponse.pageInfo,

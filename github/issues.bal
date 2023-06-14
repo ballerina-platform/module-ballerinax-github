@@ -16,10 +16,8 @@
 
 import ballerina/http;
 
-isolated function createIssue(@tainted CreateIssueInput createIssueInput, string repositoryOwnerName,
-                            string repositoryName, string accessToken, http:Client graphQlClient)
-                            returns @tainted Issue|Error {
-
+isolated function createIssue(CreateIssueInput createIssueInput, string repositoryOwnerName, string repositoryName, 
+        string accessToken, http:Client graphQlClient) returns Issue|Error {
     string repositoryId = check getRepositoryId(repositoryOwnerName, repositoryName, accessToken, graphQlClient);
     CreateIssueInputPayload createIssueInputPayload = {
         repositoryId: repositoryId,
@@ -27,7 +25,7 @@ isolated function createIssue(@tainted CreateIssueInput createIssueInput, string
     };
     do {
         string[] labelIds = [];
-        if (!(createIssueInput?.labelNames is ())) {
+        if !(createIssueInput?.labelNames is ()) {
             foreach string labelName in <string[]>createIssueInput?.labelNames {
                 Label label = check getLabel(repositoryOwnerName, repositoryName, labelName, accessToken, graphQlClient);
                 labelIds.push(label.id);
@@ -36,7 +34,7 @@ isolated function createIssue(@tainted CreateIssueInput createIssueInput, string
         }
 
         string[] assigneeIds = [];
-        if (!(createIssueInput?.assigneeNames is ())) {
+        if !(createIssueInput?.assigneeNames is ()) {
             foreach string assigneeName in <string[]>createIssueInput?.assigneeNames {
                 string userId = check getUserId(assigneeName, accessToken, graphQlClient);
                 assigneeIds.push(userId);
@@ -44,23 +42,23 @@ isolated function createIssue(@tainted CreateIssueInput createIssueInput, string
             createIssueInputPayload["assigneeIds"] = assigneeIds;
         }
 
-        if (!(createIssueInput?.projectIds is ())) {
+        if !(createIssueInput?.projectIds is ()) {
             createIssueInputPayload["projectIds"] = <string[]>createIssueInput?.projectIds;
         }
 
-        if (!(createIssueInput?.milestoneId is ())) {
+        if !(createIssueInput?.milestoneId is ()) {
             createIssueInputPayload["milestoneId"] = <string>createIssueInput?.milestoneId;
         }
 
-        if (!(createIssueInput?.issueTemplate is ())) {
+        if !(createIssueInput?.issueTemplate is ()) {
             createIssueInputPayload["issueTemplate"] = <string>createIssueInput?.issueTemplate;
         }
 
-        if (!(createIssueInput?.body is ())) {
+        if !(createIssueInput?.body is ()) {
             createIssueInputPayload["body"] = <string>createIssueInput?.body;
         }
 
-        if (!(createIssueInput?.clientMutationId is ())) {
+        if !(createIssueInput?.clientMutationId is ()) {
             createIssueInputPayload["clientMutationId"] = <string>createIssueInput?.clientMutationId;
         }
     } on fail var e {
@@ -73,7 +71,7 @@ isolated function createIssue(@tainted CreateIssueInput createIssueInput, string
 
     if graphQlData is map<json> {
         json createIssue = graphQlData.get(GIT_CREATE_ISSUE);
-        if (createIssue is map<json>) {
+        if createIssue is map<json> {
             json issue = createIssue.get(GIT_ISSUE);
             if issue is map<json> {
                 Issue|error issueObj = issue.cloneWithType(Issue);
@@ -86,43 +84,42 @@ isolated function createIssue(@tainted CreateIssueInput createIssueInput, string
     return graphQlData;
 }
 
-isolated function updateIssue(@tainted UpdateIssueInput updateIssueInput, string repositoryOwnerName, string repositoryName,
-                            int issueNumber, string accessToken, http:Client graphQlClient)
-                            returns @tainted Issue|Error {
+isolated function updateIssue(UpdateIssueInput updateIssueInput, string repositoryOwnerName, string repositoryName,
+        int issueNumber, string accessToken, http:Client graphQlClient) returns Issue|Error {
     UpdateIssueInputPayload updateIssueInputPayload = {};
 
     do {
-        if (updateIssueInput?.id is ()) {
+        if updateIssueInput?.id is () {
             updateIssueInputPayload["id"] = check getIssueId(repositoryOwnerName, repositoryName, issueNumber,
-                                                            accessToken, graphQlClient);
+                    accessToken, graphQlClient);
         }
 
-        if (!(updateIssueInput?.title is ())) {
+        if !(updateIssueInput?.title is ()) {
             updateIssueInputPayload["title"] = <string>updateIssueInput?.title;
         }
 
-        if (!(updateIssueInput?.body is ())) {
+        if !(updateIssueInput?.body is ()) {
             updateIssueInputPayload["body"] = <string>updateIssueInput?.body;
         }
 
-        if (!(updateIssueInput?.milestoneId is ())) {
+        if !(updateIssueInput?.milestoneId is ()) {
             updateIssueInputPayload["milestoneId"] = <string>updateIssueInput?.milestoneId;
         }
 
-        if (!(updateIssueInput?.state is ())) {
+        if !(updateIssueInput?.state is ()) {
             updateIssueInputPayload["state"] = <IssueState>updateIssueInput?.state;
         }
 
-        if (!(updateIssueInput?.projectIds is ())) {
+        if !(updateIssueInput?.projectIds is ()) {
             updateIssueInputPayload["projectIds"] = <string[]>updateIssueInput?.projectIds;
         }
 
-        if (!(updateIssueInput?.clientMutationId is ())) {
+        if !(updateIssueInput?.clientMutationId is ()) {
             updateIssueInputPayload["clientMutationId"] = <string>updateIssueInput?.clientMutationId;
         }
 
         string[] labelIds = [];
-        if (!(updateIssueInput?.labelNames is ())) {
+        if !(updateIssueInput?.labelNames is ()) {
             foreach string labelName in <string[]>updateIssueInput?.labelNames {
                 Label label = check getLabel(repositoryOwnerName, repositoryName, labelName, accessToken, graphQlClient);
                 labelIds.push(label.id);
@@ -131,7 +128,7 @@ isolated function updateIssue(@tainted UpdateIssueInput updateIssueInput, string
         }
 
         string[] assigneeIds = [];
-        if (!(updateIssueInput?.assigneeNames is ())) {
+        if !(updateIssueInput?.assigneeNames is ()) {
             foreach string assigneeName in <string[]>updateIssueInput?.assigneeNames {
                 string userId = check getUserId(assigneeName, accessToken, graphQlClient);
                 assigneeIds.push(userId);
@@ -147,7 +144,7 @@ isolated function updateIssue(@tainted UpdateIssueInput updateIssueInput, string
 
     if graphQlData is map<json> {
         json updateIssue = graphQlData.get(GIT_UPDATE_ISSUE);
-        if (updateIssue is map<json>) {
+        if updateIssue is map<json> {
             json issue = updateIssue.get(GIT_ISSUE);
             if issue is map<json> {
                 Issue|error issueObj = issue.cloneWithType(Issue);
@@ -161,16 +158,16 @@ isolated function updateIssue(@tainted UpdateIssueInput updateIssueInput, string
 }
 
 isolated function getIssue(string repositoryOwnerName, string repositoryName, int issueNumber, string accessToken, 
-                           http:Client graphQlClient, int perPageCountForLabels = 10) returns @tainted Issue|Error {
+        http:Client graphQlClient, int perPageCountForLabels = 10) returns Issue|Error {
     string stringQuery = getFormulatedStringQueryForGetIssue(repositoryOwnerName, repositoryName, issueNumber, 
-                                                             perPageCountForLabels);
+            perPageCountForLabels);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json repository = graphQlData.get(GIT_REPOSITORY);
-        if (repository is map<json>) {
+        if repository is map<json> {
             json issue = repository.get(GIT_ISSUE);
-            if (issue is map<json>) {
+            if issue is map<json> {
                 Issue|error issueObj = issue.cloneWithType(Issue);
                 if issueObj is error {
                     return error ClientError("GitHub Client Error", issueObj);
@@ -214,19 +211,19 @@ isolated function getIssue(string repositoryOwnerName, string repositoryName, in
 }
 
 isolated function getIssueCommentList(string repositoryOwnerName, string repositoryName, int issueNumber,
-                                                int perPageCount, string accessToken, http:Client graphQlClient,
-                                                string? nextPageCursor = ()) returns @tainted IssueCommentList|Error {
+        int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor = ()) returns 
+        IssueCommentList|Error {
     string stringQuery = getFormulatedStringQueryForGetIssueCommentList(repositoryOwnerName, repositoryName,
-                                                                        issueNumber, perPageCount, nextPageCursor);
+            issueNumber, perPageCount, nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json repository = graphQlData.get(GIT_REPOSITORY);
-        if (repository is map<json>) {
+        if repository is map<json> {
             json issue = repository.get(GIT_ISSUE);
-            if (issue is map<json>) {
+            if issue is map<json> {
                 json comments = issue.get(GIT_COMMENTS);
-                if (comments is map<json>) {
+                if comments is map<json> {
                     IssueCommentListPayload|error commentListResponse = comments.cloneWithType(IssueCommentListPayload);
                     if commentListResponse is IssueCommentListPayload {
                         IssueCommentList issueCommentList = {
