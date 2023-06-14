@@ -16,17 +16,6 @@
 
 import ballerina/http;
 
-// mutation is in preview state
-isolated function createLabel(CreateLabelInput createLabelInput, string accessToken, http:Client graphQlClient)
-                            returns @tainted Error? {
-    string stringQuery = getFormulatedStringQueryForCreateLabel(createLabelInput);
-    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
-    if graphQlData is Error {
-        return graphQlData;
-    }
-    return;
-}
-
 isolated function getLabel(string repositoryOwnerName, string repositoryName, string labelName,
                                     string accessToken, http:Client graphQlClient) returns @tainted Label|Error {
     string stringQuery = getFormulatedStringQueryForGetLabel(repositoryOwnerName, repositoryName, labelName);
