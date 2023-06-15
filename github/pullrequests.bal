@@ -16,10 +16,9 @@
 
 import ballerina/http;
 
-isolated function getPullRequest(string owner, string repositoryName, int pullRequestNumber,
-                                string accessToken, http:Client graphQlClient) returns @tainted PullRequest|Error {
-    string stringQuery = getFormulatedStringQueryForGetAPullRequest(owner, repositoryName,
-                                                                    pullRequestNumber);
+isolated function getPullRequest(string owner, string repositoryName, int pullRequestNumber, string accessToken, 
+        http:Client graphQlClient) returns PullRequest|Error {
+    string stringQuery = getFormulatedStringQueryForGetAPullRequest(owner, repositoryName, pullRequestNumber);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
@@ -33,14 +32,10 @@ isolated function getPullRequest(string owner, string repositoryName, int pullRe
                 }
 
                 pullRequestObj.lastCommit = check getLastCommit(owner, repositoryName, pullRequestNumber, accessToken,
-                                                                graphQlClient);
+                        graphQlClient);
 
-                PullRequestReviewList reviewCommentList = check getPullRequestReviewCommentList(owner,
-                                                                                                repositoryName,
-                                                                                                pullRequestNumber,
-                                                                                                100,
-                                                                                                accessToken,
-                                                                                                graphQlClient);
+                PullRequestReviewList reviewCommentList = check getPullRequestReviewCommentList(owner, repositoryName,
+                        pullRequestNumber, 100, accessToken, graphQlClient);
                 PullRequestReview[] reviewComments = [];
                 boolean hasPRCommentListNextPage = reviewCommentList.pageInfo.hasNextPage;
                 string? nextPageCursor = reviewCommentList.pageInfo.endCursor;
@@ -73,12 +68,11 @@ isolated function getPullRequest(string owner, string repositoryName, int pullRe
     return graphQlData;
 }
 
-isolated function getPullRequests(string repositoryOwnerName, string repositoryName,
-                                                PullRequestState state, int perPageCount, string accessToken,
-                                                http:Client graphQlClient, string? nextPageCursor = ())
-                                                returns @tainted PullRequestList|Error {
+isolated function getPullRequests(string repositoryOwnerName, string repositoryName, PullRequestState state,
+        int perPageCount, string accessToken, http:Client graphQlClient, string? nextPageCursor = ()) returns 
+        PullRequestList|Error {
     string stringQuery = getFormulatedStringQueryForGetPullRequestList(repositoryOwnerName, repositoryName, state,
-                                                                        perPageCount, nextPageCursor);
+            perPageCount, nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
@@ -104,12 +98,11 @@ isolated function getPullRequests(string repositoryOwnerName, string repositoryN
     return graphQlData;
 }
 
-isolated function createPullRequest(@tainted CreatePullRequestInput createPullRequestInput, string repositoryOwnerName,
-                                    string repositoryName, string accessToken, http:Client graphQlClient)
-                                    returns @tainted PullRequest|Error {
+isolated function createPullRequest(CreatePullRequestInput createPullRequestInput, string repositoryOwnerName,
+        string repositoryName, string accessToken, http:Client graphQlClient) returns PullRequest|Error {
     if createPullRequestInput?.repositoryId is () {
         createPullRequestInput["repositoryId"] = check getRepositoryId(repositoryOwnerName, repositoryName,
-                                                                        accessToken, graphQlClient);
+                accessToken, graphQlClient);
     }
     string stringQuery = getFormulatedStringQueryForCreatePullRequest(createPullRequestInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -129,10 +122,9 @@ isolated function createPullRequest(@tainted CreatePullRequestInput createPullRe
     return graphQlData;
 }
 
-isolated function updatePullRequest(@tainted UpdatePullRequestInput updatePullRequestInput, string repositoryOwnerName,
-                                    string repositoryName, int pullRequestNumber, string accessToken,
-                                    http:Client graphQlClient) returns @tainted PullRequest|Error {
-
+isolated function updatePullRequest(UpdatePullRequestInput updatePullRequestInput, string repositoryOwnerName,
+        string repositoryName, int pullRequestNumber, string accessToken, http:Client graphQlClient) returns 
+        PullRequest|Error {
     UpdatePullRequestInputPayload updatePullRequestInputPayload = {};
     do {
         if updatePullRequestInput?.pullRequestId is () {
@@ -213,12 +205,10 @@ isolated function updatePullRequest(@tainted UpdatePullRequestInput updatePullRe
 }
 
 isolated function getPullRequestReviewCommentList(string repositoryOwnerName, string repositoryName,
-                                                int pullRequestNumber, int perPageCount, string accessToken,
-                                                http:Client graphQlClient, string? nextPageCursor = ())
-                                                returns @tainted PullRequestReviewList|Error {
+        int pullRequestNumber, int perPageCount, string accessToken, http:Client graphQlClient, string? 
+        nextPageCursor = ()) returns PullRequestReviewList|Error {
     string stringQuery = getFormulatedStringQueryForGetReviewListForRepository(repositoryOwnerName, repositoryName,
-                                                                                pullRequestNumber, perPageCount,
-                                                                                nextPageCursor);
+            pullRequestNumber, perPageCount, nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
@@ -248,14 +238,12 @@ isolated function getPullRequestReviewCommentList(string repositoryOwnerName, st
     return graphQlData;
 }
 
-isolated function createPullRequestReview(@tainted AddPullRequestReviewInput addPullRequestReviewInput,
-                                            string repositoryOwnerName, string repositoryName, int pullRequestNumber,
-                                            string accessToken, http:Client graphQlClient)
-                                            returns @tainted PullRequestReview|Error {
+isolated function createPullRequestReview(AddPullRequestReviewInput addPullRequestReviewInput,
+        string repositoryOwnerName, string repositoryName, int pullRequestNumber, string accessToken, http:Client 
+        graphQlClient) returns PullRequestReview|Error {
     if addPullRequestReviewInput?.pullRequestId is () {
         addPullRequestReviewInput["pullRequestId"] = check getPullRequestId(repositoryOwnerName, repositoryName,
-                                                                            pullRequestNumber, accessToken,
-                                                                            graphQlClient);
+                pullRequestNumber, accessToken, graphQlClient);
     }
     string stringQuery = getFormulatedStringQueryForAddPullRequestReview(addPullRequestReviewInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -275,9 +263,8 @@ isolated function createPullRequestReview(@tainted AddPullRequestReviewInput add
     return graphQlData;
 }
 
-isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePullRequestReviewInput,
-                                        string accessToken, http:Client graphQlClient) returns @tainted Error? {
-
+isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePullRequestReviewInput, string accessToken, 
+        http:Client graphQlClient) returns Error? {
     string stringQuery = getFormulatedStringQueryForUpdatePullRequestReview(updatePullRequestReviewInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {
@@ -286,9 +273,8 @@ isolated function updatePullRequestReview(UpdatePullRequestReviewInput updatePul
     return;
 }
 
-isolated function deletePendingPullRequestReview(DeletePullRequestReviewInput deletePullRequestReview,
-                                                string accessToken, http:Client graphQlClient)
-                                                returns @tainted Error? {
+isolated function deletePendingPullRequestReview(DeletePullRequestReviewInput deletePullRequestReview, 
+        string accessToken, http:Client graphQlClient) returns Error? {
     string stringQuery = getFormulatedStringQueryForDeletePullRequestReview(deletePullRequestReview);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {
@@ -298,8 +284,7 @@ isolated function deletePendingPullRequestReview(DeletePullRequestReviewInput de
 }
 
 isolated function getLastCommit(string owner, string repositoryName, int pullRequestNumber, string accessToken,
-                                        http:Client graphQlClient) returns Commit|Error {
-
+        http:Client graphQlClient) returns Commit|Error {
     string stringQuery = getFormulatedStringQueryForGetLastCommit(owner, repositoryName, pullRequestNumber);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 

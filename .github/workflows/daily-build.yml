@@ -37,9 +37,6 @@ jobs:
                 ISSUE_ASSIGNEE: ${{ secrets.ASSIGNEE }}
                 RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
                 JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
-                GITHUB_TOPIC: ${{ secrets.TOPIC }}
-                GITHUB_SECRET: ${{ secrets.SECRET }}
-                GITHUB_CALLBACK: ${{ secrets.CALLBACK }}
                 GITHUB_USERNAME: ${{ secrets.USERNAME }}
 
             # Read the ballerina test results

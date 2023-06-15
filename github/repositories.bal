@@ -16,9 +16,8 @@
 
 import ballerina/http;
 
-isolated function getRepository(string username, string repositoryName, string accessToken,
-                                    http:Client graphQlClient) returns @tainted Repository|Error {
-
+isolated function getRepository(string username, string repositoryName, string accessToken, http:Client graphQlClient) 
+        returns Repository|Error {
     string stringQuery = getFormulatedStringQueryForGetRepository(username, repositoryName);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
@@ -30,7 +29,7 @@ isolated function getRepository(string username, string repositoryName, string a
                 return error ClientError("GitHub Client Error", result);
             }
             LanguageList languageList = check getLanguageList(username, repositoryName, 100, accessToken,
-                                                            graphQlClient);
+                    graphQlClient);
 
             Language[] languages = [];
             boolean hasNextPage = languageList.pageInfo.hasNextPage;
@@ -42,7 +41,7 @@ isolated function getRepository(string username, string repositoryName, string a
 
             while (hasNextPage) {
                 languageList = check getLanguageList(username, repositoryName, 100, accessToken, graphQlClient,
-                                                    nextPageCursor);
+                        nextPageCursor);
                 hasNextPage = languageList.pageInfo.hasNextPage;
                 nextPageCursor = languageList.pageInfo.endCursor;
 
@@ -59,7 +58,7 @@ isolated function getRepository(string username, string repositoryName, string a
 }
 
 isolated function getRepositoryContent(string username, string repositoryName, string expression, string accessToken,
-                                        http:Client graphQlClient) returns File[]|Error {
+        http:Client graphQlClient) returns File[]|Error {
     string stringQuery = getFormulatedStringQueryForGetRepositoryContent(username, repositoryName, expression);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
@@ -86,10 +85,9 @@ isolated function getRepositoryContent(string username, string repositoryName, s
 }
 
 isolated function getRepositoryList(int perPageCount, string accessToken, http:Client graphQlClient,
-                                    boolean isOrganization, string? owner, string? nextPageCursor = ())
-                                    returns @tainted RepositoryList|Error {
-    string stringQuery = getFormulatedStringQueryForGetRepositoryList(perPageCount, isOrganization, owner,
-                                                                    nextPageCursor);
+        boolean isOrganization, string? owner, string? nextPageCursor = ()) returns RepositoryList|Error {
+    string stringQuery = getFormulatedStringQueryForGetRepositoryList(perPageCount, isOrganization, owner, 
+            nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
@@ -126,12 +124,10 @@ isolated function getRepositoryList(int perPageCount, string accessToken, http:C
     }
 }
 
-isolated function getCollaborators(string owner, string repositoryName, int perPageCount,
-                                                string accessToken, http:Client graphQlClient,
-                                                string? nextPageCursor = ())
-                                                returns @tainted CollaboratorList|Error {
+isolated function getCollaborators(string owner, string repositoryName, int perPageCount, string accessToken, 
+        http:Client graphQlClient, string? nextPageCursor = ()) returns CollaboratorList|Error {
     string stringQuery = getFormulatedStringQueryForGetCollaboratorList(owner, repositoryName, perPageCount,
-                                                                        nextPageCursor);
+            nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
@@ -157,11 +153,9 @@ isolated function getCollaborators(string owner, string repositoryName, int perP
     return graphQlData;
 }
 
-isolated function getBranches(string ownerName, string repositoryName, int perPageCount,
-                                        string accessToken, http:Client graphQlClient, string? nextPageCursor = ())
-                                        returns @tainted BranchList|Error {
-    string stringQuery = getFormulatedStringQueryForGetBranches(ownerName, repositoryName, perPageCount,
-                                                                            nextPageCursor);
+isolated function getBranches(string ownerName, string repositoryName, int perPageCount, string accessToken, 
+        http:Client graphQlClient, string? nextPageCursor = ()) returns BranchList|Error {
+    string stringQuery = getFormulatedStringQueryForGetBranches(ownerName, repositoryName, perPageCount, nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
@@ -187,15 +181,13 @@ isolated function getBranches(string ownerName, string repositoryName, int perPa
     return graphQlData;
 }
 
-isolated function updateRepository(@tainted UpdateRepositoryInput updateRepositoryInput, string repositoryOwnerName,
-                                    string repositoryName, string accessToken, http:Client graphQlClient)
-                                    returns @tainted Error? {
+isolated function updateRepository(UpdateRepositoryInput updateRepositoryInput, string repositoryOwnerName,
+        string repositoryName, string accessToken, http:Client graphQlClient) returns Error? {
     if updateRepositoryInput?.repositoryId is () {
         updateRepositoryInput["repositoryId"] = check getRepositoryId(repositoryOwnerName, repositoryName, accessToken,
-                                                                    graphQlClient);
+                graphQlClient);
     }
     string stringQuery = getFormulatedStringQueryForUpdateRepository(updateRepositoryInput);
-
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {
         return graphQlData;
@@ -203,13 +195,11 @@ isolated function updateRepository(@tainted UpdateRepositoryInput updateReposito
     return;
 }
 
-isolated function getIssues(string repositoryOwnerName, string repositoryName, int perPageCount,
-                                        string accessToken, http:Client graphQlClient, string? nextPageCursor,
-                                        IssueFilters issueFilters) returns @tainted IssueList|Error {
-    string stringQuery = getFormulatedStringQueryForGetIssueList(repositoryOwnerName, repositoryName,
-                                                                perPageCount, nextPageCursor, issueFilters);
+isolated function getIssues(string repositoryOwnerName, string repositoryName, int perPageCount, string accessToken, 
+        http:Client graphQlClient, string? nextPageCursor, IssueFilters issueFilters) returns IssueList|Error {
+    string stringQuery = getFormulatedStringQueryForGetIssueList(repositoryOwnerName, repositoryName, perPageCount, 
+            nextPageCursor, issueFilters);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
-
     if graphQlData is map<json> {
         json repository = graphQlData.get(GIT_REPOSITORY);
         if repository is map<json> {
@@ -233,9 +223,8 @@ isolated function getIssues(string repositoryOwnerName, string repositoryName, i
     return graphQlData;
 }
 
-isolated function createRepository(@tainted CreateRepositoryInput createRepositoryInput, string accessToken,
-                                    http:Client graphQlClient) returns @tainted Error? {
-
+isolated function createRepository(CreateRepositoryInput createRepositoryInput, string accessToken, http:Client 
+        graphQlClient) returns Error? {
     if createRepositoryInput?.template is () {
         createRepositoryInput["template"] = false;
     }
@@ -247,7 +236,6 @@ isolated function createRepository(@tainted CreateRepositoryInput createReposito
     }
 
     string stringQuery = getFormulatedStringQueryForCreateRepository(createRepositoryInput);
-
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
     if graphQlData is Error {
         return graphQlData;
@@ -256,8 +244,7 @@ isolated function createRepository(@tainted CreateRepositoryInput createReposito
 }
 
 isolated function getLanguageList(string owner, string repositoryName, int perPageCount, string accessToken,
-                                http:Client graphQlClient, string? nextPageCursor = ()) returns LanguageList|Error {
-
+        http:Client graphQlClient, string? nextPageCursor = ()) returns LanguageList|Error {
     string stringQuery = getFormulatedStringQueryForGetLanguages(owner, repositoryName, perPageCount, nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 

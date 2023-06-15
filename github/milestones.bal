@@ -16,18 +16,17 @@
 
 import ballerina/http;
 
-isolated function getMilestones(string repositoryOwnerName, string repositoryName, int perPageCount,
-                                            string accessToken, http:Client graphQlClient, string? nextPageCursor = ())
-                                            returns @tainted MilestoneList|Error {
-    string stringQuery = getFormulatedStringQueryForGetMilestones(repositoryOwnerName, repositoryName, perPageCount,
-                                                                nextPageCursor);
+isolated function getMilestones(string repositoryOwnerName, string repositoryName, int perPageCount, string accessToken,
+        http:Client graphQlClient, string? nextPageCursor = ()) returns MilestoneList|Error {
+    string stringQuery = getFormulatedStringQueryForGetMilestones(repositoryOwnerName, repositoryName,
+            perPageCount, nextPageCursor);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json repository = graphQlData.get(GIT_REPOSITORY);
-        if (repository is map<json>) {
+        if repository is map<json> {
             json milestones = repository.get(GIT_MILESTONES);
-            if (milestones is map<json>) {
+            if milestones is map<json> {
                 MilestoneListPayload|error milestoneListResponse = milestones.cloneWithType(MilestoneListPayload);
                 if milestoneListResponse is MilestoneListPayload {
                     MilestoneList milestoneList = {
@@ -47,16 +46,15 @@ isolated function getMilestones(string repositoryOwnerName, string repositoryNam
 }
 
 isolated function getMilestone(string repositoryOwnerName, string repositoryName, int milestoneNumber,
-                                        string accessToken, http:Client graphQlClient) returns @tainted
-                                        Milestone|Error {
+        string accessToken, http:Client graphQlClient) returns Milestone|Error {
     string stringQuery = getFormulatedStringQueryForGetAMilestone(repositoryOwnerName, repositoryName, milestoneNumber);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json repository = graphQlData.get(GIT_REPOSITORY);
-        if (repository is map<json>) {
+        if repository is map<json> {
             json milestone = repository.get(GIT_MILESTONE);
-            if (milestone is map<json>) {
+            if milestone is map<json> {
                 Milestone|error milestoneObj = milestone.cloneWithType(Milestone);
                 return milestoneObj is Milestone ? milestoneObj : error ClientError("GitHub Client Error", milestoneObj);
             }

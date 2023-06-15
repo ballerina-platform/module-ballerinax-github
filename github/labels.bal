@@ -16,27 +16,16 @@
 
 import ballerina/http;
 
-// mutation is in preview state
-isolated function createLabel(CreateLabelInput createLabelInput, string accessToken, http:Client graphQlClient)
-                            returns @tainted Error? {
-    string stringQuery = getFormulatedStringQueryForCreateLabel(createLabelInput);
-    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
-    if graphQlData is Error {
-        return graphQlData;
-    }
-    return;
-}
-
 isolated function getLabel(string repositoryOwnerName, string repositoryName, string labelName,
-                                    string accessToken, http:Client graphQlClient) returns @tainted Label|Error {
+                                    string accessToken, http:Client graphQlClient) returns Label|Error {
     string stringQuery = getFormulatedStringQueryForGetLabel(repositoryOwnerName, repositoryName, labelName);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json repository = graphQlData.get(GIT_REPOSITORY);
-        if (repository is map<json>) {
+        if repository is map<json> {
             json label = repository.get(GIT_LABEL);
-            if (label is map<json>) {
+            if label is map<json> {
                 Label|error labelObj = label.cloneWithType(Label);
                 return labelObj is Label ? labelObj : error ClientError("GitHub Client Error", labelObj);
             }
@@ -49,18 +38,18 @@ isolated function getLabel(string repositoryOwnerName, string repositoryName, st
 
 isolated function getLabels(string repositoryOwnerName, string repositoryName, int issueNumber,
                                     int perPageCount, string accessToken, http:Client graphQlClient,
-                                    string? nextPageToken = ()) returns @tainted LabelList|Error {
+                                    string? nextPageToken = ()) returns LabelList|Error {
     string stringQuery = getFormulatedStringQueryForGetAllLabelsForAIssue(repositoryOwnerName, repositoryName,
-                                                                        issueNumber, perPageCount, nextPageToken);
+            issueNumber, perPageCount, nextPageToken);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
 
     if graphQlData is map<json> {
         json repository = graphQlData.get(GIT_REPOSITORY);
-        if (repository is map<json>) {
+        if repository is map<json> {
             json issue = repository.get(GIT_ISSUE);
-            if (issue is map<json>) {
+            if issue is map<json> {
                 json labels = issue.get(GIT_LABELS);
-                if (labels is map<json>) {
+                if labels is map<json> {
                     LabelListPayload|error labelListResponse = labels.cloneWithType(LabelListPayload);
                     if labelListResponse is LabelListPayload {
                         LabelList labelList = {
@@ -82,14 +71,15 @@ isolated function getLabels(string repositoryOwnerName, string repositoryName, i
 }
 
 isolated function addLabels(AddLabelsInput addLabelsInput, string accessToken,
-                                        http:Client graphQlClient) returns @tainted LabelList|Error {
+                                        http:Client graphQlClient) returns LabelList|Error {
 
     Issue issue = check getIssue(addLabelsInput.repositoryOwnerName, addLabelsInput.repositoryName,
                             addLabelsInput.issueNumber, accessToken, graphQlClient);
 
     string[] labelIds = [];
     foreach string labelName in addLabelsInput.labelNames {
-        Label label = check getLabel(addLabelsInput.repositoryOwnerName, addLabelsInput.repositoryName, labelName, accessToken, graphQlClient);
+        Label label = check getLabel(addLabelsInput.repositoryOwnerName, addLabelsInput.repositoryName, 
+                labelName, accessToken, graphQlClient);
         labelIds.push(label.id);
     }
 
@@ -98,7 +88,7 @@ isolated function addLabels(AddLabelsInput addLabelsInput, string accessToken,
         labelIds: labelIds
     };
 
-    if (!(addLabelsInput?.clientMutationId is ())) {
+    if !(addLabelsInput?.clientMutationId is ()) {
         addLabelsToLabelableInput["clientMutationId"] = <string>addLabelsInput?.clientMutationId;
     }
 
@@ -107,11 +97,11 @@ isolated function addLabels(AddLabelsInput addLabelsInput, string accessToken,
 
     if graphQlData is map<json> {
         json addLableToLabelable = graphQlData.get(GIT_ADD_LABLE_TO_LABELABLE);
-        if (addLableToLabelable is map<json>) {
+        if addLableToLabelable is map<json> {
             json labelable = addLableToLabelable.get(GIT_LABELABLE);
-            if (labelable is map<json>) {
+            if labelable is map<json> {
                 json labels = labelable.get(GIT_LABELS);
-                if (labels is map<json>) {
+                if labels is map<json> {
                     LabelListPayload|error labelListResponse = labels.cloneWithType(LabelListPayload);
                     if labelListResponse is LabelListPayload {
                         LabelList labelList = {
@@ -133,14 +123,15 @@ isolated function addLabels(AddLabelsInput addLabelsInput, string accessToken,
 }
 
 isolated function removeLabel(RemoveIssueLabelInput removeIssueLabelInput,
-                                            string accessToken, http:Client graphQlClient) returns @tainted Error? {
+                                            string accessToken, http:Client graphQlClient) returns Error? {
 
     Issue issue = check getIssue(removeIssueLabelInput.repositoryOwnerName, removeIssueLabelInput.repositoryName,
                             removeIssueLabelInput.issueNumber, accessToken, graphQlClient);
 
     string[] labelIds = [];
     foreach string labelName in removeIssueLabelInput.labelNames {
-        Label label = check getLabel(removeIssueLabelInput.repositoryOwnerName, removeIssueLabelInput.repositoryName, labelName, accessToken, graphQlClient);
+        Label label = check getLabel(removeIssueLabelInput.repositoryOwnerName, removeIssueLabelInput.repositoryName,
+                labelName, accessToken, graphQlClient);
         labelIds.push(label.id);
     }
 
@@ -149,7 +140,7 @@ isolated function removeLabel(RemoveIssueLabelInput removeIssueLabelInput,
         labelIds: labelIds
     };
 
-    if (!(removeIssueLabelInput?.clientMutationId is ())) {
+    if !(removeIssueLabelInput?.clientMutationId is ()) {
         removeLabelsFromLabelable["clientMutationId"] = <string>removeIssueLabelInput?.clientMutationId;
     }
 

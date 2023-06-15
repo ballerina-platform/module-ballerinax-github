@@ -214,7 +214,7 @@ function testCreateIssue() returns error? {
         milestoneId: milestoneId
     };
 
-    Issue|Error response =  githubClient->createIssue(createIssueInput, testUsername, testUserRepositoryName);
+    Issue|Error response = githubClient->createIssue(createIssueInput, testUsername, testUserRepositoryName);
     if response is ClientError {
         record {|anydata body?;|} errorDetails = response.detail();
         log:printError("Client error received. Error detail = " + errorDetails?.body.toString());
@@ -422,7 +422,7 @@ function updateFeatureRepository() returns error? {
         "sha": sha
     };
     updateFileRequest.setJsonPayload(payload);
-    json _ = check githubDirectClient->put(REPO_FILE_PATH,updateFileRequest, fileAPIHeaders);
+    json _ = check githubDirectClient->put(REPO_FILE_PATH, updateFileRequest, fileAPIHeaders);
     log:printInfo("sucessfully updated file " + REPO_BASE_URL + REPO_FILE_PATH);
 
 }
@@ -506,7 +506,8 @@ function testCreatePullRequestReview() returns error? {
         event: PULL_REQUEST_REVIEW_COMMENT
     };
 
-    PullRequestReview response = check githubClient->createPullRequestReview(createPullRequestReviewInput, testUsername, testUserRepositoryName, createdPullRequestNumber);
+    PullRequestReview response = check githubClient->createPullRequestReview(createPullRequestReviewInput, testUsername,
+        testUserRepositoryName, createdPullRequestNumber);
     createdPullRequestReviewId = response.id;
 }
 
@@ -521,7 +522,8 @@ function testCreatePullRequestReviewWithPendingState() returns error? {
         body: "This is a test review comment for a pull  from Ballerina GitHub connector "
     };
 
-    PullRequestReview response = check githubClient->createPullRequestReview(createPullRequestReviewInput, testUsername, testUserRepositoryName, createdPullRequestNumber);
+    PullRequestReview response = check githubClient->createPullRequestReview(createPullRequestReviewInput, testUsername,
+        testUserRepositoryName, createdPullRequestNumber);
     createdPullRequestReviewIdWithPendingState = response.id;
 }
 
@@ -574,13 +576,13 @@ function testGetUserProject() returns error? {
     if project is ClientError {
         record {|anydata body?;|} errorDetails = project.detail();
         log:printError("Client error received. Error detail = " + errorDetails?.body.toString());
-        if(getProjectRetryCount > 3) {
+        if getProjectRetryCount > 3 {
             return project;
         } else {
             log:printInfo("Retrying githubClient -> getProject() after 5 seconds...");
-            runtime:sleep(5);   //Github seems to add project async mannger. Sometimes immediate call does not return the project.
+            runtime:sleep(5); //Github seems to add project async mannger. Sometimes immediate call does not return the project.
             return testGetUserProject();
-        }     
+        }
     } else if project is ServerError {
         record {|json? data?; GraphQLClientError[] errors; map<json>? extensions?;|} errorDetails = project.detail();
         log:printError("Server error received. Error detail = " + errorDetails.errors.toString());
