@@ -25,12 +25,14 @@ jobs:
                   echo "GRAALVM_HOME: ${{ env.GRAALVM_HOME }}"
                   echo "JAVA_HOME: ${{ env.JAVA_HOME }}"
                   native-image --version
+            
+            - name: Set Up Ballerina
+              uses: ballerina-platform/setup-ballerina@main
+              with:
+                version: latest
 
             - name: Run Ballerina tests using the native executable
-              uses: ballerina-platform/ballerina-action/@nightly
-              with:
-                  args:
-                      test --native ./github
+              run: bal test --native ./github
               env:
                 JAVA_HOME: /usr/lib/jvm/default-jvm
                 ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
