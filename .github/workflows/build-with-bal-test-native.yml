@@ -27,7 +27,7 @@ jobs:
                   native-image --version
             
             - name: Set Up Ballerina
-              uses: ballerina-platform/setup-ballerina@main
+              uses: ballerina-platform/setup-ballerina@v1.1.0
               with:
                 version: latest
 
