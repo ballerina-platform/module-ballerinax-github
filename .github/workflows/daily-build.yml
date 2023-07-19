@@ -29,7 +29,7 @@ jobs:
               uses: ballerina-platform/ballerina-action/@nightly
               with:
                   args:
-                      test --code-coverage ./github
+                      test --test-report --code-coverage --coverage-format=xml ./github
               env:
                 ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                 ORG_NAME: ${{ secrets.ORG_NAME }}
@@ -39,22 +39,8 @@ jobs:
                 JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
                 GITHUB_USERNAME: ${{ secrets.USERNAME }}
 
-            # Read the ballerina test results
-            - name: Read Ballerina Test Results
-              id: test_results
-              run: |
-                content=`cat ./github/target/report/test_results.json`                
-                content="${content//'%'/'%25'}"
-                content="${content//$'\n'/'%0A'}"
-                content="${content//$'\r'/'%0D'}"
-                echo "::set-output name=testResultsJson::$content"
-
-            # Print the code coverage information
-            - name: Code Coverage
-              run: |
-                echo "Covered Code Lines : ${{fromJson(steps.test_results.outputs.testResultsJson).coveredLines}}"
-                echo "Total Code Lines : $(expr ${{fromJson(steps.test_results.outputs.testResultsJson).missedLines}} + ${{fromJson(steps.test_results.outputs.testResultsJson).coveredLines}})"
-                echo "Code Coverage Percentage : ${{fromJson(steps.test_results.outputs.testResultsJson).coveragePercentage}}"
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v3
 
             # Send notification when build fails
             - name: Notify failure

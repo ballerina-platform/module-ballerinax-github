@@ -1,0 +1,39 @@
+name: Pull_Request
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+    build:
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Ballerina Build
+              uses: ballerina-platform/ballerina-action/@nightly
+              with:
+                  args:
+                      pack
+              env:
+                  WORKING_DIR: ./github
+                  JAVA_HOME: /usr/lib/jvm/default-jvm
+            - name: Ballerina Test
+              uses: ballerina-platform/ballerina-action/@nightly
+              with:
+                  args:
+                      test --test-report --code-coverage --coverage-format=xml
+              env:
+                  WORKING_DIR: ./github
+                  JAVA_HOME: /usr/lib/jvm/default-jvm
+                  ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+                  ORG_NAME: ${{ secrets.ORG_NAME }}
+                  USER_REPO_NAME: ${{ secrets.REPO_NAME }}
+                  ISSUE_ASSIGNEE: ${{ secrets.ASSIGNEE }}
+                  RESOURCE_PATH: ${{ secrets.RESOURCE_PATH }}
+                  JAVA_OPTS: -DBALLERINA_DEV_COMPILE_BALLERINA_ORG=true
+                  GITHUB_USERNAME: ${{ secrets.USERNAME }}
+
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v3
