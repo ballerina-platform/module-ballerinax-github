@@ -6,26 +6,25 @@ on:
 
 jobs:
     build:
-
         runs-on: ubuntu-latest
-
         steps:
             - uses: actions/checkout@v2
+
             - name: Set Up Ballerina
               uses: ballerina-platform/setup-ballerina@v1.1.0
               with:
-                version: latest
+                  version: latest
+
             - name: Ballerina Build
-              run: bal pack
+              run: bal pack ./github
               env:
-                  WORKING_DIR: ./github
                   JAVA_HOME: /usr/lib/jvm/default-jvm
+
             - name: Ballerina Tests
               # tests will be skipped if the PR is from a forked repository (as the secrets are not available)
               if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
-              run: bal test --test-report --code-coverage --coverage-format=xml
+              run: bal test --test-report --code-coverage --coverage-format=xml ./github
               env:
-                  WORKING_DIR: ./github
                   JAVA_HOME: /usr/lib/jvm/default-jvm
                   ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
                   ORG_NAME: ${{ secrets.ORG_NAME }}
