@@ -35,7 +35,7 @@ Execute the commands below to build from the source after installing Ballerina S
     ```
 * To run the tests:
     ```
-    bal test ./github
+    bal test ./ballerina
     ```
 
 # Contributing to Ballerina
