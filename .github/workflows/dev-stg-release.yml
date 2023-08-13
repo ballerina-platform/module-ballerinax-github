@@ -7,42 +7,44 @@ on:
         description: Ballerina Central Environment
         type: choice
         options:
-        - STAGE
-        - DEV
+          - STAGE
+          - DEV
         required: true
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    env: 
+    env:
       BALLERINA_${{ github.event.inputs.bal_central_environment }}_CENTRAL: true
     steps:
       - uses: actions/checkout@v2
-      - name: Ballerina Build
-        uses: ballerina-platform/ballerina-action/@2201.2.1
+
+      # Setup Ballerina Environment
+      - name: Set Up Ballerina
+        uses: ballerina-platform/setup-ballerina@v1.1.0
         with:
-          args:
-            pack ./github
+          version: 2201.7.0
+
+      # Build Ballerina Project
+      - name: Ballerina Build
+        run: bal pack ./ballerina
         env:
           JAVA_HOME: /usr/lib/jvm/default-jvm
 
+      # Push to Ballerina Staging Central
       - name: Push to Staging
         if: github.event.inputs.bal_central_environment == 'STAGE'
-        uses: ballerina-platform/ballerina-action/@2201.2.1
-        with:
-          args:
-            push
+        run: bal push
+        working-directory: ./ballerina
         env:
-          WORKING_DIR: ./github
           BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_STAGE_ACCESS_TOKEN }}
-      
+          JAVA_HOME: /usr/lib/jvm/default-jvm
+
+      # Push to Ballerina Dev Central
       - name: Push to Dev
         if: github.event.inputs.bal_central_environment == 'DEV'
-        uses: ballerina-platform/ballerina-action/@2201.2.1
-        with:
-          args:
-            push
+        run: bal push
+        working-directory: ./ballerina
         env:
-          WORKING_DIR: ./github
-          JAVA_HOME: /usr/lib/jvm/default-jvm
           BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_DEV_ACCESS_TOKEN }}
+          JAVA_HOME: /usr/lib/jvm/default-jvm
