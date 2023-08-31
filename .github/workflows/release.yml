@@ -2,25 +2,30 @@ name: Deployment
 
 on:
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Ballerina Build
-        uses: ballerina-platform/ballerina-action/@2201.2.1
-        with:
-          args:
-            pack ./github
 
-      - name: Ballerina Push
-        uses: ballerina-platform/ballerina-action/@2201.2.1
+      # Setup Ballerina Environment
+      - name: Set Up Ballerina
+        uses: ballerina-platform/setup-ballerina@v1.1.0
         with:
-          args:
-            push
+          version: 2201.2.1
+
+      # Build Ballerina Project
+      - name: Ballerina Build
+        run: bal pack ./ballerina
         env:
-          WORKING_DIR: ./github
           JAVA_HOME: /usr/lib/jvm/default-jvm
-          BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_ACCESS_TOKEN }}
+
+      # Push to Ballerina Central
+      - name: Ballerina Push
+        run: bal push
+        working-directory: ./ballerina
+        env:
+          BALLERINA_CENTRAL_ACCESS_TOKEN: ${{ secrets.BALLERINA_CENTRAL_DEV_ACCESS_TOKEN }}
+          JAVA_HOME: /usr/lib/jvm/default-jvm
