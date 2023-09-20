@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches-ignore:
+    branches:
       - "automated/dependency_version_update"
       - "automated/dependency_version_update_tmp"
   repository_dispatch:
