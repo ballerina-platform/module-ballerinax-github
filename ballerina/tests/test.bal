@@ -837,8 +837,7 @@ function testGetRepositoryContent() returns error? {
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["network-calls"]
 }
 function testAddStar() returns error? {
     log:printInfo("githubClient -> addStar()");
@@ -852,7 +851,6 @@ function testAddStar() returns error? {
 
 @test:Config {
     groups: ["network-calls"],
-    enable: true,
     dependsOn: [testAddStar]
 }
 function testRemoveStar() returns error? {
