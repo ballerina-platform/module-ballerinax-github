@@ -185,6 +185,18 @@ isolated function getFormulatedStringQueryForGetIssueList(string repositoryOwner
 
 }
 
+isolated function getFormulatedStringQueryForAddStar(AddStarInput addStarInput)
+                                                            returns string {
+    return string `{"variables":{"addStarInput": ${addStarInput.toJsonString()}},
+                    "query":"${ADD_STAR}"}`;
+}
+
+isolated function getFormulatedStringQueryForRemoveStar(RemoveStarInput removeStarInput)
+                                                            returns string {
+    return string `{"variables":{"removeStarInput": ${removeStarInput.toJsonString()}},
+                    "query":"${REMOVE_STAR}"}`;
+}
+
 isolated function getFormulatedStringQueryForCreateIssue(CreateIssueInputPayload createIssueInput) returns string {
     return string `{"variables":{"createIssueInput": ${createIssueInput.toJsonString()}},"query":"${CREATE_ISSUE}"}`;
 }

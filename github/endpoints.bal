@@ -152,6 +152,27 @@ public isolated client class Client {
         return new stream<Branch, Error?>(branchStream);
     }
 
+    // Stars
+    # Add star
+    #
+    # + addStarInput - `AddStarInput` record
+    #
+    # + return - `github:Error` if not successful
+    @display {label: "Add Star"}
+    remote isolated function addStar(AddStarInput addStarInput) returns Error? {
+        return addStar(addStarInput, self.authToken, self.githubGraphQlClient);
+    }
+
+    # Remove star
+    #
+    # + removeStarInput - `RemoveStarInput` record
+    #
+    # + return - `github:Error` if not successful
+    @display {label: "Remove Star"}
+    remote isolated function removeStar(RemoveStarInput removeStarInput) returns Error? {
+        return removeStar(removeStarInput, self.authToken, self.githubGraphQlClient);
+    }
+
     // Issues 
     # Create issue
     #
