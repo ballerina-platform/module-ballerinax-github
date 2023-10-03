@@ -835,3 +835,32 @@ function testGetRepositoryContent() returns error? {
     File[] response = check githubClient->getRepositoryContent(testUsername, testUserRepositoryName, "HEAD:");
     test:assertTrue(response.length() > 0, "Failed to get file list");
 }
+
+@test:Config {
+    groups: ["network-calls"],
+    enable: true
+}
+function testAddStar() returns error? {
+    log:printInfo("githubClient -> addStar()");
+    Repository userRepository = check githubClient->getRepository(testUsername, testUserRepositoryName);
+    AddStarInput addStarInput = {
+        starrableId: userRepository.id
+    };
+    check githubClient->addStar(addStarInput);
+    test:assertTrue(true);
+}
+
+@test:Config {
+    groups: ["network-calls"],
+    enable: true,
+    dependsOn: [testAddStar]
+}
+function testRemoveStar() returns error? {
+    log:printInfo("githubClient -> removeStar()");
+    Repository userRepository = check githubClient->getRepository(testUsername, testUserRepositoryName);
+    RemoveStarInput removeStarInput = {
+        starrableId: userRepository.id
+    };
+    check githubClient->removeStar(removeStarInput);
+    test:assertTrue(true);
+}
