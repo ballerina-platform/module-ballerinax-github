@@ -26,6 +26,18 @@ final string UPDATE_REPOSITORY = "mutation($updateRepositoryInput: UpdateReposit
                                 "  }\n" +
                                 "}";
 
+final string ADD_STAR = "mutation($addStarInput: AddStarInput!) {\n" +
+                        "  addStar(input:$addStarInput){ " +
+                        "      clientMutationId \n" +
+                        "  }\n" +
+                        "}";
+
+final string REMOVE_STAR = "mutation($removeStarInput: RemoveStarInput!) {\n" +
+                        "  removeStar(input:$removeStarInput){ " +
+                        "      clientMutationId \n" +
+                        "  }\n" +
+                        "}";
+
 final string CREATE_ISSUE = "mutation($createIssueInput: CreateIssueInput!){\n" +
                             "   createIssue(input: $createIssueInput){\n" +
                             "       issue{\n" +
