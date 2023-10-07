@@ -963,6 +963,28 @@ public type UnstarRepositoryInput record {
     string repositoryName;
 };
 
+# Represent star topic input payload.
+# 
+# + clientMutationId - A unique identifier for the client performing the mutation. 
+# + topicName - Topic name
+public type StarTopicInput record {
+    @display {label: "Client Mutation Id"}
+    string clientMutationId?;
+    @display {label: "Topic Name"}
+    string topicName;
+};
+
+# Represent unstar topic input payload.
+# 
+# + clientMutationId - A unique identifier for the client performing the mutation. 
+# + topicName - Topic name
+public type UnstarTopicInput record {
+    @display {label: "Client Mutation Id"}
+    string clientMutationId?;
+    @display {label: "Topic Name"}
+    string topicName;
+};
+
 # Represent add star input payload.
 # 
 # + clientMutationId - A unique identifier for the client performing the mutation. 

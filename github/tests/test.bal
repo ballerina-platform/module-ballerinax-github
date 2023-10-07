@@ -24,6 +24,7 @@ import ballerina/lang.runtime;
 
 configurable string testOrganizationName = os:getEnv("ORG_NAME");
 configurable string testUserRepositoryName = os:getEnv("USER_REPO_NAME");
+configurable string testTopicName = os:getEnv("TOPIC_NAME");
 configurable string testResourcePath = os:getEnv("RESOURCE_PATH");
 configurable string testIssueAssignee = os:getEnv("ISSUE_ASSIGNEE");
 configurable string testUsername = os:getEnv("GITHUB_USERNAME");
@@ -858,5 +859,30 @@ function testUnstarRepository() returns error? {
         repositoryName: testUserRepositoryName
     };
     check githubClient->unstarRepository(unstarRepositoryInput);
+    test:assertTrue(true);
+}
+
+@test:Config {
+    groups: ["network-calls"]
+}
+function testStarTopic() returns error? {
+    log:printInfo("githubClient -> starTopic()");
+    StarTopicInput starTopicInput = {
+        topicName: testTopicName
+    };
+    check githubClient->starTopic(starTopicInput);
+    test:assertTrue(true);
+}
+
+@test:Config {
+    groups: ["network-calls"],
+    dependsOn: [testStarTopic]
+}
+function testUnstarTopic() returns error? {
+    log:printInfo("githubClient -> unstarTopic()");
+    UnstarTopicInput unstarTopicInput = {
+        topicName: testTopicName
+    };
+    check githubClient->unstarTopic(unstarTopicInput);
     test:assertTrue(true);
 }

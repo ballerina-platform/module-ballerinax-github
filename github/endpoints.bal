@@ -537,6 +537,28 @@ public isolated client class Client {
         return new stream<User, Error?>(organizationMemberStream);
     }
 
+    // Topics
+
+    # Star a given topic
+    #
+    # + starTopicInput - `StarTopicInput` record
+    #
+    # + return - `github:Error` if not successful
+    @display {label: "Star Topic"}
+    remote isolated function starTopic(StarTopicInput starTopicInput) returns Error? {
+        return starTopic(starTopicInput, self.authToken, self.githubGraphQlClient);
+    }
+
+    # Unstar a given topic
+    #
+    # + unstarTopicInput - `UnstarTopicInput` record
+    #
+    # + return - `github:Error` if not successful
+    @display {label: "Unstar Topic"}
+    remote isolated function unstarTopic(UnstarTopicInput unstarTopicInput) returns Error? {
+        return unstarTopic(unstarTopicInput, self.authToken, self.githubGraphQlClient);
+    }
+
     # Search
     #
     # + searchQuery - The search string to look for
