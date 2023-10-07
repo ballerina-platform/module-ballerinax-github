@@ -839,26 +839,26 @@ function testGetRepositoryContent() returns error? {
 @test:Config {
     groups: ["network-calls"]
 }
-function testAddStar() returns error? {
-    log:printInfo("githubClient -> addStar()");
-    Repository userRepository = check githubClient->getRepository(testUsername, testUserRepositoryName);
-    AddStarInput addStarInput = {
-        starrableId: userRepository.id
+function testStarRepository() returns error? {
+    log:printInfo("githubClient -> starRepository()");
+    StarRepositoryInput starRepositoryInput = {
+        repositoryOwnerName: testUsername, 
+        repositoryName: testUserRepositoryName
     };
-    check githubClient->addStar(addStarInput);
+    check githubClient->starRepository(starRepositoryInput);
     test:assertTrue(true);
 }
 
 @test:Config {
     groups: ["network-calls"],
-    dependsOn: [testAddStar]
+    dependsOn: [testStarRepository]
 }
-function testRemoveStar() returns error? {
-    log:printInfo("githubClient -> removeStar()");
-    Repository userRepository = check githubClient->getRepository(testUsername, testUserRepositoryName);
-    RemoveStarInput removeStarInput = {
-        starrableId: userRepository.id
+function testUnstarRepository() returns error? {
+    log:printInfo("githubClient -> unstarRepository()");
+    UnstarRepositoryInput unstarRepositoryInput = {
+        repositoryOwnerName: testUsername, 
+        repositoryName: testUserRepositoryName
     };
-    check githubClient->removeStar(removeStarInput);
+    check githubClient->unstarRepository(unstarRepositoryInput);
     test:assertTrue(true);
 }
