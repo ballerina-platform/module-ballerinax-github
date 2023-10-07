@@ -719,6 +719,12 @@ final string GET_PROJECT_ID = "query($repositoryOwnerName: String!, $repositoryN
                                 "  }\n" +
                                 "}";
 
+final string GET_TOPIC_ID = "query($topicName: String!){\n" +
+                            "  topic(name: $topicName){\n" +
+                            "      id\n" +
+                            "  }\n" +
+                            "}";
+
 final string GET_USER_OWNER_ID = "query($userName: String!){\n" +
                                 "  user(login: $userName){\n" +
                                 "     id\n" +

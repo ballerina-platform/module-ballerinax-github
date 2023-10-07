@@ -57,6 +57,7 @@ final string GIT_REPOSITORIES = "repositories";
 final string GIT_REPOSITORY = "repository";
 final string GIT_REPOSITORY_OWNER = "repositoryOwner";
 final string GIT_START_CURSOR = "startCursor";
+final string GIT_TOPIC = "topic";
 final string GIT_USER = "user";
 final string GIT_USERS = "users";
 final string GIT_BRANCH_REF_PREFIX = "refs/heads/";
