@@ -935,6 +935,34 @@ public type UpdateRepositoryInput record {
     boolean template?;
 };
 
+# Represent star repository input payload.
+# 
+# + clientMutationId - A unique identifier for the client performing the mutation. 
+# + repositoryOwnerName - Repository owner name/ GitHub username
+# + repositoryName - Repository name
+public type StarRepositoryInput record {
+    @display {label: "Client Mutation Id"}
+    string clientMutationId?;
+    @display {label: "Repository Owner Name"}
+    string repositoryOwnerName;
+    @display {label: "Repository Name"}
+    string repositoryName;
+};
+
+# Represent unstar repository input payload.
+# 
+# + clientMutationId - A unique identifier for the client performing the mutation. 
+# + repositoryOwnerName - Repository owner name/ GitHub username
+# + repositoryName - Repository name
+public type UnstarRepositoryInput record {
+    @display {label: "Client Mutation Id"}
+    string clientMutationId?;
+    @display {label: "Repository Owner Name"}
+    string repositoryOwnerName;
+    @display {label: "Repository Name"}
+    string repositoryName;
+};
+
 # Represent add star input payload.
 # 
 # + clientMutationId - A unique identifier for the client performing the mutation. 
