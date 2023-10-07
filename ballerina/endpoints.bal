@@ -546,6 +546,28 @@ public isolated client class Client {
         return unstarTopic(unstarTopicInput, self.authToken, self.githubGraphQlClient);
     }
 
+    // Gists
+
+    # Star a given gist
+    #
+    # + starGistInput - `StarTopicInput` record
+    #
+    # + return - `github:Error` if not successful
+    @display {label: "Star Gist"}
+    remote isolated function starGist(StarGistInput starGistInput) returns Error? {
+        return starGist(starGistInput, self.authToken, self.githubGraphQlClient);
+    }
+
+    # Unstar a given gist
+    #
+    # + unstarGistInput - `UnstarGistInput` record
+    #
+    # + return - `github:Error` if not successful
+    @display {label: "Unstar Gist"}
+    remote isolated function unstarGist(UnstarGistInput unstarGistInput) returns Error? {
+        return unstarGist(unstarGistInput, self.authToken, self.githubGraphQlClient);
+    }
+
     # Search
     #
     # + searchQuery - The search string to look for
