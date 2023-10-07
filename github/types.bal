@@ -985,6 +985,34 @@ public type UnstarTopicInput record {
     string topicName;
 };
 
+# Represent star gist input payload.
+# 
+# + clientMutationId - A unique identifier for the client performing the mutation. 
+# + gistOwnerName - Gist owner name/ GitHub username
+# + gistName - Gist name
+public type StarGistInput record {
+    @display {label: "Client Mutation Id"}
+    string clientMutationId?;
+    @display {label: "Gist Owner Name"}
+    string gistOwnerName;
+    @display {label: "Gist Name"}
+    string gistName;
+};
+
+# Represent unstar gist input payload.
+# 
+# + clientMutationId - A unique identifier for the client performing the mutation. 
+# + gistOwnerName - Gist owner name/ GitHub username
+# + gistName - Gist name
+public type UnstarGistInput record {
+    @display {label: "Client Mutation Id"}
+    string clientMutationId?;
+    @display {label: "Gist Owner Name"}
+    string gistOwnerName;
+    @display {label: "Gist Name"}
+    string gistName;
+};
+
 # Represent add star input payload.
 # 
 # + clientMutationId - A unique identifier for the client performing the mutation. 

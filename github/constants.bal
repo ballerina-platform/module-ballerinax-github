@@ -37,6 +37,7 @@ final string GIT_COMMENTS = "comments";
 final string GIT_REVIEWS = "reviews";
 final string GIT_EVENTS = "events";
 final string GIT = "git";
+final string GIT_GIST = "gist";
 final string GIT_GISTS = "gists";
 final string GIT_ORGS = "orgs";
 final string GIT_MEMBERSHIPS = "memberships";

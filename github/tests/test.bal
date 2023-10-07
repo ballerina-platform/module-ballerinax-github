@@ -25,6 +25,7 @@ import ballerina/lang.runtime;
 configurable string testOrganizationName = os:getEnv("ORG_NAME");
 configurable string testUserRepositoryName = os:getEnv("USER_REPO_NAME");
 configurable string testTopicName = os:getEnv("TOPIC_NAME");
+configurable string testGistName = os:getEnv("GIST_NAME");
 configurable string testResourcePath = os:getEnv("RESOURCE_PATH");
 configurable string testIssueAssignee = os:getEnv("ISSUE_ASSIGNEE");
 configurable string testUsername = os:getEnv("GITHUB_USERNAME");
@@ -884,5 +885,32 @@ function testUnstarTopic() returns error? {
         topicName: testTopicName
     };
     check githubClient->unstarTopic(unstarTopicInput);
+    test:assertTrue(true);
+}
+
+@test:Config {
+    groups: ["network-calls"]
+}
+function testStarGist() returns error? {
+    log:printInfo("githubClient -> starGist()");
+    StarGistInput starGistInput = {
+        gistOwnerName: testUsername,
+        gistName: testGistName
+    };
+    check githubClient->starGist(starGistInput);
+    test:assertTrue(true);
+}
+
+@test:Config {
+    groups: ["network-calls"],
+    dependsOn: [testStarGist]
+}
+function testUnstarGist() returns error? {
+    log:printInfo("githubClient -> unstarGist()");
+    UnstarGistInput unstarGistInput = {
+        gistOwnerName: testUsername,
+        gistName: testGistName
+    };
+    check githubClient->unstarGist(unstarGistInput);
     test:assertTrue(true);
 }

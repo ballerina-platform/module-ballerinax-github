@@ -725,6 +725,14 @@ final string GET_TOPIC_ID = "query($topicName: String!){\n" +
                             "  }\n" +
                             "}";
 
+final string GET_GIST_ID = "query($gistOwnerName: String!, $gistName: String!){\n" +
+                           "  user(login: $gistOwnerName){\n" +
+                           "      gist(name: $gistName){\n" +
+                           "          id\n" +
+                           "      }\n" +
+                           "  }\n" +
+                           "}";
+
 final string GET_USER_OWNER_ID = "query($userName: String!){\n" +
                                 "  user(login: $userName){\n" +
                                 "     id\n" +
