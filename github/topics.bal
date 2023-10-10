@@ -16,17 +16,13 @@
 
 import ballerina/http;
 
-isolated function starTopic(StarTopicInput starTopicInput, string accessToken, http:Client 
+isolated function starTopic(string topicName, string accessToken, http:Client 
         graphQlClient) returns Error? {
-    string topicId = check getTopicId(starTopicInput.topicName, accessToken, graphQlClient);
+    string topicId = check getTopicId(topicName, accessToken, graphQlClient);
 
     AddStarInput addStarInput = {
         starrableId: topicId
     };
-
-    if !(starTopicInput?.clientMutationId is ()) {
-        addStarInput["clientMutationId"] = <string>starTopicInput?.clientMutationId;
-    }
 
     string stringQuery = getFormulatedStringQueryForAddStar(addStarInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -36,17 +32,13 @@ isolated function starTopic(StarTopicInput starTopicInput, string accessToken, h
     return;
 }
 
-isolated function unstarTopic(UnstarTopicInput unstarTopicInput, string accessToken, http:Client 
+isolated function unstarTopic(string topicName, string accessToken, http:Client 
         graphQlClient) returns Error? {
-    string topicId = check getTopicId(unstarTopicInput.topicName, accessToken, graphQlClient);
+    string topicId = check getTopicId(topicName, accessToken, graphQlClient);
 
     RemoveStarInput removeStarInput = {
         starrableId: topicId
     };
-
-    if !(unstarTopicInput?.clientMutationId is ()) {
-        removeStarInput["clientMutationId"] = <string>unstarTopicInput?.clientMutationId;
-    }
 
     string stringQuery = getFormulatedStringQueryForRemoveStar(removeStarInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);

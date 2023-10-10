@@ -284,18 +284,13 @@ isolated function getLanguageList(string owner, string repositoryName, int perPa
     return graphQlData;
 }
 
-isolated function starRepository(StarRepositoryInput starRepositoryInput, string accessToken, http:Client 
+isolated function starRepository(string owner, string repositoryName, string accessToken, http:Client 
         graphQlClient) returns Error? {
-    string repositoryId = check getRepositoryId(starRepositoryInput.repositoryOwnerName, 
-            starRepositoryInput.repositoryName, accessToken, graphQlClient);
+    string repositoryId = check getRepositoryId(owner, repositoryName, accessToken, graphQlClient);
 
     AddStarInput addStarInput = {
         starrableId: repositoryId
     };
-
-    if !(starRepositoryInput?.clientMutationId is ()) {
-        addStarInput["clientMutationId"] = <string>starRepositoryInput?.clientMutationId;
-    }
 
     string stringQuery = getFormulatedStringQueryForAddStar(addStarInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -305,18 +300,13 @@ isolated function starRepository(StarRepositoryInput starRepositoryInput, string
     return;
 }
 
-isolated function unstarRepository(UnstarRepositoryInput unstarRepositoryInput, string accessToken, http:Client 
+isolated function unstarRepository(string owner, string repositoryName, string accessToken, http:Client 
         graphQlClient) returns Error? {
-    string repositoryId = check getRepositoryId(unstarRepositoryInput.repositoryOwnerName, 
-            unstarRepositoryInput.repositoryName, accessToken, graphQlClient);
+    string repositoryId = check getRepositoryId(owner, repositoryName, accessToken, graphQlClient);
 
     RemoveStarInput removeStarInput = {
         starrableId: repositoryId
     };
-
-    if !(unstarRepositoryInput?.clientMutationId is ()) {
-        removeStarInput["clientMutationId"] = <string>unstarRepositoryInput?.clientMutationId;
-    }
 
     string stringQuery = getFormulatedStringQueryForRemoveStar(removeStarInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);

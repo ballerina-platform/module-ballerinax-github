@@ -154,22 +154,24 @@ public isolated client class Client {
 
     # Star a given repository
     #
-    # + starRepositoryInput - `StarRepositoryInput` record
+    # + owner - Repository owner name
+    # + repositoryName - Repository name
     #
     # + return - `github:Error` if not successful
     @display {label: "Star Repository"}
-    remote isolated function starRepository(StarRepositoryInput starRepositoryInput) returns Error? {
-        return starRepository(starRepositoryInput, self.authToken, self.githubGraphQlClient);
+    remote isolated function starRepository(string owner, string repositoryName) returns Error? {
+        return starRepository(owner, repositoryName, self.authToken, self.githubGraphQlClient);
     }
 
     # Unstar a given repository
     #
-    # + unstarRepositoryInput - `UnstarRepositoryInput` record
+    # + owner - Repository owner name
+    # + repositoryName - Repository name
     #
     # + return - `github:Error` if not successful
     @display {label: "Unstar Repository"}
-    remote isolated function unstarRepository(UnstarRepositoryInput unstarRepositoryInput) returns Error? {
-        return unstarRepository(unstarRepositoryInput, self.authToken, self.githubGraphQlClient);
+    remote isolated function unstarRepository(string owner, string repositoryName) returns Error? {
+        return unstarRepository(owner, repositoryName, self.authToken, self.githubGraphQlClient);
     }
 
     // Issues 
@@ -541,44 +543,46 @@ public isolated client class Client {
 
     # Star a given topic
     #
-    # + starTopicInput - `StarTopicInput` record
+    # + topicName - Topic name
     #
     # + return - `github:Error` if not successful
     @display {label: "Star Topic"}
-    remote isolated function starTopic(StarTopicInput starTopicInput) returns Error? {
-        return starTopic(starTopicInput, self.authToken, self.githubGraphQlClient);
+    remote isolated function starTopic(string topicName) returns Error? {
+        return starTopic(topicName, self.authToken, self.githubGraphQlClient);
     }
 
     # Unstar a given topic
     #
-    # + unstarTopicInput - `UnstarTopicInput` record
+    # + topicName - Topic name
     #
     # + return - `github:Error` if not successful
     @display {label: "Unstar Topic"}
-    remote isolated function unstarTopic(UnstarTopicInput unstarTopicInput) returns Error? {
-        return unstarTopic(unstarTopicInput, self.authToken, self.githubGraphQlClient);
+    remote isolated function unstarTopic(string topicName) returns Error? {
+        return unstarTopic(topicName, self.authToken, self.githubGraphQlClient);
     }
 
     // Gists
 
     # Star a given gist
     #
-    # + starGistInput - `StarTopicInput` record
+    # + owner - Gist owner name
+    # + gistName - Gist name
     #
     # + return - `github:Error` if not successful
     @display {label: "Star Gist"}
-    remote isolated function starGist(StarGistInput starGistInput) returns Error? {
-        return starGist(starGistInput, self.authToken, self.githubGraphQlClient);
+    remote isolated function starGist(string owner, string gistName) returns Error? {
+        return starGist(owner, gistName, self.authToken, self.githubGraphQlClient);
     }
 
     # Unstar a given gist
     #
-    # + unstarGistInput - `UnstarGistInput` record
+    # + owner - Gist owner name
+    # + gistName - Gist name
     #
     # + return - `github:Error` if not successful
     @display {label: "Unstar Gist"}
-    remote isolated function unstarGist(UnstarGistInput unstarGistInput) returns Error? {
-        return unstarGist(unstarGistInput, self.authToken, self.githubGraphQlClient);
+    remote isolated function unstarGist(string owner, string gistName) returns Error? {
+        return unstarGist(owner, gistName, self.authToken, self.githubGraphQlClient);
     }
 
     # Search

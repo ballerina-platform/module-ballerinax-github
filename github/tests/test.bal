@@ -841,11 +841,7 @@ function testGetRepositoryContent() returns error? {
 }
 function testStarRepository() returns error? {
     log:printInfo("githubClient -> starRepository()");
-    StarRepositoryInput starRepositoryInput = {
-        repositoryOwnerName: testUsername, 
-        repositoryName: testUserRepositoryName
-    };
-    check githubClient->starRepository(starRepositoryInput);
+    check githubClient->starRepository(testUsername, testUserRepositoryName);
     test:assertTrue(true);
 }
 
@@ -855,11 +851,7 @@ function testStarRepository() returns error? {
 }
 function testUnstarRepository() returns error? {
     log:printInfo("githubClient -> unstarRepository()");
-    UnstarRepositoryInput unstarRepositoryInput = {
-        repositoryOwnerName: testUsername, 
-        repositoryName: testUserRepositoryName
-    };
-    check githubClient->unstarRepository(unstarRepositoryInput);
+    check githubClient->unstarRepository(testUsername, testUserRepositoryName);
     test:assertTrue(true);
 }
 
@@ -868,10 +860,7 @@ function testUnstarRepository() returns error? {
 }
 function testStarTopic() returns error? {
     log:printInfo("githubClient -> starTopic()");
-    StarTopicInput starTopicInput = {
-        topicName: testTopicName
-    };
-    check githubClient->starTopic(starTopicInput);
+    check githubClient->starTopic(testTopicName);
     test:assertTrue(true);
 }
 
@@ -881,10 +870,7 @@ function testStarTopic() returns error? {
 }
 function testUnstarTopic() returns error? {
     log:printInfo("githubClient -> unstarTopic()");
-    UnstarTopicInput unstarTopicInput = {
-        topicName: testTopicName
-    };
-    check githubClient->unstarTopic(unstarTopicInput);
+    check githubClient->unstarTopic(testTopicName);
     test:assertTrue(true);
 }
 
@@ -893,11 +879,7 @@ function testUnstarTopic() returns error? {
 }
 function testStarGist() returns error? {
     log:printInfo("githubClient -> starGist()");
-    StarGistInput starGistInput = {
-        gistOwnerName: testUsername,
-        gistName: testGistName
-    };
-    check githubClient->starGist(starGistInput);
+    check githubClient->starGist(testUsername, testGistName);
     test:assertTrue(true);
 }
 
@@ -907,10 +889,6 @@ function testStarGist() returns error? {
 }
 function testUnstarGist() returns error? {
     log:printInfo("githubClient -> unstarGist()");
-    UnstarGistInput unstarGistInput = {
-        gistOwnerName: testUsername,
-        gistName: testGistName
-    };
-    check githubClient->unstarGist(unstarGistInput);
+    check githubClient->unstarGist(testUsername, testGistName);
     test:assertTrue(true);
 }
