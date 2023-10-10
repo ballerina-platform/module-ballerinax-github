@@ -16,18 +16,13 @@
 
 import ballerina/http;
 
-isolated function starGist(StarGistInput starGistInput, string accessToken, http:Client 
+isolated function starGist(string owner, string gistName, string accessToken, http:Client 
         graphQlClient) returns Error? {
-    string gistId = check getGistId(starGistInput.gistOwnerName, starGistInput.gistName,
-                accessToken, graphQlClient);
+    string gistId = check getGistId(owner, gistName, accessToken, graphQlClient);
 
     AddStarInput addStarInput = {
         starrableId: gistId
     };
-
-    if !(starGistInput?.clientMutationId is ()) {
-        addStarInput["clientMutationId"] = <string>starGistInput?.clientMutationId;
-    }
 
     string stringQuery = getFormulatedStringQueryForAddStar(addStarInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
@@ -37,18 +32,13 @@ isolated function starGist(StarGistInput starGistInput, string accessToken, http
     return;
 }
 
-isolated function unstarGist(UnstarGistInput unstarGistInput, string accessToken, http:Client 
+isolated function unstarGist(string owner, string gistName, string accessToken, http:Client 
         graphQlClient) returns Error? {
-    string gistId = check getGistId(unstarGistInput.gistOwnerName, unstarGistInput.gistName, 
-                accessToken, graphQlClient);
+    string gistId = check getGistId(owner, gistName, accessToken, graphQlClient);
 
     RemoveStarInput removeStarInput = {
         starrableId: gistId
     };
-
-    if !(unstarGistInput?.clientMutationId is ()) {
-        removeStarInput["clientMutationId"] = <string>unstarGistInput?.clientMutationId;
-    }
 
     string stringQuery = getFormulatedStringQueryForRemoveStar(removeStarInput);
     map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
