@@ -139,7 +139,6 @@ function testCreateRepository() returns error? {
         description: "New Updated Description"
     };
     check githubClient->createRepository(createRepositoryInput);
-    test:assertTrue(true);
 }
 
 @test:Config {
@@ -842,7 +841,6 @@ function testGetRepositoryContent() returns error? {
 function testStarRepository() returns error? {
     log:printInfo("githubClient -> starRepository()");
     check githubClient->starRepository(testUsername, testUserRepositoryName);
-    test:assertTrue(true);
 }
 
 @test:Config {
@@ -852,7 +850,6 @@ function testStarRepository() returns error? {
 function testUnstarRepository() returns error? {
     log:printInfo("githubClient -> unstarRepository()");
     check githubClient->unstarRepository(testUsername, testUserRepositoryName);
-    test:assertTrue(true);
 }
 
 @test:Config {
@@ -861,7 +858,6 @@ function testUnstarRepository() returns error? {
 function testStarTopic() returns error? {
     log:printInfo("githubClient -> starTopic()");
     check githubClient->starTopic(testTopicName);
-    test:assertTrue(true);
 }
 
 @test:Config {
@@ -871,7 +867,6 @@ function testStarTopic() returns error? {
 function testUnstarTopic() returns error? {
     log:printInfo("githubClient -> unstarTopic()");
     check githubClient->unstarTopic(testTopicName);
-    test:assertTrue(true);
 }
 
 @test:Config {
@@ -880,7 +875,6 @@ function testUnstarTopic() returns error? {
 function testStarGist() returns error? {
     log:printInfo("githubClient -> starGist()");
     check githubClient->starGist(testUsername, testGistName);
-    test:assertTrue(true);
 }
 
 @test:Config {
@@ -890,5 +884,4 @@ function testStarGist() returns error? {
 function testUnstarGist() returns error? {
     log:printInfo("githubClient -> unstarGist()");
     check githubClient->unstarGist(testUsername, testGistName);
-    test:assertTrue(true);
 }

@@ -152,7 +152,7 @@ public isolated client class Client {
         return new stream<Branch, Error?>(branchStream);
     }
 
-    # Star a given repository
+    # Star a given repository.
     #
     # + owner - Repository owner name
     # + repositoryName - Repository name
@@ -163,7 +163,7 @@ public isolated client class Client {
         return starRepository(owner, repositoryName, self.authToken, self.githubGraphQlClient);
     }
 
-    # Unstar a given repository
+    # Unstar a given repository.
     #
     # + owner - Repository owner name
     # + repositoryName - Repository name
@@ -541,7 +541,7 @@ public isolated client class Client {
 
     // Topics
 
-    # Star a given topic
+    # Star a given topic.
     #
     # + topicName - Topic name
     #
@@ -551,7 +551,7 @@ public isolated client class Client {
         return starTopic(topicName, self.authToken, self.githubGraphQlClient);
     }
 
-    # Unstar a given topic
+    # Unstar a given topic.
     #
     # + topicName - Topic name
     #
@@ -563,7 +563,7 @@ public isolated client class Client {
 
     // Gists
 
-    # Star a given gist
+    # Star a given gist.
     #
     # + owner - Gist owner name
     # + gistName - Gist name
@@ -574,7 +574,7 @@ public isolated client class Client {
         return starGist(owner, gistName, self.authToken, self.githubGraphQlClient);
     }
 
-    # Unstar a given gist
+    # Unstar a given gist.
     #
     # + owner - Gist owner name
     # + gistName - Gist name
