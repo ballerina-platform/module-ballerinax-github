@@ -192,7 +192,6 @@ isolated function updateRepository(UpdateRepositoryInput updateRepositoryInput, 
     if graphQlData is Error {
         return graphQlData;
     }
-    return;
 }
 
 isolated function getIssues(string repositoryOwnerName, string repositoryName, int perPageCount, string accessToken, 
@@ -240,7 +239,6 @@ isolated function createRepository(CreateRepositoryInput createRepositoryInput, 
     if graphQlData is Error {
         return graphQlData;
     }
-    return;
 }
 
 isolated function getLanguageList(string owner, string repositoryName, int perPageCount, string accessToken,
@@ -284,7 +282,6 @@ isolated function starRepository(string owner, string repositoryName, string acc
     if graphQlData is Error {
         return graphQlData;
     }
-    return;
 }
 
 isolated function unstarRepository(string owner, string repositoryName, string accessToken, http:Client 
@@ -300,5 +297,4 @@ isolated function unstarRepository(string owner, string repositoryName, string a
     if graphQlData is Error {
         return graphQlData;
     }
-    return;
 }

@@ -595,7 +595,7 @@ isolated function getTopicId(string topicName, string accessToken,
 
     if graphQlData is map<json> {
         json topic = graphQlData.get(GIT_TOPIC);
-        if (topic is map<json>) {
+        if topic is map<json> {
             json topicId = topic.get(GIT_ID);
             return topicId.toBalString();
         }
@@ -611,7 +611,7 @@ isolated function getGistId(string gistOwnerName, string gistName, string access
 
     if graphQlData is map<json> {
         json user = graphQlData.get(GIT_USER);
-        if (user is map<json>) {
+        if user is map<json> {
             json gist = user.get(GIT_GIST);
             if gist is map<json> {
                 json gistId = gist.get(GIT_ID);
