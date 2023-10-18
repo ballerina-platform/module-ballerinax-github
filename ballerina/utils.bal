@@ -159,6 +159,18 @@ isolated function getFormulatedStringQueryForGetIssueList(string repositoryOwner
 
 }
 
+isolated function getFormulatedStringQueryForAddStar(AddStarInput addStarInput)
+                                                            returns string {
+    return string `{"variables":{"addStarInput": ${addStarInput.toJsonString()}},
+                    "query":"${ADD_STAR}"}`;
+}
+
+isolated function getFormulatedStringQueryForRemoveStar(RemoveStarInput removeStarInput)
+                                                            returns string {
+    return string `{"variables":{"removeStarInput": ${removeStarInput.toJsonString()}},
+                    "query":"${REMOVE_STAR}"}`;
+}
+
 isolated function getFormulatedStringQueryForCreateIssue(CreateIssueInputPayload createIssueInput) returns string {
     return string `{"variables":{"createIssueInput": ${createIssueInput.toJsonString()}},"query":"${CREATE_ISSUE}"}`;
 }
@@ -461,6 +473,18 @@ isolated function getFormulatedStringQueryForGetPullRequestId(string repositoryO
 //                      + string `${GET_REPOSITORY_ID}"}`;
 //}
 
+isolated function getFormulatedStringQueryForGetTopicId(string topicName) returns string {
+    return string `{"variables":{"topicName":"${topicName}"},"query":"`
+                    + string `${GET_TOPIC_ID}"}`;
+}
+
+isolated function getFormulatedStringQueryForGetGistId(string gistOwnerName, string gistName) 
+                                                        returns string {
+    return string `{"variables":{"gistOwnerName":"${gistOwnerName}", 
+                    "gistName": "${gistName}"},"query":"`
+                    + string `${GET_GIST_ID}"}`;
+}
+
 isolated function getFormulatedStringQueryForGetUserOwnerId(string userName) returns string {
     return string `{"variables":{"userName":"${userName}"},"query":"`
                     + string `${GET_USER_OWNER_ID}"}`;
@@ -558,6 +582,42 @@ isolated function getUserId(string userName, string accessToken, http:Client gra
         if (user is map<json>) {
             json userId = user.get(GIT_ID);
             return userId.toBalString();
+        }
+        return error ClientError("GitHub Client Error", body = user);
+    }
+    return graphQlData;
+}
+
+isolated function getTopicId(string topicName, string accessToken,
+                                http:Client graphQlClient) returns @tainted string|Error {
+    string stringQuery = getFormulatedStringQueryForGetTopicId(topicName);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+
+    if graphQlData is map<json> {
+        json topic = graphQlData.get(GIT_TOPIC);
+        if topic is map<json> {
+            json topicId = topic.get(GIT_ID);
+            return topicId.toBalString();
+        }
+        return error ClientError("GitHub Client Error", body = topic);
+    }
+    return graphQlData;
+}
+
+isolated function getGistId(string gistOwnerName, string gistName, string accessToken,
+                                http:Client graphQlClient) returns @tainted string|Error {
+    string stringQuery = getFormulatedStringQueryForGetGistId(gistOwnerName, gistName);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+
+    if graphQlData is map<json> {
+        json user = graphQlData.get(GIT_USER);
+        if user is map<json> {
+            json gist = user.get(GIT_GIST);
+            if gist is map<json> {
+                json gistId = gist.get(GIT_ID);
+                return gistId.toBalString();
+            }
+            return error ClientError("GitHub Client Error", body = gist);
         }
         return error ClientError("GitHub Client Error", body = user);
     }

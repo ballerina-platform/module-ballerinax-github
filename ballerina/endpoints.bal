@@ -149,6 +149,28 @@ public isolated client class Client {
         return new stream<Branch, Error?>(branchStream);
     }
 
+    # Star a given repository.
+    #
+    # + owner - Repository owner name
+    # + repositoryName - Repository name
+    #
+    # + return - `github:Error` if not successful
+    @display {label: "Star Repository"}
+    remote isolated function starRepository(string owner, string repositoryName) returns Error? {
+        return starRepository(owner, repositoryName, self.authToken, self.githubGraphQlClient);
+    }
+
+    # Unstar a given repository.
+    #
+    # + owner - Repository owner name
+    # + repositoryName - Repository name
+    #
+    # + return - `github:Error` if not successful
+    @display {label: "Unstar Repository"}
+    remote isolated function unstarRepository(string owner, string repositoryName) returns Error? {
+        return unstarRepository(owner, repositoryName, self.authToken, self.githubGraphQlClient);
+    }
+
     // Issues 
     # Create issue
     #
@@ -502,6 +524,52 @@ public isolated client class Client {
         OrganizationMemberStream organizationMemberStream = check new OrganizationMemberStream(self.githubGraphQlClient,
                 self.authToken, organizationName);
         return new stream<User, Error?>(organizationMemberStream);
+    }
+
+    // Topics
+
+    # Star a given topic.
+    #
+    # + topicName - Topic name
+    #
+    # + return - `github:Error` if not successful
+    @display {label: "Star Topic"}
+    remote isolated function starTopic(string topicName) returns Error? {
+        return starTopic(topicName, self.authToken, self.githubGraphQlClient);
+    }
+
+    # Unstar a given topic.
+    #
+    # + topicName - Topic name
+    #
+    # + return - `github:Error` if not successful
+    @display {label: "Unstar Topic"}
+    remote isolated function unstarTopic(string topicName) returns Error? {
+        return unstarTopic(topicName, self.authToken, self.githubGraphQlClient);
+    }
+
+    // Gists
+
+    # Star a given gist.
+    #
+    # + owner - Gist owner name
+    # + gistName - Gist name
+    #
+    # + return - `github:Error` if not successful
+    @display {label: "Star Gist"}
+    remote isolated function starGist(string owner, string gistName) returns Error? {
+        return starGist(owner, gistName, self.authToken, self.githubGraphQlClient);
+    }
+
+    # Unstar a given gist.
+    #
+    # + owner - Gist owner name
+    # + gistName - Gist name
+    #
+    # + return - `github:Error` if not successful
+    @display {label: "Unstar Gist"}
+    remote isolated function unstarGist(string owner, string gistName) returns Error? {
+        return unstarGist(owner, gistName, self.authToken, self.githubGraphQlClient);
     }
 
     # Search
