@@ -38,16 +38,6 @@ isolated function stringToJson(string src) returns json|error {
     return src.fromJsonString();
 }
 
-# Split the given string using the given delimeter and return the string component of the given index.
-# + receiver - The string to be split
-# + delimeter - Delimeter used to split the string
-# + index - Index of the string component which should be returned
-# + return - String component
-isolated function split(string receiver, string delimeter, int index) returns string {
-    string[] resultArray = regex:split(receiver, delimeter);
-    return resultArray[index];
-}
-
 // GraphQL Query Formulation Methods
 
 isolated function getFormulatedStringQueryForGetUser(string? username = ()) returns string {
@@ -154,22 +144,6 @@ isolated function getFormulatedStringQueryForGetBranches(string username, string
     }
 }
 
-isolated function getFormulatedStringQueryForGetIssueListAssignedToUser(string repositoryOwnerName,
-                                                                        string repositoryName, string assignee,
-                                                                        int perPageCount, string? lastPageCursor = ())
-                                                                        returns string {
-
-    if (lastPageCursor is string) {
-        return string `{"variables":{"owner":"${repositoryOwnerName}", "name":"${repositoryName}", 
-                        "assignee":"${assignee}", "perPageCount":${perPageCount}, 
-                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_ISSUE_LIST_ASSIGNED_TO_USER}"}`;
-    } else {
-        return string `{"variables":{"owner":"${repositoryOwnerName}", "name":"${repositoryName}", 
-                        "assignee":"${assignee}", "perPageCount":${perPageCount}, "lastPageCursor":null},
-                        "query":"${GET_ISSUE_LIST_ASSIGNED_TO_USER}"}`;
-    }
-}
-
 isolated function getFormulatedStringQueryForGetIssueList(string repositoryOwnerName, string repositoryName,
                                                         int perPageCount, string? lastPageCursor,
                                                         IssueFilters issueFilters) returns string {
@@ -183,6 +157,18 @@ isolated function getFormulatedStringQueryForGetIssueList(string repositoryOwner
                         "lastPageCursor":null},"query":" ${GET_ISSUE_LIST}"}`;
     }
 
+}
+
+isolated function getFormulatedStringQueryForAddStar(AddStarInput addStarInput)
+                                                            returns string {
+    return string `{"variables":{"addStarInput": ${addStarInput.toJsonString()}},
+                    "query":"${ADD_STAR}"}`;
+}
+
+isolated function getFormulatedStringQueryForRemoveStar(RemoveStarInput removeStarInput)
+                                                            returns string {
+    return string `{"variables":{"removeStarInput": ${removeStarInput.toJsonString()}},
+                    "query":"${REMOVE_STAR}"}`;
 }
 
 isolated function getFormulatedStringQueryForCreateIssue(CreateIssueInputPayload createIssueInput) returns string {
@@ -229,22 +215,10 @@ isolated function getFormulatedStringQueryForDeleteIssueComment(DeleteIssueComme
                     "query":"${DELETE_ISSUE_COMMENT}"}`;
 }
 
-isolated function getFormulatedStringQueryForCreateLabel(CreateLabelInput createLabelInput) returns string {
-    return string `{"variables":{"createLabelInput": ${createLabelInput.toJsonString()}},"query":"${CREATE_LABEL}"}`;
-}
-
 isolated function getFormulatedStringQueryForGetLabel(string username, string repositoryName, string labelName)
                                                     returns string {
     return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
                     "labelName": "${labelName}"},"query":"${GET_A_REPOSITORY_LABEL}"}`;
-}
-
-isolated function getFormulatedStringQueryForUpdateLabel(UpdateLabelInput updateLabelInput) returns string {
-    return string `{"variables":{"updateLabelInput": ${updateLabelInput.toJsonString()}},"query":"${UPDATE_LABEL}"}`;
-}
-
-isolated function getFormulatedStringQueryForDeleteLabel(DeleteLabelInput deleteLabelInput) returns string {
-    return string `{"variables":{"deleteLabelInput": ${deleteLabelInput.toJsonString()}},"query":"${DELETE_LABEL}"}`;
 }
 
 isolated function getFormulatedStringQueryForGetAllLabelsForAIssue(string username, string repositoryName,
@@ -499,11 +473,16 @@ isolated function getFormulatedStringQueryForGetPullRequestId(string repositoryO
 //                      + string `${GET_REPOSITORY_ID}"}`;
 //}
 
-isolated function getFormulatedStringQueryForGetProjectId(string repositoryOwnerName, string repositoryName,
-                                                        int projectNumber) returns string {
-    return string `{"variables":{"repositoryOwnerName":"${repositoryOwnerName}", "repositoryName": "${repositoryName}",
-                    "projectNumber":${projectNumber}},"query":"`
-                    + string `${GET_PROJECT_ID}"}`;
+isolated function getFormulatedStringQueryForGetTopicId(string topicName) returns string {
+    return string `{"variables":{"topicName":"${topicName}"},"query":"`
+                    + string `${GET_TOPIC_ID}"}`;
+}
+
+isolated function getFormulatedStringQueryForGetGistId(string gistOwnerName, string gistName) 
+                                                        returns string {
+    return string `{"variables":{"gistOwnerName":"${gistOwnerName}", 
+                    "gistName": "${gistName}"},"query":"`
+                    + string `${GET_GIST_ID}"}`;
 }
 
 isolated function getFormulatedStringQueryForGetUserOwnerId(string userName) returns string {
@@ -603,6 +582,42 @@ isolated function getUserId(string userName, string accessToken, http:Client gra
         if (user is map<json>) {
             json userId = user.get(GIT_ID);
             return userId.toBalString();
+        }
+        return error ClientError("GitHub Client Error", body = user);
+    }
+    return graphQlData;
+}
+
+isolated function getTopicId(string topicName, string accessToken,
+                                http:Client graphQlClient) returns @tainted string|Error {
+    string stringQuery = getFormulatedStringQueryForGetTopicId(topicName);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+
+    if graphQlData is map<json> {
+        json topic = graphQlData.get(GIT_TOPIC);
+        if topic is map<json> {
+            json topicId = topic.get(GIT_ID);
+            return topicId.toBalString();
+        }
+        return error ClientError("GitHub Client Error", body = topic);
+    }
+    return graphQlData;
+}
+
+isolated function getGistId(string gistOwnerName, string gistName, string accessToken,
+                                http:Client graphQlClient) returns @tainted string|Error {
+    string stringQuery = getFormulatedStringQueryForGetGistId(gistOwnerName, gistName);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+
+    if graphQlData is map<json> {
+        json user = graphQlData.get(GIT_USER);
+        if user is map<json> {
+            json gist = user.get(GIT_GIST);
+            if gist is map<json> {
+                json gistId = gist.get(GIT_ID);
+                return gistId.toBalString();
+            }
+            return error ClientError("GitHub Client Error", body = gist);
         }
         return error ClientError("GitHub Client Error", body = user);
     }

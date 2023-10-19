@@ -200,7 +200,6 @@ isolated function updateRepository(@tainted UpdateRepositoryInput updateReposito
     if graphQlData is Error {
         return graphQlData;
     }
-    return;
 }
 
 isolated function getIssues(string repositoryOwnerName, string repositoryName, int perPageCount,
@@ -252,7 +251,6 @@ isolated function createRepository(@tainted CreateRepositoryInput createReposito
     if graphQlData is Error {
         return graphQlData;
     }
-    return;
 }
 
 isolated function getLanguageList(string owner, string repositoryName, int perPageCount, string accessToken,
@@ -282,4 +280,34 @@ isolated function getLanguageList(string owner, string repositoryName, int perPa
         return error ClientError("GitHub Client Error while getting repository.", body = repository);
     }
     return graphQlData;
+}
+
+isolated function starRepository(string owner, string repositoryName, string accessToken, http:Client 
+        graphQlClient) returns Error? {
+    string repositoryId = check getRepositoryId(owner, repositoryName, accessToken, graphQlClient);
+
+    AddStarInput addStarInput = {
+        starrableId: repositoryId
+    };
+
+    string stringQuery = getFormulatedStringQueryForAddStar(addStarInput);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+    if graphQlData is Error {
+        return graphQlData;
+    }
+}
+
+isolated function unstarRepository(string owner, string repositoryName, string accessToken, http:Client 
+        graphQlClient) returns Error? {
+    string repositoryId = check getRepositoryId(owner, repositoryName, accessToken, graphQlClient);
+
+    RemoveStarInput removeStarInput = {
+        starrableId: repositoryId
+    };
+
+    string stringQuery = getFormulatedStringQueryForRemoveStar(removeStarInput);
+    map<json>|Error graphQlData = getGraphQlData(graphQlClient, accessToken, stringQuery);
+    if graphQlData is Error {
+        return graphQlData;
+    }
 }

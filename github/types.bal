@@ -935,6 +935,24 @@ public type UpdateRepositoryInput record {
     boolean template?;
 };
 
+# Represent add star input payload.
+# 
+# + clientMutationId - A unique identifier for the client performing the mutation. 
+# + starrableId - The ID of the starrable.
+public type AddStarInput record {
+    string clientMutationId?;
+    string starrableId;
+};
+
+# Represent remove star input payload.
+# 
+# + clientMutationId - A unique identifier for the client performing the mutation. 
+# + starrableId - The ID of the starrable.
+public type RemoveStarInput record {
+    string clientMutationId?;
+    string starrableId;
+};
+
 # Represent create issue input payload.
 #
 # + title - The title for the issue.
