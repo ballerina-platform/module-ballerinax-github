@@ -723,7 +723,7 @@ function testSearchPullRequest() returns error? {
     log:printInfo("githubClient -> testSearchPullRequest()");
 
     string query = string `repo:ballerina-platform/ballerina-extended-library is:pr is:open`;
-    SearchResult response = check githubClient->search(query, SEARCH_TYPE_ISSUE, 10);
+    SearchResult response = check githubClient->search(query, SEARCH_TYPE_PULL_REQUEST, 10);
     Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
     test:assertTrue(result is PullRequest[]);
 }
