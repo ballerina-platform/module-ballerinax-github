@@ -24,12 +24,12 @@ import ballerina/lang.runtime;
 
 configurable string testOrganizationName = os:getEnv("ORG_NAME");
 configurable string testUserRepositoryName = os:getEnv("USER_REPO_NAME");
-configurable string testTopicName = os:getEnv("TOPIC_NAME");
-configurable string testGistName = os:getEnv("GIST_NAME");
 configurable string testResourcePath = os:getEnv("RESOURCE_PATH");
 configurable string testIssueAssignee = os:getEnv("ISSUE_ASSIGNEE");
 configurable string testUsername = os:getEnv("GITHUB_USERNAME");
 configurable string authToken = os:getEnv("ACCESS_TOKEN");
+configurable string testTopicName = "language";
+configurable string testGistName = "5a648dc78fd2d402ec484e2663282e6f";
 
 const REPO_BASE_URL = "https://api.github.com/repos/connector-ecosystem/github-connector/contents";
 const REPO_FILE_PATH = "/src/db/resources/info1.txt";
