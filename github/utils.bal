@@ -38,6 +38,16 @@ isolated function stringToJson(string src) returns json|error {
     return src.fromJsonString();
 }
 
+# Split the given string using the given delimeter and return the string component of the given index.
+# + receiver - The string to be split
+# + delimeter - Delimeter used to split the string
+# + index - Index of the string component which should be returned
+# + return - String component
+isolated function split(string receiver, string delimeter, int index) returns string {
+    string[] resultArray = regex:split(receiver, delimeter);
+    return resultArray[index];
+}
+
 // GraphQL Query Formulation Methods
 
 isolated function getFormulatedStringQueryForGetUser(string? username = ()) returns string {
@@ -144,6 +154,22 @@ isolated function getFormulatedStringQueryForGetBranches(string username, string
     }
 }
 
+isolated function getFormulatedStringQueryForGetIssueListAssignedToUser(string repositoryOwnerName,
+                                                                        string repositoryName, string assignee,
+                                                                        int perPageCount, string? lastPageCursor = ())
+                                                                        returns string {
+
+    if (lastPageCursor is string) {
+        return string `{"variables":{"owner":"${repositoryOwnerName}", "name":"${repositoryName}",
+                        "assignee":"${assignee}", "perPageCount":${perPageCount},
+                        "lastPageCursor":"${lastPageCursor}"},"query":"${GET_ISSUE_LIST_ASSIGNED_TO_USER}"}`;
+    } else {
+        return string `{"variables":{"owner":"${repositoryOwnerName}", "name":"${repositoryName}",
+                        "assignee":"${assignee}", "perPageCount":${perPageCount}, "lastPageCursor":null},
+                        "query":"${GET_ISSUE_LIST_ASSIGNED_TO_USER}"}`;
+    }
+}
+
 isolated function getFormulatedStringQueryForGetIssueList(string repositoryOwnerName, string repositoryName,
                                                         int perPageCount, string? lastPageCursor,
                                                         IssueFilters issueFilters) returns string {
@@ -215,10 +241,22 @@ isolated function getFormulatedStringQueryForDeleteIssueComment(DeleteIssueComme
                     "query":"${DELETE_ISSUE_COMMENT}"}`;
 }
 
+isolated function getFormulatedStringQueryForCreateLabel(CreateLabelInput createLabelInput) returns string {
+    return string `{"variables":{"createLabelInput": ${createLabelInput.toJsonString()}},"query":"${CREATE_LABEL}"}`;
+}
+
 isolated function getFormulatedStringQueryForGetLabel(string username, string repositoryName, string labelName)
                                                     returns string {
     return string `{"variables":{"username":"${username}", "repositoryName":"${repositoryName}", 
                     "labelName": "${labelName}"},"query":"${GET_A_REPOSITORY_LABEL}"}`;
+}
+
+isolated function getFormulatedStringQueryForUpdateLabel(UpdateLabelInput updateLabelInput) returns string {
+    return string `{"variables":{"updateLabelInput": ${updateLabelInput.toJsonString()}},"query":"${UPDATE_LABEL}"}`;
+}
+
+isolated function getFormulatedStringQueryForDeleteLabel(DeleteLabelInput deleteLabelInput) returns string {
+    return string `{"variables":{"deleteLabelInput": ${deleteLabelInput.toJsonString()}},"query":"${DELETE_LABEL}"}`;
 }
 
 isolated function getFormulatedStringQueryForGetAllLabelsForAIssue(string username, string repositoryName,
@@ -472,6 +510,13 @@ isolated function getFormulatedStringQueryForGetPullRequestId(string repositoryO
 //"},"query":"`
 //                      + string `${GET_REPOSITORY_ID}"}`;
 //}
+
+isolated function getFormulatedStringQueryForGetProjectId(string repositoryOwnerName, string repositoryName,
+                                                        int projectNumber) returns string {
+    return string `{"variables":{"repositoryOwnerName":"${repositoryOwnerName}", "repositoryName": "${repositoryName}",
+                    "projectNumber":${projectNumber}},"query":"`
+                    + string `${GET_PROJECT_ID}"}`;
+}
 
 isolated function getFormulatedStringQueryForGetTopicId(string topicName) returns string {
     return string `{"variables":{"topicName":"${topicName}"},"query":"`
