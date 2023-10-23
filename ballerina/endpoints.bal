@@ -26,8 +26,8 @@ public isolated client class Client {
     final string authToken;
     final http:Client githubGraphQlClient;
 
-    # Initialize the connector. During the initialization you have to pass 
-    # Create a GitHub account and obtain tokens following [this guid](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+    # Initialize the connector. During the initialization you have to pass the token.
+    # Create a GitHub account and obtain tokens following [this guide](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
     #
     # + config - Configurations required to initialize the `Client`
     # + return - Error at failure of client initialization
