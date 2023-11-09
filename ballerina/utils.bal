@@ -15,7 +15,6 @@
 // under the License.
 
 import ballerina/http;
-import ballerina/regex;
 
 # Construct the request by adding the payload and authorization tokens.
 # + request - HTTP request object
@@ -494,8 +493,7 @@ isolated function getFormulatedStringQueryForSearch(string searchQuery, SearchTy
                                                     int perPageCountForLabels, int perPageCountForAssignees, 
                                                     int perPageCountForRelatedIssues, int perPageCountForPRReviews,
                                                     string? lastPageCursor) returns string {
-    string query = searchQuery.indexOf(string `"`) !is () ? regex:replaceAll(searchQuery, string `"`, string `\"`) : 
-    searchQuery;
+    string query = searchQuery.indexOf(string `"`) !is () ?  re `"`.replaceAll(searchQuery, "\""): searchQuery;
     if lastPageCursor is string {
         return string `{"variables":{"searchQuery":"${query}", "searchType": ${searchType.toBalString()},
                     "perPageCount":${perPageCount}, "perPageCountForLabels":${perPageCountForLabels}, 
