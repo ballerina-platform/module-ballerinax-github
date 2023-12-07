@@ -3,7 +3,7 @@ name: Build
 on:
   push:
     branches:
-      - main
+      - master
       - 2201.[0-9]+.x
   repository_dispatch:
     types: check_connector_for_breaking_changes
