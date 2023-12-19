@@ -48,10 +48,6 @@ github/modules/webhook/tests/Config.toml
 
 Config.toml
 
-# Java and Idea related ignores
-build/
-.gradle/
-
 # Ballerina related ignores
 Ballerina.lock
 
@@ -63,3 +59,12 @@ Ballerina.lock
 
 # DS_Store file
 *.DS_Store
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+
+# Environment files
+*.env
