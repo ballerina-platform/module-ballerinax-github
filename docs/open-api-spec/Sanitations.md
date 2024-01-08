@@ -11,5 +11,5 @@ This file records the sanitation done on top of the official OAS. These sanitati
 ## OpenAPI cli command
 
 ```bash
-bal openapi -i docs/open-api-spec/openapi.yaml --mode client -o ballerina/modules/oas
+bal openapi -i docs/open-api-spec/openapi.json --mode client -o ballerina
 ```
