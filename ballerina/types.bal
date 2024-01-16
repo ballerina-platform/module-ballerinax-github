@@ -9581,10 +9581,10 @@ public type OrganizationFull record {
     string avatar_url;
     string? description;
     string name?;
-    string company?;
+    string? company?;
     string blog?;
     string location?;
-    string email?;
+    string? email?;
     string? twitter_username?;
     boolean is_verified?;
     boolean has_organization_projects;

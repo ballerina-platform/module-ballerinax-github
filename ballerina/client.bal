@@ -5919,11 +5919,11 @@ public isolated client class Client {
     # + path - path parameter
     # + ref - The name of the commit/branch/tag. Default: the repository’s default branch.
     # + return - Response 
-    resource isolated function get repos/[string owner]/[string repo]/contents/[string path](string? ref = ()) returns ContentTree|error? {
+    resource isolated function get repos/[string owner]/[string repo]/contents/[string path](string? ref = ()) returns ContentTree[]|error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/contents/${getEncodedUri(path)}`;
         map<anydata> queryParam = {"ref": ref};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        ContentTree? response = check self.clientEp->get(resourcePath);
+        ContentTree[]? response = check self.clientEp->get(resourcePath);
         return response;
     }
     # Create or update file contents
@@ -10604,7 +10604,7 @@ public isolated client class Client {
     # + since - Only show repositories updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
     # + before - Only show repositories updated before the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
     # + return - Response 
-    resource isolated function get user/repos("all"|"public"|"private" visibility = "all", string affiliation = "owner,collaborator,organization_member", "all"|"owner"|"public"|"private"|"member" 'type = "all", "created"|"updated"|"pushed"|"full_name" sort = "full_name", "asc"|"desc"? direction = (), int per_page = 30, int page = 1, string? since = (), string? before = ()) returns Repository[]|error {
+    resource isolated function get user/repos("all"|"public"|"private"? visibility = "all", string? affiliation = "owner,collaborator,organization_member", "all"|"owner"|"public"|"private"|"member"? 'type = "all", "created"|"updated"|"pushed"|"full_name" sort = "full_name", "asc"|"desc"? direction = (), int per_page = 30, int page = 1, string? since = (), string? before = ()) returns Repository[]|error {
         string resourcePath = string `/user/repos`;
         map<anydata> queryParam = {"visibility": visibility, "affiliation": affiliation, "type": 'type, "sort": sort, "direction": direction, "per_page": per_page, "page": page, "since": since, "before": before};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);

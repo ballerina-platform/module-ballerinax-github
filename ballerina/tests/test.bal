@@ -14,15 +14,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/log;
 import ballerina/test;
-// import ballerina/io;
 import ballerina/http;
-// import ballerina/uuid;
 import ballerina/os;
-// import ballerina/mime;
-// import ballerina/lang.runtime;
 
+// Configurables
 configurable string testOrganizationName = os:getEnv("ORG_NAME");
 configurable string testUserRepositoryName = os:getEnv("REPO_NAME");
 configurable string testResourcePath = os:getEnv("RESOURCE_PATH");
@@ -32,17 +28,29 @@ configurable string authToken = os:getEnv("ACCESS_TOKEN");
 configurable string testTopicName = "language";
 configurable string testGistName = "5a648dc78fd2d402ec484e2663282e6f";
 
+// Constants
 const REPO_BASE_URL = "https://api.github.com/repos/connector-ecosystem/github-connector/contents";
 const REPO_FILE_PATH = "/src/db/resources/info1.txt";
 const FEATURE_BRANCH = "feature/feature2";
 const TEST_REPO_NAME = "ballerina-github-connector-test-repo";
+
+// Variables to hold intermediate results
+int milestoneNumber = 2;
+int fetchedProjectId = -1;
+int fetchedProjectNumber = -1;
+int createdIssueId = -1;
+int createdIssueNumber = -1;
+int createdIssueCommentId = -1;
+int createdPullRequestId = -1;
+int createdPullRequestNumber = -1;
+int createdPullRequestReviewId = -1;
+int createdPullRequestReviewIdWithPendingState = -1;
 
 ConnectionConfig gitHubConfig = {
     auth: {
         token: authToken
     }
 };
-
 Client github = check new (gitHubConfig);
 
 @test:Config {
@@ -50,7 +58,7 @@ Client github = check new (gitHubConfig);
 }
 function testGetUser() returns error? {
     UserResponse response = check github->/user();
-    test:assertEquals(response.login, testUsername, msg = "Failed /user() funtion for authenticated user");
+    test:assertEquals(response.login, testUsername);
 }
 
 @test:Config {
@@ -58,7 +66,7 @@ function testGetUser() returns error? {
 }
 function testGetUserWithGivenUsername() returns error? {
     UserResponse response = check github->/users/[testUsername];
-    test:assertEquals(response.login, testUsername, msg = "Failed users/[string username]() funtion for a given username");
+    test:assertEquals(response.login, testUsername);
 }
 
 @test:Config {
@@ -66,23 +74,23 @@ function testGetUserWithGivenUsername() returns error? {
 }
 function testGetRepository() returns error? {
     FullRepository response = check github->/repos/[testUsername]/[testUserRepositoryName];
-    test:assertEquals(response.name, testUserRepositoryName, msg = "Failed repos/[string owner]/[string repo]()");
+    test:assertEquals(response.name, testUserRepositoryName);
 }
 
-// @test:Config {
-//     groups: ["github"]
-// }
-// function testGetRepositories() returns error? {
-//     Repository[] response = check github->/user/repos();
-//     test:assertTrue(response[0] is Repository, msg = "Failed user/repos() for authenticated user");
-// }
+@test:Config {
+    groups: ["github"]
+}
+function testGetRepositories() returns error? {
+    Repository[] response = check github->/user/repos('type = ());
+    test:assertTrue(response[0] is Repository);
+}
 
 @test:Config {
     groups: ["github"]
 }
 function testGetRepositoriesOfGivenUser() returns error? {
     MinimalRepository[] response = check github->/users/[testUsername]/repos();
-    test:assertTrue(response[0] is MinimalRepository, msg = "Failed users/[string username]/repos()");
+    test:assertTrue(response[0] is MinimalRepository);
 }
 
 @test:Config {
@@ -90,7 +98,7 @@ function testGetRepositoriesOfGivenUser() returns error? {
 }
 function testGetRepositoriesOfGivenOrganization() returns error? {
     MinimalRepository[] response = check github->/orgs/[testOrganizationName]/repos();
-    test:assertTrue(response[0] is MinimalRepository, msg = "Failed orgs/[string org]/repos()");
+    test:assertTrue(response[0] is MinimalRepository);
 }
 
 @test:Config {
@@ -109,48 +117,45 @@ function testgetBranches() returns error? {
     test:assertTrue(response[0] is ShortBranch);
 }
 
-// @test:Config {
-//     groups: ["github"]
-// }
-// function testCreateRepository() returns error? {
-//     User_repos_body body = {
-//         name: TEST_REPO_NAME,
-//         description: "New Updated Description"
-//     };
-//     Repository response = check github->/user/repos.post(body);
-//     test:assertEquals(response.name, TEST_REPO_NAME);
-// }
-
-// @test:Config {
-//     groups: ["github"]
-//     // dependsOn: [testCreateRepository]
-// }
-// function testDeleteRepository() returns error? {
-//     http:Response response = check github->/repos/[testUsername]/[TEST_REPO_NAME].delete();
-//     io:println(response);
-//     // Repository response = check github->/user/repos.post(body);
-//     // test:assertEquals(response.name, "ballerina-github-connector-test-repo");
-// }
-
 @test:Config {
     groups: ["github"]
+}
+function testCreateRepository() returns error? {
+    User_repos_body body = {
+        name: TEST_REPO_NAME,
+        description: "New Test Repo Description"
+    };
+    Repository response = check github->/user/repos.post(body);
+    test:assertEquals(response.name, TEST_REPO_NAME);
+}
+
+@test:Config {
+    groups: ["github"],
+    dependsOn: [testCreateRepository]
 }
 function testUpdateRepository() returns error? {
     Owner_repo_body_1 body = {
         description: "New Updated Description"
     };
     FullRepository response = check github->/repos/[testUsername]/[TEST_REPO_NAME].patch(body);
+    test:assertEquals(response.name, TEST_REPO_NAME);
     test:assertEquals(response.description, "New Updated Description");
 }
 
-int milestoneNumber = 2;
+@test:Config {
+    groups: ["github"],
+    dependsOn: [testUpdateRepository]
+}
+function testDeleteRepository() returns error? {
+    http:Response response = check github->/repos/[testUsername]/[TEST_REPO_NAME].delete();
+}
 
 @test:Config {
     groups: ["github"]
 }
 function testGetMilestone() returns error? {
     Milestone milestone = check github->/repos/[testUsername]/[testUserRepositoryName]/milestones/[milestoneNumber]();
-    test:assertTrue(milestone.number == milestoneNumber, msg = "Failed testgetMilestones()");
+    test:assertTrue(milestone.number == milestoneNumber);
 }
 
 @test:Config {
@@ -161,10 +166,11 @@ function testGetMilestones() returns error? {
     test:assertTrue(response[0] is Milestone);
 }
 
-int createdProjectId = -1;
-int createdProjectNumber = -1;
-int getProjectRetryCount = 0;
-
+// ----------NOTE----------
+// The project created by this test case will no be deleted.
+// Instead an already created project will be updated and deleted.
+// The reason is Github seems to be adding project async mannger.
+// Sometimes immediate call does not return the project when we try to get the created project.
 @test:Config {
     groups: ["github"]
 }
@@ -174,13 +180,8 @@ function testCreateUserProject() returns error? {
         body: "This is the body of the test project"
     };
     Project response = check github->/user/projects.post(body);
-    createdProjectId = response.id;
-    createdProjectNumber = response.number;
     test:assertEquals(response.name, "Test Project Created by Ballerina GitHub Connector");
 }
-
-int createdIssueId = -1;
-int createdIssueNumber = -1;
 
 @test:Config {
     groups: ["github"],
@@ -219,23 +220,21 @@ function testUpdateIssue() returns error? {
 
 @test:Config {
     groups: ["github"],
-    dependsOn: [testCreateIssue, testUpdateIssue]
+    dependsOn: [testUpdateIssue]
 }
 function testGetIssue() returns error? {
     Issue? response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber]();
-    test:assertTrue(response?.number == createdIssueNumber, msg = "Failed testGetIssue()");
+    test:assertTrue(response?.number == createdIssueNumber);
 }
 
 @test:Config {
     groups: ["github"],
-    dependsOn: [testCreateIssue, testUpdateIssue]
+    dependsOn: [testUpdateIssue]
 }
 function testGetIssues() returns error? {
     Issue[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues(assignee=testUsername, labels="enhancement");
     test:assertTrue(response[0] is Issue);
 }
-
-int createdIssueCommentId = -1;
 
 @test:Config {
     groups: ["github"],
@@ -276,7 +275,7 @@ function testDeleteComment() returns error? {
 function testGetRepositoryLabel() returns error? {
     string labelName = "bug";
     Label response = check github->/repos/[testUsername]/[testUserRepositoryName]/labels/[labelName]();
-    test:assertTrue(response.name == "bug", msg = "Failed testGetRepositoryLabel()");
+    test:assertTrue(response.name == "bug");
 }
 
 @test:Config {
@@ -297,7 +296,7 @@ function testAddIssueLabels() returns error? {
         labels: ["bug"]
     };
     Label[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber]/labels.post(body);
-    test:assertTrue(response.length() >= 0, msg = "Failed testGetRepositoryLabelListInIssue()");
+    test:assertTrue(response.length() >= 0);
 }
 
 @test:Config {
@@ -306,10 +305,21 @@ function testAddIssueLabels() returns error? {
 }
 function testRemoveIssueLabels() returns error? {
     Label[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber]/labels/["bug"].delete();
+    test:assertTrue(response.length() == 1);
 }
 
-int createdPullRequestId = -1;
-int createdPullRequestNumber = -1;
+@test:Config {
+    groups: ["github"],
+    dependsOn: [testRemoveIssueLabels]
+}
+function testCloseIssue() returns error? {
+    Issues_issue_number_body body = {
+        state: "closed",
+        state_reason: "not_planned"
+    };
+    Issue response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber].patch(body);
+    test:assertEquals(response.state, "closed");
+}
 
 @test:Config {
     groups: ["github"]
@@ -379,9 +389,6 @@ function testUpdatePullRequestToClose() returns error? {
     test:assertTrue(response.number == createdPullRequestNumber);
 }
 
-int createdPullRequestReviewId = -1;
-int createdPullRequestReviewIdWithPendingState = -1;
-
 @test:Config {
     groups: ["github"],
     dependsOn: [testUpdatePullRequest]
@@ -432,7 +439,8 @@ function testDeletePullRequestReview() returns error? {
 }
 
 @test:Config {
-    groups: ["github"]
+    groups: ["github"],
+    dependsOn: [testCreateUserProject]
 }
 function testGetOrgProjectList() returns error? {
     Project[] response = check github->/orgs/["wso2-enterprise"]/projects();
@@ -443,36 +451,28 @@ function testGetOrgProjectList() returns error? {
     groups: ["github"],
     dependsOn: [testCreateUserProject]
 }
-function testGetUserProject() returns error? {
-    getProjectRetryCount = getProjectRetryCount + 1;
-    Project|error project = github->/projects/[createdProjectNumber]();
-    if project is Project {
-        test:assertTrue(project.number == createdProjectNumber);
-    } else if project is http:ClientError {
-        // record {|anydata body?;|} errorDetails = project.detail();
-        log:printError("Client error received. Error detail = ");
-        // if getProjectRetryCount > 3 {
-        //     return project;
-        // } else {
-        //     runtime:sleep(5); //Github seems to add project async mannger. Sometimes immediate call does not return the project.
-        //     return testGetUserProject();
-        // }
+function testGetLatestUserProject() returns error? {
+    Project[] response = check github->/users/[testUsername]/projects();
+    if response.length() > 0 {
+        Project recentProject = response[0];
+        fetchedProjectId = recentProject.id;
+        fetchedProjectNumber = recentProject.number;
     } else {
-        return project;
+        test:assertFail();
     }
 }
 
 @test:Config {
     groups: ["github"],
-    dependsOn: [testGetUserProject]
+    dependsOn: [testGetLatestUserProject]
 }
 function testUpdateProject() returns error? {
     Projects_project_id_body_1 body = {
         name: "Test Project Created by Ballerina GitHub Connector UPDATED"
     };
 
-    Project response = check github->/projects/[createdProjectId].patch(body);
-    test:assertTrue(response.number == createdProjectNumber);
+    Project response = check github->/projects/[fetchedProjectId].patch(body);
+    test:assertTrue(response.number == fetchedProjectNumber);
 }
 
 @test:Config {
@@ -480,7 +480,7 @@ function testUpdateProject() returns error? {
     dependsOn: [testUpdateProject, testCreateIssue]
 }
 function testDeleteProject() returns error? {
-    http:Response response = check github->/projects/[createdProjectId].delete();
+    http:Response response = check github->/projects/[fetchedProjectId].delete();
 }
 
 @test:Config {
@@ -499,14 +499,13 @@ function testGetUserProjectList() returns error? {
     test:assertTrue(response[0] is Project);
 }
 
-// Payload binding failure - Have to check with the API doc and update the schema.
-// @test:Config {
-//     groups: ["github"]
-// }
-// function testGetOrganization() returns error? {
-//     OrganizationFull response = check github->/orgs/[testOrganizationName]();
-//     test:assertTrue(response is OrganizationFull);
-// }
+@test:Config {
+    groups: ["github"]
+}
+function testGetOrganization() returns error? {
+    OrganizationFull response = check github->/orgs/[testOrganizationName]();
+    test:assertTrue(response is OrganizationFull);
+}
 
 @test:Config {
     groups: ["github"]
@@ -524,130 +523,6 @@ function testGetOrganizationMembersList() returns error? {
     test:assertTrue(response[0] is SimpleUser);
 }
 
-// @test:Config {
-//     groups: ["github"]
-// }
-// function testSearch() returns @tainted error? {
-//     SearchResult response = check github->search("connector-", SEARCH_TYPE_USER, 10);
-//     Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-//     test:assertTrue(result is User[]);
-// }
-
-// @test:Config {
-//     groups: ["github"]
-// }
-// function testSearchMultiWordsString() returns error? {
-
-//     string query = string `repo:ballerina-platform/ballerina-extended-library is:issue is:open label:"Type/New Feature"`;
-//     SearchResult response = check github->search(query, SEARCH_TYPE_ISSUE, 10);
-//     Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-//     test:assertTrue(result is Issue[]);
-// }
-
-// @test:Config {
-//     groups: ["github"]
-// }
-// function testSearchIssueLabels() returns error? {
-
-//     string query = string `repo:ballerina-platform/ballerina-extended-library is:issue is:open label:"Team/Connector"`;
-//     SearchResult response = check github->search(query, SEARCH_TYPE_ISSUE, 1, 1);
-//     Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-//     if result is Issue[] {
-//         if result.length() > 0 {
-//             int labelCount = let var nodes = result[0]?.labels?.nodes
-//                 in nodes is () ? 0 : nodes.length();
-//             test:assertTrue(labelCount == 1);
-//         }
-//     } else {
-//         test:assertFail("Incorrect search results");
-//     }
-// }
-
-// @test:Config {
-//     groups: ["github"]
-// }
-// function testSearchPullRequest() returns error? {
-
-//     string query = string `repo:ballerina-platform/ballerina-extended-library is:pr is:open`;
-//     SearchResult response = check github->search(query, SEARCH_TYPE_PULL_REQUEST, 10);
-//     Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-//     test:assertTrue(result is PullRequest[], "Unexpected search results Found. Expected: 'PullRequest[]', found: " + result.toBalString());
-// }
-
-// @test:Config {
-//     groups: ["github"]
-// }
-// function testSearchPullRequestComplex() returns error? {
-
-//     string query = string `repo:ballerina-platform/ballerina-extended-library is:pr state:closed author:abeykoon created:2021-11-01..2022-07-11`;
-//     SearchResult response = check github->search(query, SEARCH_TYPE_PULL_REQUEST, 5);
-//     Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-//     test:assertTrue(result is PullRequest[]);
-// }
-
-// @test:Config {
-//     groups: ["github"]
-// }
-// function testSearchPullRequestWithRelatedIssues() returns error? {
-
-//     string query = string `repo:ballerina-platform/module-ballerinax-github is:pr is:closed author:sachinira`;
-//     SearchResult response = check github->search(query, SEARCH_TYPE_PULL_REQUEST, 5);
-//     Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-
-//     if result is PullRequest[] {
-//         foreach PullRequest item in result {
-//             RelatedIssues issues = item?.closingIssuesReferences ?: {};
-//             if issues?.nodes != [] {
-//                 Issue[] issueData = issues?.nodes ?: [];
-//                 test:assertTrue(issueData != []);
-//             }
-//         }
-//     }
-// }
-
-// @test:Config {
-//     groups: ["github"]
-// }
-// function testSearchPullRequestWithReviews() returns error? {
-
-//     string query = string `repo:ballerina-platform/module-ballerinax-github is:pr is:closed review:approved author:sachinira`;
-//     SearchResult response = check github->search(query, SEARCH_TYPE_PULL_REQUEST, 5, perPageCountForPRReviews = 1);
-//     Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-
-//     if result is PullRequest[] {
-//         foreach PullRequest item in result {
-//             PullRequestReview[]? pullRequestReviews = item.pullRequestReviews;
-//             if pullRequestReviews is PullRequestReview[] {
-//                 if pullRequestReviews.length() > 0 {
-//                     test:assertTrue(pullRequestReviews.length() == 1);
-//                 }
-//             }
-//         }
-//     }
-// }
-
-// @test:Config {
-//     groups: ["github"]
-// }
-// function testSearchUser() returns error? {
-
-//     string query = string `mike in:name created:<2022-01-01 type:user`;
-//     SearchResult response = check github->search(query, SEARCH_TYPE_USER, 20);
-//     Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-//     test:assertTrue(result is User[]);
-// }
-
-// @test:Config {
-//     groups: ["github"]
-// }
-// function testSearchOrganization() returns error? {
-
-//     string query = string `data in:email type:org`;
-//     SearchResult response = check github->search(query, SEARCH_TYPE_ORGANIZATION, 20);
-//     Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-//     test:assertTrue(result is Organization[]);
-// }
-
 @test:Config {
     groups: ["github"]
 }
@@ -656,13 +531,17 @@ function testGetLanguagesFromRepository() returns error? {
     test:assertTrue(response is Language);
 }
 
-// @test:Config {
-//     groups: ["github"]
-// }
-// function testGetRepositoryContent() returns error? {
-//     ContentTree? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src"]();
-//     test:assertTrue(response is ContentTree);
-// }
+@test:Config {
+    groups: ["github"]
+}
+function testGetRepositoryContent() returns error? {
+    ContentTree[]? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src"]();
+    if response is ContentTree[] {
+        test:assertTrue(response.length() > 0);
+    } else {
+        test:assertFail();
+    }
+}
 
 @test:Config {
     groups: ["github"]
@@ -678,21 +557,6 @@ function testStarRepository() returns error? {
 function testUnstarRepository() returns error? {
     http:Response response = check github->/user/starred/[testUsername]/[testUserRepositoryName].delete();
 }
-
-// @test:Config {
-//     groups: ["github"]
-// }
-// function testStarTopic() returns error? {
-//     check github->starTopic(testTopicName);
-// }
-
-// @test:Config {
-//     groups: ["github"],
-//     dependsOn: [testStarTopic]
-// }
-// function testUnstarTopic() returns error? {
-//     check github->unstarTopic(testTopicName);
-// }
 
 @test:Config {
     groups: ["github"]
