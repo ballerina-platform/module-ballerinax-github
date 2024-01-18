@@ -1,15 +1,69 @@
 # Introduction
 
-This file records the sanitation done on top of the official OAS. These sanitation's are done for improving usability and as workaround for known limitations in language side.
+This file documents the modifications applied to enhance the usability of the official OpenAPI Specification (OAS). These adjustments are made to address known limitations on the language side and improve overall functionality.
 
-1. Remove resource paths,
-    * /users/{userId}/settings - This path has around 20 odd sub paths and does not add significant usability.
-    * /users/{userId}/watch & /users/{userId}/stop - This will be covered in Google PubSub
+1. Remove the `x-webhooks` section along with all associated component schemas.
 
-2. Rename `Thread` schema to `NotificationThread`. This is done as a workaround for issue, [Openapi tool does not escape in built symbols](https://github.com/ballerina-platform/ballerina-standard-library/issues/5067)
+2. Restructure OpenAPI by relocating inline responses from endpoint definitions in `paths` section to the `components` section and reference them appropriately within each endpoint's response.
+    - `#/components/schemas/manifest-conversions`
+    - `#/components/schemas/repository-response`
+    - `#/components/schemas/notification-read`
+    - `#/components/schemas/actions-cache-usage-by-repository-response`
+    - `#/components/schemas/runner-response`
+    - `#/components/schemas/organization-actions-secret-response`
+    - `#/components/schemas/minimal-repository-response`
+    - `#/components/schemas/organization-actions-variable-response`
+    - `#/components/schemas/codespace-response`
+    - `#/components/schemas/codespaces-org-secret-response`
+    - `#/components/schemas/copilot-seat-details-response`
+    - `#/components/schemas/copilot-seat-created`
+    - `#/components/schemas/copilot-seat-cancelled`
+    - `#/components/schemas/organization-dependabot-secret-response`
+    - `#/components/schemas/installation-response`
+    - `#/components/schemas/interaction-limit-response-any`
+    - `#/components/schemas/artifact-response`
+    - `#/components/schemas/actions-secret-response`
+    - `#/components/schemas/actions-variable-response`
+    - `#/components/schemas/workflow-run-response`
+    - `#/components/schemas/job-response`
+    - `#/components/schemas/workflow-response`
+    - `#/components/schemas/check-run-response`
+    - `#/components/schemas/check-suite-response`
+    - `#/components/schemas/dependabot-secret-response`
+    - `#/components/schemas/snapshot-response`
+    - `#/components/schemas/merged-branch-response`
+    - `#/components/schemas/environment-response`
+    - `#/components/schemas/deployment-branch-policy-response`
+    - `#/components/schemas/deployment-protection-rule-response`
+    - `#/components/schemas/custom-deployment-rule-app-response`
+    - `#/components/schemas/stargazer-response`
+    - `#/components/schemas/code-search-result-item-response`
+    - `#/components/schemas/commit-search-result-item-response`
+    - `#/components/schemas/issue-search-result-item-response`
+    - `#/components/schemas/label-search-result-item-response`
+    - `#/components/schemas/repo-search-result-item-response`
+    - `#/components/schemas/topic-search-result-item-response`
+    - `#/components/schemas/user-search-result-item-response`
+    - `#/components/schemas/user-response`
+    - `#/components/schemas/codespace-response`
+    - `#/components/schemas/codespaces-secret-response`
+    - `#/components/schemas/codespace-machine-response`
+    - `#/components/schemas/installation-response`
+    - `#/components/schemas/repository-response`
+    - `#/components/schemas/starred-repository-response`
+
+3. Change the name of the `Thread` schema to `NotificationThread` as a workaround for the issue outlined in [Openapi tool does not escape in built symbols](https://github.com/ballerina-platform/ballerina-standard-library/issues/5067)
+
+4. Set the `nullable` property to `true` for the `company` and `email` fields in the `organization-full` schema under `component` section. This adjustment is made to address a data binding issue.
+
+5. Update the response schema `#/components/schemas/content-tree` for the endpoint `/repos/{owner}/{repo}/contents/{path}` to represent the response as an array. This adjustment is made to address a data binding issue.
+
+6. Update the `state_reason` field to be nullable in the `Issue` record within the generated types as a workaround for the issue outlined in [Nillable Enum Types Result in Incorrect Record Field Generation](https://github.com/ballerina-platform/ballerina-library/issues/5902)
+
+7. Update the resource function `get user/repos(...)` to allow optional query parameters, in accordance with the OAS specification that designates them as non-required. This modification addresses a discrepancy in the generated client, which previously disallowed passing null values for the corresponding parameters.
 
 ## OpenAPI cli command
 
 ```bash
-bal openapi -i docs/open-api-spec/openapi.json --mode client -o ballerina
+bal openapi -i docs/open-api-spec/openapi.json --mode client --license docs/license.txt -o ballerina
 ```
