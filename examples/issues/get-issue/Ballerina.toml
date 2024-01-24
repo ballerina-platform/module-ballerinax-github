@@ -1,0 +1,8 @@
+[package]
+org = "azeemmuzammil"
+name = "get_issue"
+version = "0.1.0"
+distribution = "2201.8.4"
+
+[build-options]
+observabilityIncluded = true
