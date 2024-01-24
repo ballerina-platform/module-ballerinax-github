@@ -48,6 +48,7 @@ Client githubClient = check new (gitHubConfig);
     enable: true
 }
 function testGetUser() returns error? {
+    log:printInfo("Test Commit");
     log:printInfo(" Testing githubClient -> getUser()");
     User response = check githubClient->getUser();
     test:assertEquals(response.login, testUsername, msg = "Failed getUser() funtion for authenticated user");
