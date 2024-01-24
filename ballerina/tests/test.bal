@@ -53,73 +53,55 @@ ConnectionConfig gitHubConfig = {
 };
 Client github = check new (gitHubConfig);
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetUser() returns error? {
     UserResponse response = check github->/user();
     test:assertEquals(response.login, testUsername);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetUserWithGivenUsername() returns error? {
     UserResponse response = check github->/users/[testUsername];
     test:assertEquals(response.login, testUsername);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetRepository() returns error? {
     FullRepository response = check github->/repos/[testUsername]/[testUserRepositoryName];
     test:assertEquals(response.name, testUserRepositoryName);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetRepositories() returns error? {
     Repository[] response = check github->/user/repos('type = ());
     test:assertTrue(response[0] is Repository);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetRepositoriesOfGivenUser() returns error? {
     MinimalRepository[] response = check github->/users/[testUsername]/repos();
     test:assertTrue(response[0] is MinimalRepository);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetRepositoriesOfGivenOrganization() returns error? {
     MinimalRepository[] response = check github->/orgs/[testOrganizationName]/repos();
     test:assertTrue(response[0] is MinimalRepository);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetCollaborators() returns error? {
     Collaborator[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/collaborators();
     test:assertTrue(response[0] is Collaborator);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testgetBranches() returns error? {
     ShortBranch[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/branches();
     test:assertTrue(response[0] is ShortBranch);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testCreateRepository() returns error? {
     User_repos_body body = {
         name: TEST_REPO_NAME,
@@ -130,7 +112,6 @@ function testCreateRepository() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testCreateRepository]
 }
 function testUpdateRepository() returns error? {
@@ -143,24 +124,19 @@ function testUpdateRepository() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testUpdateRepository]
 }
 function testDeleteRepository() returns error? {
     http:Response response = check github->/repos/[testUsername]/[TEST_REPO_NAME].delete();
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetMilestone() returns error? {
     Milestone milestone = check github->/repos/[testUsername]/[testUserRepositoryName]/milestones/[milestoneNumber]();
     test:assertTrue(milestone.number == milestoneNumber);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetMilestones() returns error? {
     Milestone[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/milestones();
     test:assertTrue(response[0] is Milestone);
@@ -171,9 +147,7 @@ function testGetMilestones() returns error? {
 // Instead an already created project will be updated and deleted.
 // The reason is Github seems to be adding project async mannger.
 // Sometimes immediate call does not return the project when we try to get the created project.
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testCreateUserProject() returns error? {
     User_projects_body body = {
         name: "Test Project Created by Ballerina GitHub Connector",
@@ -184,7 +158,6 @@ function testCreateUserProject() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testGetMilestone, testCreateUserProject]
 }
 function testCreateIssue() returns error? {
@@ -203,7 +176,6 @@ function testCreateIssue() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testCreateIssue]
 }
 function testUpdateIssue() returns error? {
@@ -219,7 +191,6 @@ function testUpdateIssue() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testUpdateIssue]
 }
 function testGetIssue() returns error? {
@@ -228,7 +199,6 @@ function testGetIssue() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testUpdateIssue]
 }
 function testGetIssues() returns error? {
@@ -237,7 +207,6 @@ function testGetIssues() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testGetIssue]
 }
 function testAddComment() returns error? {
@@ -250,7 +219,6 @@ function testAddComment() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testAddComment]
 }
 function testUpdateComment() returns error? {
@@ -262,16 +230,13 @@ function testUpdateComment() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testUpdateComment]
 }
 function testDeleteComment() returns error? {
     check github->/repos/[testUsername]/[testUserRepositoryName]/issues/comments/[createdIssueCommentId].delete();
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetRepositoryLabel() returns error? {
     string labelName = "bug";
     Label response = check github->/repos/[testUsername]/[testUserRepositoryName]/labels/[labelName]();
@@ -279,7 +244,6 @@ function testGetRepositoryLabel() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testAddIssueLabels]
 }
 function testGetIssueLabels() returns error? {
@@ -288,7 +252,6 @@ function testGetIssueLabels() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testCreateIssue]
 }
 function testAddIssueLabels() returns error? {
@@ -300,7 +263,6 @@ function testAddIssueLabels() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testAddIssueLabels]
 }
 function testRemoveIssueLabels() returns error? {
@@ -309,7 +271,6 @@ function testRemoveIssueLabels() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testRemoveIssueLabels]
 }
 function testCloseIssue() returns error? {
@@ -321,9 +282,7 @@ function testCloseIssue() returns error? {
     test:assertEquals(response.state, "closed");
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testCreatePullRequest() returns error? {
     Repo_pulls_body body = {
         title: "Test PR created from Ballerina GitHub Connector",
@@ -338,7 +297,6 @@ function testCreatePullRequest() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testCreatePullRequest]
 }
 function testGetAPullRequest() returns error? {
@@ -347,7 +305,6 @@ function testGetAPullRequest() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testCreatePullRequest]
 }
 function testGetPullRequestList() returns error? {
@@ -356,7 +313,6 @@ function testGetPullRequestList() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testGetAPullRequest, testGetPullRequestList]
 }
 function testLastCommit() returns error? {
@@ -365,7 +321,6 @@ function testLastCommit() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testLastCommit]
 }
 function testUpdatePullRequest() returns error? {
@@ -377,7 +332,6 @@ function testUpdatePullRequest() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testUpdatePullRequest]
 }
 function testUpdatePullRequestToClose() returns error? {
@@ -390,7 +344,6 @@ function testUpdatePullRequestToClose() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testUpdatePullRequest]
 }
 function testCreatePullRequestReview() returns error? {
@@ -404,7 +357,6 @@ function testCreatePullRequestReview() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testUpdatePullRequest]
 }
 function testCreatePullRequestReviewWithPendingState() returns error? {
@@ -417,7 +369,6 @@ function testCreatePullRequestReviewWithPendingState() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testCreatePullRequestReview]
 }
 function testUpdatePullRequestReview() returns error? {
@@ -430,7 +381,6 @@ function testUpdatePullRequestReview() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testCreatePullRequestReviewWithPendingState]
 }
 function testDeletePullRequestReview() returns error? {
@@ -439,7 +389,6 @@ function testDeletePullRequestReview() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testCreateUserProject]
 }
 function testGetOrgProjectList() returns error? {
@@ -448,7 +397,6 @@ function testGetOrgProjectList() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testCreateUserProject]
 }
 function testGetLatestUserProject() returns error? {
@@ -463,7 +411,6 @@ function testGetLatestUserProject() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testGetLatestUserProject]
 }
 function testUpdateProject() returns error? {
@@ -476,64 +423,49 @@ function testUpdateProject() returns error? {
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testUpdateProject, testCreateIssue]
 }
 function testDeleteProject() returns error? {
     http:Response response = check github->/projects/[fetchedProjectId].delete();
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetRepositoryProjectList() returns error? {
     Project[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/projects();
     test:assertTrue(response[0] is Project);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetUserProjectList() returns error? {
     Project[] response = check github->/users/[testUsername]/projects();
     test:assertTrue(response[0] is Project);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetOrganization() returns error? {
     OrganizationFull response = check github->/orgs/[testOrganizationName]();
     test:assertTrue(response is OrganizationFull);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetUserOrganizationList() returns error? {
     OrganizationSimple[] response = check github->/users/["kasthuriraajan"]/orgs();
     test:assertTrue(response[0] is OrganizationSimple);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetOrganizationMembersList() returns error? {
     SimpleUser[] response = check github->/orgs/["ballerina-platform"]/members();
     test:assertTrue(response[0] is SimpleUser);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetLanguagesFromRepository() returns error? {
     Language response = check github->/repos/[testUsername]/[testUserRepositoryName]/languages();
     test:assertTrue(response is Language);
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testGetRepositoryContent() returns error? {
     ContentTree[]? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src"]();
     if response is ContentTree[] {
@@ -543,30 +475,24 @@ function testGetRepositoryContent() returns error? {
     }
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testStarRepository() returns error? {
     check github->/user/starred/[testUsername]/[testUserRepositoryName].put();
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testStarRepository]
 }
 function testUnstarRepository() returns error? {
     http:Response response = check github->/user/starred/[testUsername]/[testUserRepositoryName].delete();
 }
 
-@test:Config {
-    groups: ["github"]
-}
+@test:Config {}
 function testStarGist() returns error? {
     http:Response response = check github->/gists/[testGistName]/star.put();
 }
 
 @test:Config {
-    groups: ["github"],
     dependsOn: [testStarGist]
 }
 function testUnstarGist() returns error? {
