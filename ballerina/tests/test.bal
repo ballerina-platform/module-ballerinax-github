@@ -14,14 +14,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/log;
 import ballerina/test;
 import ballerina/http;
-import ballerina/uuid;
 import ballerina/os;
-import ballerina/mime;
-import ballerina/lang.runtime;
 
+// Configurables
 configurable string testOrganizationName = os:getEnv("ORG_NAME");
 configurable string testUserRepositoryName = os:getEnv("REPO_NAME");
 configurable string testResourcePath = os:getEnv("RESOURCE_PATH");
@@ -31,859 +28,547 @@ configurable string authToken = os:getEnv("ACCESS_TOKEN");
 configurable string testTopicName = "language";
 configurable string testGistName = "5a648dc78fd2d402ec484e2663282e6f";
 
+// Constants
 const REPO_BASE_URL = "https://api.github.com/repos/connector-ecosystem/github-connector/contents";
 const REPO_FILE_PATH = "/src/db/resources/info1.txt";
 const FEATURE_BRANCH = "feature/feature2";
+const TEST_REPO_NAME = "ballerina-github-connector-test-repo";
+
+// Variables to hold intermediate results
+int milestoneNumber = 2;
+int fetchedProjectId = -1;
+int fetchedProjectNumber = -1;
+int createdIssueId = -1;
+int createdIssueNumber = -1;
+int createdIssueCommentId = -1;
+int createdPullRequestId = -1;
+int createdPullRequestNumber = -1;
+int createdPullRequestReviewId = -1;
+int createdPullRequestReviewIdWithPendingState = -1;
 
 ConnectionConfig gitHubConfig = {
     auth: {
         token: authToken
     }
 };
-
-Client githubClient = check new (gitHubConfig);
+Client github = check new (gitHubConfig);
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetUser() returns error? {
-    log:printInfo(" Testing githubClient -> getUser()");
-    User response = check githubClient->getUser();
-    test:assertEquals(response.login, testUsername, msg = "Failed getUser() funtion for authenticated user");
+    UserResponse response = check github->/user();
+    test:assertEquals(response.login, testUsername);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetUserWithGivenUsername() returns error? {
-    log:printInfo("Testing githubClient -> getUser() with a given username");
-    User response = check githubClient->getUser(testUsername);
-    test:assertEquals(response.login, testUsername, msg = "Failed getUser() funtion for a given username");
+    UserResponse response = check github->/users/[testUsername];
+    test:assertEquals(response.login, testUsername);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetRepository() returns error? {
-    log:printInfo("Testing githubClient -> getRepository()");
-    Repository response = check githubClient->getRepository(testUsername, testUserRepositoryName);
-    test:assertEquals(response.name, testUserRepositoryName, msg = "Failed testGetUserRepository()");
+    FullRepository response = check github->/repos/[testUsername]/[testUserRepositoryName];
+    test:assertEquals(response.name, testUserRepositoryName);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetRepositories() returns error? {
-    log:printInfo("Testing githubClient -> getRepositories() for authenticated user");
-    stream<Repository, Error?> response = check githubClient->getRepositories();
-    test:assertTrue(response.next() is record {|Repository value;|},
-                    msg = "Failed testGetRepositories() for authenticated user");
+    Repository[] response = check github->/user/repos('type = ());
+    test:assertTrue(response[0] is Repository);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetRepositoriesOfGivenUser() returns error? {
-    log:printInfo("Testing githubClient -> getRepositories() for a given user");
-    stream<Repository, Error?> response = check githubClient->getRepositories(testUsername);
-    test:assertTrue(response.next() is record {|Repository value;|},
-                    msg = "Failed testGetRepositories() for a given user");
+    MinimalRepository[] response = check github->/users/[testUsername]/repos();
+    test:assertTrue(response[0] is MinimalRepository);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetRepositoriesOfGivenOrganization() returns error? {
-    log:printInfo("Testing githubClient -> getRepositories() for a given organization");
-    stream<Repository, Error?> response = check githubClient->getRepositories(testOrganizationName, true);
-    test:assertTrue(response.next() is record {|Repository value;|},
-                    msg = "Failed testGetRepositories() for a given organization");
+    MinimalRepository[] response = check github->/orgs/[testOrganizationName]/repos();
+    test:assertTrue(response[0] is MinimalRepository);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetCollaborators() returns error? {
-    log:printInfo("githubClient -> getCollaborators()");
-    stream<User, Error?> response = check githubClient->getCollaborators(testUsername, testUserRepositoryName);
-    test:assertTrue(response.next() is record {|User value;|});
+    Collaborator[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/collaborators();
+    test:assertTrue(response[0] is Collaborator);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testgetBranches() returns error? {
-    log:printInfo("githubClient -> getBranches()");
-    stream<Branch, Error?> response = check githubClient->getBranches(testUsername, testUserRepositoryName);
-    test:assertTrue(response.next() is record {|Branch value;|});
+    ShortBranch[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/branches();
+    test:assertTrue(response[0] is ShortBranch);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: false // This test case have been disabled as this operation cannot be run continuosly without 
-    // deleteRepository operation which is not yet supported by the GitHub GraphQL API.
+    groups: ["github"]
 }
 function testCreateRepository() returns error? {
-    log:printInfo("githubClient -> createRepository()");
-    CreateRepositoryInput createRepositoryInput = {
-        name: "ballerina-github-connector-test-repo",
-        visibility: PUBLIC_REPOSITORY,
-        description: "New Updated Description"
+    User_repos_body body = {
+        name: TEST_REPO_NAME,
+        description: "New Test Repo Description"
     };
-    check githubClient->createRepository(createRepositoryInput);
+    Repository response = check github->/user/repos.post(body);
+    test:assertEquals(response.name, TEST_REPO_NAME);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"],
+    dependsOn: [testCreateRepository]
 }
 function testUpdateRepository() returns error? {
-    log:printInfo("githubClient -> updateRepository()");
-    UpdateRepositoryInput updateRepositoryInput = {
+    Owner_repo_body_1 body = {
         description: "New Updated Description"
     };
-    check githubClient->updateRepository(updateRepositoryInput, testUsername, testUserRepositoryName);
+    FullRepository response = check github->/repos/[testUsername]/[TEST_REPO_NAME].patch(body);
+    test:assertEquals(response.name, TEST_REPO_NAME);
+    test:assertEquals(response.description, "New Updated Description");
 }
 
-string milestoneId = "";
+@test:Config {
+    groups: ["github"],
+    dependsOn: [testUpdateRepository]
+}
+function testDeleteRepository() returns error? {
+    http:Response response = check github->/repos/[testUsername]/[TEST_REPO_NAME].delete();
+}
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetMilestone() returns error? {
-    log:printInfo("githubClient -> getMilestone()");
-    Milestone milestone = check githubClient->getMilestone(testUsername, testUserRepositoryName, 2);
-    test:assertTrue(milestone.number == 2, msg = "Failed testgetMilestones()");
-    milestoneId = milestone.id;
+    Milestone milestone = check github->/repos/[testUsername]/[testUserRepositoryName]/milestones/[milestoneNumber]();
+    test:assertTrue(milestone.number == milestoneNumber);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetMilestones() returns error? {
-    log:printInfo("githubClient -> getMilestones()");
-    stream<Milestone, Error?> response = check githubClient->getMilestones(testUsername, testUserRepositoryName);
-    test:assertTrue(response.next() is record {|Milestone value;|});
+    Milestone[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/milestones();
+    test:assertTrue(response[0] is Milestone);
 }
 
-string createdProjectId = "";
-int createdProjectNumber = -1;
-int getProjectRetryCount = 0;
-
+// ----------NOTE----------
+// The project created by this test case will no be deleted.
+// Instead an already created project will be updated and deleted.
+// The reason is Github seems to be adding project async mannger.
+// Sometimes immediate call does not return the project when we try to get the created project.
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testCreateUserProject() returns error? {
-    log:printInfo("githubClient -> createProject()");
-    CreateRepositoryProjectInput createRepositoryProjectInput = {
-        ownerName: testUsername,
+    User_projects_body body = {
         name: "Test Project Created by Ballerina GitHub Connector",
         body: "This is the body of the test project"
     };
-    Project response = check githubClient->createProject(createRepositoryProjectInput);
-    createdProjectId = response.id;
-    createdProjectNumber = (<int>(response?.number));
+    Project response = check github->/user/projects.post(body);
+    test:assertEquals(response.name, "Test Project Created by Ballerina GitHub Connector");
 }
 
-string createdIssueId = "";
-int createdIssueNumber = -1;
-
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
+    groups: ["github"],
     dependsOn: [testGetMilestone, testCreateUserProject]
 }
 function testCreateIssue() returns error? {
-    log:printInfo("githubClient -> createIssue()");
-    CreateIssueInput createIssueInput = {
+    Repo_issues_body body = {
         title: "This is a test Issue Title",
         body: "This is test issue body",
-        labelNames: ["bug"],
-        assigneeNames: [testUsername],
-        projectIds: [createdProjectId],
-        milestoneId: milestoneId
+        assignees: [testUsername],
+        milestone: milestoneNumber,
+        labels: ["bug"]
     };
 
-    Issue|Error response = githubClient->createIssue(createIssueInput, testUsername, testUserRepositoryName);
-    if response is ClientError {
-        record {|anydata body?;|} errorDetails = response.detail();
-        log:printError("Client error received. Error detail = " + errorDetails?.body.toString());
-        return response;
-    } else if response is ServerError {
-        record {|json? data?; GraphQLClientError[] errors; map<json>? extensions?;|} errorDetails = response.detail();
-        log:printError("Server error received. Error detail = " + errorDetails.errors.toString());
-        return response;
-    } else {
-        createdIssueId = response.id;
-        createdIssueNumber = response.number;
-    }
-
+    Issue response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues.post(body);
+    createdIssueId = response.id;
+    createdIssueNumber = response.number;
+    test:assertEquals(response.title, "This is a test Issue Title");
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
+    groups: ["github"],
     dependsOn: [testCreateIssue]
 }
 function testUpdateIssue() returns error? {
-    log:printInfo("githubClient -> updateIssue()");
-    UpdateIssueInput updateRepositoryInput = {
+    Issues_issue_number_body body = {
         title: "Updated issue title",
         body: "This is updated test issue body",
-        labelNames: ["enhancement"],
-        assigneeNames: [testUsername],
-        milestoneId: milestoneId
+        assignees: [testUsername],
+        labels: ["enhancement"],
+        milestone: milestoneNumber
     };
-
-    Issue response = check githubClient->updateIssue(updateRepositoryInput, testUsername, testUserRepositoryName, createdIssueNumber);
-    log:printInfo("Issue updated: " + response.toString());
+    Issue response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber].patch(body);
+    test:assertEquals(response.title, "Updated issue title");
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
-    dependsOn: [testCreateIssue]
+    groups: ["github"],
+    dependsOn: [testUpdateIssue]
 }
 function testGetIssue() returns error? {
-    log:printInfo("githubClient -> getIssue()");
-    Issue response = check githubClient->getIssue(testUsername, testUserRepositoryName, createdIssueNumber);
-    test:assertTrue(response.number == createdIssueNumber, msg = "Failed testGetIssue()");
+    Issue? response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber]();
+    test:assertTrue(response?.number == createdIssueNumber);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"],
+    dependsOn: [testUpdateIssue]
 }
 function testGetIssues() returns error? {
-    log:printInfo("githubClient -> getIssues()");
-    IssueFilters issueFilters = {
-        assignee: testUsername,
-        labels: ["good first issue"]
-    };
-    stream<Issue, Error?> response = check githubClient->getIssues(testUsername, testUserRepositoryName, issueFilters);
-    test:assertTrue(response.next() is record {|Issue value;|});
+    Issue[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues(assignee=testUsername, labels="enhancement");
+    test:assertTrue(response[0] is Issue);
 }
 
-string createdIssueCommentId = "";
-
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
-    dependsOn: [testCreateIssue]
+    groups: ["github"],
+    dependsOn: [testGetIssue]
 }
 function testAddComment() returns error? {
-    log:printInfo("githubClient -> addComment()");
-    AddIssueCommentInput addIssueCommentInput = {
-        repositoryOwnerName: testUsername,
-        repositoryName: testUserRepositoryName,
-        issueNumber: createdIssueNumber,
+    Issue_number_comments_body body = {
         body: "Comment Added by Ballerina GitHub connector!"
     };
-    IssueComment response = check githubClient->addComment(addIssueCommentInput);
+    IssueComment response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber]/comments.post(body);
     createdIssueCommentId = response.id;
-    log:printInfo("ID: " + response.id);
+    test:assertEquals(response.user?.login, testUsername);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
+    groups: ["github"],
     dependsOn: [testAddComment]
 }
 function testUpdateComment() returns error? {
-    log:printInfo("githubClient -> updateComment()");
-    UpdateIssueCommentInput updateIssueComment = {
-        id: createdIssueCommentId,
-        body: "new comment added with addComment() UPDATED"
+    Comments_comment_id_body_2 body = {
+        body: "New comment added with addComment() UPDATED"
     };
-    check githubClient->updateComment(updateIssueComment);
+    IssueComment response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/comments/[createdIssueCommentId].patch(body);
+    test:assertEquals(response.body, "New comment added with addComment() UPDATED");
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
+    groups: ["github"],
     dependsOn: [testUpdateComment]
 }
 function testDeleteComment() returns error? {
-    log:printInfo("githubClient -> deleteComment()");
-    DeleteIssueCommentInput deleteIssueComment = {
-        id: createdIssueCommentId
-    };
-    check githubClient->deleteComment(deleteIssueComment);
+    check github->/repos/[testUsername]/[testUserRepositoryName]/issues/comments/[createdIssueCommentId].delete();
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetRepositoryLabel() returns error? {
-    log:printInfo("githubClient -> getLabel()");
     string labelName = "bug";
-    Label response = check githubClient->getLabel(testUsername, testUserRepositoryName, labelName);
-    test:assertTrue(response.name == "bug", msg = "Failed testGetRepositoryLabel()");
+    Label response = check github->/repos/[testUsername]/[testUserRepositoryName]/labels/[labelName]();
+    test:assertTrue(response.name == "bug");
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
-    dependsOn: [testAddLabelsToLabelable]
+    groups: ["github"],
+    dependsOn: [testAddIssueLabels]
 }
-function testGetLabels() returns error? {
-    log:printInfo("githubClient -> getLabels()");
-    stream<Label, Error?> response = check githubClient->getLabels(testUsername, testUserRepositoryName, createdIssueNumber);
-    test:assertTrue(response.next() is record {|Label value;|});
+function testGetIssueLabels() returns error? {
+    Label[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber]/labels();
+    test:assertTrue(response[0] is Label);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
+    groups: ["github"],
     dependsOn: [testCreateIssue]
 }
-function testAddLabelsToLabelable() returns error? {
-    log:printInfo("githubClient -> addIssueLabel()");
-    AddLabelsInput addIssueLabelInput = {
-        repositoryOwnerName: testUsername,
-        repositoryName: testUserRepositoryName,
-        issueNumber: createdIssueNumber,
-        labelNames: ["bug"]
+function testAddIssueLabels() returns error? {
+    Issue_number_labels_body_1 body = {
+        labels: ["bug"]
     };
-    LabelList response = check githubClient->addLabels(addIssueLabelInput);
-    test:assertTrue(response.length() >= 0, msg = "Failed testGetRepositoryLabelListInIssue()");
-    log:printInfo(response.toString());
+    Label[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber]/labels.post(body);
+    test:assertTrue(response.length() >= 0);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
-    dependsOn: [testAddLabelsToLabelable]
+    groups: ["github"],
+    dependsOn: [testAddIssueLabels]
 }
-function testRemoveLabelsFromLabelable() returns error? {
-    log:printInfo("githubClient -> removeLabel()");
-    RemoveIssueLabelInput removeIssueLabelsInput = {
-        repositoryOwnerName: testUsername,
-        repositoryName: testUserRepositoryName,
-        issueNumber: createdIssueNumber,
-        labelNames: ["bug"]
-    };
-    check githubClient->removeLabel(removeIssueLabelsInput);
+function testRemoveIssueLabels() returns error? {
+    Label[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber]/labels/["bug"].delete();
+    test:assertTrue(response.length() == 1);
 }
-
-string createdPullRequestId = "";
-int createdPullRequestNumber = -1;
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"],
+    dependsOn: [testRemoveIssueLabels]
+}
+function testCloseIssue() returns error? {
+    Issues_issue_number_body body = {
+        state: "closed",
+        state_reason: "not_planned"
+    };
+    Issue response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber].patch(body);
+    test:assertEquals(response.state, "closed");
+}
+
+@test:Config {
+    groups: ["github"]
 }
 function testCreatePullRequest() returns error? {
-    log:printInfo("githubClient -> createPullRequest()");
-    //push some changes to the branch before creating PR (Github limitation) 
-    check updateFeatureRepository();
-    CreatePullRequestInput createPullRequestInput = {
+    Repo_pulls_body body = {
         title: "Test PR created from Ballerina GitHub Connector",
-        baseRefName: "master",
-        headRefName: FEATURE_BRANCH,
+        base: "master",
+        head: FEATURE_BRANCH,
         body: "This is some dummy content for PR body"
     };
-    PullRequest response = check githubClient->createPullRequest(createPullRequestInput, testUsername, testUserRepositoryName);
+
+    PullRequest response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls.post(body);
     createdPullRequestId = response.id;
-    createdPullRequestNumber = (<int>(response?.number));
-}
-
-function updateFeatureRepository() returns error? {
-    http:BearerTokenConfig tokenConfig = {token: authToken};
-    http:ClientConfiguration httpClientConfig = {auth: tokenConfig};
-    http:Client githubDirectClient = check new (REPO_BASE_URL, httpClientConfig);
-    map<string> fileAPIHeaders = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"};
-
-    //get sha of existing file
-    json fileInfo = check githubDirectClient->get(REPO_FILE_PATH + "?ref=" + FEATURE_BRANCH, fileAPIHeaders);
-    string sha = check fileInfo.sha;
-    log:printInfo("sha of file = " + sha);
-
-    //update the file
-    http:Request updateFileRequest = new ();
-    string fileContent = "my new file contents=" + uuid:createType1AsString();
-    string encordedFileContent = check mime:base64Encode(fileContent).ensureType();
-    json payload = {
-        "message": "Update file",
-        "branch": FEATURE_BRANCH,
-        "committer": {"name": "connector-ecosystem", "email": "connector.ecosystem@gmail.com"},
-        "content": encordedFileContent,
-        "sha": sha
-    };
-    updateFileRequest.setJsonPayload(payload);
-    json _ = check githubDirectClient->put(REPO_FILE_PATH, updateFileRequest, fileAPIHeaders);
-    log:printInfo("sucessfully updated file " + REPO_BASE_URL + REPO_FILE_PATH);
-
+    createdPullRequestNumber = response.number;
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
+    groups: ["github"],
     dependsOn: [testCreatePullRequest]
 }
-function testGetPullRequest() returns error? {
-    log:printInfo("githubClient -> getPullRequest()");
-    PullRequest response = check githubClient->getPullRequest(testUsername, testUserRepositoryName, createdPullRequestNumber);
-    test:assertTrue(response.number == createdPullRequestNumber, msg = "Failed testGetPullRequest()");
+function testGetAPullRequest() returns error? {
+    PullRequest response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls/[createdPullRequestNumber]();
+    test:assertTrue(response.number == createdPullRequestNumber, msg = "Failed testGetaPullRequest()");
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
-    dependsOn: [testGetPullRequest]
-}
-function testLastCommit() returns error? {
-    log:printInfo("Testing Last commit part from githubClient->getPullRequest");
-    PullRequest pullRequest = check githubClient->getPullRequest(testUsername, testUserRepositoryName,
-                                                                createdPullRequestNumber);
-    test:assertTrue(pullRequest.lastCommit is Commit, "Issue in fetching last commit");
-}
-
-@test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"],
+    dependsOn: [testCreatePullRequest]
 }
 function testGetPullRequestList() returns error? {
-    log:printInfo("githubClient -> getPullRequests()");
-    stream<PullRequest, Error?> response = check githubClient->getPullRequests("ballerina-platform", "module-ballerinax-googleapis.gmail", PULL_REQUEST_MERGED);
-    test:assertTrue(response.next() is record {|PullRequest value;|});
+    PullRequestSimple[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls();
+    test:assertTrue(response[0] is PullRequestSimple);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
+    groups: ["github"],
+    dependsOn: [testGetAPullRequest, testGetPullRequestList]
+}
+function testLastCommit() returns error? {
+    Commit[] commits = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls/[createdPullRequestNumber]/commits();
+    test:assertTrue(commits[0] is Commit, "Issue in fetching last commit");
+}
+
+@test:Config {
+    groups: ["github"],
     dependsOn: [testLastCommit]
 }
 function testUpdatePullRequest() returns error? {
-    log:printInfo("githubClient -> updatePullRequest()");
-    UpdatePullRequestInput updatePullRequestInput = {
-        title: "Test PR created from Ballerina GitHub Connector Updated",
-        labelNames: ["bug"],
-        assigneeNames: ["MadhurangaWije"]
+    Pulls_pull_number_body body = {
+        title: "Test PR created from Ballerina GitHub Connector Updated"
     };
-    PullRequest response = check githubClient->updatePullRequest(updatePullRequestInput, testUsername, testUserRepositoryName, createdPullRequestNumber);
-    log:printInfo(response.toString());
+    PullRequest response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls/[createdPullRequestNumber].patch(body);
+    test:assertTrue(response.number == createdPullRequestNumber, msg = "Failed testUpdatePullRequest()");
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
+    groups: ["github"],
     dependsOn: [testUpdatePullRequest]
 }
 function testUpdatePullRequestToClose() returns error? {
-    log:printInfo("githubClient -> updatePullRequest()");
-    UpdatePullRequestInput updatePullRequestInput = {
-        state: PULL_REQUEST_CLOSED
+    Pulls_pull_number_body body = {
+        state: "closed"
     };
 
-    PullRequest response = check githubClient->updatePullRequest(updatePullRequestInput, testUsername, testUserRepositoryName, createdPullRequestNumber);
-    log:printInfo(response.toString());
+    PullRequest response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls/[createdPullRequestNumber].patch(body);
+    test:assertTrue(response.number == createdPullRequestNumber);
 }
 
-string createdPullRequestReviewId = "";
-string createdPullRequestReviewIdWithPendingState = "";
-
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
+    groups: ["github"],
     dependsOn: [testUpdatePullRequest]
 }
 function testCreatePullRequestReview() returns error? {
-    log:printInfo("githubClient -> createPullRequestReview()");
-    AddPullRequestReviewInput createPullRequestReviewInput = {
+    Pull_number_reviews_body body = {
         body: "This is a test review comment for a pull  from Ballerina GitHub connector ",
-        event: PULL_REQUEST_REVIEW_COMMENT
+        event: "COMMENT"
     };
 
-    PullRequestReview response = check githubClient->createPullRequestReview(createPullRequestReviewInput, testUsername,
-        testUserRepositoryName, createdPullRequestNumber);
+    PullRequestReview response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls/[createdPullRequestNumber]/reviews.post(body);
     createdPullRequestReviewId = response.id;
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
+    groups: ["github"],
     dependsOn: [testUpdatePullRequest]
 }
 function testCreatePullRequestReviewWithPendingState() returns error? {
-    log:printInfo("githubClient -> createPullRequestReview()");
-    AddPullRequestReviewInput createPullRequestReviewInput = {
+    Pull_number_reviews_body body = {
         body: "This is a test review comment for a pull  from Ballerina GitHub connector "
     };
 
-    PullRequestReview response = check githubClient->createPullRequestReview(createPullRequestReviewInput, testUsername,
-        testUserRepositoryName, createdPullRequestNumber);
+    PullRequestReview response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls/[createdPullRequestNumber]/reviews.post(body);
     createdPullRequestReviewIdWithPendingState = response.id;
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
+    groups: ["github"],
     dependsOn: [testCreatePullRequestReview]
 }
 function testUpdatePullRequestReview() returns error? {
-    log:printInfo("githubClient -> updatePullRequestReview()");
-    UpdatePullRequestReviewInput updatePullRequestReviewInput = {
-        pullRequestReviewId: createdPullRequestReviewId,
+    Reviews_review_id_body body = {
         body: "This is a test review comment for a pull  from Ballerina GitHub connector Updated"
     };
-    check githubClient->updatePullRequestReview(updatePullRequestReviewInput);
+
+    PullRequestReview response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls/[createdPullRequestNumber]/reviews/[createdPullRequestReviewId].put(body);
+    test:assertTrue(response.id == createdPullRequestReviewId);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
+    groups: ["github"],
     dependsOn: [testCreatePullRequestReviewWithPendingState]
 }
 function testDeletePullRequestReview() returns error? {
-    log:printInfo("githubClient -> deletePendingPullRequestReview()");
-    DeletePullRequestReviewInput deletePullRequestReview = {
-        pullRequestReviewId: createdPullRequestReviewIdWithPendingState
-    };
-    check githubClient->deletePendingPullRequestReview(deletePullRequestReview);
+    PullRequestReview response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls/[createdPullRequestNumber]/reviews/[createdPullRequestReviewIdWithPendingState].delete();
+    test:assertTrue(response.id == createdPullRequestReviewIdWithPendingState);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
-}
-function testGetOrgProjectList() returns error? {
-    log:printInfo("githubClient -> getOrganizationProjectList()");
-    stream<Project, Error?> response = check githubClient->getProjects("wso2-enterprise", GITHUB_ORGANIZATION, (), PROJECT_OPEN);
-    test:assertTrue(response.next() is record {|Project value;|});
-}
-
-@test:Config {
-    groups: ["network-calls"],
-    enable: true,
+    groups: ["github"],
     dependsOn: [testCreateUserProject]
 }
-function testGetUserProject() returns error? {
-    log:printInfo("githubClient -> getProject()");
-    getProjectRetryCount = getProjectRetryCount + 1;
-    Project|Error project = githubClient->getProject(testUsername, createdProjectNumber);
-    if project is ClientError {
-        record {|anydata body?;|} errorDetails = project.detail();
-        log:printError("Client error received. Error detail = " + errorDetails?.body.toString());
-        if getProjectRetryCount > 3 {
-            return project;
-        } else {
-            log:printInfo("Retrying githubClient -> getProject() after 5 seconds...");
-            runtime:sleep(5); //Github seems to add project async mannger. Sometimes immediate call does not return the project.
-            return testGetUserProject();
-        }
-    } else if project is ServerError {
-        record {|json? data?; GraphQLClientError[] errors; map<json>? extensions?;|} errorDetails = project.detail();
-        log:printError("Server error received. Error detail = " + errorDetails.errors.toString());
-        return project;
+function testGetOrgProjectList() returns error? {
+    Project[] response = check github->/orgs/["wso2-enterprise"]/projects();
+    test:assertTrue(response[0] is Project);
+}
+
+@test:Config {
+    groups: ["github"],
+    dependsOn: [testCreateUserProject]
+}
+function testGetLatestUserProject() returns error? {
+    Project[] response = check github->/users/[testUsername]/projects();
+    if response.length() > 0 {
+        Project recentProject = response[0];
+        fetchedProjectId = recentProject.id;
+        fetchedProjectNumber = recentProject.number;
     } else {
-        log:printInfo(project.toString());
+        test:assertFail();
     }
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
-    dependsOn: [testGetUserProject]
+    groups: ["github"],
+    dependsOn: [testGetLatestUserProject]
 }
 function testUpdateProject() returns error? {
-    log:printInfo("githubClient -> updateProject()");
-    UpdateProjectInput updateProjectInput = {
-        projectId: createdProjectId,
+    Projects_project_id_body_1 body = {
         name: "Test Project Created by Ballerina GitHub Connector UPDATED"
     };
 
-    Project response = check githubClient->updateProject(updateProjectInput);
-    log:printInfo(response.toString());
+    Project response = check github->/projects/[fetchedProjectId].patch(body);
+    test:assertTrue(response.number == fetchedProjectNumber);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true,
+    groups: ["github"],
     dependsOn: [testUpdateProject, testCreateIssue]
 }
 function testDeleteProject() returns error? {
-    log:printInfo("githubClient -> deleteProject()");
-    DeleteProjectInput deleteProjectInput = {
-        projectId: createdProjectId
-    };
-    check githubClient->deleteProject(deleteProjectInput);
+    http:Response response = check github->/projects/[fetchedProjectId].delete();
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetRepositoryProjectList() returns error? {
-    log:printInfo("githubClient -> getRepositoryProjectList()");
-    stream<Project, Error?> response = check githubClient->getProjects(testUsername, GITHUB_USER, testUserRepositoryName, PROJECT_OPEN);
-    test:assertTrue(response.next() is record {|Project value;|});
+    Project[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/projects();
+    test:assertTrue(response[0] is Project);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetUserProjectList() returns error? {
-    log:printInfo("githubClient -> getUserProjectList()");
-    stream<Project, Error?> response = check githubClient->getProjects(testUsername, GITHUB_USER);
-    test:assertTrue(response.next() is record {|Project value;|});
+    Project[] response = check github->/users/[testUsername]/projects();
+    test:assertTrue(response[0] is Project);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetOrganization() returns error? {
-    log:printInfo("githubClient -> getOrganization()");
-    stream<Organization, Error?> response = check githubClient->getOrganizations(testOrganizationName, GITHUB_ORGANIZATION);
-    test:assertTrue(response.next() is record {|Organization value;|});
+    OrganizationFull response = check github->/orgs/[testOrganizationName]();
+    test:assertTrue(response is OrganizationFull);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetUserOrganizationList() returns error? {
-    log:printInfo("githubClient -> getUserOrganizationList()");
-    stream<Organization, Error?> response = check githubClient->getOrganizations("kasthuriraajan", GITHUB_USER);
-    test:assertTrue(response.next() is record {|Organization value;|});
+    OrganizationSimple[] response = check github->/users/["kasthuriraajan"]/orgs();
+    test:assertTrue(response[0] is OrganizationSimple);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
+    groups: ["github"]
 }
 function testGetOrganizationMembersList() returns error? {
-    log:printInfo("githubClient -> getOrganizationMembers()");
-    stream<User, Error?> response = check githubClient->getOrganizationMembers("ballerina-platform");
-    test:assertTrue(response.next() is record {|User value;|});
+    SimpleUser[] response = check github->/orgs/["ballerina-platform"]/members();
+    test:assertTrue(response[0] is SimpleUser);
 }
 
 @test:Config {
-    groups: ["network-calls"],
-    enable: true
-}
-function testSearch() returns @tainted error? {
-    log:printInfo("githubClient -> search()");
-    SearchResult response = check githubClient->search("connector-", SEARCH_TYPE_USER, 10);
-    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-    test:assertTrue(result is User[]);
-}
-
-@test:Config {
-    groups: ["network-calls"],
-    enable: true
-}
-function testSearchMultiWordsString() returns error? {
-    log:printInfo("githubClient -> testSearchMultiWordsString()");
-
-    string query = string `repo:ballerina-platform/ballerina-extended-library is:issue is:open label:"Type/New Feature"`;
-    SearchResult response = check githubClient->search(query, SEARCH_TYPE_ISSUE, 10);
-    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-    test:assertTrue(result is Issue[]);
-}
-
-@test:Config {
-    groups: ["network-calls"],
-    enable: true
-}
-function testSearchIssueLabels() returns error? {
-    log:printInfo("githubClient -> testSearchIssueLabels()");
-
-    string query = string `repo:ballerina-platform/ballerina-extended-library is:issue is:open label:"Team/Connector"`;
-    SearchResult response = check githubClient->search(query, SEARCH_TYPE_ISSUE, 1, 1);
-    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-    if result is Issue[] {
-        if result.length() > 0 {
-            int labelCount = let var nodes = result[0]?.labels?.nodes
-                in nodes is () ? 0 : nodes.length();
-            test:assertTrue(labelCount == 1);
-        }
-    } else {
-        test:assertFail("Incorrect search results");
-    }
-}
-
-@test:Config {
-    groups: ["network-calls"],
-    enable: true
-}
-function testSearchPullRequest() returns error? {
-    log:printInfo("githubClient -> testSearchPullRequest()");
-
-    string query = string `repo:ballerina-platform/ballerina-extended-library is:pr is:open`;
-    SearchResult response = check githubClient->search(query, SEARCH_TYPE_PULL_REQUEST, 10);
-    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-    test:assertTrue(result is PullRequest[], "Unexpected search results Found. Expected: 'PullRequest[]', found: " + result.toBalString());
-}
-
-@test:Config {
-    groups: ["network-calls"],
-    enable: true
-}
-function testSearchPullRequestComplex() returns error? {
-    log:printInfo("githubClient -> testSearchPullRequestComplex()");
-
-    string query = string `repo:ballerina-platform/ballerina-extended-library is:pr state:closed author:abeykoon created:2021-11-01..2022-07-11`;
-    SearchResult response = check githubClient->search(query, SEARCH_TYPE_PULL_REQUEST, 5);
-    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-    test:assertTrue(result is PullRequest[]);
-}
-
-@test:Config {
-    groups: ["network-calls"],
-    enable: true
-}
-function testSearchPullRequestWithRelatedIssues() returns error? {
-    log:printInfo("githubClient -> testSearchPullRequestWithRelatedIssues()");
-
-    string query = string `repo:ballerina-platform/module-ballerinax-github is:pr is:closed author:sachinira`;
-    SearchResult response = check githubClient->search(query, SEARCH_TYPE_PULL_REQUEST, 5);
-    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-
-    if result is PullRequest[] {
-        foreach PullRequest item in result {
-            RelatedIssues issues = item?.closingIssuesReferences ?: {};
-            if issues?.nodes != [] {
-                Issue[] issueData = issues?.nodes ?: [];
-                test:assertTrue(issueData != []);
-            }
-        }
-    }
-}
-
-@test:Config {
-    groups: ["network-calls"],
-    enable: true
-}
-function testSearchPullRequestWithReviews() returns error? {
-    log:printInfo("githubClient -> testSearchPullRequestWithReviews()");
-
-    string query = string `repo:ballerina-platform/module-ballerinax-github is:pr is:closed review:approved author:sachinira`;
-    SearchResult response = check githubClient->search(query, SEARCH_TYPE_PULL_REQUEST, 5, perPageCountForPRReviews = 1);
-    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-
-    if result is PullRequest[] {
-        foreach PullRequest item in result {
-            PullRequestReview[]? pullRequestReviews = item.pullRequestReviews;
-            if pullRequestReviews is PullRequestReview[] {
-                if pullRequestReviews.length() > 0 {
-                    test:assertTrue(pullRequestReviews.length() == 1);
-                }
-            }
-        }
-    }
-}
-
-@test:Config {
-    groups: ["network-calls"],
-    enable: true
-}
-function testSearchUser() returns error? {
-    log:printInfo("githubClient -> testSearchUser()");
-
-    string query = string `mike in:name created:<2022-01-01 type:user`;
-    SearchResult response = check githubClient->search(query, SEARCH_TYPE_USER, 20);
-    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-    test:assertTrue(result is User[]);
-}
-
-@test:Config {
-    groups: ["network-calls"],
-    enable: true
-}
-function testSearchOrganization() returns error? {
-    log:printInfo("githubClient -> testSearchOrganization()");
-
-    string query = string `data in:email type:org`;
-    SearchResult response = check githubClient->search(query, SEARCH_TYPE_ORGANIZATION, 20);
-    Issue[]|User[]|Organization[]|Repository[]|PullRequest[] result = response.results;
-    test:assertTrue(result is Organization[]);
-}
-
-@test:Config {
-    enable: true
+    groups: ["github"]
 }
 function testGetLanguagesFromRepository() returns error? {
-    log:printInfo("Testing language list in a given repository");
-    Repository response = check githubClient->getRepository(testUsername, testUserRepositoryName);
-    Language[]? languageList = response?.languages;
-    if languageList is Language[] {
-        test:assertTrue(languageList.length() > 0, "Failed to get language list");
+    Language response = check github->/repos/[testUsername]/[testUserRepositoryName]/languages();
+    test:assertTrue(response is Language);
+}
+
+@test:Config {
+    groups: ["github"]
+}
+function testGetRepositoryContent() returns error? {
+    ContentTree[]? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src"]();
+    if response is ContentTree[] {
+        test:assertTrue(response.length() > 0);
     } else {
-        test:assertFail("Language list is empty");
+        test:assertFail();
     }
 }
 
 @test:Config {
-    enable: true
-}
-function testGetRepositoryContent() returns error? {
-    log:printInfo("githubClient -> testGetRepositoryContent()");
-    File[] response = check githubClient->getRepositoryContent(testUsername, testUserRepositoryName, "HEAD:");
-    test:assertTrue(response.length() > 0, "Failed to get file list");
-}
-
-@test:Config {
-    groups: ["network-calls"]
+    groups: ["github"]
 }
 function testStarRepository() returns error? {
-    log:printInfo("githubClient -> starRepository()");
-    check githubClient->starRepository(testUsername, testUserRepositoryName);
+    check github->/user/starred/[testUsername]/[testUserRepositoryName].put();
 }
 
 @test:Config {
-    groups: ["network-calls"],
+    groups: ["github"],
     dependsOn: [testStarRepository]
 }
 function testUnstarRepository() returns error? {
-    log:printInfo("githubClient -> unstarRepository()");
-    check githubClient->unstarRepository(testUsername, testUserRepositoryName);
+    http:Response response = check github->/user/starred/[testUsername]/[testUserRepositoryName].delete();
 }
 
 @test:Config {
-    groups: ["network-calls"]
-}
-function testStarTopic() returns error? {
-    log:printInfo("githubClient -> starTopic()");
-    check githubClient->starTopic(testTopicName);
-}
-
-@test:Config {
-    groups: ["network-calls"],
-    dependsOn: [testStarTopic]
-}
-function testUnstarTopic() returns error? {
-    log:printInfo("githubClient -> unstarTopic()");
-    check githubClient->unstarTopic(testTopicName);
-}
-
-@test:Config {
-    groups: ["network-calls"]
+    groups: ["github"]
 }
 function testStarGist() returns error? {
-    log:printInfo("githubClient -> starGist()");
-    check githubClient->starGist(testUsername, testGistName);
+    http:Response response = check github->/gists/[testGistName]/star.put();
 }
 
 @test:Config {
-    groups: ["network-calls"],
+    groups: ["github"],
     dependsOn: [testStarGist]
 }
 function testUnstarGist() returns error? {
-    log:printInfo("githubClient -> unstarGist()");
-    check githubClient->unstarGist(testUsername, testGistName);
+    http:Response response = check github->/gists/[testGistName]/star.delete();
 }
