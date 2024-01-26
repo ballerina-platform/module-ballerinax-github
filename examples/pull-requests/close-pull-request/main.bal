@@ -33,7 +33,7 @@ github:ConnectionConfig gitHubConfig = {
 };
 github:Client github = check new (gitHubConfig);
 
-public function main() {
+public function main() returns error? {
     github:Pulls_pull_number_body body = {
         state: "closed"
     };

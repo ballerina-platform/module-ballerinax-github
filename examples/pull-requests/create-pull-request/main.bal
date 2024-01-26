@@ -32,7 +32,7 @@ github:ConnectionConfig gitHubConfig = {
 };
 github:Client github = check new (gitHubConfig);
 
-public function main() {
+public function main() returns error? {
     github:Repo_pulls_body body = {
         title: "Test PR",
         base: "master",

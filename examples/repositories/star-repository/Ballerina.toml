@@ -1,0 +1,8 @@
+[package]
+org = "github_examples"
+name = "star_repository"
+version = "0.1.0"
+distribution = "2201.8.4"
+
+[build-options]
+observabilityIncluded = true

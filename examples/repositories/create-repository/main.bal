@@ -20,10 +20,6 @@ import ballerinax/github;
 
 configurable string authToken = os:getEnv("ACCESS_TOKEN");
 
-// NOTE: Replace with actual values.
-string userName = "TEST_USER_NAME";
-string userRepoName = "TEST_REPO_NAME";
-
 // GitHub Connection Configurations
 github:ConnectionConfig gitHubConfig = {
     auth: {
@@ -33,13 +29,10 @@ github:ConnectionConfig gitHubConfig = {
 github:Client github = check new (gitHubConfig);
 
 public function main() returns error? {
-    github:Repo_issues_body body = {
-        title: "This is a test Issue Title",
-        body: "This is test issue body",
-        assignees: [userName],
-        labels: ["bug", "good-first-issue"]
+    github:User_repos_body body = {
+        name: "Test Repository",
+        description: "New Test Repo Description"
     };
-
-    github:Issue issueResp = check github->/repos/[userName]/[userRepoName]/issues.post(body);
-    io:println(issueResp.toString());
+    github:Repository repoResponse = check github->/user/repos.post(body);
+    io:println(repoResponse.toString());
 }

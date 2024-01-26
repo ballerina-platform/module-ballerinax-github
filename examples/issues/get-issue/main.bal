@@ -33,7 +33,7 @@ github:ConnectionConfig gitHubConfig = {
 };
 github:Client github = check new (gitHubConfig);
 
-public function main() {
+public function main() returns error? {
     // Get a single Issue specified by the IssueNumber
     github:Issue? issueResp = check github->/repos/[userName]/[userRepoName]/issues/[issueNumber]();
     io:println(issueResp.toString());

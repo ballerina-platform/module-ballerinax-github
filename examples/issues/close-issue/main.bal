@@ -33,7 +33,7 @@ github:ConnectionConfig gitHubConfig = {
 };
 github:Client github = check new (gitHubConfig);
 
-public function main() {
+public function main() returns error? {
     github:Issues_issue_number_body body = {
         state: "closed",
         state_reason: "not_planned"

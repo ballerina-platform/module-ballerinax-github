@@ -33,13 +33,5 @@ github:ConnectionConfig gitHubConfig = {
 github:Client github = check new (gitHubConfig);
 
 public function main() returns error? {
-    github:Repo_issues_body body = {
-        title: "This is a test Issue Title",
-        body: "This is test issue body",
-        assignees: [userName],
-        labels: ["bug", "good-first-issue"]
-    };
-
-    github:Issue issueResp = check github->/repos/[userName]/[userRepoName]/issues.post(body);
-    io:println(issueResp.toString());
+    check github->/user/starred/[userName]/[userRepoName].put();
 }

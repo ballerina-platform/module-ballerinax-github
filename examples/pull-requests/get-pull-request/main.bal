@@ -33,7 +33,7 @@ github:ConnectionConfig gitHubConfig = {
 };
 github:Client github = check new (gitHubConfig);
 
-public function main() {
+public function main() returns error? {
     // Get a single Pull-Request specified by the PullRequestNumber
     github:PullRequest prResponse = check github->/repos/[userName]/[userRepoName]/pulls/[prNumber]();
     io:println(prResponse.toString());

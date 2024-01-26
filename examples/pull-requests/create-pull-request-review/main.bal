@@ -33,7 +33,7 @@ github:ConnectionConfig gitHubConfig = {
 };
 github:Client github = check new (gitHubConfig);
 
-public function main() {
+public function main() returns error? {
     github:Pull_number_reviews_body body = {
         body: "This is a test review comment for a pull request",
         event: "COMMENT"
