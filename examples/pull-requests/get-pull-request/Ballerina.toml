@@ -1,6 +1,6 @@
 [package]
 org = "github_examples"
-name = "close_issue"
+name = "get_pull_request"
 version = "0.1.0"
 distribution = "2201.8.4"
 
