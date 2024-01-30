@@ -2,7 +2,7 @@
 
 [GitHub](https://github.com/), the world's largest community of developers, fosters collaboration in discovering, sharing, and building superior software. It serves as an all-encompassing platform, accommodating both open-source projects and private team repositories, making it the go-to choice for collaborative development.
 
-This connector facilitates operations for connecting and interacting with [GitHub's REST API](https://docs.github.com/en/rest?apiVersion=2022-11-28) endpoints over the network. It serves as a reliable tool for seamless communication with various RESTful interfaces on GitHub.
+This connector facilitates operations for connecting and interacting with [GitHub's REST API v2022-11-28](https://docs.github.com/en/rest?apiVersion=2022-11-28) endpoints over the network. It serves as a reliable tool for seamless communication with various RESTful interfaces on GitHub.
 
 ## Set up guide
 

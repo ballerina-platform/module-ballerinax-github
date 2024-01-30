@@ -1,1 +1,0 @@
-../Close issue.md
