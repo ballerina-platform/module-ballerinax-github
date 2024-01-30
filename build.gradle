@@ -59,6 +59,7 @@ def moduleVersion = project.version.replace("-SNAPSHOT", "")
 
 task build {
     dependsOn(':github-ballerina:build')
+    dependsOn(':github-examples:build')
 }
 
 release {

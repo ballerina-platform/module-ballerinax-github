@@ -30,8 +30,10 @@ plugins {
 rootProject.name = 'module-ballerinax-github'
 
 include ':github-ballerina'
+include ':github-examples'
 
 project(':github-ballerina').projectDir = file("ballerina")
+project(':github-examples').projectDir = file("examples")
 
 gradleEnterprise {
     buildScan {
