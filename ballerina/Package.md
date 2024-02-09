@@ -6,7 +6,7 @@ This Ballerina connector is designed to interface with [GitHub's REST API (versi
 
 ## Set up guide
 
-To use the GitHub Connector in Ballerina, you must have a GitHub account and a Personal Access Token (PAT) for authentication. If you already have a GitHub account, you can seamlessly integrate the connector with your existing account. If not, you can easily create a new GitHub account by visiting [GitHub's Sign Up page](https://github.com/) and following the straightforward registration process. Once you have a GitHub account, you can proceed to create a PAT.
+To use the GitHub Connector in Ballerina, you must have a GitHub account and a Personal Access Token (PAT) for authentication. If you already have a GitHub account, you can integrate the connector with your existing account. If not, you can create a new GitHub account by visiting [GitHub's Sign Up page](https://github.com/) and following the registration process. Once you have a GitHub account, you can proceed to create a PAT.
 
 ### Step 1: Access GitHub Settings
 
