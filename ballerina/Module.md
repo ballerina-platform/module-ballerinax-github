@@ -1,12 +1,12 @@
 ## Overview
 
-[GitHub](https://github.com/), the world's largest community of developers, fosters collaboration in discovering, sharing, and building superior software. It serves as an all-encompassing platform, accommodating both open-source projects and private team repositories, making it the go-to choice for collaborative development.
+[GitHub](https://github.com/) is a widely used platform for version control and collaboration, allowing developers to work together on projects from anywhere. It hosts a vast array of both open-source and private projects, providing a suite of development tools for collaborative software development.
 
-This connector facilitates operations for connecting and interacting with [GitHub's REST API v2022-11-28](https://docs.github.com/en/rest?apiVersion=2022-11-28) endpoints over the network. It serves as a reliable tool for seamless communication with various RESTful interfaces on GitHub.
+This Ballerina connector is designed to interface with [GitHub's REST API (version 2022-11-28)](https://docs.github.com/en/rest?apiVersion=2022-11-28), facilitating programmatic access to GitHub's services. It enables developers to automate tasks, manage repositories, issues, pull requests, and more, directly from Ballerina applications.
 
 ## Set up guide
 
-To use the GitHub Connector, it's essential to own a GitHub account and a PAT(Personal Access Token). If you already have one, you can seamlessly integrate the connector with your existing account. If not, you can easily create a new GitHub account by visiting [GitHub's Sign Up page](https://github.com/) and following the straightforward registration process. Once you have a GitHub account, you can proceed to create a PAT.
+To use the GitHub Connector in Ballerina, you must have a GitHub account and a Personal Access Token (PAT) for authentication. If you already have a GitHub account, you can seamlessly integrate the connector with your existing account. If not, you can easily create a new GitHub account by visiting [GitHub's Sign Up page](https://github.com/) and following the straightforward registration process. Once you have a GitHub account, you can proceed to create a PAT.
 
 ### Step 1: Access GitHub Settings
 
