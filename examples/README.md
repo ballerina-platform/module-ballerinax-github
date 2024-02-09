@@ -8,7 +8,7 @@ The `GitHub` connector provides practical examples illustrating usage in various
 
 3. [Create and Manage a PullRequest in GitHub](https://github.com/ballerina-platform/module-ballerinax-github/tree/master/examples/create-and-manage-pull-request) - Create a pull request on GitHub, and request changes as necessary.
 
-4. [Star Ballerina-Platform Repositories](https://github.com/ballerina-platform/module-ballerinax-github/tree/master/examples/Star ballerina repositories) - Fetch all repositories under the `ballerina-platform` organization on GitHub and star each of them
+4. [Star Ballerina-Platform Repositories](https://github.com/ballerina-platform/module-ballerinax-github/tree/master/examples/star-ballerina-repositories) - Fetch all repositories under the `ballerina-platform` organization on GitHub and star each of them
 
 ## Prerequisites
 
