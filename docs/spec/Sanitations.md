@@ -62,6 +62,8 @@ This file documents the modifications applied to enhance the usability of the of
 
 7. Update the resource function `get user/repos(...)` to allow optional query parameters, in accordance with the OAS specification that designates them as non-required. This modification addresses a discrepancy in the generated client, which previously disallowed passing null values for the corresponding parameters.
 
+8. Remove the security-sensitive keys, including the private key, GitHub app token, and JWT token, which are provided as example values. These keys are leading to failures in Trivy scans.
+
 ## OpenAPI cli command
 
 ```bash
