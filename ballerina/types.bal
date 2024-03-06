@@ -8612,7 +8612,7 @@ public type Minimalrepository_license record {
     string 'key?;
     string name?;
     string spdx_id?;
-    string url?;
+    string? url?;
     string node_id?;
 };
 
