@@ -31,8 +31,12 @@ configurable string testGistName = "5a648dc78fd2d402ec484e2663282e6f";
 // Constants
 const REPO_BASE_URL = "https://api.github.com/repos/connector-ecosystem/github-connector/contents";
 const REPO_FILE_PATH = "/src/db/resources/info1.txt";
-const FEATURE_BRANCH = "feature/feature2";
+const MASTER_BRANCH = "master";
+const NEW_FEATURE_BRANCH = "feature/newFeature";
+const LATEST_MASTER_COMMIT_HASH = "9e7ce2f52536e7c5b90f8fee35f129fb14d1631f";
 const TEST_REPO_NAME = "ballerina-github-connector-test-repo";
+string NEW_FEATURE_BRANCH_HEAD = string `heads/${NEW_FEATURE_BRANCH}`;
+string NEW_FEATURE_BRANCH_REF = string `refs/${NEW_FEATURE_BRANCH_HEAD}`;
 
 // Variables to hold intermediate results
 int milestoneNumber = 2;
@@ -283,11 +287,79 @@ function testCloseIssue() returns error? {
 }
 
 @test:Config {}
+function testGetMasterBranchLatestCommitSHA() returns error? {
+    BranchWithProtection response = check github->/repos/[testUsername]/[testUserRepositoryName]/branches/[MASTER_BRANCH]();
+    string commitHash = response.'commit.sha;
+    test:assertEquals(commitHash, LATEST_MASTER_COMMIT_HASH);
+}
+
+@test:Config {
+    dependsOn: [testGetMasterBranchLatestCommitSHA]
+}
+function testCreateNewBranch() returns error? {
+    Git_refs_body body = {
+        ref: NEW_FEATURE_BRANCH_REF,
+        sha: LATEST_MASTER_COMMIT_HASH
+    };
+    GitRef response = check github->/repos/[testUsername]/[testUserRepositoryName]/git/refs.post(body);
+    test:assertEquals(response.ref, NEW_FEATURE_BRANCH_REF);
+}
+
+@test:Config {
+    dependsOn: [testCreateNewBranch]
+}
+function testCommitNewFile() returns error? {
+    // Create a blob for the new file content
+    Git_blobs_body blobBody = {
+        content: "This is an example file content."
+    };
+    ShortBlob blobResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/blobs.post(blobBody);
+    string blobSHA = blobResponse.sha;
+
+    // Get the latest commit from the branch
+    GitCommit commitResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/commits/[LATEST_MASTER_COMMIT_HASH]();
+    string treeSHA = commitResponse.tree.sha;
+
+    // Create a new tree with the new file blob
+    Git_trees_body treeBody = {
+        base_tree: treeSHA,
+        tree: [
+            {
+                path: "newFile.txt",
+                mode: "100644",
+                'type: "blob",
+                sha: blobSHA
+            }
+        ]
+    };
+    GitTree treeResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/trees.post(treeBody);
+    string newTreeSHA = treeResponse.sha;
+
+    // Create a new commit
+    Git_commits_body commitBody = {
+        parents: [LATEST_MASTER_COMMIT_HASH],
+        tree: newTreeSHA,
+        message: "Add a new text file"
+    };
+    GitCommit newCommitResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/commits.post(commitBody);
+    string newCommitSHA = newCommitResponse.sha;
+
+    // Update the branch to point to the new commit
+    Refs_ref_body updateRefBody = {
+        sha: newCommitSHA
+    };
+    GitRef response = check github->/repos/[testUsername]/[testUserRepositoryName]/git/refs/[NEW_FEATURE_BRANCH_HEAD].patch(updateRefBody);
+    test:assertEquals(response.ref, NEW_FEATURE_BRANCH_REF);
+}
+
+@test:Config {
+    dependsOn: [testCommitNewFile]
+}
 function testCreatePullRequest() returns error? {
     Repo_pulls_body body = {
         title: "Test PR created from Ballerina GitHub Connector",
-        base: "master",
-        head: FEATURE_BRANCH,
+        base: MASTER_BRANCH,
+        head: NEW_FEATURE_BRANCH,
         body: "This is some dummy content for PR body"
     };
 
@@ -341,6 +413,13 @@ function testUpdatePullRequestToClose() returns error? {
 
     PullRequest response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls/[createdPullRequestNumber].patch(body);
     test:assertTrue(response.number == createdPullRequestNumber);
+}
+
+@test:Config {
+    dependsOn: [testUpdatePullRequestToClose]
+}
+function testDeleteBranch() returns error? {
+    http:Response response = check github->/repos/[testUsername]/[testUserRepositoryName]/git/refs/[NEW_FEATURE_BRANCH_HEAD].delete();
 }
 
 @test:Config {
