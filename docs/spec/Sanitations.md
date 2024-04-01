@@ -58,13 +58,15 @@ This file documents the modifications applied to enhance the usability of the of
 
 5. Set the `nullable` property to `true` for the `url` property of the `license` property in the `minimal-repository` schema under the `component` section. This adjustment is made to address a data binding issue.
 
-6. Update the response schema `#/components/schemas/content-tree` for the endpoint `/repos/{owner}/{repo}/contents/{path}` to represent the response as an array. This adjustment is made to address a data binding issue.
+6. Set the `nullable` property to `true` for the `description` property of the `labels` property in the `pull-request-simple` schema under the `component` section. This adjustment is made to address a data binding issue.(https://github.com/ballerina-platform/ballerina-library/issues/6259)
 
-7. Update the `state_reason` field to be nullable in the `Issue` record within the generated types as a workaround for the issue outlined in [Nillable Enum Types Result in Incorrect Record Field Generation](https://github.com/ballerina-platform/ballerina-library/issues/5902)
+7. Update the response schema `#/components/schemas/content-tree` for the endpoint `/repos/{owner}/{repo}/contents/{path}` to represent the response as an array. This adjustment is made to address a data binding issue.
 
-8. Update the resource function `get user/repos(...)` to allow optional query parameters, in accordance with the OAS specification that designates them as non-required. This modification addresses a discrepancy in the generated client, which previously disallowed passing null values for the corresponding parameters.
+8. Update the `state_reason` field to be nullable in the `Issue` record within the generated types as a workaround for the issue outlined in [Nillable Enum Types Result in Incorrect Record Field Generation](https://github.com/ballerina-platform/ballerina-library/issues/5902)
 
-9. Remove the security-sensitive keys, including the private key, GitHub app token, and JWT token, which are provided as example values. These keys are leading to failures in Trivy scans.
+9. Update the resource function `get user/repos(...)` to allow optional query parameters, in accordance with the OAS specification that designates them as non-required. This modification addresses a discrepancy in the generated client, which previously disallowed passing null values for the corresponding parameters.
+
+10. Remove the security-sensitive keys, including the private key, GitHub app token, and JWT token, which are provided as example values. These keys are leading to failures in Trivy scans.
 
 ## OpenAPI cli command
 
