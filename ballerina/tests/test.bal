@@ -309,18 +309,15 @@ function testCreateNewBranch() returns error? {
     dependsOn: [testCreateNewBranch]
 }
 function testCommitNewFile() returns error? {
-    // Create a blob for the new file content
     Git_blobs_body blobBody = {
         content: "This is an example file content."
     };
     ShortBlob blobResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/blobs.post(blobBody);
     string blobSHA = blobResponse.sha;
 
-    // Get the latest commit from the branch
     GitCommit commitResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/commits/[LATEST_MASTER_COMMIT_HASH]();
     string treeSHA = commitResponse.tree.sha;
 
-    // Create a new tree with the new file blob
     Git_trees_body treeBody = {
         base_tree: treeSHA,
         tree: [
@@ -335,7 +332,6 @@ function testCommitNewFile() returns error? {
     GitTree treeResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/trees.post(treeBody);
     string newTreeSHA = treeResponse.sha;
 
-    // Create a new commit
     Git_commits_body commitBody = {
         parents: [LATEST_MASTER_COMMIT_HASH],
         tree: newTreeSHA,
@@ -344,7 +340,6 @@ function testCommitNewFile() returns error? {
     GitCommit newCommitResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/commits.post(commitBody);
     string newCommitSHA = newCommitResponse.sha;
 
-    // Update the branch to point to the new commit
     Refs_ref_body updateRefBody = {
         sha: newCommitSHA
     };
