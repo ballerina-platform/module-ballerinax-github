@@ -12101,7 +12101,7 @@ public type Pullrequestsimple_labels record {
     string node_id;
     string url;
     string name;
-    string description;
+    string? description;
     string color;
     boolean default;
 };
