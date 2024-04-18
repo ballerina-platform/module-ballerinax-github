@@ -73,4 +73,5 @@ task buildExamples {
 buildExamples.dependsOn ":github-ballerina:build"
 testExamples.dependsOn ":github-ballerina:build"
 
-build.dependsOn buildExamples
+// TODO: Enable the examples build once https://github.com/ballerina-platform/ballerina-library/issues/6135 is fixed
+// build.dependsOn buildExamples
