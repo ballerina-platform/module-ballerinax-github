@@ -2,7 +2,7 @@
 distribution = "2201.8.0"
 org = "ballerinax"
 name = "github"
-version = "4.3.0"
+version = "5.0.0"
 authors = ["Ballerina"]
 export = ["github"]
 keywords = ["IT Operations/Source Control", "Cost/Freemium"]
@@ -11,4 +11,4 @@ repository = "https://github.com/ballerina-platform/module-ballerinax-github"
 license = ["Apache-2.0"]
 
 [build-options]
-observabilityIncluded = true
+observabilityIncluded = false
