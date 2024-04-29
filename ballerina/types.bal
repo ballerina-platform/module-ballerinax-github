@@ -201,8 +201,6 @@ public type PullRequestSimpleArr PullRequestSimple[];
 
 public type StatusArr Status[];
 
-public type ContentTreeArr ContentTree[];
-
 public type ContributorArr Contributor[];
 
 public type DependabotAlertArr DependabotAlert[];

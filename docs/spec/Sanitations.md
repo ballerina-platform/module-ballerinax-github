@@ -71,5 +71,5 @@ This file documents the modifications applied to enhance the usability of the of
 ## OpenAPI cli command
 
 ```bash
-bal openapi -i docs/open-api-spec/openapi.json --mode client --license docs/license.txt -o ballerina
+bal openapi -i docs/spec/openapi.json --mode client --license docs/license.txt -o ballerina
 ```
