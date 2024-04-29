@@ -550,6 +550,16 @@ function testGetRepositoryContent() returns error? {
 }
 
 @test:Config {}
+function testGetRepositoryContentOfFile() returns error? {
+    ContentTree[]? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src/db/main.bal"]();
+    if response is ContentTree[] {
+        test:assertTrue(response.length() == 1);
+    } else {
+        test:assertFail();
+    }
+}
+
+@test:Config {}
 function testStarRepository() returns error? {
     check github->/user/starred/[testUsername]/[testUserRepositoryName].put();
 }
