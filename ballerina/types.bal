@@ -201,6 +201,8 @@ public type PullRequestSimpleArr PullRequestSimple[];
 
 public type StatusArr Status[];
 
+public type ContentTreeArr ContentTree[];
+
 public type ContributorArr Contributor[];
 
 public type DependabotAlertArr DependabotAlert[];
@@ -8010,9 +8012,6 @@ public type Issue_number_labels_body record {
 
 # If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value for [delivery signature headers](https://docs.github.com/webhooks/event-payloads/#delivery-headers).
 public type WebhookConfigSecret string;
-
-# Content Tree
-public type ContentTreeResponse ContentTree|ContentTree[];
 
 # Create a new snapshot of a repository's dependencies.
 public type Snapshot record {|
