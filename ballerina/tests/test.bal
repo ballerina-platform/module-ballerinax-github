@@ -541,7 +541,7 @@ function testGetLanguagesFromRepository() returns error? {
 
 @test:Config {}
 function testGetRepositoryContent() returns error? {
-    ContentTree[]? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src"]();
+    ContentTreeResponse? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src"]();
     if response is ContentTree[] {
         test:assertTrue(response.length() > 0);
     } else {
