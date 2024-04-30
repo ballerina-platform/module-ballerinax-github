@@ -302,7 +302,7 @@ modules = [
 [[package]]
 org = "ballerinax"
 name = "github"
-version = "5.0.1"
+version = "5.0.2"
 dependencies = [
 	{org = "ballerina", name = "constraint"},
 	{org = "ballerina", name = "http"},

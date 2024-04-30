@@ -2,7 +2,7 @@
 distribution = "2201.8.0"
 org = "ballerinax"
 name = "github"
-version = "5.0.1"
+version = "5.0.2"
 authors = ["Ballerina"]
 export = ["github"]
 keywords = ["IT Operations/Source Control", "Cost/Freemium"]
