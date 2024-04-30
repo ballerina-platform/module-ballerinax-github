@@ -5932,12 +5932,17 @@ public isolated client class Client {
     # + path - path parameter
     # + ref - The name of the commit/branch/tag. Default: the repository’s default branch.
     # + return - Response 
-    resource isolated function get repos/[string owner]/[string repo]/contents/[string path](string? ref = ()) returns ContentTreeResponse|error? {
+    resource isolated function get repos/[string owner]/[string repo]/contents/[string path](string? ref = ()) returns ContentTree[]|error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/contents/${getEncodedUri(path)}`;
         map<anydata> queryParam = {"ref": ref};
         resourcePath = resourcePath + check getPathForQueryParam(queryParam);
-        ContentTreeResponse? response = check self.clientEp->get(resourcePath);
-        return response;
+        ContentTree[]|ContentTree? response = check self.clientEp->get(resourcePath);
+        if response is ContentTree[] {
+            return response;
+        } else if response is ContentTree {
+            return [response];
+        }
+        return ();
     }
     # Create or update file contents
     #

@@ -541,9 +541,19 @@ function testGetLanguagesFromRepository() returns error? {
 
 @test:Config {}
 function testGetRepositoryContent() returns error? {
-    ContentTreeResponse? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src"]();
+    ContentTree[]? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src"]();
     if response is ContentTree[] {
         test:assertTrue(response.length() > 0);
+    } else {
+        test:assertFail();
+    }
+}
+
+@test:Config {}
+function testGetRepositoryContentOfFile() returns error? {
+    ContentTree[]? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src/db/main.bal"]();
+    if response is ContentTree[] {
+        test:assertTrue(response.length() == 1);
     } else {
         test:assertFail();
     }
