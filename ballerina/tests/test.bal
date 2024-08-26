@@ -151,8 +151,9 @@ function testGetMilestones() returns error? {
 // Instead an already created project will be updated and deleted.
 // The reason is Github seems to be adding project async mannger.
 // Sometimes immediate call does not return the project when we try to get the created project.
-// TODO: Re-enable `testCreateUserProject` and `testDeleteProject` if and when the user changes as for this user
-// we can no loger create projects as it is disabled.
+// TODO: Re-enable `testCreateUserProject` and `testDeleteProject` if and when the test-user is changed as for this user
+// project creation is disabled due to rate limit.
+// An issue is created to track this: https://github.com/ballerina-platform/ballerina-library/issues/6917
 @test:Config {
     enable: false
 }
