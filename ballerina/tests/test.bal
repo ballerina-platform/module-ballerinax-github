@@ -151,7 +151,11 @@ function testGetMilestones() returns error? {
 // Instead an already created project will be updated and deleted.
 // The reason is Github seems to be adding project async mannger.
 // Sometimes immediate call does not return the project when we try to get the created project.
-@test:Config {}
+// TODO: Re-enable `testCreateUserProject` and `testDeleteProject` if and when the user changes as for this user
+// we can no loger create projects as it is disabled.
+@test:Config {
+    enable: false
+}
 function testCreateUserProject() returns error? {
     User_projects_body body = {
         name: "Test Project Created by Ballerina GitHub Connector",
@@ -162,7 +166,7 @@ function testCreateUserProject() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testGetMilestone, testCreateUserProject]
+    dependsOn: [testGetMilestone]
 }
 function testCreateIssue() returns error? {
     Repo_issues_body body = {
@@ -462,17 +466,13 @@ function testDeletePullRequestReview() returns error? {
     test:assertTrue(response.id == createdPullRequestReviewIdWithPendingState);
 }
 
-@test:Config {
-    dependsOn: [testCreateUserProject]
-}
+@test:Config {}
 function testGetOrgProjectList() returns error? {
     Project[] response = check github->/orgs/["wso2-enterprise"]/projects();
     test:assertTrue(response[0] is Project);
 }
 
-@test:Config {
-    dependsOn: [testCreateUserProject]
-}
+@test:Config {}
 function testGetLatestUserProject() returns error? {
     Project[] response = check github->/users/[testUsername]/projects();
     if response.length() > 0 {
@@ -497,6 +497,7 @@ function testUpdateProject() returns error? {
 }
 
 @test:Config {
+    enable: false,
     dependsOn: [testUpdateProject, testCreateIssue]
 }
 function testDeleteProject() returns error? {
