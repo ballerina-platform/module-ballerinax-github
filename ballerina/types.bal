@@ -3634,7 +3634,7 @@ public type Pullrequestsimple_head record {
     string label;
     string ref;
     # A repository on GitHub.
-    Repository repo;
+    Repository? repo;
     string sha;
     # A GitHub user.
     NullableSimpleUser? user;
