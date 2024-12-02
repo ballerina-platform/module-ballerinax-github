@@ -15,5 +15,5 @@ jobs:
       package-name: github
       package-org: ballerinax
       additional-build-flags: "-x :github-examples:build"
-      additional-release-flags: "-x :github-examples:build"
-      additional-publish-flags: "-x :github-examples:build"
+      additional-release-flags: "-x :github-examples:build -x :github-ballerina:test"
+      additional-publish-flags: "-x :github-examples:build -x :github-ballerina:test"
