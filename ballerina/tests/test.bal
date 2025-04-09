@@ -487,7 +487,9 @@ function testGetLatestUserProject() returns error? {
     }
 }
 
+// Enable after fixing this: https://github.com/ballerina-platform/ballerina-library/issues/7777
 @test:Config {
+    enable: false,
     dependsOn: [testGetLatestUserProject]
 }
 function testUpdateProject() returns error? {
