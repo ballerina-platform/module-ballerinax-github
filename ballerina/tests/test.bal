@@ -467,13 +467,15 @@ function testDeletePullRequestReview() returns error? {
     test:assertTrue(response.id == createdPullRequestReviewIdWithPendingState);
 }
 
-@test:Config {}
+// Enable after fixing this: https://github.com/ballerina-platform/ballerina-library/issues/7777
+@test:Config {enable: false}
 function testGetOrgProjectList() returns error? {
     Project[] response = check github->/orgs/["wso2-enterprise"]/projects();
     test:assertTrue(response[0] is Project);
 }
 
-@test:Config {}
+// Enable after fixing this: https://github.com/ballerina-platform/ballerina-library/issues/7777
+@test:Config {enable: false}
 function testGetLatestUserProject() returns error? {
     Project[] response = check github->/users/[testUsername]/projects();
     if response.length() > 0 {
@@ -505,13 +507,15 @@ function testDeleteProject() returns error? {
     http:Response response = check github->/projects/[fetchedProjectId].delete();
 }
 
-@test:Config {}
+// Enable after fixing this: https://github.com/ballerina-platform/ballerina-library/issues/7777
+@test:Config {enable: false}
 function testGetRepositoryProjectList() returns error? {
     Project[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/projects();
     test:assertTrue(response[0] is Project);
 }
 
-@test:Config {}
+// Enable after fixing this: https://github.com/ballerina-platform/ballerina-library/issues/7777
+@test:Config {enable: false}
 function testGetUserProjectList() returns error? {
     Project[] response = check github->/users/[testUsername]/projects();
     test:assertTrue(response[0] is Project);
