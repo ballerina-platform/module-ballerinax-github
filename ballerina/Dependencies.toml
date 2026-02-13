@@ -5,7 +5,7 @@
 
 [ballerina]
 dependencies-toml-version = "2"
-distribution-version = "2201.13.1"
+distribution-version = "2201.13.0"
 
 [[package]]
 org = "ballerina"
@@ -330,7 +330,7 @@ dependencies = [
 [[package]]
 org = "ballerinax"
 name = "github"
-version = "5.1.0"
+version = "6.0.0"
 dependencies = [
 	{org = "ballerina", name = "constraint"},
 	{org = "ballerina", name = "data.jsondata"},
