@@ -15,16 +15,17 @@
 // under the License.
 
 import ballerina/test;
-import ballerina/http;
 import ballerina/os;
 
 // Configurables
-configurable string testOrganizationName = os:getEnv("ORG_NAME");
-configurable string testUserRepositoryName = os:getEnv("REPO_NAME");
-configurable string testResourcePath = os:getEnv("RESOURCE_PATH");
-configurable string testIssueAssignee = os:getEnv("ASSIGNEE");
-configurable string testUsername = os:getEnv("USERNAME");
-configurable string authToken = os:getEnv("ACCESS_TOKEN");
+configurable boolean isLiveServer = false;
+configurable string serviceUrl = isLiveServer ? "https://api.github.com" : "http://localhost:9090";
+configurable string testOrganizationName = isLiveServer ? os:getEnv("ORG_NAME") : "test-org";
+configurable string testUserRepositoryName = isLiveServer ? os:getEnv("REPO_NAME") : "test-repo";
+configurable string testResourcePath = isLiveServer ? os:getEnv("RESOURCE_PATH") : "/test/path";
+configurable string testIssueAssignee = isLiveServer ? os:getEnv("ASSIGNEE") : "testUser";
+configurable string testUsername = isLiveServer ? os:getEnv("USERNAME") : "testUser";
+configurable string authToken = isLiveServer ? os:getEnv("ACCESS_TOKEN") : "mock-token";
 configurable string testTopicName = "language";
 configurable string testGistName = "5a648dc78fd2d402ec484e2663282e6f";
 
@@ -55,71 +56,72 @@ ConnectionConfig gitHubConfig = {
         token: authToken
     }
 };
-Client github = check new (gitHubConfig);
+Client github = check new (gitHubConfig, serviceUrl);
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetUser() returns error? {
-    UserResponse response = check github->/user();
-    test:assertEquals(response.login, testUsername);
+    UserResponse? response = check github->/user();
+    test:assertEquals(response?.login, testUsername);
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetUserWithGivenUsername() returns error? {
     UserResponse response = check github->/users/[testUsername];
     test:assertEquals(response.login, testUsername);
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetRepository() returns error? {
     FullRepository response = check github->/repos/[testUsername]/[testUserRepositoryName];
     test:assertEquals(response.name, testUserRepositoryName);
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetRepositories() returns error? {
-    Repository[] response = check github->/user/repos('type = ());
-    test:assertTrue(response[0] is Repository);
+    Repository[]? response = check github->/user/repos();
+    test:assertTrue(response is Repository[]);
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetRepositoriesOfGivenUser() returns error? {
     MinimalRepository[] response = check github->/users/[testUsername]/repos();
     test:assertTrue(response[0] is MinimalRepository);
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetRepositoriesOfGivenOrganization() returns error? {
     MinimalRepository[] response = check github->/orgs/[testOrganizationName]/repos();
     test:assertTrue(response[0] is MinimalRepository);
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetCollaborators() returns error? {
     Collaborator[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/collaborators();
     test:assertTrue(response[0] is Collaborator);
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testgetBranches() returns error? {
     ShortBranch[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/branches();
     test:assertTrue(response[0] is ShortBranch);
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testCreateRepository() returns error? {
-    User_repos_body body = {
+    user_repos_body body = {
         name: TEST_REPO_NAME,
         description: "New Test Repo Description"
     };
-    Repository response = check github->/user/repos.post(body);
-    test:assertEquals(response.name, TEST_REPO_NAME);
+    Repository? response = check github->/user/repos.post(body);
+    test:assertEquals(response?.name, TEST_REPO_NAME);
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testCreateRepository]
 }
 function testUpdateRepository() returns error? {
-    Owner_repo_body_1 body = {
+    owner_repo_body_1 body = {
         description: "New Updated Description"
     };
     FullRepository response = check github->/repos/[testUsername]/[TEST_REPO_NAME].patch(body);
@@ -128,19 +130,20 @@ function testUpdateRepository() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testUpdateRepository]
 }
 function testDeleteRepository() returns error? {
-    http:Response response = check github->/repos/[testUsername]/[TEST_REPO_NAME].delete();
+    check github->/repos/[testUsername]/[TEST_REPO_NAME].delete();
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetMilestone() returns error? {
     Milestone milestone = check github->/repos/[testUsername]/[testUserRepositoryName]/milestones/[milestoneNumber]();
     test:assertTrue(milestone.number == milestoneNumber);
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetMilestones() returns error? {
     Milestone[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/milestones();
     test:assertTrue(response[0] is Milestone);
@@ -158,19 +161,20 @@ function testGetMilestones() returns error? {
     enable: false
 }
 function testCreateUserProject() returns error? {
-    User_projects_body body = {
+    user_projects_body body = {
         name: "Test Project Created by Ballerina GitHub Connector",
         body: "This is the body of the test project"
     };
-    Project response = check github->/user/projects.post(body);
-    test:assertEquals(response.name, "Test Project Created by Ballerina GitHub Connector");
+    Project? response = check github->/user/projects.post(body);
+    test:assertEquals(response?.name, "Test Project Created by Ballerina GitHub Connector");
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testGetMilestone]
 }
 function testCreateIssue() returns error? {
-    Repo_issues_body body = {
+    repo_issues_body body = {
         title: "This is a test Issue Title",
         body: "This is test issue body",
         assignees: [testUsername],
@@ -185,10 +189,11 @@ function testCreateIssue() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testCreateIssue]
 }
 function testUpdateIssue() returns error? {
-    Issues_issue_number_body body = {
+    issues_issueNumber_body body = {
         title: "Updated issue title",
         body: "This is updated test issue body",
         assignees: [testUsername],
@@ -200,6 +205,7 @@ function testUpdateIssue() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testUpdateIssue]
 }
 function testGetIssue() returns error? {
@@ -208,6 +214,7 @@ function testGetIssue() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testUpdateIssue]
 }
 function testGetIssues() returns error? {
@@ -216,10 +223,11 @@ function testGetIssues() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testGetIssue]
 }
 function testAddComment() returns error? {
-    Issue_number_comments_body body = {
+    issueNumber_comments_body body = {
         body: "Comment Added by Ballerina GitHub connector!"
     };
     IssueComment response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber]/comments.post(body);
@@ -228,10 +236,11 @@ function testAddComment() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testAddComment]
 }
 function testUpdateComment() returns error? {
-    Comments_comment_id_body_2 body = {
+    comments_commentId_body_2 body = {
         body: "New comment added with addComment() UPDATED"
     };
     IssueComment response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/comments/[createdIssueCommentId].patch(body);
@@ -239,13 +248,14 @@ function testUpdateComment() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testUpdateComment]
 }
 function testDeleteComment() returns error? {
     check github->/repos/[testUsername]/[testUserRepositoryName]/issues/comments/[createdIssueCommentId].delete();
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetRepositoryLabel() returns error? {
     string labelName = "bug";
     Label response = check github->/repos/[testUsername]/[testUserRepositoryName]/labels/[labelName]();
@@ -253,6 +263,7 @@ function testGetRepositoryLabel() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testAddIssueLabels]
 }
 function testGetIssueLabels() returns error? {
@@ -261,10 +272,11 @@ function testGetIssueLabels() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testCreateIssue]
 }
 function testAddIssueLabels() returns error? {
-    Issue_number_labels_body_1 body = {
+    issueNumber_labels_body_1 body = {
         labels: ["bug"]
     };
     Label[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber]/labels.post(body);
@@ -272,6 +284,7 @@ function testAddIssueLabels() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testAddIssueLabels]
 }
 function testRemoveIssueLabels() returns error? {
@@ -280,18 +293,19 @@ function testRemoveIssueLabels() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testRemoveIssueLabels]
 }
 function testCloseIssue() returns error? {
-    Issues_issue_number_body body = {
+    issues_issueNumber_body body = {
         state: "closed",
-        state_reason: "not_planned"
+        stateReason: "not_planned"
     };
     Issue response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber].patch(body);
     test:assertEquals(response.state, "closed");
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetMasterBranchLatestCommitSHA() returns error? {
     BranchWithProtection response = check github->/repos/[testUsername]/[testUserRepositoryName]/branches/[MASTER_BRANCH]();
     string commitHash = response.'commit.sha;
@@ -299,10 +313,11 @@ function testGetMasterBranchLatestCommitSHA() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testGetMasterBranchLatestCommitSHA]
 }
 function testCreateNewBranch() returns error? {
-    Git_refs_body body = {
+    git_refs_body body = {
         ref: NEW_FEATURE_BRANCH_REF,
         sha: LATEST_MASTER_COMMIT_HASH
     };
@@ -311,10 +326,11 @@ function testCreateNewBranch() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testCreateNewBranch]
 }
 function testCommitNewFile() returns error? {
-    Git_blobs_body blobBody = {
+    git_blobs_body blobBody = {
         content: "This is an example file content."
     };
     ShortBlob blobResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/blobs.post(blobBody);
@@ -323,8 +339,8 @@ function testCommitNewFile() returns error? {
     GitCommit commitResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/commits/[LATEST_MASTER_COMMIT_HASH]();
     string treeSHA = commitResponse.tree.sha;
 
-    Git_trees_body treeBody = {
-        base_tree: treeSHA,
+    git_trees_body treeBody = {
+        baseTree: treeSHA,
         tree: [
             {
                 path: "newFile.txt",
@@ -337,7 +353,7 @@ function testCommitNewFile() returns error? {
     GitTree treeResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/trees.post(treeBody);
     string newTreeSHA = treeResponse.sha;
 
-    Git_commits_body commitBody = {
+    git_commits_body commitBody = {
         parents: [LATEST_MASTER_COMMIT_HASH],
         tree: newTreeSHA,
         message: "Add a new text file"
@@ -345,7 +361,7 @@ function testCommitNewFile() returns error? {
     GitCommit newCommitResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/commits.post(commitBody);
     string newCommitSHA = newCommitResponse.sha;
 
-    Refs_ref_body updateRefBody = {
+    refs_ref_body updateRefBody = {
         sha: newCommitSHA
     };
     GitRef response = check github->/repos/[testUsername]/[testUserRepositoryName]/git/refs/[NEW_FEATURE_BRANCH_HEAD].patch(updateRefBody);
@@ -353,10 +369,11 @@ function testCommitNewFile() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testCommitNewFile]
 }
 function testCreatePullRequest() returns error? {
-    Repo_pulls_body body = {
+    repo_pulls_body body = {
         title: "Test PR created from Ballerina GitHub Connector",
         base: MASTER_BRANCH,
         head: NEW_FEATURE_BRANCH,
@@ -369,22 +386,25 @@ function testCreatePullRequest() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testCreatePullRequest]
 }
 function testGetAPullRequest() returns error? {
-    PullRequest response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls/[createdPullRequestNumber]();
-    test:assertTrue(response.number == createdPullRequestNumber, msg = "Failed testGetaPullRequest()");
+    PullRequest? response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls/[createdPullRequestNumber]();
+    test:assertTrue(response?.number == createdPullRequestNumber, msg = "Failed testGetaPullRequest()");
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testCreatePullRequest]
 }
 function testGetPullRequestList() returns error? {
-    PullRequestSimple[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls();
-    test:assertTrue(response[0] is PullRequestSimple);
+    PullRequestSimple[]? response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls();
+    test:assertTrue(response is PullRequestSimple[]);
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testGetAPullRequest, testGetPullRequestList]
 }
 function testLastCommit() returns error? {
@@ -393,10 +413,11 @@ function testLastCommit() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testLastCommit]
 }
 function testUpdatePullRequest() returns error? {
-    Pulls_pull_number_body body = {
+    pulls_pullNumber_body body = {
         title: "Test PR created from Ballerina GitHub Connector Updated"
     };
     PullRequest response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls/[createdPullRequestNumber].patch(body);
@@ -404,10 +425,11 @@ function testUpdatePullRequest() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testUpdatePullRequest]
 }
 function testUpdatePullRequestToClose() returns error? {
-    Pulls_pull_number_body body = {
+    pulls_pullNumber_body body = {
         state: "closed"
     };
 
@@ -416,17 +438,19 @@ function testUpdatePullRequestToClose() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testUpdatePullRequestToClose]
 }
 function testDeleteBranch() returns error? {
-    http:Response response = check github->/repos/[testUsername]/[testUserRepositoryName]/git/refs/[NEW_FEATURE_BRANCH_HEAD].delete();
+    check github->/repos/[testUsername]/[testUserRepositoryName]/git/refs/[NEW_FEATURE_BRANCH_HEAD].delete();
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testUpdatePullRequest]
 }
 function testCreatePullRequestReview() returns error? {
-    Pull_number_reviews_body body = {
+    pullNumber_reviews_body body = {
         body: "This is a test review comment for a pull  from Ballerina GitHub connector ",
         event: "COMMENT"
     };
@@ -436,10 +460,11 @@ function testCreatePullRequestReview() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testUpdatePullRequest]
 }
 function testCreatePullRequestReviewWithPendingState() returns error? {
-    Pull_number_reviews_body body = {
+    pullNumber_reviews_body body = {
         body: "This is a test review comment for a pull  from Ballerina GitHub connector "
     };
 
@@ -448,10 +473,11 @@ function testCreatePullRequestReviewWithPendingState() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testCreatePullRequestReview]
 }
 function testUpdatePullRequestReview() returns error? {
-    Reviews_review_id_body body = {
+    reviews_reviewId_body body = {
         body: "This is a test review comment for a pull  from Ballerina GitHub connector Updated"
     };
 
@@ -460,6 +486,7 @@ function testUpdatePullRequestReview() returns error? {
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testCreatePullRequestReviewWithPendingState]
 }
 function testDeletePullRequestReview() returns error? {
@@ -493,12 +520,12 @@ function testGetLatestUserProject() returns error? {
     dependsOn: [testGetLatestUserProject]
 }
 function testUpdateProject() returns error? {
-    Projects_project_id_body_1 body = {
+    projects_projectId_body_1 body = {
         name: "Test Project Created by Ballerina GitHub Connector UPDATED"
     };
 
-    Project response = check github->/projects/[fetchedProjectId].patch(body);
-    test:assertTrue(response.number == fetchedProjectNumber);
+    Project? response = check github->/projects/[fetchedProjectId].patch(body);
+    test:assertTrue(response?.number == fetchedProjectNumber);
 }
 
 @test:Config {
@@ -506,7 +533,7 @@ function testUpdateProject() returns error? {
     dependsOn: [testUpdateProject, testCreateIssue]
 }
 function testDeleteProject() returns error? {
-    http:Response response = check github->/projects/[fetchedProjectId].delete();
+    check github->/projects/[fetchedProjectId].delete();
 }
 
 // Enable after fixing this: https://github.com/ballerina-platform/ballerina-library/issues/7777
@@ -523,70 +550,72 @@ function testGetUserProjectList() returns error? {
     test:assertTrue(response[0] is Project);
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetOrganization() returns error? {
     OrganizationFull response = check github->/orgs/[testOrganizationName]();
     test:assertTrue(response is OrganizationFull);
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetUserOrganizationList() returns error? {
     OrganizationSimple[] response = check github->/users/["kasthuriraajan"]/orgs();
     test:assertTrue(response[0] is OrganizationSimple);
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetOrganizationMembersList() returns error? {
     SimpleUser[] response = check github->/orgs/["ballerina-platform"]/members();
     test:assertTrue(response[0] is SimpleUser);
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetLanguagesFromRepository() returns error? {
     Language response = check github->/repos/[testUsername]/[testUserRepositoryName]/languages();
     test:assertTrue(response is Language);
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetRepositoryContent() returns error? {
-    ContentTree[]? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src"]();
-    if response is ContentTree[] {
+    inline_response_200? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src"]();
+    if response is ContentDirectory {
         test:assertTrue(response.length() > 0);
     } else {
         test:assertFail();
     }
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetRepositoryContentOfFile() returns error? {
-    ContentTree[]? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src/db/main.bal"]();
-    if response is ContentTree[] {
-        test:assertTrue(response.length() == 1);
+    inline_response_200? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src/db/main.bal"]();
+    if response is ContentFile {
+        test:assertTrue(response.name.length() > 0);
     } else {
         test:assertFail();
     }
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testStarRepository() returns error? {
     check github->/user/starred/[testUsername]/[testUserRepositoryName].put();
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testStarRepository]
 }
 function testUnstarRepository() returns error? {
-    http:Response response = check github->/user/starred/[testUsername]/[testUserRepositoryName].delete();
+    check github->/user/starred/[testUsername]/[testUserRepositoryName].delete();
 }
 
-@test:Config {}
+@test:Config {groups: ["mock_tests", "live_tests"]}
 function testStarGist() returns error? {
-    http:Response response = check github->/gists/[testGistName]/star.put();
+    check github->/gists/[testGistName]/star.put();
 }
 
 @test:Config {
+    groups: ["mock_tests", "live_tests"],
     dependsOn: [testStarGist]
 }
 function testUnstarGist() returns error? {
-    http:Response response = check github->/gists/[testGistName]/star.delete();
+    check github->/gists/[testGistName]/star.delete();
 }
