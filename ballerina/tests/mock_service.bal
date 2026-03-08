@@ -1,4 +1,4 @@
-// Copyright (c) 2024, WSO2 LLC. (http://www.wso2.org).
+// Copyright (c) 2026, WSO2 LLC. (http://www.wso2.org).
 //
 // WSO2 LLC. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
@@ -16,9 +16,11 @@
 
 import ballerina/http;
 
+configurable int MOCK_SERVICE_PORT = 9090;
+
 int nextReviewId = 1000;
 
-service on new http:Listener(9090) {
+service on new http:Listener(MOCK_SERVICE_PORT) {
 
     // ─── Users ───
 
@@ -338,8 +340,12 @@ service on new http:Listener(9090) {
     resource function post repos/[string owner]/[string repo]/pulls/[int pullNumber]/reviews(http:Request req) returns json|error {
         json payload = check req.getJsonPayload();
         string body = check payload.body;
-        nextReviewId += 1;
-        return reviewJson(nextReviewId, body);
+        int reviewId;
+        lock {
+            nextReviewId += 1;
+            reviewId = nextReviewId;
+        }
+        return reviewJson(reviewId, body);
     }
 
     resource function put repos/[string owner]/[string repo]/pulls/[int pullNumber]/reviews/[int reviewId](http:Request req) returns json|error {

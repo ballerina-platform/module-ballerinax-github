@@ -19,7 +19,7 @@ import ballerina/os;
 
 // Configurables
 configurable boolean isLiveServer = false;
-configurable string serviceUrl = isLiveServer ? "https://api.github.com" : "http://localhost:9090";
+configurable string serviceUrl = isLiveServer ? "https://api.github.com" : string `http://localhost:${MOCK_SERVICE_PORT}`;
 configurable string testOrganizationName = isLiveServer ? os:getEnv("ORG_NAME") : "test-org";
 configurable string testUserRepositoryName = isLiveServer ? os:getEnv("REPO_NAME") : "test-repo";
 configurable string testResourcePath = isLiveServer ? os:getEnv("RESOURCE_PATH") : "/test/path";
@@ -61,7 +61,11 @@ Client github = check new (gitHubConfig, serviceUrl);
 @test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetUser() returns error? {
     UserResponse? response = check github->/user();
-    test:assertEquals(response?.login, testUsername);
+    if response is UserResponse {
+        test:assertEquals(response.login, testUsername);
+    } else {
+        test:assertFail("Expected non-empty response from /user endpoint, but received ()");
+    }
 }
 
 @test:Config {groups: ["mock_tests", "live_tests"]}

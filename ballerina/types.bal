@@ -18,6 +18,7 @@ import ballerina/constraint;
 import ballerina/data.jsondata;
 import ballerina/http;
 
+# The GPG signature verification data for the commit.
 public type GitCommit_verification record {
     boolean verified;
     string reason;
@@ -30,7 +31,10 @@ public type SecurityAndAnalysis record {
     # Enable or disable Dependabot security updates for the repository
     SecurityAndAnalysis_dependabot_security_updates dependabot_security_updates?;
     SecurityAndAnalysis_secret_scanning_push_protection secret_scanning?;
-    SecurityAndAnalysis_secret_scanning_push_protection advanced_security?;
+    # Enable or disable GitHub Advanced Security for the repository.
+    # 
+    # For standalone Code Scanning or Secret Protection products, this parameter cannot be used.
+    SecurityAndAnalysis_advanced_security advanced_security?;
 };
 
 # Authentication Token
@@ -662,24 +666,33 @@ public type ActionsListRepoOrganizationSecretsQueries record {
 public type FullRepository record {
     # A repository on GitHub
     Repository parent?;
+    # Whether forking is allowed on the repository.
     @jsondata:Name {value: "allow_forking"}
     boolean allowForking?;
     # Whether anonymous git access is allowed
     @jsondata:Name {value: "anonymous_access_enabled"}
     boolean anonymousAccessEnabled = true;
+    # API URL for the authenticated user's subscription to the repository.
     @jsondata:Name {value: "subscription_url"}
     string subscriptionUrl;
+    # API URL template for listing repository branches.
     @jsondata:Name {value: "branches_url"}
     string branchesUrl;
+    # API URL template for accessing issue comments.
     @jsondata:Name {value: "issue_comment_url"}
     string issueCommentUrl;
+    # Whether rebase merging is allowed on pull requests.
     @jsondata:Name {value: "allow_rebase_merge"}
     boolean allowRebaseMerge?;
+    # API URL for listing repository watchers.
     @jsondata:Name {value: "subscribers_url"}
     string subscribersUrl;
-    RepoSearchResultItem_permissions permissions?;
+    # The permissions the authenticated user has on the repository.
+    FullRepository_permissions permissions?;
+    # A temporary token for cloning the repository.
     @jsondata:Name {value: "temp_clone_token"}
     string? tempCloneToken?;
+    # API URL template for listing repository releases.
     @jsondata:Name {value: "releases_url"}
     string releasesUrl;
     # The default value for a squash merge commit message:
@@ -689,68 +702,101 @@ public type FullRepository record {
     # - `BLANK` - default to a blank commit message
     @jsondata:Name {value: "squash_merge_commit_message"}
     "PR_BODY"|"COMMIT_MESSAGES"|"BLANK" squashMergeCommitMessage?;
+    # The number of users watching the repository.
     @jsondata:Name {value: "subscribers_count"}
     int subscribersCount;
+    # The unique identifier of the repository.
     int id;
+    # Whether the repository has discussions enabled.
     @jsondata:Name {value: "has_discussions"}
     boolean hasDiscussions;
+    # The number of forks of the repository.
     int forks;
+    # API URL template for accessing Git references.
     @jsondata:Name {value: "git_refs_url"}
     string gitRefsUrl;
+    # The SSH URL for cloning the repository.
     @jsondata:Name {value: "ssh_url"}
     string sshUrl;
+    # The full name of the repository in owner/name format.
     @jsondata:Name {value: "full_name"}
     string fullName;
     # The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0
     int size;
+    # The template repository from which this repository was created.
     @jsondata:Name {value: "template_repository"}
     NullableRepository? templateRepository?;
+    # API URL for listing programming languages used.
     @jsondata:Name {value: "languages_url"}
     string languagesUrl;
+    # URL of the repository page on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # API URL template for listing repository collaborators.
     @jsondata:Name {value: "collaborators_url"}
     string collaboratorsUrl;
+    # The HTTPS URL for cloning the repository.
     @jsondata:Name {value: "clone_url"}
     string cloneUrl;
+    # The default branch of the repository.
     @jsondata:Name {value: "default_branch"}
     string defaultBranch;
+    # API URL for listing repository webhooks.
     @jsondata:Name {value: "hooks_url"}
     string hooksUrl;
+    # API URL template for accessing Git trees.
     @jsondata:Name {value: "trees_url"}
     string treesUrl;
+    # Whether the repository has downloads enabled.
     @jsondata:Name {value: "has_downloads"}
     boolean hasDownloads?;
+    # The date the repository was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
+    # The number of watchers on the repository.
     int watchers;
+    # API URL for listing repository deployments.
     @jsondata:Name {value: "deployments_url"}
     string deploymentsUrl;
+    # API URL template for listing repository deploy keys.
     @jsondata:Name {value: "keys_url"}
     string keysUrl;
+    # Whether the repository is archived.
     boolean archived;
+    # Whether the repository has the wiki enabled.
     @jsondata:Name {value: "has_wiki"}
     boolean hasWiki;
+    # The date the repository was last updated.
     @jsondata:Name {value: "updated_at"}
     string updatedAt;
     # Returns whether or not this repository disabled
     boolean disabled;
+    # API URL template for comparing two commits.
     @jsondata:Name {value: "compare_url"}
     string compareUrl;
+    # API URL template for accessing Git commits.
     @jsondata:Name {value: "git_commits_url"}
     string gitCommitsUrl;
+    # The list of topics associated with the repository.
     string[] topics?;
+    # Whether the pull request branch can be updated from the base branch.
     @jsondata:Name {value: "allow_update_branch"}
     boolean allowUpdateBranch?;
+    # API URL template for accessing Git tags.
     @jsondata:Name {value: "git_tags_url"}
     string gitTagsUrl;
+    # API URL for performing merge operations.
     @jsondata:Name {value: "merges_url"}
     string mergesUrl;
+    # API URL for the repository.
     string url;
+    # API URL template for accessing repository contents.
     @jsondata:Name {value: "contents_url"}
     string contentsUrl;
+    # API URL template for listing repository issues.
     @jsondata:Name {value: "issues_url"}
     string issuesUrl;
+    # Whether the PR title is used as the default squash commit message.
     @jsondata:Name {value: "use_squash_pr_title_as_default"}
     boolean useSquashPrTitleAsDefault?;
     # A GitHub user
@@ -762,6 +808,7 @@ public type FullRepository record {
     # - `BLANK` - default to a blank commit message
     @jsondata:Name {value: "merge_commit_message"}
     "PR_BODY"|"PR_TITLE"|"BLANK" mergeCommitMessage?;
+    # API URL template for listing repository assignees.
     @jsondata:Name {value: "assignees_url"}
     string assigneesUrl;
     # The default value for a squash merge commit title:
@@ -770,54 +817,78 @@ public type FullRepository record {
     # - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit)
     @jsondata:Name {value: "squash_merge_commit_title"}
     "PR_TITLE"|"COMMIT_OR_PR_TITLE" squashMergeCommitTitle?;
+    # The number of open issues in the repository.
     @jsondata:Name {value: "open_issues"}
     int openIssues;
+    # The GraphQL node identifier of the repository.
     @jsondata:Name {value: "node_id"}
     string nodeId;
+    # The number of stars on the repository.
     @jsondata:Name {value: "stargazers_count"}
     int stargazersCount;
+    # Whether the repository is a template repository.
     @jsondata:Name {value: "is_template"}
     boolean isTemplate?;
+    # The date of the most recent push to the repository.
     @jsondata:Name {value: "pushed_at"}
     string pushedAt;
+    # The primary programming language of the repository.
     string? language;
     # A repository on GitHub
     Repository 'source?;
+    # API URL template for listing repository labels.
     @jsondata:Name {value: "labels_url"}
     string labelsUrl;
+    # The Subversion URL for the repository.
     @jsondata:Name {value: "svn_url"}
     string svnUrl;
+    # The name of the master branch.
     @jsondata:Name {value: "master_branch"}
     string masterBranch?;
+    # API URL template for downloading repository archives.
     @jsondata:Name {value: "archive_url"}
     string archiveUrl;
+    # Whether merge commits are allowed on pull requests.
     @jsondata:Name {value: "allow_merge_commit"}
     boolean allowMergeCommit?;
+    # API URL for listing repository forks.
     @jsondata:Name {value: "forks_url"}
     string forksUrl;
     # The repository visibility: public, private, or internal
     string visibility?;
+    # API URL template for listing commit statuses.
     @jsondata:Name {value: "statuses_url"}
     string statusesUrl;
+    # The number of repositories in the fork network.
     @jsondata:Name {value: "network_count"}
     int networkCount;
     # License Simple
     NullableLicenseSimple? license;
+    # Whether auto-merge is allowed on pull requests.
     @jsondata:Name {value: "allow_auto_merge"}
     boolean allowAutoMerge?;
+    # The name of the repository.
     string name;
+    # API URL template for listing pull requests.
     @jsondata:Name {value: "pulls_url"}
     string pullsUrl;
+    # API URL for listing repository tags.
     @jsondata:Name {value: "tags_url"}
     string tagsUrl;
+    # Whether the repository is private.
     boolean 'private;
+    # API URL for listing repository contributors.
     @jsondata:Name {value: "contributors_url"}
     string contributorsUrl;
+    # API URL template for listing repository notifications.
     @jsondata:Name {value: "notifications_url"}
     string notificationsUrl;
+    # The number of open issues in the repository.
     @jsondata:Name {value: "open_issues_count"}
     int openIssuesCount;
+    # A short description of the repository.
     string? description;
+    # Whether the repository has projects enabled.
     @jsondata:Name {value: "has_projects"}
     boolean hasProjects;
     # The default value for a merge commit title.
@@ -826,48 +897,70 @@ public type FullRepository record {
     #   - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name)
     @jsondata:Name {value: "merge_commit_title"}
     "PR_TITLE"|"MERGE_MESSAGE" mergeCommitTitle?;
+    # API URL template for listing commit comments.
     @jsondata:Name {value: "comments_url"}
     string commentsUrl;
+    # API URL for listing users who starred the repository.
     @jsondata:Name {value: "stargazers_url"}
     string stargazersUrl;
+    # Whether to delete branches on merge.
     @jsondata:Name {value: "delete_branch_on_merge"}
     boolean deleteBranchOnMerge?;
+    # The Git protocol URL for the repository.
     @jsondata:Name {value: "git_url"}
     string gitUrl;
+    # Whether the repository has GitHub Pages enabled.
     @jsondata:Name {value: "has_pages"}
     boolean hasPages;
     # A GitHub user
     SimpleUser owner;
+    # Whether squash merging is allowed on pull requests.
     @jsondata:Name {value: "allow_squash_merge"}
     boolean allowSquashMerge?;
+    # API URL template for listing repository commits.
     @jsondata:Name {value: "commits_url"}
     string commitsUrl;
+    # API URL template for accessing repository blobs.
     @jsondata:Name {value: "blobs_url"}
     string blobsUrl;
+    # API URL for listing repository downloads.
     @jsondata:Name {value: "downloads_url"}
     string downloadsUrl;
+    # Whether the repository has issues enabled.
     @jsondata:Name {value: "has_issues"}
     boolean hasIssues;
+    # Whether commit sign-off is required for web-based commits.
     @jsondata:Name {value: "web_commit_signoff_required"}
     boolean webCommitSignoffRequired?;
+    # The code of conduct for the repository.
     @jsondata:Name {value: "code_of_conduct"}
     CodeOfConductSimple codeOfConduct?;
+    # The URL of the mirror for the repository.
     @jsondata:Name {value: "mirror_url"}
     string? mirrorUrl;
+    # API URL template for listing repository milestones.
     @jsondata:Name {value: "milestones_url"}
     string milestonesUrl;
+    # API URL for listing teams with access to the repository.
     @jsondata:Name {value: "teams_url"}
     string teamsUrl;
+    # The security and analysis settings for the repository.
     @jsondata:Name {value: "security_and_analysis"}
     SecurityAndAnalysis? securityAndAnalysis?;
+    # Whether the repository is a fork.
     boolean 'fork;
+    # API URL for listing repository events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
+    # API URL template for listing issue events.
     @jsondata:Name {value: "issue_events_url"}
     string issueEventsUrl;
+    # The number of watchers on the repository.
     @jsondata:Name {value: "watchers_count"}
     int watchersCount;
+    # The URL of the repository's homepage.
     string? homepage;
+    # The number of forks of the repository.
     @jsondata:Name {value: "forks_count"}
     int forksCount;
 };
@@ -1074,6 +1167,114 @@ public type repo_import_body record {
     string tfvcProject?;
     # The originating VCS type. Without this parameter, the import job will take additional time to detect the VCS type before beginning the import. This detection step will be reflected in the response.
     "subversion"|"git"|"mercurial"|"tfvc" vcs?;
+};
+
+public type NullableRepository_template_repository record {
+    int id?;
+    string node_id?;
+    string name?;
+    string full_name?;
+    Repository_template_repository_owner owner?;
+    boolean 'private?;
+    string html_url?;
+    string description?;
+    boolean 'fork?;
+    string url?;
+    string archive_url?;
+    string assignees_url?;
+    string blobs_url?;
+    string branches_url?;
+    string collaborators_url?;
+    string comments_url?;
+    string commits_url?;
+    string compare_url?;
+    string contents_url?;
+    string contributors_url?;
+    string deployments_url?;
+    string downloads_url?;
+    string events_url?;
+    string forks_url?;
+    string git_commits_url?;
+    string git_refs_url?;
+    string git_tags_url?;
+    string git_url?;
+    string issue_comment_url?;
+    string issue_events_url?;
+    string issues_url?;
+    string keys_url?;
+    string labels_url?;
+    string languages_url?;
+    string merges_url?;
+    string milestones_url?;
+    string notifications_url?;
+    string pulls_url?;
+    string releases_url?;
+    string ssh_url?;
+    string stargazers_url?;
+    string statuses_url?;
+    string subscribers_url?;
+    string subscription_url?;
+    string tags_url?;
+    string teams_url?;
+    string trees_url?;
+    string clone_url?;
+    string mirror_url?;
+    string hooks_url?;
+    string svn_url?;
+    string homepage?;
+    string language?;
+    int forks_count?;
+    int stargazers_count?;
+    int watchers_count?;
+    int size?;
+    string default_branch?;
+    int open_issues_count?;
+    boolean is_template?;
+    string[] topics?;
+    boolean has_issues?;
+    boolean has_projects?;
+    boolean has_wiki?;
+    boolean has_pages?;
+    boolean has_downloads?;
+    boolean archived?;
+    boolean disabled?;
+    string visibility?;
+    string pushed_at?;
+    string created_at?;
+    string updated_at?;
+    Repository_template_repository_permissions permissions?;
+    boolean allow_rebase_merge?;
+    string temp_clone_token?;
+    boolean allow_squash_merge?;
+    boolean allow_auto_merge?;
+    boolean delete_branch_on_merge?;
+    boolean allow_update_branch?;
+    boolean use_squash_pr_title_as_default?;
+    # The default value for a squash merge commit title:
+    # 
+    # - `PR_TITLE` - default to the pull request's title.
+    # - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit).
+    "PR_TITLE"|"COMMIT_OR_PR_TITLE" squash_merge_commit_title?;
+    # The default value for a squash merge commit message:
+    # 
+    # - `PR_BODY` - default to the pull request's body.
+    # - `COMMIT_MESSAGES` - default to the branch's commit messages.
+    # - `BLANK` - default to a blank commit message.
+    "PR_BODY"|"COMMIT_MESSAGES"|"BLANK" squash_merge_commit_message?;
+    # The default value for a merge commit title.
+    # 
+    # - `PR_TITLE` - default to the pull request's title.
+    # - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name).
+    "PR_TITLE"|"MERGE_MESSAGE" merge_commit_title?;
+    # The default value for a merge commit message.
+    # 
+    # - `PR_TITLE` - default to the pull request's title.
+    # - `PR_BODY` - default to the pull request's body.
+    # - `BLANK` - default to a blank commit message.
+    "PR_BODY"|"PR_TITLE"|"BLANK" merge_commit_message?;
+    boolean allow_merge_commit?;
+    int subscribers_count?;
+    int network_count?;
 };
 
 public type ProtectedBranch_required_conversation_resolution record {|
@@ -1520,6 +1721,15 @@ public type ActionsListEnvironmentVariablesQueries record {
     int page = 1;
 };
 
+# The permissions the authenticated user has on the repository.
+public type MinimalRepository_permissions record {
+    boolean admin?;
+    boolean maintain?;
+    boolean push?;
+    boolean triage?;
+    boolean pull?;
+};
+
 # The GitHub Pages deployment status
 public type PageDeployment record {
     # The URI to the deployed GitHub Pages
@@ -1619,6 +1829,7 @@ public type clientId_token_body record {
     string accessToken;
 };
 
+# The tree object referenced by the commit.
 public type GitCommit_tree record {
     # SHA for the commit
     string sha;
@@ -2294,6 +2505,7 @@ public type AppsListInstallationsForAuthenticatedUserQueries record {
     int page = 1;
 };
 
+# Hypermedia links for the pull request.
 public type PullRequest__links record {
     # Hypermedia Link
     Link comments;
@@ -2320,58 +2532,78 @@ public type TimelineReviewedEvent__links record {
 
 # GitHub account for managing multiple users, teams, and repositories
 public type Organization record {
+    # API URL for listing the organization's repositories.
     @jsondata:Name {value: "repos_url"}
     string reposUrl;
     # Specifies if repository projects are enabled for repositories that belong to this org
     @jsondata:Name {value: "has_repository_projects"}
     boolean hasRepositoryProjects;
+    # API URL template for listing the organization's members.
     @jsondata:Name {value: "members_url"}
     string membersUrl;
+    # A short description of the organization.
     string? description;
+    # The date the organization was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
     # Unique login name of the organization
     string login;
     # Display blog url for the organization
     string blog?;
+    # The type of the account.
     string 'type;
+    # API URL template for listing public members.
     @jsondata:Name {value: "public_members_url"}
     string publicMembersUrl;
+    # The date the organization was last updated.
     @jsondata:Name {value: "updated_at"}
     string updatedAt;
     # Display company name for the organization
     string company?;
+    # The unique identifier of the organization.
     int id;
+    # The number of public repositories in the organization.
     @jsondata:Name {value: "public_repos"}
     int publicRepos;
+    # The billing plan for the organization.
     Organization_plan plan?;
     # Display email for the organization
     string email?;
+    # Whether the organization's domain is verified.
     @jsondata:Name {value: "is_verified"}
     boolean isVerified?;
+    # The number of public gists in the organization.
     @jsondata:Name {value: "public_gists"}
     int publicGists;
     # URL for the organization
     string url;
+    # API URL for listing the organization's issues.
     @jsondata:Name {value: "issues_url"}
     string issuesUrl;
+    # The number of followers of the organization.
     int followers;
+    # URL of the organization's avatar image.
     @jsondata:Name {value: "avatar_url"}
     string avatarUrl;
+    # API URL for listing the organization's events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
     # Specifies if organization projects are enabled for this org
     @jsondata:Name {value: "has_organization_projects"}
     boolean hasOrganizationProjects;
+    # URL of the organization's GitHub profile page.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # The number of accounts the organization is following.
     int following;
     # Display name for the organization
     string name?;
     # Display location for the organization
     string location?;
+    # API URL for listing the organization's webhooks.
     @jsondata:Name {value: "hooks_url"}
     string hooksUrl;
+    # The GraphQL node identifier of the organization.
     @jsondata:Name {value: "node_id"}
     string nodeId;
 };
@@ -2835,6 +3067,7 @@ public type personalaccesstokens_patId_body record {
     "revoke" action;
 };
 
+# The head branch of the pull request.
 public type PullRequestSimple_head record {
     string label;
     string ref;
@@ -2996,41 +3229,63 @@ public type RepositoryRuleParamsStatusCheckConfiguration record {
 
 # Collaborator
 public type NullableCollaborator record {
+    # API URL template for the user's gists.
     @jsondata:Name {value: "gists_url"}
     string gistsUrl;
+    # API URL to list the user's repositories.
     @jsondata:Name {value: "repos_url"}
     string reposUrl;
+    # API URL template to check who the user is following.
     @jsondata:Name {value: "following_url"}
     string followingUrl;
+    # API URL template for repositories the user has starred.
     @jsondata:Name {value: "starred_url"}
     string starredUrl;
+    # The username of the user.
     string login;
+    # API URL to list the user's followers.
     @jsondata:Name {value: "followers_url"}
     string followersUrl;
+    # The type of the account.
     string 'type;
+    # API URL for the user.
     string url;
+    # The role name assigned to the collaborator.
     @jsondata:Name {value: "role_name"}
     string roleName;
+    # API URL to list repositories the user is watching.
     @jsondata:Name {value: "subscriptions_url"}
     string subscriptionsUrl;
+    # API URL for events received by the user.
     @jsondata:Name {value: "received_events_url"}
     string receivedEventsUrl;
+    # URL of the user's avatar image.
     @jsondata:Name {value: "avatar_url"}
     string avatarUrl;
+    # API URL template for the user's events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
+    # The permissions the collaborator has on the repository.
     NullableCollaborator_permissions permissions?;
+    # URL of the user's GitHub profile page.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # The display name of the user.
     string? name?;
+    # Whether the user is a GitHub site administrator.
     @jsondata:Name {value: "site_admin"}
     boolean siteAdmin;
+    # The unique identifier of the user.
     int id;
+    # The Gravatar ID of the user.
     @jsondata:Name {value: "gravatar_id"}
     string? gravatarId;
+    # The publicly visible email address of the user.
     string? email?;
+    # The GraphQL node identifier of the user.
     @jsondata:Name {value: "node_id"}
     string nodeId;
+    # API URL to list the user's organizations.
     @jsondata:Name {value: "organizations_url"}
     string organizationsUrl;
 };
@@ -3096,67 +3351,106 @@ public type DevcontainersResponse record {
 
 # Public User
 public type PublicUser record {|
+    # API URL template for the user's gists.
     @jsondata:Name {value: "gists_url"}
     string gistsUrl;
+    # API URL to list the user's repositories.
     @jsondata:Name {value: "repos_url"}
     string reposUrl;
+    # API URL template to check who the user is following.
     @jsondata:Name {value: "following_url"}
     string followingUrl;
+    # The Twitter username of the user.
     @jsondata:Name {value: "twitter_username"}
     string? twitterUsername?;
+    # The biography of the user.
     string? bio;
+    # The date the user account was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
+    # The username of the user.
     string login;
+    # The type of the account.
     string 'type;
+    # The URL of the user's blog or website.
     string? blog;
+    # The number of private gists the user owns.
     @jsondata:Name {value: "private_gists"}
     int privateGists?;
+    # The total number of private repositories the user owns.
     @jsondata:Name {value: "total_private_repos"}
     int totalPrivateRepos?;
+    # API URL to list repositories the user is watching.
     @jsondata:Name {value: "subscriptions_url"}
     string subscriptionsUrl;
+    # The date the user account was last updated.
     @jsondata:Name {value: "updated_at"}
     string updatedAt;
+    # Whether the user is a GitHub site administrator.
     @jsondata:Name {value: "site_admin"}
     boolean siteAdmin;
+    # The total disk usage across all repositories in kilobytes.
     @jsondata:Name {value: "disk_usage"}
     int diskUsage?;
+    # The number of collaborators across the user's private repositories.
     int collaborators?;
+    # The company the user belongs to.
     string? company;
+    # The number of private repositories owned by the user.
     @jsondata:Name {value: "owned_private_repos"}
     int ownedPrivateRepos?;
+    # The unique identifier of the user.
     int id;
+    # The number of public repositories the user owns.
     @jsondata:Name {value: "public_repos"}
     int publicRepos;
+    # The Gravatar ID of the user.
     @jsondata:Name {value: "gravatar_id"}
     string? gravatarId;
+    # The billing plan for the user.
     PublicUser_plan plan?;
+    # The publicly visible email address of the user.
     string? email;
+    # API URL to list the user's organizations.
     @jsondata:Name {value: "organizations_url"}
     string organizationsUrl;
+    # Whether the user is available for hire.
     boolean? hireable;
+    # API URL template for repositories the user has starred.
     @jsondata:Name {value: "starred_url"}
     string starredUrl;
+    # API URL to list the user's followers.
     @jsondata:Name {value: "followers_url"}
     string followersUrl;
+    # The number of public gists the user owns.
     @jsondata:Name {value: "public_gists"}
     int publicGists;
+    # API URL for the user.
     string url;
+    # API URL for events received by the user.
     @jsondata:Name {value: "received_events_url"}
     string receivedEventsUrl;
+    # The number of followers the user has.
     int followers;
+    # URL of the user's avatar image.
     @jsondata:Name {value: "avatar_url"}
     string avatarUrl;
+    # API URL template for the user's events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
+    # URL of the user's GitHub profile page.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # The number of users the user is following.
     int following;
+    # The display name of the user.
     string? name;
+    # The geographic location of the user.
     string? location;
+    # The GraphQL node identifier of the user.
     @jsondata:Name {value: "node_id"}
     string nodeId;
+    # The date the user account was suspended.
     @jsondata:Name {value: "suspended_at"}
     string? suspendedAt?;
 |};
@@ -3279,162 +3573,247 @@ public type PullsListCommentsForReviewQueries record {
 
 # Minimal Repository
 public type NullableMinimalRepository record {
+    # Whether forking is allowed on the repository.
     @jsondata:Name {value: "allow_forking"}
     boolean allowForking?;
+    # The number of stars on the repository.
     @jsondata:Name {value: "stargazers_count"}
     int stargazersCount?;
+    # Whether the repository is a template repository.
     @jsondata:Name {value: "is_template"}
     boolean isTemplate?;
+    # The date of the most recent push to the repository.
     @jsondata:Name {value: "pushed_at"}
     string? pushedAt?;
+    # API URL for the authenticated user's subscription to the repository.
     @jsondata:Name {value: "subscription_url"}
     string subscriptionUrl;
+    # The primary programming language of the repository.
     string? language?;
+    # API URL template for listing repository branches.
     @jsondata:Name {value: "branches_url"}
     string branchesUrl;
+    # API URL template for accessing issue comments.
     @jsondata:Name {value: "issue_comment_url"}
     string issueCommentUrl;
+    # API URL template for listing repository labels.
     @jsondata:Name {value: "labels_url"}
     string labelsUrl;
+    # API URL for listing repository watchers.
     @jsondata:Name {value: "subscribers_url"}
     string subscribersUrl;
-    Repository_template_repository_permissions permissions?;
+    # The permissions the authenticated user has on the repository.
+    MinimalRepository_permissions permissions?;
+    # A temporary token for cloning the repository.
     @jsondata:Name {value: "temp_clone_token"}
     string tempCloneToken?;
+    # API URL template for listing repository releases.
     @jsondata:Name {value: "releases_url"}
     string releasesUrl;
+    # The Subversion URL for the repository.
     @jsondata:Name {value: "svn_url"}
     string svnUrl?;
+    # The number of users watching the repository.
     @jsondata:Name {value: "subscribers_count"}
     int subscribersCount?;
+    # The unique identifier of the repository.
     int id;
+    # Whether the repository has discussions enabled.
     @jsondata:Name {value: "has_discussions"}
     boolean hasDiscussions?;
+    # The number of forks of the repository.
     int forks?;
+    # API URL template for downloading repository archives.
     @jsondata:Name {value: "archive_url"}
     string archiveUrl;
+    # API URL template for accessing Git references.
     @jsondata:Name {value: "git_refs_url"}
     string gitRefsUrl;
+    # API URL for listing repository forks.
     @jsondata:Name {value: "forks_url"}
     string forksUrl;
+    # The visibility of the repository.
     string visibility?;
+    # API URL template for listing commit statuses.
     @jsondata:Name {value: "statuses_url"}
     string statusesUrl;
+    # The number of repositories in the fork network.
     @jsondata:Name {value: "network_count"}
     int networkCount?;
+    # The SSH URL for cloning the repository.
     @jsondata:Name {value: "ssh_url"}
     string sshUrl?;
+    # The role name assigned to the user for this repository.
     @jsondata:Name {value: "role_name"}
     string roleName?;
+    # The license information for the repository.
     NullableMinimalRepository_license? license?;
+    # The full name of the repository in owner/name format.
     @jsondata:Name {value: "full_name"}
     string fullName;
     # The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0
     int size?;
+    # API URL for listing programming languages used.
     @jsondata:Name {value: "languages_url"}
     string languagesUrl;
+    # URL of the repository page on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # API URL template for listing repository collaborators.
     @jsondata:Name {value: "collaborators_url"}
     string collaboratorsUrl;
+    # The HTTPS URL for cloning the repository.
     @jsondata:Name {value: "clone_url"}
     string cloneUrl?;
+    # The name of the repository.
     string name;
+    # API URL template for listing pull requests.
     @jsondata:Name {value: "pulls_url"}
     string pullsUrl;
+    # The default branch of the repository.
     @jsondata:Name {value: "default_branch"}
     string defaultBranch?;
+    # API URL for listing repository webhooks.
     @jsondata:Name {value: "hooks_url"}
     string hooksUrl;
+    # API URL template for accessing Git trees.
     @jsondata:Name {value: "trees_url"}
     string treesUrl;
+    # API URL for listing repository tags.
     @jsondata:Name {value: "tags_url"}
     string tagsUrl;
+    # Whether the repository is private.
     boolean 'private;
+    # API URL for listing repository contributors.
     @jsondata:Name {value: "contributors_url"}
     string contributorsUrl;
+    # Whether the repository has downloads enabled.
     @jsondata:Name {value: "has_downloads"}
     boolean hasDownloads?;
+    # API URL template for listing repository notifications.
     @jsondata:Name {value: "notifications_url"}
     string notificationsUrl;
+    # The number of open issues in the repository.
     @jsondata:Name {value: "open_issues_count"}
     int openIssuesCount?;
+    # A short description of the repository.
     string? description;
+    # The date the repository was created.
     @jsondata:Name {value: "created_at"}
     string? createdAt?;
+    # The number of watchers on the repository.
     int watchers?;
+    # API URL for listing repository deployments.
     @jsondata:Name {value: "deployments_url"}
     string deploymentsUrl;
+    # API URL template for listing repository deploy keys.
     @jsondata:Name {value: "keys_url"}
     string keysUrl;
+    # Whether the repository has projects enabled.
     @jsondata:Name {value: "has_projects"}
     boolean hasProjects?;
+    # Whether the repository is archived.
     boolean archived?;
+    # Whether the repository has the wiki enabled.
     @jsondata:Name {value: "has_wiki"}
     boolean hasWiki?;
+    # The date the repository was last updated.
     @jsondata:Name {value: "updated_at"}
     string? updatedAt?;
+    # API URL template for listing commit comments.
     @jsondata:Name {value: "comments_url"}
     string commentsUrl;
+    # API URL for listing users who starred the repository.
     @jsondata:Name {value: "stargazers_url"}
     string stargazersUrl;
+    # Whether the repository is disabled.
     boolean disabled?;
+    # Whether to delete branches on merge.
     @jsondata:Name {value: "delete_branch_on_merge"}
     boolean deleteBranchOnMerge?;
+    # The Git protocol URL for the repository.
     @jsondata:Name {value: "git_url"}
     string gitUrl?;
+    # Whether the repository has GitHub Pages enabled.
     @jsondata:Name {value: "has_pages"}
     boolean hasPages?;
     # A GitHub user
     SimpleUser owner;
+    # API URL template for listing repository commits.
     @jsondata:Name {value: "commits_url"}
     string commitsUrl;
+    # API URL template for comparing two commits.
     @jsondata:Name {value: "compare_url"}
     string compareUrl;
+    # API URL template for accessing Git commits.
     @jsondata:Name {value: "git_commits_url"}
     string gitCommitsUrl;
+    # The list of topics associated with the repository.
     string[] topics?;
+    # API URL template for accessing repository blobs.
     @jsondata:Name {value: "blobs_url"}
     string blobsUrl;
+    # API URL template for accessing Git tags.
     @jsondata:Name {value: "git_tags_url"}
     string gitTagsUrl;
+    # API URL for performing merge operations.
     @jsondata:Name {value: "merges_url"}
     string mergesUrl;
+    # API URL for listing repository downloads.
     @jsondata:Name {value: "downloads_url"}
     string downloadsUrl;
+    # Whether the repository has issues enabled.
     @jsondata:Name {value: "has_issues"}
     boolean hasIssues?;
+    # The code of conduct for the repository.
     @jsondata:Name {value: "code_of_conduct"}
     CodeOfConduct codeOfConduct?;
+    # Whether commit sign-off is required for web-based commits.
     @jsondata:Name {value: "web_commit_signoff_required"}
     boolean webCommitSignoffRequired?;
+    # API URL for the repository.
     string url;
+    # API URL template for accessing repository contents.
     @jsondata:Name {value: "contents_url"}
     string contentsUrl;
+    # The URL of the mirror for the repository.
     @jsondata:Name {value: "mirror_url"}
     string? mirrorUrl?;
+    # API URL template for listing repository milestones.
     @jsondata:Name {value: "milestones_url"}
     string milestonesUrl;
+    # API URL for listing teams with access to the repository.
     @jsondata:Name {value: "teams_url"}
     string teamsUrl;
+    # The security and analysis settings for the repository.
     @jsondata:Name {value: "security_and_analysis"}
     SecurityAndAnalysis? securityAndAnalysis?;
+    # Whether the repository is a fork.
     boolean 'fork;
+    # API URL template for listing repository issues.
     @jsondata:Name {value: "issues_url"}
     string issuesUrl;
+    # API URL for listing repository events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
+    # API URL template for listing issue events.
     @jsondata:Name {value: "issue_events_url"}
     string issueEventsUrl;
+    # API URL template for listing repository assignees.
     @jsondata:Name {value: "assignees_url"}
     string assigneesUrl;
+    # The number of open issues in the repository.
     @jsondata:Name {value: "open_issues"}
     int openIssues?;
+    # The number of watchers on the repository.
     @jsondata:Name {value: "watchers_count"}
     int watchersCount?;
+    # The GraphQL node identifier of the repository.
     @jsondata:Name {value: "node_id"}
     string nodeId;
+    # The URL of the repository's homepage.
     string? homepage?;
+    # The number of forks of the repository.
     @jsondata:Name {value: "forks_count"}
     int forksCount?;
 };
@@ -3984,7 +4363,7 @@ public type NullableRepository record {
     # Whether to allow rebase merges for pull requests
     @jsondata:Name {value: "allow_rebase_merge"}
     boolean allowRebaseMerge = true;
-    Repository_permissions permissions?;
+    TeamRepository_permissions permissions?;
     @jsondata:Name {value: "subscribers_url"}
     string subscribersUrl;
     @jsondata:Name {value: "temp_clone_token"}
@@ -4014,7 +4393,7 @@ public type NullableRepository record {
     string fullName;
     # The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0
     int size;
-    Repository_template_repository? template_repository?;
+    NullableRepository_template_repository? template_repository?;
     @jsondata:Name {value: "languages_url"}
     string languagesUrl;
     @jsondata:Name {value: "html_url"}
@@ -4857,6 +5236,7 @@ public type IssuesListLabelsForRepoQueries record {
     int page = 1;
 };
 
+# The license information for the repository.
 public type NullableMinimalRepository_license record {
     string 'key?;
     string name?;
@@ -4888,6 +5268,7 @@ public type TeamsListReposLegacyQueries record {
     int page = 1;
 };
 
+# The permissions the authenticated user has on the repository.
 public type Repository_permissions record {
     boolean admin;
     boolean pull;
@@ -5167,6 +5548,14 @@ public type ReposListBranchesQueries record {
     int page = 1;
 };
 
+public type TeamRepository_permissions record {
+    boolean admin;
+    boolean pull;
+    boolean triage?;
+    boolean push;
+    boolean maintain?;
+};
+
 public type user_ssh_signing_keys_body record {
     # A descriptive name for the new key.
     string title?;
@@ -5264,12 +5653,15 @@ public type GistsListQueries record {
 
 # Color-coded labels help you categorize and filter your issues (just like labels in Gmail)
 public type Label record {
+    # Whether this label comes by default in a new repository.
     boolean default;
     # 6-character hex code, without the leading #, identifying the color
     string color;
     # The name of the label
     string name;
+    # Optional description of the label, such as its purpose.
     string? description;
+    # Unique identifier for the label.
     int id;
     # URL for the label
     string url;
@@ -5361,6 +5753,15 @@ public type ActionsRepositoryPermissions record {
     SelectedActionsUrl selectedActionsUrl?;
     # Whether GitHub Actions is enabled on the repository
     ActionsEnabled enabled;
+};
+
+# Pull request metadata if this issue is a pull request.
+public type Issue_pull_request record {
+    string? merged_at?;
+    string? diff_url;
+    string? html_url;
+    string? patch_url;
+    string? url;
 };
 
 public type org_repos_body record {
@@ -5491,6 +5892,17 @@ public type SimpleClassroomUser record {
     string login;
 };
 
+# The base branch of the pull request.
+public type PullRequestSimple_base record {
+    string label;
+    string ref;
+    # A repository on GitHub
+    Repository repo;
+    string sha;
+    # A GitHub user
+    NullableSimpleUser? user;
+};
+
 # Set secrets for Dependabot
 public type DependabotSecretResponse record {
     @jsondata:Name {value: "total_count"}
@@ -5537,6 +5949,7 @@ public type rulesets_rulesetId_body_1 record {
     "branch"|"tag" target?;
 };
 
+# The base branch of the pull request.
 public type PullRequest_base record {
     string label;
     string ref;
@@ -5956,41 +6369,63 @@ public type BranchWithProtection record {
 
 # Collaborator
 public type Collaborator record {
+    # API URL template for the user's gists.
     @jsondata:Name {value: "gists_url"}
     string gistsUrl;
+    # API URL to list the user's repositories.
     @jsondata:Name {value: "repos_url"}
     string reposUrl;
+    # API URL template to check who the user is following.
     @jsondata:Name {value: "following_url"}
     string followingUrl;
+    # API URL template for repositories the user has starred.
     @jsondata:Name {value: "starred_url"}
     string starredUrl;
+    # The username of the user.
     string login;
+    # API URL to list the user's followers.
     @jsondata:Name {value: "followers_url"}
     string followersUrl;
+    # The type of the account.
     string 'type;
+    # API URL for the user.
     string url;
+    # The role name assigned to the collaborator.
     @jsondata:Name {value: "role_name"}
     string roleName;
+    # API URL to list repositories the user is watching.
     @jsondata:Name {value: "subscriptions_url"}
     string subscriptionsUrl;
+    # API URL for events received by the user.
     @jsondata:Name {value: "received_events_url"}
     string receivedEventsUrl;
+    # URL of the user's avatar image.
     @jsondata:Name {value: "avatar_url"}
     string avatarUrl;
+    # API URL template for the user's events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
+    # The permissions the collaborator has on the repository.
     NullableCollaborator_permissions permissions?;
+    # URL of the user's GitHub profile page.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # The display name of the user.
     string? name?;
+    # Whether the user is a GitHub site administrator.
     @jsondata:Name {value: "site_admin"}
     boolean siteAdmin;
+    # The unique identifier of the user.
     int id;
+    # The Gravatar ID of the user.
     @jsondata:Name {value: "gravatar_id"}
     string? gravatarId;
+    # The publicly visible email address of the user.
     string? email?;
+    # The GraphQL node identifier of the user.
     @jsondata:Name {value: "node_id"}
     string nodeId;
+    # API URL to list the user's organizations.
     @jsondata:Name {value: "organizations_url"}
     string organizationsUrl;
 };
@@ -6393,73 +6828,115 @@ public type AppsListInstallationReposForAuthenticatedUserQueries record {
 
 # Private User
 public type PrivateUser record {
+    # API URL template for the user's gists.
     @jsondata:Name {value: "gists_url"}
     string gistsUrl;
+    # API URL to list the user's repositories.
     @jsondata:Name {value: "repos_url"}
     string reposUrl;
+    # Whether the user has two-factor authentication enabled.
     @jsondata:Name {value: "two_factor_authentication"}
     boolean twoFactorAuthentication;
+    # API URL template to check who the user is following.
     @jsondata:Name {value: "following_url"}
     string followingUrl;
+    # The Twitter username of the user.
     @jsondata:Name {value: "twitter_username"}
     string? twitterUsername?;
+    # The biography of the user.
     string? bio;
+    # The date the user account was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
+    # The username of the user.
     string login;
+    # The type of the account.
     string 'type;
+    # The URL of the user's blog or website.
     string? blog;
+    # The number of private gists the user owns.
     @jsondata:Name {value: "private_gists"}
     int privateGists;
+    # The total number of private repositories the user owns.
     @jsondata:Name {value: "total_private_repos"}
     int totalPrivateRepos;
+    # API URL to list repositories the user is watching.
     @jsondata:Name {value: "subscriptions_url"}
     string subscriptionsUrl;
+    # The date the user account was last updated.
     @jsondata:Name {value: "updated_at"}
     string updatedAt;
+    # Whether the user is a GitHub site administrator.
     @jsondata:Name {value: "site_admin"}
     boolean siteAdmin;
+    # The total disk usage across all repositories in kilobytes.
     @jsondata:Name {value: "disk_usage"}
     int diskUsage;
+    # The number of collaborators across the user's private repositories.
     int collaborators;
+    # The company the user belongs to.
     string? company;
+    # The number of private repositories owned by the user.
     @jsondata:Name {value: "owned_private_repos"}
     int ownedPrivateRepos;
+    # The unique identifier of the user.
     int id;
+    # The number of public repositories the user owns.
     @jsondata:Name {value: "public_repos"}
     int publicRepos;
+    # The Gravatar ID of the user.
     @jsondata:Name {value: "gravatar_id"}
     string? gravatarId;
+    # The billing plan for the user.
     PublicUser_plan plan?;
+    # The publicly visible email address of the user.
     string? email;
+    # API URL to list the user's organizations.
     @jsondata:Name {value: "organizations_url"}
     string organizationsUrl;
+    # Whether the user is available for hire.
     boolean? hireable;
+    # API URL template for repositories the user has starred.
     @jsondata:Name {value: "starred_url"}
     string starredUrl;
+    # API URL to list the user's followers.
     @jsondata:Name {value: "followers_url"}
     string followersUrl;
+    # The number of public gists the user owns.
     @jsondata:Name {value: "public_gists"}
     int publicGists;
+    # API URL for the user.
     string url;
+    # API URL for events received by the user.
     @jsondata:Name {value: "received_events_url"}
     string receivedEventsUrl;
+    # The LDAP distinguished name for the user.
     @jsondata:Name {value: "ldap_dn"}
     string ldapDn?;
+    # The number of followers the user has.
     int followers;
+    # URL of the user's avatar image.
     @jsondata:Name {value: "avatar_url"}
     string avatarUrl;
+    # API URL template for the user's events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
+    # Whether the user has a GitHub Business Plus plan.
     @jsondata:Name {value: "business_plus"}
     boolean businessPlus?;
+    # URL of the user's GitHub profile page.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # The number of users the user is following.
     int following;
+    # The display name of the user.
     string? name;
+    # The geographic location of the user.
     string? location;
+    # The GraphQL node identifier of the user.
     @jsondata:Name {value: "node_id"}
     string nodeId;
+    # The date the user account was suspended.
     @jsondata:Name {value: "suspended_at"}
     string? suspendedAt?;
 };
@@ -6578,66 +7055,98 @@ public type AppsListInstallationRequestsForAuthenticatedAppQueries record {
 
 # Pull Request Simple
 public type PullRequestSimple record {
+    # API URL for the associated issue.
     @jsondata:Name {value: "issue_url"}
     string issueUrl;
+    # Hypermedia links for the pull request.
     PullRequest__links _links;
+    # URL of the pull request diff.
     @jsondata:Name {value: "diff_url"}
     string diffUrl;
+    # The date the pull request was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
+    # The users assigned to the pull request.
     SimpleUser[]? assignees?;
+    # The users requested to review the pull request.
     @jsondata:Name {value: "requested_reviewers"}
     SimpleUser[]? requestedReviewers?;
+    # The title of the pull request.
     string title;
+    # The body text of the pull request.
     string? body;
+    # The teams requested to review the pull request.
     @jsondata:Name {value: "requested_teams"}
     Team[]? requestedTeams?;
+    # The head branch of the pull request.
     PullRequestSimple_head head;
+    # The association of the author with the repository.
     @jsondata:Name {value: "author_association"}
     AuthorAssociation authorAssociation;
+    # The pull request number.
     int number;
+    # URL of the pull request patch.
     @jsondata:Name {value: "patch_url"}
     string patchUrl;
+    # The date the pull request was last updated.
     @jsondata:Name {value: "updated_at"}
     string updatedAt;
     # Indicates whether or not the pull request is a draft
     boolean draft?;
+    # API URL for the pull request comments.
     @jsondata:Name {value: "comments_url"}
     string commentsUrl;
+    # The SHA of the merge commit.
     @jsondata:Name {value: "merge_commit_sha"}
     string? mergeCommitSha;
+    # API URL template for a pull request review comment.
     @jsondata:Name {value: "review_comment_url"}
     string reviewCommentUrl;
+    # The reason the pull request conversation was locked.
     @jsondata:Name {value: "active_lock_reason"}
     string? activeLockReason?;
+    # The unique identifier of the pull request.
     int id;
+    # The state of the pull request.
     string state;
+    # Whether the pull request is locked.
     boolean locked;
+    # API URL for the pull request commits.
     @jsondata:Name {value: "commits_url"}
     string commitsUrl;
+    # The date the pull request was closed.
     @jsondata:Name {value: "closed_at"}
     string? closedAt;
+    # API URL for the pull request commit statuses.
     @jsondata:Name {value: "statuses_url"}
     string statusesUrl;
+    # The date the pull request was merged.
     @jsondata:Name {value: "merged_at"}
     string? mergedAt;
+    # The auto-merge configuration for the pull request.
     @jsondata:Name {value: "auto_merge"}
     AutoMerge? autoMerge;
+    # API URL for the pull request.
     string url;
+    # The labels associated with the pull request.
     PullRequest_labels[] labels;
     # A collection of related issues and pull requests
     NullableMilestone? milestone;
+    # URL of the pull request page on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # API URL for the pull request review comments.
     @jsondata:Name {value: "review_comments_url"}
     string reviewCommentsUrl;
     # A GitHub user
     NullableSimpleUser? assignee;
     # A GitHub user
     NullableSimpleUser? user;
+    # The GraphQL node identifier of the pull request.
     @jsondata:Name {value: "node_id"}
     string nodeId;
-    PullRequestSimple_head base;
+    # The base branch of the pull request.
+    PullRequestSimple_base base;
 };
 
 # An optional comment when closing an alert. Cannot be updated or deleted. Must be `null` when changing `state` to `open`
@@ -7179,6 +7688,7 @@ public type ReposGetCommitQueries record {
     int page = 1;
 };
 
+# The billing plan for the user.
 public type PublicUser_plan record {
     int collaborators;
     string name;
@@ -7610,6 +8120,7 @@ public type IssuesListCommentsForRepoQueries record {
     string since?;
 };
 
+# The head branch of the pull request.
 public type PullRequest_head record {
     string label;
     string ref;
@@ -7726,8 +8237,10 @@ public type CodeScanningAnalysisToolVersion string?;
 
 # A release
 public type Release record {
+    # The HTML-rendered description of the release.
     @jsondata:Name {value: "body_html"}
     string bodyHtml?;
+    # The plain text description of the release.
     @jsondata:Name {value: "body_text"}
     string bodyText?;
     # The name of the tag
@@ -7735,19 +8248,27 @@ public type Release record {
     string tagName;
     # A GitHub user
     SimpleUser author;
+    # The date the release was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
+    # The number of mentions found in the release body.
     @jsondata:Name {value: "mentions_count"}
     int mentionsCount?;
+    # The description body of the release.
     string? body?;
+    # API URL for the release.
     string url;
+    # API URL for the release assets.
     @jsondata:Name {value: "assets_url"}
     string assetsUrl;
+    # The list of assets attached to the release.
     ReleaseAsset[] assets;
     # Whether to identify the release as a prerelease or a full release
     boolean prerelease;
+    # URL of the release page on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # URL to download the release source as a zip file.
     @jsondata:Name {value: "zipball_url"}
     string? zipballUrl;
     # Specifies the commitish value that determines where the Git tag is created from
@@ -7755,15 +8276,21 @@ public type Release record {
     string targetCommitish;
     # true to create a draft (unpublished) release, false to create a published one
     boolean draft;
+    # The name of the release.
     string? name;
+    # URL template for uploading release assets.
     @jsondata:Name {value: "upload_url"}
     string uploadUrl;
     ReactionRollup reactions?;
+    # The unique identifier of the release.
     int id;
+    # URL to download the release source as a tarball.
     @jsondata:Name {value: "tarball_url"}
     string? tarballUrl;
+    # The date the release was published.
     @jsondata:Name {value: "published_at"}
     string? publishedAt;
+    # The GraphQL node identifier of the release.
     @jsondata:Name {value: "node_id"}
     string nodeId;
     # The URL of the release discussion
@@ -7862,6 +8389,7 @@ public type IssueEventLabel record {
     string? name;
 };
 
+# The permissions the collaborator has on the repository.
 public type NullableCollaborator_permissions record {
     boolean pull;
     boolean triage?;
@@ -8293,6 +8821,7 @@ public type Link record {
     string href;
 };
 
+# The license information for the repository.
 public type MinimalRepository_license record {
     string 'key?;
     string name?;
@@ -8710,20 +9239,27 @@ public type Repository record {
     # Whether anonymous git access is enabled for this repository
     @jsondata:Name {value: "anonymous_access_enabled"}
     boolean anonymousAccessEnabled?;
+    # API URL for the authenticated user's subscription to the repository.
     @jsondata:Name {value: "subscription_url"}
     string subscriptionUrl;
+    # API URL template for listing repository branches.
     @jsondata:Name {value: "branches_url"}
     string branchesUrl;
+    # API URL template for accessing issue comments.
     @jsondata:Name {value: "issue_comment_url"}
     string issueCommentUrl;
     # Whether to allow rebase merges for pull requests
     @jsondata:Name {value: "allow_rebase_merge"}
     boolean allowRebaseMerge = true;
+    # The permissions the authenticated user has on the repository.
     Repository_permissions permissions?;
+    # API URL for listing repository watchers.
     @jsondata:Name {value: "subscribers_url"}
     string subscribersUrl;
+    # A temporary token for cloning the repository.
     @jsondata:Name {value: "temp_clone_token"}
     string tempCloneToken?;
+    # API URL template for listing repository releases.
     @jsondata:Name {value: "releases_url"}
     string releasesUrl;
     # The default value for a squash merge commit message:
@@ -8733,6 +9269,7 @@ public type Repository record {
     # - `BLANK` - default to a blank commit message
     @jsondata:Name {value: "squash_merge_commit_message"}
     "PR_BODY"|"COMMIT_MESSAGES"|"BLANK" squashMergeCommitMessage?;
+    # The number of users watching the repository.
     @jsondata:Name {value: "subscribers_count"}
     int subscribersCount?;
     # Unique identifier of the repository
@@ -8740,29 +9277,40 @@ public type Repository record {
     # Whether discussions are enabled
     @jsondata:Name {value: "has_discussions"}
     boolean hasDiscussions = false;
+    # The number of forks of the repository.
     int forks;
+    # API URL template for accessing Git references.
     @jsondata:Name {value: "git_refs_url"}
     string gitRefsUrl;
+    # The SSH URL for cloning the repository.
     @jsondata:Name {value: "ssh_url"}
     string sshUrl;
+    # The full name of the repository in owner/name format.
     @jsondata:Name {value: "full_name"}
     string fullName;
     # The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0
     int size;
+    # The template repository from which this repository was created.
     Repository_template_repository? template_repository?;
+    # API URL for listing programming languages used.
     @jsondata:Name {value: "languages_url"}
     string languagesUrl;
+    # URL of the repository page on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # API URL template for listing repository collaborators.
     @jsondata:Name {value: "collaborators_url"}
     string collaboratorsUrl;
+    # The HTTPS URL for cloning the repository.
     @jsondata:Name {value: "clone_url"}
     string cloneUrl;
     # The default branch of the repository
     @jsondata:Name {value: "default_branch"}
     string defaultBranch;
+    # API URL for listing repository webhooks.
     @jsondata:Name {value: "hooks_url"}
     string hooksUrl;
+    # API URL template for accessing Git trees.
     @jsondata:Name {value: "trees_url"}
     string treesUrl;
     # Whether downloads are enabled
@@ -8771,11 +9319,15 @@ public type Repository record {
     @jsondata:Name {value: "has_downloads"}
     @deprecated
     boolean hasDownloads = true;
+    # The date the repository was created.
     @jsondata:Name {value: "created_at"}
     string? createdAt;
+    # The number of watchers on the repository.
     int watchers;
+    # API URL for listing repository deployments.
     @jsondata:Name {value: "deployments_url"}
     string deploymentsUrl;
+    # API URL template for listing repository deploy keys.
     @jsondata:Name {value: "keys_url"}
     string keysUrl;
     # Whether the repository is archived
@@ -8783,27 +9335,37 @@ public type Repository record {
     # Whether the wiki is enabled
     @jsondata:Name {value: "has_wiki"}
     boolean hasWiki = true;
+    # The date the repository was last updated.
     @jsondata:Name {value: "updated_at"}
     string? updatedAt;
     # Returns whether or not this repository disabled
     boolean disabled;
+    # API URL template for comparing two commits.
     @jsondata:Name {value: "compare_url"}
     string compareUrl;
+    # API URL template for accessing Git commits.
     @jsondata:Name {value: "git_commits_url"}
     string gitCommitsUrl;
+    # The list of topics associated with the repository.
     string[] topics?;
     # Whether or not a pull request head branch that is behind its base branch can always be updated even if it is not required to be up to date before merging
     @jsondata:Name {value: "allow_update_branch"}
     boolean allowUpdateBranch = false;
+    # API URL template for accessing Git tags.
     @jsondata:Name {value: "git_tags_url"}
     string gitTagsUrl;
+    # API URL for performing merge operations.
     @jsondata:Name {value: "merges_url"}
     string mergesUrl;
+    # The time the authenticated user starred the repository.
     @jsondata:Name {value: "starred_at"}
     string starredAt?;
+    # API URL for the repository.
     string url;
+    # API URL template for accessing repository contents.
     @jsondata:Name {value: "contents_url"}
     string contentsUrl;
+    # API URL template for listing repository issues.
     @jsondata:Name {value: "issues_url"}
     string issuesUrl;
     # Whether a squash merge commit can use the pull request title as default. **This property has been deprecated. Please use `squash_merge_commit_title` instead
@@ -8821,6 +9383,7 @@ public type Repository record {
     # - `BLANK` - default to a blank commit message
     @jsondata:Name {value: "merge_commit_message"}
     "PR_BODY"|"PR_TITLE"|"BLANK" mergeCommitMessage?;
+    # API URL template for listing repository assignees.
     @jsondata:Name {value: "assignees_url"}
     string assigneesUrl;
     # The default value for a squash merge commit title:
@@ -8829,35 +9392,47 @@ public type Repository record {
     # - `COMMIT_OR_PR_TITLE` - default to the commit's title (if only one commit) or the pull request's title (when more than one commit)
     @jsondata:Name {value: "squash_merge_commit_title"}
     "PR_TITLE"|"COMMIT_OR_PR_TITLE" squashMergeCommitTitle?;
+    # The number of open issues in the repository.
     @jsondata:Name {value: "open_issues"}
     int openIssues;
+    # The GraphQL node identifier of the repository.
     @jsondata:Name {value: "node_id"}
     string nodeId;
+    # The number of stars on the repository.
     @jsondata:Name {value: "stargazers_count"}
     int stargazersCount;
     # Whether this repository acts as a template that can be used to generate new repositories
     @jsondata:Name {value: "is_template"}
     boolean isTemplate = false;
+    # The date of the most recent push to the repository.
     @jsondata:Name {value: "pushed_at"}
     string? pushedAt;
+    # The primary programming language of the repository.
     string? language;
+    # API URL template for listing repository labels.
     @jsondata:Name {value: "labels_url"}
     string labelsUrl;
+    # The Subversion URL for the repository.
     @jsondata:Name {value: "svn_url"}
     string svnUrl;
+    # The name of the master branch.
     @jsondata:Name {value: "master_branch"}
     string masterBranch?;
+    # API URL template for downloading repository archives.
     @jsondata:Name {value: "archive_url"}
     string archiveUrl;
     # Whether to allow merge commits for pull requests
     @jsondata:Name {value: "allow_merge_commit"}
     boolean allowMergeCommit = true;
+    # API URL for listing repository forks.
     @jsondata:Name {value: "forks_url"}
     string forksUrl;
     # The repository visibility: public, private, or internal
     string visibility = "public";
+    # API URL template for listing commit statuses.
     @jsondata:Name {value: "statuses_url"}
     string statusesUrl;
+    # The number of repositories in the fork network.
     @jsondata:Name {value: "network_count"}
     int networkCount?;
     # License Simple
@@ -8867,18 +9442,24 @@ public type Repository record {
     boolean allowAutoMerge = false;
     # The name of the repository
     string name;
+    # API URL template for listing pull requests.
     @jsondata:Name {value: "pulls_url"}
     string pullsUrl;
+    # API URL for listing repository tags.
     @jsondata:Name {value: "tags_url"}
     string tagsUrl;
     # Whether the repository is private or public
     boolean 'private = false;
+    # API URL for listing repository contributors.
     @jsondata:Name {value: "contributors_url"}
     string contributorsUrl;
+    # API URL template for listing repository notifications.
     @jsondata:Name {value: "notifications_url"}
     string notificationsUrl;
+    # The number of open issues in the repository.
     @jsondata:Name {value: "open_issues_count"}
     int openIssuesCount;
+    # A short description of the repository.
     string? description;
     # Whether projects are enabled
     @jsondata:Name {value: "has_projects"}
@@ -8889,15 +9470,19 @@ public type Repository record {
     # - `MERGE_MESSAGE` - default to the classic title for a merge message (e.g., Merge pull request #123 from branch-name)
     @jsondata:Name {value: "merge_commit_title"}
     "PR_TITLE"|"MERGE_MESSAGE" mergeCommitTitle?;
+    # API URL template for listing commit comments.
     @jsondata:Name {value: "comments_url"}
     string commentsUrl;
+    # API URL for listing users who starred the repository.
     @jsondata:Name {value: "stargazers_url"}
     string stargazersUrl;
     # Whether to delete head branches when pull requests are merged
     @jsondata:Name {value: "delete_branch_on_merge"}
     boolean deleteBranchOnMerge = false;
+    # The Git protocol URL for the repository.
     @jsondata:Name {value: "git_url"}
     string gitUrl;
+    # Whether the repository has GitHub Pages enabled.
     @jsondata:Name {value: "has_pages"}
     boolean hasPages;
     # A GitHub user
@@ -8905,10 +9490,13 @@ public type Repository record {
     # Whether to allow squash merges for pull requests
     @jsondata:Name {value: "allow_squash_merge"}
     boolean allowSquashMerge = true;
+    # API URL template for listing repository commits.
     @jsondata:Name {value: "commits_url"}
     string commitsUrl;
+    # API URL template for accessing repository blobs.
     @jsondata:Name {value: "blobs_url"}
     string blobsUrl;
+    # API URL for listing repository downloads.
     @jsondata:Name {value: "downloads_url"}
     string downloadsUrl;
     # Whether issues are enabled
@@ -8917,20 +9505,29 @@ public type Repository record {
     # Whether to require contributors to sign off on web-based commits
     @jsondata:Name {value: "web_commit_signoff_required"}
     boolean webCommitSignoffRequired = false;
+    # The URL of the mirror for the repository.
     @jsondata:Name {value: "mirror_url"}
     string? mirrorUrl;
+    # API URL template for listing repository milestones.
     @jsondata:Name {value: "milestones_url"}
     string milestonesUrl;
+    # API URL for listing teams with access to the repository.
     @jsondata:Name {value: "teams_url"}
     string teamsUrl;
+    # Whether the repository is a fork.
     boolean 'fork;
+    # API URL for listing repository events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
+    # API URL template for listing issue events.
     @jsondata:Name {value: "issue_events_url"}
     string issueEventsUrl;
+    # The number of watchers on the repository.
     @jsondata:Name {value: "watchers_count"}
     int watchersCount;
+    # The URL of the repository's homepage.
     string? homepage;
+    # The number of forks of the repository.
     @jsondata:Name {value: "forks_count"}
     int forksCount;
 };
@@ -8941,162 +9538,247 @@ public type reposownerrepoissuesissueNumberlabels_labels record {
 
 # Minimal Repository
 public type MinimalRepository record {
+    # Whether forking is allowed on the repository.
     @jsondata:Name {value: "allow_forking"}
     boolean allowForking?;
+    # The number of stars on the repository.
     @jsondata:Name {value: "stargazers_count"}
     int stargazersCount?;
+    # Whether the repository is a template repository.
     @jsondata:Name {value: "is_template"}
     boolean isTemplate?;
+    # The date of the most recent push to the repository.
     @jsondata:Name {value: "pushed_at"}
     string? pushedAt?;
+    # API URL for the authenticated user's subscription to the repository.
     @jsondata:Name {value: "subscription_url"}
     string subscriptionUrl;
+    # The primary programming language of the repository.
     string? language?;
+    # API URL template for listing repository branches.
     @jsondata:Name {value: "branches_url"}
     string branchesUrl;
+    # API URL template for accessing issue comments.
     @jsondata:Name {value: "issue_comment_url"}
     string issueCommentUrl;
+    # API URL template for listing repository labels.
     @jsondata:Name {value: "labels_url"}
     string labelsUrl;
+    # API URL for listing repository watchers.
     @jsondata:Name {value: "subscribers_url"}
     string subscribersUrl;
-    Repository_template_repository_permissions permissions?;
+    # The permissions the authenticated user has on the repository.
+    MinimalRepository_permissions permissions?;
+    # A temporary token for cloning the repository.
     @jsondata:Name {value: "temp_clone_token"}
     string tempCloneToken?;
+    # API URL template for listing repository releases.
     @jsondata:Name {value: "releases_url"}
     string releasesUrl;
+    # The Subversion URL for the repository.
     @jsondata:Name {value: "svn_url"}
     string svnUrl?;
+    # The number of users watching the repository.
     @jsondata:Name {value: "subscribers_count"}
     int subscribersCount?;
+    # The unique identifier of the repository.
     int id;
+    # Whether the repository has discussions enabled.
     @jsondata:Name {value: "has_discussions"}
     boolean hasDiscussions?;
+    # The number of forks of the repository.
     int forks?;
+    # API URL template for downloading repository archives.
     @jsondata:Name {value: "archive_url"}
     string archiveUrl;
+    # API URL template for accessing Git references.
     @jsondata:Name {value: "git_refs_url"}
     string gitRefsUrl;
+    # API URL for listing repository forks.
     @jsondata:Name {value: "forks_url"}
     string forksUrl;
+    # The visibility of the repository.
     string visibility?;
+    # API URL template for listing commit statuses.
     @jsondata:Name {value: "statuses_url"}
     string statusesUrl;
+    # The number of repositories in the fork network.
     @jsondata:Name {value: "network_count"}
     int networkCount?;
+    # The SSH URL for cloning the repository.
     @jsondata:Name {value: "ssh_url"}
     string sshUrl?;
+    # The role name assigned to the user for this repository.
     @jsondata:Name {value: "role_name"}
     string roleName?;
+    # The license information for the repository.
     MinimalRepository_license? license?;
+    # The full name of the repository in owner/name format.
     @jsondata:Name {value: "full_name"}
     string fullName;
     # The size of the repository. Size is calculated hourly. When a repository is initially created, the size is 0
     int size?;
+    # API URL for listing programming languages used.
     @jsondata:Name {value: "languages_url"}
     string languagesUrl;
+    # URL of the repository page on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # API URL template for listing repository collaborators.
     @jsondata:Name {value: "collaborators_url"}
     string collaboratorsUrl;
+    # The HTTPS URL for cloning the repository.
     @jsondata:Name {value: "clone_url"}
     string cloneUrl?;
+    # The name of the repository.
     string name;
+    # API URL template for listing pull requests.
     @jsondata:Name {value: "pulls_url"}
     string pullsUrl;
+    # The default branch of the repository.
     @jsondata:Name {value: "default_branch"}
     string defaultBranch?;
+    # API URL for listing repository webhooks.
     @jsondata:Name {value: "hooks_url"}
     string hooksUrl;
+    # API URL template for accessing Git trees.
     @jsondata:Name {value: "trees_url"}
     string treesUrl;
+    # API URL for listing repository tags.
     @jsondata:Name {value: "tags_url"}
     string tagsUrl;
+    # Whether the repository is private.
     boolean 'private;
+    # API URL for listing repository contributors.
     @jsondata:Name {value: "contributors_url"}
     string contributorsUrl;
+    # Whether the repository has downloads enabled.
     @jsondata:Name {value: "has_downloads"}
     boolean hasDownloads?;
+    # API URL template for listing repository notifications.
     @jsondata:Name {value: "notifications_url"}
     string notificationsUrl;
+    # The number of open issues in the repository.
     @jsondata:Name {value: "open_issues_count"}
     int openIssuesCount?;
+    # A short description of the repository.
     string? description;
+    # The date the repository was created.
     @jsondata:Name {value: "created_at"}
     string? createdAt?;
+    # The number of watchers on the repository.
     int watchers?;
+    # API URL for listing repository deployments.
     @jsondata:Name {value: "deployments_url"}
     string deploymentsUrl;
+    # API URL template for listing repository deploy keys.
     @jsondata:Name {value: "keys_url"}
     string keysUrl;
+    # Whether the repository has projects enabled.
     @jsondata:Name {value: "has_projects"}
     boolean hasProjects?;
+    # Whether the repository is archived.
     boolean archived?;
+    # Whether the repository has the wiki enabled.
     @jsondata:Name {value: "has_wiki"}
     boolean hasWiki?;
+    # The date the repository was last updated.
     @jsondata:Name {value: "updated_at"}
     string? updatedAt?;
+    # API URL template for listing commit comments.
     @jsondata:Name {value: "comments_url"}
     string commentsUrl;
+    # API URL for listing users who starred the repository.
     @jsondata:Name {value: "stargazers_url"}
     string stargazersUrl;
+    # Whether the repository is disabled.
     boolean disabled?;
+    # Whether to delete branches on merge.
     @jsondata:Name {value: "delete_branch_on_merge"}
     boolean deleteBranchOnMerge?;
+    # The Git protocol URL for the repository.
     @jsondata:Name {value: "git_url"}
     string gitUrl?;
+    # Whether the repository has GitHub Pages enabled.
     @jsondata:Name {value: "has_pages"}
     boolean hasPages?;
     # A GitHub user
     SimpleUser owner;
+    # API URL template for listing repository commits.
     @jsondata:Name {value: "commits_url"}
     string commitsUrl;
+    # API URL template for comparing two commits.
     @jsondata:Name {value: "compare_url"}
     string compareUrl;
+    # API URL template for accessing Git commits.
     @jsondata:Name {value: "git_commits_url"}
     string gitCommitsUrl;
+    # The list of topics associated with the repository.
     string[] topics?;
+    # API URL template for accessing repository blobs.
     @jsondata:Name {value: "blobs_url"}
     string blobsUrl;
+    # API URL template for accessing Git tags.
     @jsondata:Name {value: "git_tags_url"}
     string gitTagsUrl;
+    # API URL for performing merge operations.
     @jsondata:Name {value: "merges_url"}
     string mergesUrl;
+    # API URL for listing repository downloads.
     @jsondata:Name {value: "downloads_url"}
     string downloadsUrl;
+    # Whether the repository has issues enabled.
     @jsondata:Name {value: "has_issues"}
     boolean hasIssues?;
+    # The code of conduct for the repository.
     @jsondata:Name {value: "code_of_conduct"}
     CodeOfConduct codeOfConduct?;
+    # Whether commit sign-off is required for web-based commits.
     @jsondata:Name {value: "web_commit_signoff_required"}
     boolean webCommitSignoffRequired?;
+    # API URL for the repository.
     string url;
+    # API URL template for accessing repository contents.
     @jsondata:Name {value: "contents_url"}
     string contentsUrl;
+    # The URL of the mirror for the repository.
     @jsondata:Name {value: "mirror_url"}
     string? mirrorUrl?;
+    # API URL template for listing repository milestones.
     @jsondata:Name {value: "milestones_url"}
     string milestonesUrl;
+    # API URL for listing teams with access to the repository.
     @jsondata:Name {value: "teams_url"}
     string teamsUrl;
+    # The security and analysis settings for the repository.
     @jsondata:Name {value: "security_and_analysis"}
     SecurityAndAnalysis? securityAndAnalysis?;
+    # Whether the repository is a fork.
     boolean 'fork;
+    # API URL template for listing repository issues.
     @jsondata:Name {value: "issues_url"}
     string issuesUrl;
+    # API URL for listing repository events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
+    # API URL template for listing issue events.
     @jsondata:Name {value: "issue_events_url"}
     string issueEventsUrl;
+    # API URL template for listing repository assignees.
     @jsondata:Name {value: "assignees_url"}
     string assigneesUrl;
+    # The number of open issues in the repository.
     @jsondata:Name {value: "open_issues"}
     int openIssues?;
+    # The number of watchers on the repository.
     @jsondata:Name {value: "watchers_count"}
     int watchersCount?;
+    # The GraphQL node identifier of the repository.
     @jsondata:Name {value: "node_id"}
     string nodeId;
+    # The URL of the repository's homepage.
     string? homepage?;
+    # The number of forks of the repository.
     @jsondata:Name {value: "forks_count"}
     int forksCount?;
 };
@@ -9188,11 +9870,15 @@ public type ReposCompareCommitsQueries record {
 
 # Issues are a great way to keep track of tasks, enhancements, and bugs for your projects
 public type Issue record {
+    # The HTML-rendered body of the issue.
     @jsondata:Name {value: "body_html"}
     string bodyHtml?;
+    # The plain text body of the issue.
     @jsondata:Name {value: "body_text"}
     string bodyText?;
+    # The users assigned to the issue.
     SimpleUser[]? assignees?;
+    # The date the issue was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
     # Title of the issue
@@ -9201,36 +9887,51 @@ public type Issue record {
     string? body?;
     # A repository on GitHub
     Repository repository?;
+    # The user who closed the issue.
     @jsondata:Name {value: "closed_by"}
     NullableSimpleUser? closedBy?;
+    # API URL template for the issue's labels.
     @jsondata:Name {value: "labels_url"}
     string labelsUrl;
+    # The association of the author with the repository.
     @jsondata:Name {value: "author_association"}
     AuthorAssociation authorAssociation;
     # Number uniquely identifying the issue within its repository
     int number;
+    # The date the issue was last updated.
     @jsondata:Name {value: "updated_at"}
     string updatedAt;
+    # The GitHub App that triggered the event.
     @jsondata:Name {value: "performed_via_github_app"}
     NullableIntegration? performedViaGithubApp?;
+    # Whether the issue is a draft.
     boolean draft?;
+    # API URL for the issue's comments.
     @jsondata:Name {value: "comments_url"}
     string commentsUrl;
+    # The reason the issue conversation was locked.
     @jsondata:Name {value: "active_lock_reason"}
     string? activeLockReason?;
+    # The unique identifier of the issue.
     int id;
+    # API URL for the repository containing the issue.
     @jsondata:Name {value: "repository_url"}
     string repositoryUrl;
     # State of the issue; either 'open' or 'closed'
     string state;
+    # Whether the issue conversation is locked.
     boolean locked;
+    # API URL for the issue's timeline events.
     @jsondata:Name {value: "timeline_url"}
     string timelineUrl?;
     # The reason for the current state
     @jsondata:Name {value: "state_reason"}
-    "completed"|"reopened"|"not_planned"? stateReason?;
-    IssueSearchResultItem_pull_request pull_request?;
+    string? stateReason?;
+    # Pull request metadata if this issue is a pull request.
+    Issue_pull_request pull_request?;
+    # The number of comments on the issue.
     int comments;
+    # The date the issue was closed.
     @jsondata:Name {value: "closed_at"}
     string? closedAt;
     # URL for the issue
@@ -9239,8 +9940,10 @@ public type Issue record {
     (string|record {int id?; string node_id?; string url?; string name?; string? description?; string? color?; boolean default?;})[] labels;
     # A collection of related issues and pull requests
     NullableMilestone? milestone;
+    # API URL for the issue's events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
+    # URL of the issue page on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
     ReactionRollup reactions?;
@@ -9248,6 +9951,7 @@ public type Issue record {
     NullableSimpleUser? assignee;
     # A GitHub user
     NullableSimpleUser? user;
+    # The GraphQL node identifier of the issue.
     @jsondata:Name {value: "node_id"}
     string nodeId;
 };
@@ -9403,6 +10107,7 @@ public type ParticipationStats record {
     int[] owner;
 };
 
+# The Git commit data.
 public type Commit_commit record {
     string url;
     # Metaproperties for Git author/committer information
@@ -9635,17 +10340,23 @@ public type GitCommit record {
     GitCommit_committer committer;
     # Identifying information for the git-user
     GitCommit_committer author;
+    # URL of the commit page on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # The tree object referenced by the commit.
     GitCommit_tree tree;
     # Message describing the purpose of the commit
     string message;
     # SHA for the commit
     string sha;
+    # API URL for the commit.
     string url;
+    # The GPG signature verification data for the commit.
     GitCommit_verification verification;
+    # The GraphQL node identifier of the commit.
     @jsondata:Name {value: "node_id"}
     string nodeId;
+    # The parent commits of this commit.
     GitCommit_parents[] parents;
 };
 
@@ -9756,6 +10467,7 @@ public type FileCommit_commit_tree record {
     string sha?;
 };
 
+# The commit statistics showing additions, deletions, and total changes.
 public type Commit_stats record {
     int additions?;
     int deletions?;
@@ -9875,39 +10587,55 @@ public type Hovercard record {
 
 # Legacy Review Comment
 public type ReviewComment record {
+    # The HTML-rendered body of the review comment.
     @jsondata:Name {value: "body_html"}
     string bodyHtml?;
+    # The SHA of the original commit to which the comment applied.
     @jsondata:Name {value: "original_commit_id"}
     string originalCommitId;
+    # Hypermedia links for the review comment.
     ReviewComment__links _links;
+    # The plain text body of the review comment.
     @jsondata:Name {value: "body_text"}
     string bodyText?;
+    # The ID of the comment this comment replies to.
     @jsondata:Name {value: "in_reply_to_id"}
     int inReplyToId?;
     # The line of the blob to which the comment applies. The last line of the range for a multi-line comment
     int line?;
+    # The diff hunk to which the comment applies.
     @jsondata:Name {value: "diff_hunk"}
     string diffHunk;
+    # The date the review comment was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
     # The first line of the range for a multi-line comment
     @jsondata:Name {value: "start_line"}
     int? startLine?;
+    # The body text of the review comment.
     string body;
+    # The association of the comment author with the repository.
     @jsondata:Name {value: "author_association"}
     AuthorAssociation authorAssociation;
+    # The relative path of the file to which the comment applies.
     string path;
+    # The original line index in the diff to which the comment applied.
     @jsondata:Name {value: "original_position"}
     int originalPosition;
+    # The date the review comment was last updated.
     @jsondata:Name {value: "updated_at"}
     string updatedAt;
+    # The ID of the pull request review this comment belongs to.
     @jsondata:Name {value: "pull_request_review_id"}
     int? pullRequestReviewId;
+    # The unique identifier of the review comment.
     int id;
     # The side of the first line of the range for a multi-line comment
     "LEFT"|"RIGHT" side = "RIGHT";
+    # API URL for the pull request.
     @jsondata:Name {value: "pull_request_url"}
     string pullRequestUrl;
+    # API URL for the review comment.
     string url;
     # The side of the first line of the range for a multi-line comment
     @jsondata:Name {value: "start_side"}
@@ -9918,14 +10646,18 @@ public type ReviewComment record {
     # The original first line of the range for a multi-line comment
     @jsondata:Name {value: "original_start_line"}
     int? originalStartLine?;
+    # URL of the review comment on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
     ReactionRollup reactions?;
+    # The line index in the diff to which the comment applies.
     int? position;
+    # The SHA of the commit to which the comment applies.
     @jsondata:Name {value: "commit_id"}
     string commitId;
     # A GitHub user
     NullableSimpleUser? user;
+    # The GraphQL node identifier of the review comment.
     @jsondata:Name {value: "node_id"}
     string nodeId;
 };
@@ -9954,7 +10686,7 @@ public type TeamRepository record {
     boolean allowRebaseMerge = true;
     @jsondata:Name {value: "labels_url"}
     string labelsUrl;
-    Repository_permissions permissions?;
+    TeamRepository_permissions permissions?;
     @jsondata:Name {value: "subscribers_url"}
     string subscribersUrl;
     @jsondata:Name {value: "temp_clone_token"}
@@ -10339,40 +11071,61 @@ public type ActionsCacheList_actions_caches record {
 
 # A GitHub user
 public type NullableSimpleUser record {
+    # API URL template for the user's gists.
     @jsondata:Name {value: "gists_url"}
     string gistsUrl;
+    # API URL to list the user's repositories.
     @jsondata:Name {value: "repos_url"}
     string reposUrl;
+    # API URL template to check who the user is following.
     @jsondata:Name {value: "following_url"}
     string followingUrl;
+    # API URL template for repositories the user has starred.
     @jsondata:Name {value: "starred_url"}
     string starredUrl;
+    # The username of the user.
     string login;
+    # API URL to list the user's followers.
     @jsondata:Name {value: "followers_url"}
     string followersUrl;
+    # The type of the account.
     string 'type;
+    # The time the user starred the resource.
     @jsondata:Name {value: "starred_at"}
     string starredAt?;
+    # API URL for the user.
     string url;
+    # API URL to list repositories the user is watching.
     @jsondata:Name {value: "subscriptions_url"}
     string subscriptionsUrl;
+    # API URL for events received by the user.
     @jsondata:Name {value: "received_events_url"}
     string receivedEventsUrl;
+    # URL of the user's avatar image.
     @jsondata:Name {value: "avatar_url"}
     string avatarUrl;
+    # API URL template for the user's events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
+    # URL of the user's GitHub profile page.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # The display name of the user.
     string? name?;
+    # Whether the user is a GitHub site administrator.
     @jsondata:Name {value: "site_admin"}
     boolean siteAdmin;
+    # The unique identifier of the user.
     int id;
+    # The Gravatar ID of the user.
     @jsondata:Name {value: "gravatar_id"}
     string? gravatarId;
+    # The publicly visible email address of the user.
     string? email?;
+    # The GraphQL node identifier of the user.
     @jsondata:Name {value: "node_id"}
     string nodeId;
+    # API URL to list the user's organizations.
     @jsondata:Name {value: "organizations_url"}
     string organizationsUrl;
 };
@@ -10538,6 +11291,7 @@ public type OrganizationSecretScanningAlert record {
     SecretScanningAlertState state?;
 };
 
+# The billing plan for the organization.
 public type TeamOrganization_plan record {
     string name;
     int space;
@@ -10662,86 +11416,126 @@ public type pages_deployment_body record {
 
 # Pull requests let you tell others about changes you've pushed to a repository on GitHub. Once a pull request is sent, interested parties can review the set of changes, discuss potential modifications, and even push follow-up commits if necessary
 public type PullRequest record {
+    # API URL for the associated issue.
     @jsondata:Name {value: "issue_url"}
     string issueUrl;
+    # Whether the pull request can be rebased.
     boolean? rebaseable?;
+    # Hypermedia links for the pull request.
     PullRequest__links _links;
+    # The number of lines deleted in the pull request.
     int deletions;
+    # URL of the pull request diff.
     @jsondata:Name {value: "diff_url"}
     string diffUrl;
+    # The date the pull request was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
+    # The users assigned to the pull request.
     SimpleUser[]? assignees?;
+    # The users requested to review the pull request.
     @jsondata:Name {value: "requested_reviewers"}
     SimpleUser[]? requestedReviewers?;
+    # The user who merged the pull request.
     @jsondata:Name {value: "merged_by"}
     NullableSimpleUser? mergedBy;
     # The title of the pull request
     string title;
+    # The body text of the pull request.
     string? body;
+    # The teams requested to review the pull request.
     @jsondata:Name {value: "requested_teams"}
     TeamSimple[]? requestedTeams?;
+    # The head branch of the pull request.
     PullRequest_head head;
+    # The association of the author with the repository.
     @jsondata:Name {value: "author_association"}
     AuthorAssociation authorAssociation;
     # Number uniquely identifying the pull request within its repository
     int number;
+    # Whether the pull request can be merged.
     boolean? mergeable;
+    # URL of the pull request patch.
     @jsondata:Name {value: "patch_url"}
     string patchUrl;
+    # The date the pull request was last updated.
     @jsondata:Name {value: "updated_at"}
     string updatedAt;
     # Indicates whether or not the pull request is a draft
     boolean draft?;
+    # API URL for the pull request comments.
     @jsondata:Name {value: "comments_url"}
     string commentsUrl;
+    # The SHA of the merge commit.
     @jsondata:Name {value: "merge_commit_sha"}
     string? mergeCommitSha;
+    # API URL template for a pull request review comment.
     @jsondata:Name {value: "review_comment_url"}
     string reviewCommentUrl;
+    # The reason the pull request conversation was locked.
     @jsondata:Name {value: "active_lock_reason"}
     string? activeLockReason?;
+    # The unique identifier of the pull request.
     int id;
     # State of this Pull Request. Either `open` or `closed`
     "open"|"closed" state;
+    # Whether the pull request is locked.
     boolean locked;
+    # The mergeability state of the pull request.
     @jsondata:Name {value: "mergeable_state"}
     string mergeableState;
+    # API URL for the pull request commits.
     @jsondata:Name {value: "commits_url"}
     string commitsUrl;
+    # The date the pull request was closed.
     @jsondata:Name {value: "closed_at"}
     string? closedAt;
+    # The number of comments on the pull request.
     int comments;
+    # The number of lines added in the pull request.
     int additions;
+    # API URL for the pull request commit statuses.
     @jsondata:Name {value: "statuses_url"}
     string statusesUrl;
+    # The date the pull request was merged.
     @jsondata:Name {value: "merged_at"}
     string? mergedAt;
+    # Whether the pull request has been merged.
     boolean merged;
+    # The number of review comments on the pull request.
     @jsondata:Name {value: "review_comments"}
     int reviewComments;
+    # The auto-merge configuration for the pull request.
     @jsondata:Name {value: "auto_merge"}
     AutoMerge? autoMerge;
+    # The number of files changed in the pull request.
     @jsondata:Name {value: "changed_files"}
     int changedFiles;
+    # API URL for the pull request.
     string url;
+    # The labels associated with the pull request.
     PullRequest_labels[] labels;
     # A collection of related issues and pull requests
     NullableMilestone? milestone;
+    # URL of the pull request page on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # API URL for the pull request review comments.
     @jsondata:Name {value: "review_comments_url"}
     string reviewCommentsUrl;
     # Indicates whether maintainers can modify the pull request
     @jsondata:Name {value: "maintainer_can_modify"}
     boolean maintainerCanModify;
+    # The number of commits in the pull request.
     int commits;
     # A GitHub user
     NullableSimpleUser? assignee;
     # A GitHub user
     SimpleUser user;
+    # The GraphQL node identifier of the pull request.
     @jsondata:Name {value: "node_id"}
     string nodeId;
+    # The base branch of the pull request.
     PullRequest_base base;
 };
 
@@ -11338,14 +12132,6 @@ public type SimpleClassroom record {
     string url;
 };
 
-public type IssueSearchResultItem_pull_request record {
-    string? merged_at?;
-    string? diff_url;
-    string? html_url;
-    string? patch_url;
-    string? url;
-};
-
 public type Event_payload_pages record {
     string page_name?;
     string title?;
@@ -11353,6 +12139,14 @@ public type Event_payload_pages record {
     string action?;
     string sha?;
     string html_url?;
+};
+
+public type IssueSearchResultItem_pull_request record {
+    string? merged_at?;
+    string? diff_url;
+    string? html_url;
+    string? patch_url;
+    string? url;
 };
 
 # Represents the Queries record for the operation: activity/list-public-events-for-user
@@ -11583,14 +12377,14 @@ public type TimelineCommittedEvent record {
     GitCommit_committer author;
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
-    GitCommit_tree tree;
+    TimelineCommittedEvent_tree tree;
     string event?;
     # Message describing the purpose of the commit
     string message;
     # SHA for the commit
     string sha;
     string url;
-    GitCommit_verification verification;
+    TimelineCommittedEvent_verification verification;
     @jsondata:Name {value: "node_id"}
     string nodeId;
     GitCommit_parents[] parents;
@@ -11973,6 +12767,7 @@ public type CheckSuite record {
     string checkRunsUrl;
     @jsondata:Name {value: "node_id"}
     string nodeId;
+    # The phase of the lifecycle that the check suite is currently in. Statuses of waiting, requested, and pending are reserved for GitHub Actions check suites.
     "queued"|"in_progress"|"completed"? status;
 };
 
@@ -12055,40 +12850,61 @@ public type ReferrerTraffic record {
 
 # A GitHub user
 public type SimpleUser record {
+    # API URL template for the user's gists.
     @jsondata:Name {value: "gists_url"}
     string gistsUrl;
+    # API URL to list the user's repositories.
     @jsondata:Name {value: "repos_url"}
     string reposUrl;
+    # API URL template to check who the user is following.
     @jsondata:Name {value: "following_url"}
     string followingUrl;
+    # API URL template for repositories the user has starred.
     @jsondata:Name {value: "starred_url"}
     string starredUrl;
+    # The username of the user.
     string login;
+    # API URL to list the user's followers.
     @jsondata:Name {value: "followers_url"}
     string followersUrl;
+    # The type of the account.
     string 'type;
+    # The time the user starred the resource.
     @jsondata:Name {value: "starred_at"}
     string starredAt?;
+    # API URL for the user.
     string url;
+    # API URL to list repositories the user is watching.
     @jsondata:Name {value: "subscriptions_url"}
     string subscriptionsUrl;
+    # API URL for events received by the user.
     @jsondata:Name {value: "received_events_url"}
     string receivedEventsUrl;
+    # URL of the user's avatar image.
     @jsondata:Name {value: "avatar_url"}
     string avatarUrl;
+    # API URL template for the user's events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
+    # URL of the user's GitHub profile page.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # The display name of the user.
     string? name?;
+    # Whether the user is a GitHub site administrator.
     @jsondata:Name {value: "site_admin"}
     boolean siteAdmin;
+    # The unique identifier of the user.
     int id;
+    # The Gravatar ID of the user.
     @jsondata:Name {value: "gravatar_id"}
     string? gravatarId;
+    # The publicly visible email address of the user.
     string? email?;
+    # The GraphQL node identifier of the user.
     @jsondata:Name {value: "node_id"}
     string nodeId;
+    # API URL to list the user's organizations.
     @jsondata:Name {value: "organizations_url"}
     string organizationsUrl;
 };
@@ -12137,6 +12953,12 @@ public type ReposListDeploymentsQueries record {
     int page = 1;
     # The SHA recorded at creation time
     string sha = "none";
+};
+
+public type TimelineCommittedEvent_tree record {
+    # SHA for the commit
+    string sha;
+    string url;
 };
 
 public type branch_protection_body record {
@@ -12516,19 +13338,28 @@ public type ActionsVariable record {
 public type Commit record {
     # A GitHub user
     NullableSimpleUser? committer;
+    # The commit statistics showing additions, deletions, and total changes.
     Commit_stats stats?;
     # A GitHub user
     NullableSimpleUser? author;
+    # URL of the commit page on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # API URL for the commit's comments.
     @jsondata:Name {value: "comments_url"}
     string commentsUrl;
+    # The Git commit data.
     Commit_commit 'commit;
+    # The list of files changed in the commit.
     DiffEntry[] files?;
+    # The SHA hash of the commit.
     string sha;
+    # API URL for the commit.
     string url;
+    # The GraphQL node identifier of the commit.
     @jsondata:Name {value: "node_id"}
     string nodeId;
+    # The parent commits of this commit.
     Commit_parents[] parents;
 };
 
@@ -12674,88 +13505,137 @@ public type DependabotAlert record {|
 
 # Team Organization
 public type TeamOrganization record {
+    # API URL for listing the organization's repositories.
     @jsondata:Name {value: "repos_url"}
     string reposUrl;
+    # Whether members can create internal repositories.
     @jsondata:Name {value: "members_can_create_internal_repositories"}
     boolean membersCanCreateInternalRepositories?;
+    # Whether members can create public GitHub Pages sites.
     @jsondata:Name {value: "members_can_create_public_pages"}
     boolean membersCanCreatePublicPages?;
+    # The URL of the organization's blog or website.
     string blog?;
+    # The type of the account.
     string 'type;
+    # API URL template for listing public members.
     @jsondata:Name {value: "public_members_url"}
     string publicMembersUrl;
+    # The number of private gists.
     @jsondata:Name {value: "private_gists"}
     int? privateGists?;
+    # The default permission level for organization repositories.
     @jsondata:Name {value: "default_repository_permission"}
     string? defaultRepositoryPermission?;
+    # The billing email address for the organization.
     @jsondata:Name {value: "billing_email"}
     string? billingEmail?;
+    # The total disk usage in kilobytes.
     @jsondata:Name {value: "disk_usage"}
     int? diskUsage?;
+    # The number of collaborators across all repositories.
     int? collaborators?;
+    # The unique identifier of the organization.
     int id;
+    # The billing plan for the organization.
     TeamOrganization_plan plan?;
+    # Whether members can create private GitHub Pages sites.
     @jsondata:Name {value: "members_can_create_private_pages"}
     boolean membersCanCreatePrivatePages?;
+    # Whether members can create repositories.
     @jsondata:Name {value: "members_can_create_repositories"}
     boolean? membersCanCreateRepositories?;
+    # Whether members can create private repositories.
     @jsondata:Name {value: "members_can_create_private_repositories"}
     boolean membersCanCreatePrivateRepositories?;
+    # The number of public gists in the organization.
     @jsondata:Name {value: "public_gists"}
     int publicGists;
+    # The number of followers of the organization.
     int followers;
+    # Whether the organization has projects enabled.
     @jsondata:Name {value: "has_organization_projects"}
     boolean hasOrganizationProjects;
+    # The number of accounts the organization is following.
     int following;
+    # URL of the organization's GitHub profile page.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # The display name of the organization.
     string name?;
+    # API URL for listing the organization's webhooks.
     @jsondata:Name {value: "hooks_url"}
     string hooksUrl;
+    # Whether repositories can have projects enabled.
     @jsondata:Name {value: "has_repository_projects"}
     boolean hasRepositoryProjects;
+    # API URL template for listing the organization's members.
     @jsondata:Name {value: "members_url"}
     string membersUrl;
+    # The Twitter username of the organization.
     @jsondata:Name {value: "twitter_username"}
     string? twitterUsername?;
+    # A short description of the organization.
     string? description;
+    # The date the organization was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
+    # The login name of the organization.
     string login;
+    # The total number of private repositories.
     @jsondata:Name {value: "total_private_repos"}
     int totalPrivateRepos?;
+    # The date the organization was last updated.
     @jsondata:Name {value: "updated_at"}
     string updatedAt;
+    # The types of repositories members can create.
     @jsondata:Name {value: "members_allowed_repository_creation_type"}
     string membersAllowedRepositoryCreationType?;
+    # Whether members can fork private repositories.
     @jsondata:Name {value: "members_can_fork_private_repositories"}
     boolean? membersCanForkPrivateRepositories?;
+    # The company name of the organization.
     string company?;
+    # The number of owned private repositories.
     @jsondata:Name {value: "owned_private_repos"}
     int ownedPrivateRepos?;
+    # The number of public repositories in the organization.
     @jsondata:Name {value: "public_repos"}
     int publicRepos;
+    # The publicly visible email of the organization.
     string email?;
+    # Whether two-factor authentication is required for members.
     @jsondata:Name {value: "two_factor_requirement_enabled"}
     boolean? twoFactorRequirementEnabled?;
+    # The date the organization was archived.
     @jsondata:Name {value: "archived_at"}
     string? archivedAt;
+    # Whether the organization's domain is verified.
     @jsondata:Name {value: "is_verified"}
     boolean isVerified?;
+    # Whether commit sign-off is required for web-based commits.
     @jsondata:Name {value: "web_commit_signoff_required"}
     boolean webCommitSignoffRequired?;
+    # API URL for the organization.
     string url;
+    # Whether members can create public repositories.
     @jsondata:Name {value: "members_can_create_public_repositories"}
     boolean membersCanCreatePublicRepositories?;
+    # API URL for listing the organization's issues.
     @jsondata:Name {value: "issues_url"}
     string issuesUrl;
+    # URL of the organization's avatar image.
     @jsondata:Name {value: "avatar_url"}
     string avatarUrl;
+    # API URL for listing the organization's events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
+    # Whether members can create GitHub Pages sites.
     @jsondata:Name {value: "members_can_create_pages"}
     boolean membersCanCreatePages?;
+    # The geographic location of the organization.
     string location?;
+    # The GraphQL node identifier of the organization.
     @jsondata:Name {value: "node_id"}
     string nodeId;
 };
@@ -12813,6 +13693,15 @@ public type Activity record {
     string nodeId;
     # The time when the activity occurred
     string timestamp;
+};
+
+# The permissions the authenticated user has on the repository.
+public type FullRepository_permissions record {
+    boolean admin;
+    boolean maintain?;
+    boolean push;
+    boolean triage?;
+    boolean pull;
 };
 
 # Issue Event
@@ -13178,28 +14067,42 @@ public type ReactionsListForCommitCommentQueries record {
 
 # Organization Full
 public type OrganizationFull record {
+    # API URL for listing the organization's repositories.
     @jsondata:Name {value: "repos_url"}
     string reposUrl;
+    # Whether members can create internal repositories.
     @jsondata:Name {value: "members_can_create_internal_repositories"}
     boolean membersCanCreateInternalRepositories?;
     # An optional URL string to display to contributors who are blocked from pushing a secret
     @jsondata:Name {value: "secret_scanning_push_protection_custom_link"}
     string? secretScanningPushProtectionCustomLink?;
+    # Whether members can create public GitHub Pages sites.
     @jsondata:Name {value: "members_can_create_public_pages"}
     boolean membersCanCreatePublicPages?;
+    # The URL of the organization's blog or website.
     string blog?;
+    # The type of the account.
     string 'type;
+    # API URL template for listing public members.
     @jsondata:Name {value: "public_members_url"}
     string publicMembersUrl;
+    # The number of private gists.
     @jsondata:Name {value: "private_gists"}
     int? privateGists?;
+    # The default permission level for organization repositories.
     @jsondata:Name {value: "default_repository_permission"}
     string? defaultRepositoryPermission?;
+    # The billing email address for the organization.
     @jsondata:Name {value: "billing_email"}
     string? billingEmail?;
+    # The total disk usage in kilobytes.
     @jsondata:Name {value: "disk_usage"}
     int? diskUsage?;
+    # The number of collaborators on private repositories.
+    # 
+    # This field may be null if the number of private repositories is over 50,000.
     int? collaborators?;
+    # The unique identifier of the organization.
     int id;
     # Whether secret scanning push protection is automatically enabled for new repositories and repositories
     # transferred to this organization.
@@ -13207,22 +14110,33 @@ public type OrganizationFull record {
     # This field is only visible to organization owners or members of a team with the security manager role
     @jsondata:Name {value: "secret_scanning_push_protection_enabled_for_new_repositories"}
     boolean secretScanningPushProtectionEnabledForNewRepositories?;
+    # The billing plan for the organization.
     TeamOrganization_plan plan?;
+    # Whether members can create private GitHub Pages sites.
     @jsondata:Name {value: "members_can_create_private_pages"}
     boolean membersCanCreatePrivatePages?;
+    # Whether members can create repositories.
     @jsondata:Name {value: "members_can_create_repositories"}
     boolean? membersCanCreateRepositories?;
+    # Whether members can create private repositories.
     @jsondata:Name {value: "members_can_create_private_repositories"}
     boolean membersCanCreatePrivateRepositories?;
+    # The number of public gists in the organization.
     @jsondata:Name {value: "public_gists"}
     int publicGists;
+    # The number of followers of the organization.
     int followers;
+    # Whether the organization has projects enabled.
     @jsondata:Name {value: "has_organization_projects"}
     boolean hasOrganizationProjects;
+    # The number of accounts the organization is following.
     int following;
+    # URL of the organization's GitHub profile page.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # The display name of the organization.
     string name?;
+    # API URL for listing the organization's webhooks.
     @jsondata:Name {value: "hooks_url"}
     string hooksUrl;
     # Whether dependabot security updates are automatically enabled for new repositories and repositories transferred
@@ -13237,20 +14151,26 @@ public type OrganizationFull record {
     # This field is only visible to organization owners or members of a team with the security manager role
     @jsondata:Name {value: "dependabot_alerts_enabled_for_new_repositories"}
     boolean dependabotAlertsEnabledForNewRepositories?;
+    # Whether repositories can have projects enabled.
     @jsondata:Name {value: "has_repository_projects"}
     boolean hasRepositoryProjects;
+    # API URL template for listing the organization's members.
     @jsondata:Name {value: "members_url"}
     string membersUrl;
+    # The Twitter username of the organization.
     @jsondata:Name {value: "twitter_username"}
     string? twitterUsername?;
+    # A short description of the organization.
     string? description;
     # Whether GitHub Advanced Security is enabled for new repositories and repositories transferred to this organization.
     # 
     # This field is only visible to organization owners or members of a team with the security manager role
     @jsondata:Name {value: "advanced_security_enabled_for_new_repositories"}
     boolean advancedSecurityEnabledForNewRepositories?;
+    # The date the organization was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
+    # The login name of the organization.
     string login;
     # Whether dependency graph is automatically enabled for new repositories and repositories transferred to this
     # organization.
@@ -13258,6 +14178,7 @@ public type OrganizationFull record {
     # This field is only visible to organization owners or members of a team with the security manager role
     @jsondata:Name {value: "dependency_graph_enabled_for_new_repositories"}
     boolean dependencyGraphEnabledForNewRepositories?;
+    # The total number of private repositories.
     @jsondata:Name {value: "total_private_repos"}
     int totalPrivateRepos?;
     # Whether secret scanning is automatically enabled for new repositories and repositories transferred to this
@@ -13266,41 +14187,60 @@ public type OrganizationFull record {
     # This field is only visible to organization owners or members of a team with the security manager role
     @jsondata:Name {value: "secret_scanning_enabled_for_new_repositories"}
     boolean secretScanningEnabledForNewRepositories?;
+    # The date the organization was last updated.
     @jsondata:Name {value: "updated_at"}
     string updatedAt;
+    # The types of repositories members can create.
     @jsondata:Name {value: "members_allowed_repository_creation_type"}
     string membersAllowedRepositoryCreationType?;
+    # Whether members can fork private repositories.
     @jsondata:Name {value: "members_can_fork_private_repositories"}
     boolean? membersCanForkPrivateRepositories?;
+    # The company name of the organization.
     string? company?;
+    # The number of owned private repositories.
     @jsondata:Name {value: "owned_private_repos"}
     int ownedPrivateRepos?;
+    # The number of public repositories in the organization.
     @jsondata:Name {value: "public_repos"}
     int publicRepos;
+    # The publicly visible email of the organization.
     string? email?;
+    # Whether two-factor authentication is required for members.
     @jsondata:Name {value: "two_factor_requirement_enabled"}
     boolean? twoFactorRequirementEnabled?;
+    # The date the organization was archived.
     @jsondata:Name {value: "archived_at"}
     string? archivedAt;
+    # Whether the organization's domain is verified.
     @jsondata:Name {value: "is_verified"}
     boolean isVerified?;
+    # Whether commit sign-off is required for web-based commits.
     @jsondata:Name {value: "web_commit_signoff_required"}
     boolean webCommitSignoffRequired?;
+    # API URL for the organization.
     string url;
+    # Whether members can create public repositories.
     @jsondata:Name {value: "members_can_create_public_repositories"}
     boolean membersCanCreatePublicRepositories?;
+    # API URL for listing the organization's issues.
     @jsondata:Name {value: "issues_url"}
     string issuesUrl;
+    # URL of the organization's avatar image.
     @jsondata:Name {value: "avatar_url"}
     string avatarUrl;
+    # API URL for listing the organization's events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
+    # Whether members can create GitHub Pages sites.
     @jsondata:Name {value: "members_can_create_pages"}
     boolean membersCanCreatePages?;
+    # The geographic location of the organization.
     string location?;
     # Whether a custom link is shown to contributors who are blocked from pushing a secret by push protection
     @jsondata:Name {value: "secret_scanning_push_protection_custom_link_enabled"}
     boolean secretScanningPushProtectionCustomLinkEnabled?;
+    # The GraphQL node identifier of the organization.
     @jsondata:Name {value: "node_id"}
     string nodeId;
 };
@@ -13498,6 +14438,7 @@ public type CodeownersErrors record {
     CodeownersErrors_errors[] errors;
 };
 
+# Hypermedia links for the review comment.
 public type ReviewComment__links record {
     # Hypermedia Link
     Link self;
@@ -13687,31 +14628,43 @@ public type Reaction record {
 public type NullableMilestone record {
     # A GitHub user
     NullableSimpleUser? creator;
+    # The date the milestone was closed.
     @jsondata:Name {value: "closed_at"}
     string? closedAt;
+    # A description of the milestone.
     string? description;
+    # The date the milestone was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
     # The title of the milestone
     string title;
+    # The number of closed issues in the milestone.
     @jsondata:Name {value: "closed_issues"}
     int closedIssues;
+    # API URL for the milestone.
     string url;
+    # The due date for the milestone.
     @jsondata:Name {value: "due_on"}
     string? dueOn;
+    # API URL for issues with this milestone.
     @jsondata:Name {value: "labels_url"}
     string labelsUrl;
     # The number of the milestone
     int number;
+    # The date the milestone was last updated.
     @jsondata:Name {value: "updated_at"}
     string updatedAt;
+    # URL of the milestone page on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # The unique identifier of the milestone.
     int id;
     # The state of the milestone
     "open"|"closed" state = "open";
+    # The number of open issues in the milestone.
     @jsondata:Name {value: "open_issues"}
     int openIssues;
+    # The GraphQL node identifier of the milestone.
     @jsondata:Name {value: "node_id"}
     string nodeId;
 };
@@ -14067,6 +15020,7 @@ public type ActionsGetActionsCacheUsageByRepoForOrgQueries record {
     int page = 1;
 };
 
+# The billing plan for the organization.
 public type Organization_plan record {
     string name?;
     int space?;
@@ -14155,31 +15109,43 @@ public type CodespacesSecret record {
 public type Milestone record {
     # A GitHub user
     NullableSimpleUser? creator;
+    # The date the milestone was closed.
     @jsondata:Name {value: "closed_at"}
     string? closedAt;
+    # A description of the milestone.
     string? description;
+    # The date the milestone was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
     # The title of the milestone
     string title;
+    # The number of closed issues in the milestone.
     @jsondata:Name {value: "closed_issues"}
     int closedIssues;
+    # API URL for the milestone.
     string url;
+    # The due date for the milestone.
     @jsondata:Name {value: "due_on"}
     string? dueOn;
+    # API URL for issues with this milestone.
     @jsondata:Name {value: "labels_url"}
     string labelsUrl;
     # The number of the milestone
     int number;
+    # The date the milestone was last updated.
     @jsondata:Name {value: "updated_at"}
     string updatedAt;
+    # URL of the milestone page on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
+    # The unique identifier of the milestone.
     int id;
     # The state of the milestone
     "open"|"closed" state = "open";
+    # The number of open issues in the milestone.
     @jsondata:Name {value: "open_issues"}
     int openIssues;
+    # The GraphQL node identifier of the milestone.
     @jsondata:Name {value: "node_id"}
     string nodeId;
 };
@@ -14220,11 +15186,15 @@ public type DependabotSecret record {
 
 # Issues are a great way to keep track of tasks, enhancements, and bugs for your projects
 public type NullableIssue record {
+    # The HTML-rendered body of the issue.
     @jsondata:Name {value: "body_html"}
     string bodyHtml?;
+    # The plain text body of the issue.
     @jsondata:Name {value: "body_text"}
     string bodyText?;
+    # The users assigned to the issue.
     SimpleUser[]? assignees?;
+    # The date the issue was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
     # Title of the issue
@@ -14233,36 +15203,51 @@ public type NullableIssue record {
     string? body?;
     # A repository on GitHub
     Repository repository?;
+    # The user who closed the issue.
     @jsondata:Name {value: "closed_by"}
     NullableSimpleUser? closedBy?;
+    # API URL template for the issue's labels.
     @jsondata:Name {value: "labels_url"}
     string labelsUrl;
+    # The association of the author with the repository.
     @jsondata:Name {value: "author_association"}
     AuthorAssociation authorAssociation;
     # Number uniquely identifying the issue within its repository
     int number;
+    # The date the issue was last updated.
     @jsondata:Name {value: "updated_at"}
     string updatedAt;
+    # The GitHub App that triggered the event.
     @jsondata:Name {value: "performed_via_github_app"}
     NullableIntegration? performedViaGithubApp?;
+    # Whether the issue is a draft.
     boolean draft?;
+    # API URL for the issue's comments.
     @jsondata:Name {value: "comments_url"}
     string commentsUrl;
+    # The reason the issue conversation was locked.
     @jsondata:Name {value: "active_lock_reason"}
     string? activeLockReason?;
+    # The unique identifier of the issue.
     int id;
+    # API URL for the repository containing the issue.
     @jsondata:Name {value: "repository_url"}
     string repositoryUrl;
     # State of the issue; either 'open' or 'closed'
     string state;
+    # Whether the issue conversation is locked.
     boolean locked;
+    # API URL for the issue's timeline events.
     @jsondata:Name {value: "timeline_url"}
     string timelineUrl?;
     # The reason for the current state
     @jsondata:Name {value: "state_reason"}
-    "completed"|"reopened"|"not_planned"? stateReason?;
-    IssueSearchResultItem_pull_request pull_request?;
+    string? stateReason?;
+    # Pull request metadata if this issue is a pull request.
+    Issue_pull_request pull_request?;
+    # The number of comments on the issue.
     int comments;
+    # The date the issue was closed.
     @jsondata:Name {value: "closed_at"}
     string? closedAt;
     # URL for the issue
@@ -14271,8 +15256,10 @@ public type NullableIssue record {
     (string|record {int id?; string node_id?; string url?; string name?; string? description?; string? color?; boolean default?;})[] labels;
     # A collection of related issues and pull requests
     NullableMilestone? milestone;
+    # API URL for the issue's events.
     @jsondata:Name {value: "events_url"}
     string eventsUrl;
+    # URL of the issue page on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
     ReactionRollup reactions?;
@@ -14280,6 +15267,7 @@ public type NullableIssue record {
     NullableSimpleUser? assignee;
     # A GitHub user
     NullableSimpleUser? user;
+    # The GraphQL node identifier of the issue.
     @jsondata:Name {value: "node_id"}
     string nodeId;
 };
@@ -14389,6 +15377,7 @@ public type ReposListCommitStatusesForRefQueries record {
     int page = 1;
 };
 
+# The template repository from which this repository was created.
 public type Repository_template_repository record {
     int id?;
     string node_id?;
@@ -14724,6 +15713,13 @@ public type CodespacesListOrgSecretsQueries record {
     int page = 1;
 };
 
+# Enable or disable GitHub Advanced Security for the repository.
+# 
+# For standalone Code Scanning or Secret Protection products, this parameter cannot be used.
+public type SecurityAndAnalysis_advanced_security record {
+    "enabled"|"disabled" status?;
+};
+
 # The default workflow permissions granted to the GITHUB_TOKEN when running workflows
 public type ActionsDefaultWorkflowPermissions "read"|"write";
 
@@ -14844,6 +15840,12 @@ public type ProjectCard record {
     int id;
     @jsondata:Name {value: "node_id"}
     string nodeId;
+};
+
+# Hypermedia links for the review.
+public type PullRequestReview__links record {
+    TimelineReviewedEvent__links_html html;
+    TimelineReviewedEvent__links_html pull_request;
 };
 
 public type CodeScanningAlertInstance_message record {
@@ -15213,24 +16215,32 @@ public type installationId_access_tokens_body record {
 
 # Comments provide a way for people to collaborate on an issue
 public type IssueComment record {
+    # API URL for the associated issue.
     @jsondata:Name {value: "issue_url"}
     string issueUrl;
+    # The HTML-rendered body of the comment.
     @jsondata:Name {value: "body_html"}
     string bodyHtml?;
+    # The plain text body of the comment.
     @jsondata:Name {value: "body_text"}
     string bodyText?;
+    # The date the comment was created.
     @jsondata:Name {value: "created_at"}
     string createdAt;
     # Contents of the issue comment
     string body?;
     # URL for the issue comment
     string url;
+    # The association of the comment author with the repository.
     @jsondata:Name {value: "author_association"}
     AuthorAssociation authorAssociation;
+    # The date the comment was last updated.
     @jsondata:Name {value: "updated_at"}
     string updatedAt;
+    # The GitHub App that created the comment.
     @jsondata:Name {value: "performed_via_github_app"}
     NullableIntegration? performedViaGithubApp?;
+    # URL of the comment on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
     ReactionRollup reactions?;
@@ -15238,6 +16248,7 @@ public type IssueComment record {
     int id;
     # A GitHub user
     NullableSimpleUser? user;
+    # The GraphQL node identifier of the comment.
     @jsondata:Name {value: "node_id"}
     string nodeId;
 };
@@ -15479,6 +16490,13 @@ public type TeamsListDiscussionsLegacyQueries record {
 
 # The REST API URL for fetching the list of instances for an alert
 public type AlertInstancesUrl string;
+
+public type TimelineCommittedEvent_verification record {
+    boolean verified;
+    string reason;
+    string? signature;
+    string? payload;
+};
 
 # Snapshot of a newly created repository's dependencies
 public type SnapshotResponse record {
@@ -16296,29 +17314,38 @@ public type ReviewCustomGatesCommentRequired record {
 
 # Pull Request Reviews are reviews on pull requests
 public type PullRequestReview record {
+    # The HTML-rendered body of the review.
     @jsondata:Name {value: "body_html"}
     string bodyHtml?;
-    TimelineReviewedEvent__links _links;
+    # Hypermedia links for the review.
+    PullRequestReview__links _links;
+    # The date the review was submitted.
     @jsondata:Name {value: "submitted_at"}
     string submittedAt?;
+    # The plain text body of the review.
     @jsondata:Name {value: "body_text"}
     string bodyText?;
+    # API URL for the reviewed pull request.
     @jsondata:Name {value: "pull_request_url"}
     string pullRequestUrl;
     # The text of the review
     string body;
+    # The association of the reviewer with the repository.
     @jsondata:Name {value: "author_association"}
     AuthorAssociation authorAssociation;
+    # URL of the review on GitHub.
     @jsondata:Name {value: "html_url"}
     string htmlUrl;
     # Unique identifier of the review
     int id;
+    # The state of the review.
     string state;
     # A GitHub user
     NullableSimpleUser? user;
     # A commit SHA for the review. If the commit object was garbage collected or forcibly deleted, then it no longer exists in Git and this value will be `null`
     @jsondata:Name {value: "commit_id"}
     string? commitId;
+    # The GraphQL node identifier of the review.
     @jsondata:Name {value: "node_id"}
     string nodeId;
 };

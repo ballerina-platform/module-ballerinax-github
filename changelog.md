@@ -4,7 +4,7 @@ This file contains all the notable changes done to the Ballerina GitHub package 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [6.0.0] - 2026-02-12
+## [Unreleased]
 
 ### Breaking Changes
 - [[#8642](https://github.com/ballerina-platform/ballerina-library/issues/8642)] Regenerated the connector from the aligned OpenAPI specification
