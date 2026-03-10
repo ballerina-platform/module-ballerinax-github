@@ -4,7 +4,6 @@ org = "ballerinax"
 name = "github"
 version = "6.0.0"
 authors = ["Ballerina"]
-export = ["github"]
 keywords = ["IT Operations/Source Control", "Cost/Freemium", "Vendor/GitHub", "Area/Project Management", "Type/Connector"]
 icon = "icon.png"
 repository = "https://github.com/ballerina-platform/module-ballerinax-github"
