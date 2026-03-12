@@ -79,7 +79,7 @@ github:Repository[] userRepos = check github->/user/repos(visibility = "private"
 #### Create a Private Repository
 
 ```ballerina
-github:User_repos_body body = {
+github:UserReposBody body = {
     name: "New Test Repo Name",
     'private: true,
     description: "New Test Repo Description"

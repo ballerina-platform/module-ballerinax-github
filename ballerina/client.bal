@@ -93,7 +93,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch app/hook/config(hook_config_body payload, map<string|string[]> headers = {}) returns WebhookConfig|error {
+    resource isolated function patch app/hook/config(HookConfigBody payload, map<string|string[]> headers = {}) returns WebhookConfig|error {
         string resourcePath = string `/app/hook/config`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -146,7 +146,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
-    # + return - The permissions the installation has are included under the `permissions` key 
+    # + return - The permissions the installation has are included under the permissions key 
     resource isolated function get app/installations(map<string|string[]> headers = {}, *AppsListInstallationsQueries queries) returns Installation[]|error {
         string resourcePath = string `/app/installations`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
@@ -178,7 +178,7 @@ public isolated client class Client {
     # + installationId - The unique identifier of the installation
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post app/installations/[int installationId]/access_tokens(installationId_access_tokens_body payload, map<string|string[]> headers = {}) returns InstallationToken|error {
+    resource isolated function post app/installations/[int installationId]/access_tokens(InstallationIdAccessTokensBody payload, map<string|string[]> headers = {}) returns InstallationToken|error {
         string resourcePath = string `/app/installations/${getEncodedUri(installationId)}/access_tokens`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -212,7 +212,7 @@ public isolated client class Client {
     # + clientId - The client ID of the GitHub app
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function delete applications/[string clientId]/grant(clientId_grant_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function delete applications/[string clientId]/grant(ClientIdGrantBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/applications/${getEncodedUri(clientId)}/grant`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -225,7 +225,7 @@ public isolated client class Client {
     # + clientId - The client ID of the GitHub app
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post applications/[string clientId]/token(clientId_token_body payload, map<string|string[]> headers = {}) returns Authorization|error {
+    resource isolated function post applications/[string clientId]/token(ClientIdTokenBody payload, map<string|string[]> headers = {}) returns Authorization|error {
         string resourcePath = string `/applications/${getEncodedUri(clientId)}/token`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -238,7 +238,7 @@ public isolated client class Client {
     # + clientId - The client ID of the GitHub app
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function delete applications/[string clientId]/token(clientId_token_body_1 payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function delete applications/[string clientId]/token(ClientIdGrantBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/applications/${getEncodedUri(clientId)}/token`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -251,7 +251,7 @@ public isolated client class Client {
     # + clientId - The client ID of the GitHub app
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch applications/[string clientId]/token(clientId_token_body_2 payload, map<string|string[]> headers = {}) returns Authorization|error {
+    resource isolated function patch applications/[string clientId]/token(ClientIdTokenBody payload, map<string|string[]> headers = {}) returns Authorization|error {
         string resourcePath = string `/applications/${getEncodedUri(clientId)}/token`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -264,7 +264,7 @@ public isolated client class Client {
     # + clientId - The client ID of the GitHub app
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post applications/[string clientId]/token/scoped(token_scoped_body payload, map<string|string[]> headers = {}) returns Authorization|error {
+    resource isolated function post applications/[string clientId]/token/scoped(TokenScopedBody payload, map<string|string[]> headers = {}) returns Authorization|error {
         string resourcePath = string `/applications/${getEncodedUri(clientId)}/token/scoped`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -432,7 +432,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post gists(gists_body payload, map<string|string[]> headers = {}) returns GistSimple|error? {
+    resource isolated function post gists(GistsBody payload, map<string|string[]> headers = {}) returns GistSimple|error? {
         string resourcePath = string `/gists`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -487,7 +487,7 @@ public isolated client class Client {
     # + gistId - The unique identifier of the gist
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch gists/[string gistId](gists_gistId_body payload, map<string|string[]> headers = {}) returns GistSimple|error {
+    resource isolated function patch gists/[string gistId](GistsgistIdBody payload, map<string|string[]> headers = {}) returns GistSimple|error {
         string resourcePath = string `/gists/${getEncodedUri(gistId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -512,7 +512,7 @@ public isolated client class Client {
     # + gistId - The unique identifier of the gist
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post gists/[string gistId]/comments(gistId_comments_body payload, map<string|string[]> headers = {}) returns GistComment|error? {
+    resource isolated function post gists/[string gistId]/comments(GistIdCommentsBody payload, map<string|string[]> headers = {}) returns GistComment|error? {
         string resourcePath = string `/gists/${getEncodedUri(gistId)}/comments`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -548,7 +548,7 @@ public isolated client class Client {
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch gists/[string gistId]/comments/[int commentId](comments_commentId_body payload, map<string|string[]> headers = {}) returns GistComment|error {
+    resource isolated function patch gists/[string gistId]/comments/[int commentId](GistIdCommentsBody payload, map<string|string[]> headers = {}) returns GistComment|error {
         string resourcePath = string `/gists/${getEncodedUri(gistId)}/comments/${getEncodedUri(commentId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -705,7 +705,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post markdown(markdown_body payload, map<string|string[]> headers = {}) returns string|error? {
+    resource isolated function post markdown(MarkdownBody payload, map<string|string[]> headers = {}) returns string|error? {
         string resourcePath = string `/markdown`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -802,7 +802,7 @@ public isolated client class Client {
     # List public events for a network of repositories
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -827,7 +827,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put notifications(notifications_body payload, map<string|string[]> headers = {}) returns NotificationRead|error? {
+    resource isolated function put notifications(NotificationsBody payload, map<string|string[]> headers = {}) returns NotificationRead|error? {
         string resourcePath = string `/notifications`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -837,7 +837,7 @@ public isolated client class Client {
 
     # Get a thread
     #
-    # + threadId - The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user))
+    # + threadId - The unique identifier of the notification thread. This corresponds to the value returned in the id field when you retrieve notifications (for example with the [GET /notifications operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user))
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get notifications/threads/[int threadId](map<string|string[]> headers = {}) returns NotificationThread|error? {
@@ -847,7 +847,7 @@ public isolated client class Client {
 
     # Mark a thread as read
     #
-    # + threadId - The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user))
+    # + threadId - The unique identifier of the notification thread. This corresponds to the value returned in the id field when you retrieve notifications (for example with the [GET /notifications operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user))
     # + headers - Headers to be sent with the request 
     # + return - Reset Content 
     resource isolated function patch notifications/threads/[int threadId](map<string|string[]> headers = {}) returns error? {
@@ -858,7 +858,7 @@ public isolated client class Client {
 
     # Get a thread subscription for the authenticated user
     #
-    # + threadId - The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user))
+    # + threadId - The unique identifier of the notification thread. This corresponds to the value returned in the id field when you retrieve notifications (for example with the [GET /notifications operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user))
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get notifications/threads/[int threadId]/subscription(map<string|string[]> headers = {}) returns ThreadSubscription|error? {
@@ -868,10 +868,10 @@ public isolated client class Client {
 
     # Set a thread subscription
     #
-    # + threadId - The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user))
+    # + threadId - The unique identifier of the notification thread. This corresponds to the value returned in the id field when you retrieve notifications (for example with the [GET /notifications operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user))
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put notifications/threads/[int threadId]/subscription(threadId_subscription_body payload, map<string|string[]> headers = {}) returns ThreadSubscription|error? {
+    resource isolated function put notifications/threads/[int threadId]/subscription(ThreadIdSubscriptionBody payload, map<string|string[]> headers = {}) returns ThreadSubscription|error? {
         string resourcePath = string `/notifications/threads/${getEncodedUri(threadId)}/subscription`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -881,7 +881,7 @@ public isolated client class Client {
 
     # Delete a thread subscription
     #
-    # + threadId - The unique identifier of the notification thread. This corresponds to the value returned in the `id` field when you retrieve notifications (for example with the [`GET /notifications` operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user))
+    # + threadId - The unique identifier of the notification thread. This corresponds to the value returned in the id field when you retrieve notifications (for example with the [GET /notifications operation](https://docs.github.com/rest/activity/notifications#list-notifications-for-the-authenticated-user))
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function delete notifications/threads/[int threadId]/subscription(map<string|string[]> headers = {}) returns error? {
@@ -936,7 +936,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch orgs/[string org](orgs_org_body payload, map<string|string[]> headers = {}) returns OrganizationFull|error {
+    resource isolated function patch orgs/[string org](OrgsorgBody payload, map<string|string[]> headers = {}) returns OrganizationFull|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1004,7 +1004,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put orgs/[string org]/actions/permissions(actions_permissions_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put orgs/[string org]/actions/permissions(ActionsPermissionsBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/actions/permissions`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1029,7 +1029,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put orgs/[string org]/actions/permissions/repositories(permissions_repositories_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put orgs/[string org]/actions/permissions/repositories(PermissionsRepositoriesBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/actions/permissions/repositories`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1133,7 +1133,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post orgs/[string org]/actions/runners/generate\-jitconfig(runners_generatejitconfig_body payload, map<string|string[]> headers = {}) returns JitConfig|error {
+    resource isolated function post orgs/[string org]/actions/runners/generate\-jitconfig(RunnersGenerateJitconfigBody payload, map<string|string[]> headers = {}) returns JitConfig|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/actions/runners/generate-jitconfig`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1202,7 +1202,7 @@ public isolated client class Client {
     # + runnerId - Unique identifier of the self-hosted runner
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put orgs/[string org]/actions/runners/[int runnerId]/labels(runnerId_labels_body payload, map<string|string[]> headers = {}) returns RunnerLabelResponse|error {
+    resource isolated function put orgs/[string org]/actions/runners/[int runnerId]/labels(RunnerIdLabelsBody payload, map<string|string[]> headers = {}) returns RunnerLabelResponse|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/actions/runners/${getEncodedUri(runnerId)}/labels`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1216,7 +1216,7 @@ public isolated client class Client {
     # + runnerId - Unique identifier of the self-hosted runner
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post orgs/[string org]/actions/runners/[int runnerId]/labels(runnerId_labels_body_1 payload, map<string|string[]> headers = {}) returns RunnerLabelResponse|error {
+    resource isolated function post orgs/[string org]/actions/runners/[int runnerId]/labels(RunnerIdLabelsBody1 payload, map<string|string[]> headers = {}) returns RunnerLabelResponse|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/actions/runners/${getEncodedUri(runnerId)}/labels`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1286,7 +1286,7 @@ public isolated client class Client {
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response when creating a secret 
-    resource isolated function put orgs/[string org]/actions/secrets/[string secretName](secrets_secretName_body payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
+    resource isolated function put orgs/[string org]/actions/secrets/[string secretName](SecretssecretNameBody payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/actions/secrets/${getEncodedUri(secretName)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1324,7 +1324,7 @@ public isolated client class Client {
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put orgs/[string org]/actions/secrets/[string secretName]/repositories(secretName_repositories_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put orgs/[string org]/actions/secrets/[string secretName]/repositories(SecretNameRepositoriesBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/actions/secrets/${getEncodedUri(secretName)}/repositories`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1372,7 +1372,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response when creating a variable 
-    resource isolated function post orgs/[string org]/actions/variables(actions_variables_body payload, map<string|string[]> headers = {}) returns EmptyObject|error {
+    resource isolated function post orgs/[string org]/actions/variables(ActionsVariablesBody payload, map<string|string[]> headers = {}) returns EmptyObject|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/actions/variables`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1408,7 +1408,7 @@ public isolated client class Client {
     # + name - The name of the variable
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch orgs/[string org]/actions/variables/[string name](variables_name_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function patch orgs/[string org]/actions/variables/[string name](VariablesnameBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/actions/variables/${getEncodedUri(name)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1435,7 +1435,7 @@ public isolated client class Client {
     # + name - The name of the variable
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put orgs/[string org]/actions/variables/[string name]/repositories(name_repositories_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put orgs/[string org]/actions/variables/[string name]/repositories(NameRepositoriesBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/actions/variables/${getEncodedUri(name)}/repositories`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1544,7 +1544,7 @@ public isolated client class Client {
     # 
     # # Deprecated
     @deprecated
-    resource isolated function put orgs/[string org]/codespaces/access(codespaces_access_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put orgs/[string org]/codespaces/access(CodespacesAccessBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/codespaces/access`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1560,7 +1560,7 @@ public isolated client class Client {
     # 
     # # Deprecated
     @deprecated
-    resource isolated function post orgs/[string org]/codespaces/access/selected_users(access_selected_users_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function post orgs/[string org]/codespaces/access/selected_users(AccessSelectedUsersBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/codespaces/access/selected_users`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1576,7 +1576,7 @@ public isolated client class Client {
     # 
     # # Deprecated
     @deprecated
-    resource isolated function delete orgs/[string org]/codespaces/access/selected_users(access_selected_users_body_1 payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function delete orgs/[string org]/codespaces/access/selected_users(AccessSelectedUsersBody1 payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/codespaces/access/selected_users`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1623,7 +1623,7 @@ public isolated client class Client {
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response when creating a secret 
-    resource isolated function put orgs/[string org]/codespaces/secrets/[string secretName](secrets_secretName_body_1 payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
+    resource isolated function put orgs/[string org]/codespaces/secrets/[string secretName](SecretssecretNameBody1 payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/codespaces/secrets/${getEncodedUri(secretName)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1661,7 +1661,7 @@ public isolated client class Client {
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put orgs/[string org]/codespaces/secrets/[string secretName]/repositories(secretName_repositories_body_1 payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put orgs/[string org]/codespaces/secrets/[string secretName]/repositories(SecretNameRepositoriesBody1 payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/codespaces/secrets/${getEncodedUri(secretName)}/repositories`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1719,7 +1719,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - OK 
-    resource isolated function post orgs/[string org]/copilot/billing/selected_teams(billing_selected_teams_body payload, map<string|string[]> headers = {}) returns CopilotSeatCreated|error {
+    resource isolated function post orgs/[string org]/copilot/billing/selected_teams(BillingSelectedTeamsBody payload, map<string|string[]> headers = {}) returns CopilotSeatCreated|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/copilot/billing/selected_teams`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1732,7 +1732,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - OK 
-    resource isolated function delete orgs/[string org]/copilot/billing/selected_teams(billing_selected_teams_body_1 payload, map<string|string[]> headers = {}) returns CopilotSeatCancelled|error {
+    resource isolated function delete orgs/[string org]/copilot/billing/selected_teams(BillingSelectedTeamsBody1 payload, map<string|string[]> headers = {}) returns CopilotSeatCancelled|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/copilot/billing/selected_teams`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1745,7 +1745,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - OK 
-    resource isolated function post orgs/[string org]/copilot/billing/selected_users(billing_selected_users_body payload, map<string|string[]> headers = {}) returns CopilotSeatCreated|error {
+    resource isolated function post orgs/[string org]/copilot/billing/selected_users(BillingSelectedUsersBody payload, map<string|string[]> headers = {}) returns CopilotSeatCreated|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/copilot/billing/selected_users`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1758,7 +1758,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - OK 
-    resource isolated function delete orgs/[string org]/copilot/billing/selected_users(billing_selected_users_body_1 payload, map<string|string[]> headers = {}) returns CopilotSeatCancelled|error {
+    resource isolated function delete orgs/[string org]/copilot/billing/selected_users(BillingSelectedUsersBody1 payload, map<string|string[]> headers = {}) returns CopilotSeatCancelled|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/copilot/billing/selected_users`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1817,7 +1817,7 @@ public isolated client class Client {
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response when creating a secret 
-    resource isolated function put orgs/[string org]/dependabot/secrets/[string secretName](secrets_secretName_body_2 payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
+    resource isolated function put orgs/[string org]/dependabot/secrets/[string secretName](SecretssecretNameBody2 payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/dependabot/secrets/${getEncodedUri(secretName)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1855,7 +1855,7 @@ public isolated client class Client {
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put orgs/[string org]/dependabot/secrets/[string secretName]/repositories(secretName_repositories_body_2 payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put orgs/[string org]/dependabot/secrets/[string secretName]/repositories(SecretNameRepositoriesBody2 payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/dependabot/secrets/${getEncodedUri(secretName)}/repositories`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1937,7 +1937,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post orgs/[string org]/hooks(org_hooks_body payload, map<string|string[]> headers = {}) returns OrgHook|error {
+    resource isolated function post orgs/[string org]/hooks(OrgHooksBody payload, map<string|string[]> headers = {}) returns OrgHook|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/hooks`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1948,7 +1948,7 @@ public isolated client class Client {
     # Get an organization webhook
     #
     # + org - The organization name. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get orgs/[string org]/hooks/[int hookId](map<string|string[]> headers = {}) returns OrgHook|error {
@@ -1959,7 +1959,7 @@ public isolated client class Client {
     # Delete an organization webhook
     #
     # + org - The organization name. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function delete orgs/[string org]/hooks/[int hookId](map<string|string[]> headers = {}) returns error? {
@@ -1970,10 +1970,10 @@ public isolated client class Client {
     # Update an organization webhook
     #
     # + org - The organization name. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch orgs/[string org]/hooks/[int hookId](hooks_hookId_body payload, map<string|string[]> headers = {}) returns OrgHook|error {
+    resource isolated function patch orgs/[string org]/hooks/[int hookId](HookshookIdBody payload, map<string|string[]> headers = {}) returns OrgHook|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/hooks/${getEncodedUri(hookId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -1984,7 +1984,7 @@ public isolated client class Client {
     # Get a webhook configuration for an organization
     #
     # + org - The organization name. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get orgs/[string org]/hooks/[int hookId]/config(map<string|string[]> headers = {}) returns WebhookConfig|error {
@@ -1995,10 +1995,10 @@ public isolated client class Client {
     # Update a webhook configuration for an organization
     #
     # + org - The organization name. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch orgs/[string org]/hooks/[int hookId]/config(hookId_config_body payload, map<string|string[]> headers = {}) returns WebhookConfig|error {
+    resource isolated function patch orgs/[string org]/hooks/[int hookId]/config(HookConfigBody payload, map<string|string[]> headers = {}) returns WebhookConfig|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/hooks/${getEncodedUri(hookId)}/config`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2009,7 +2009,7 @@ public isolated client class Client {
     # List deliveries for an organization webhook
     #
     # + org - The organization name. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -2022,7 +2022,7 @@ public isolated client class Client {
     # Get a webhook delivery for an organization webhook
     #
     # + org - The organization name. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get orgs/[string org]/hooks/[int hookId]/deliveries/[int deliveryId](map<string|string[]> headers = {}) returns HookDelivery|error {
@@ -2033,7 +2033,7 @@ public isolated client class Client {
     # Redeliver a delivery for an organization webhook
     #
     # + org - The organization name. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Accepted 
     resource isolated function post orgs/[string org]/hooks/[int hookId]/deliveries/[int deliveryId]/attempts(map<string|string[]> headers = {}) returns record {}|error {
@@ -2045,7 +2045,7 @@ public isolated client class Client {
     # Ping an organization webhook
     #
     # + org - The organization name. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function post orgs/[string org]/hooks/[int hookId]/pings(map<string|string[]> headers = {}) returns error? {
@@ -2126,7 +2126,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post orgs/[string org]/invitations(org_invitations_body payload, map<string|string[]> headers = {}) returns OrganizationInvitation|error {
+    resource isolated function post orgs/[string org]/invitations(OrgInvitationsBody payload, map<string|string[]> headers = {}) returns OrganizationInvitation|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/invitations`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2270,7 +2270,7 @@ public isolated client class Client {
     # + username - The handle for the GitHub user account
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put orgs/[string org]/memberships/[string username](memberships_username_body payload, map<string|string[]> headers = {}) returns OrgMembership|error {
+    resource isolated function put orgs/[string org]/memberships/[string username](MembershipsusernameBody payload, map<string|string[]> headers = {}) returns OrgMembership|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/memberships/${getEncodedUri(username)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2307,7 +2307,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post orgs/[string org]/migrations(org_migrations_body payload, map<string|string[]> headers = {}) returns Migration|error {
+    resource isolated function post orgs/[string org]/migrations(OrgMigrationsBody payload, map<string|string[]> headers = {}) returns Migration|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/migrations`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2321,7 +2321,7 @@ public isolated client class Client {
     # + migrationId - The unique identifier of the migration
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
-    # + return - *   `pending`, which means the migration hasn't started yet. *   `exporting`, which means the migration is in progress. *   `exported`, which means the migration finished successfully. *   `failed`, which means the migration failed 
+    # + return - *   pending, which means the migration hasn't started yet. *   exporting, which means the migration is in progress. *   exported, which means the migration finished successfully. *   failed, which means the migration failed 
     resource isolated function get orgs/[string org]/migrations/[int migrationId](map<string|string[]> headers = {}, *MigrationsGetStatusForOrgQueries queries) returns Migration|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/migrations/${getEncodedUri(migrationId)}`;
         map<Encoding> queryParamEncoding = {"exclude": {style: FORM, explode: true}};
@@ -2394,7 +2394,7 @@ public isolated client class Client {
     # + username - The handle for the GitHub user account
     # + headers - Headers to be sent with the request 
     # + return - User is getting converted asynchronously 
-    resource isolated function put orgs/[string org]/outside_collaborators/[string username](outside_collaborators_username_body payload, map<string|string[]> headers = {}) returns record {||}|error? {
+    resource isolated function put orgs/[string org]/outside_collaborators/[string username](OutsideCollaboratorsusernameBody payload, map<string|string[]> headers = {}) returns record {||}|error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/outside_collaborators/${getEncodedUri(username)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2427,7 +2427,7 @@ public isolated client class Client {
 
     # Get a package for an organization
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
@@ -2439,7 +2439,7 @@ public isolated client class Client {
 
     # Delete a package for an organization
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
@@ -2451,7 +2451,7 @@ public isolated client class Client {
 
     # Restore a package for an organization
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
@@ -2466,7 +2466,7 @@ public isolated client class Client {
 
     # List package versions for a package owned by an organization
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
@@ -2480,7 +2480,7 @@ public isolated client class Client {
 
     # Get a package version for an organization
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + org - The organization name. The name is not case sensitive
     # + packageVersionId - Unique identifier of the package version
@@ -2493,7 +2493,7 @@ public isolated client class Client {
 
     # Delete package version for an organization
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + org - The organization name. The name is not case sensitive
     # + packageVersionId - Unique identifier of the package version
@@ -2506,7 +2506,7 @@ public isolated client class Client {
 
     # Restore package version for an organization
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + org - The organization name. The name is not case sensitive
     # + packageVersionId - Unique identifier of the package version
@@ -2536,7 +2536,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Internal Error 
-    resource isolated function post orgs/[string org]/personal\-access\-token\-requests(org_personalaccesstokenrequests_body payload, map<string|string[]> headers = {}) returns record {}|error {
+    resource isolated function post orgs/[string org]/personal\-access\-token\-requests(OrgPersonalAccessTokenRequestsBody payload, map<string|string[]> headers = {}) returns record {}|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/personal-access-token-requests`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2550,7 +2550,7 @@ public isolated client class Client {
     # + patId - The unique identifier of the fine-grained personal access token
     # + headers - Headers to be sent with the request 
     # + return - Internal Error 
-    resource isolated function post orgs/[string org]/personal\-access\-token\-requests/[int patRequestId](personalaccesstokenrequests_patRequestId_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function post orgs/[string org]/personal\-access\-token\-requests/[int patRequestId](PersonalAccessTokenRequestspatRequestIdBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/personal-access-token-requests/${getEncodedUri(patRequestId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2589,7 +2589,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Internal Error 
-    resource isolated function post orgs/[string org]/personal\-access\-tokens(org_personalaccesstokens_body payload, map<string|string[]> headers = {}) returns record {}|error {
+    resource isolated function post orgs/[string org]/personal\-access\-tokens(OrgPersonalAccessTokensBody payload, map<string|string[]> headers = {}) returns record {}|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/personal-access-tokens`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2603,7 +2603,7 @@ public isolated client class Client {
     # + patId - The unique identifier of the fine-grained personal access token
     # + headers - Headers to be sent with the request 
     # + return - Internal Error 
-    resource isolated function post orgs/[string org]/personal\-access\-tokens/[int patId](personalaccesstokens_patId_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function post orgs/[string org]/personal\-access\-tokens/[int patId](PersonalAccessTokenspatIdBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/personal-access-tokens/${getEncodedUri(patId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2641,7 +2641,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post orgs/[string org]/projects(org_projects_body payload, map<string|string[]> headers = {}) returns Project|error {
+    resource isolated function post orgs/[string org]/projects(OrgProjectsBody payload, map<string|string[]> headers = {}) returns Project|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/projects`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2712,7 +2712,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post orgs/[string org]/repos(org_repos_body payload, map<string|string[]> headers = {}) returns Repository|error {
+    resource isolated function post orgs/[string org]/repos(OrgReposBody payload, map<string|string[]> headers = {}) returns Repository|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/repos`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2738,7 +2738,7 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + payload - Request body 
     # + return - Response 
-    resource isolated function post orgs/[string org]/rulesets(org_rulesets_body payload, map<string|string[]> headers = {}) returns RepositoryRuleset|error {
+    resource isolated function post orgs/[string org]/rulesets(OrgRulesetsBody payload, map<string|string[]> headers = {}) returns RepositoryRuleset|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/rulesets`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2790,7 +2790,7 @@ public isolated client class Client {
     # + headers - Headers to be sent with the request 
     # + payload - Request body 
     # + return - Response 
-    resource isolated function put orgs/[string org]/rulesets/[int rulesetId](rulesets_rulesetId_body payload, map<string|string[]> headers = {}) returns RepositoryRuleset|error {
+    resource isolated function put orgs/[string org]/rulesets/[int rulesetId](RulesetsrulesetIdBody payload, map<string|string[]> headers = {}) returns RepositoryRuleset|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/rulesets/${getEncodedUri(rulesetId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2913,7 +2913,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post orgs/[string org]/teams(org_teams_body payload, map<string|string[]> headers = {}) returns TeamFull|error {
+    resource isolated function post orgs/[string org]/teams(OrgTeamsBody payload, map<string|string[]> headers = {}) returns TeamFull|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/teams`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2949,7 +2949,7 @@ public isolated client class Client {
     # + teamSlug - The slug of the team name
     # + headers - Headers to be sent with the request 
     # + return - Response when the updated information already exists 
-    resource isolated function patch orgs/[string org]/teams/[string teamSlug](teams_teamSlug_body payload, map<string|string[]> headers = {}) returns TeamFull|error {
+    resource isolated function patch orgs/[string org]/teams/[string teamSlug](TeamsteamSlugBody payload, map<string|string[]> headers = {}) returns TeamFull|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/teams/${getEncodedUri(teamSlug)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -2976,7 +2976,7 @@ public isolated client class Client {
     # + teamSlug - The slug of the team name
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post orgs/[string org]/teams/[string teamSlug]/discussions(teamSlug_discussions_body payload, map<string|string[]> headers = {}) returns TeamDiscussion|error {
+    resource isolated function post orgs/[string org]/teams/[string teamSlug]/discussions(TeamSlugDiscussionsBody payload, map<string|string[]> headers = {}) returns TeamDiscussion|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/teams/${getEncodedUri(teamSlug)}/discussions`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3015,7 +3015,7 @@ public isolated client class Client {
     # + discussionNumber - The number that identifies the discussion
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch orgs/[string org]/teams/[string teamSlug]/discussions/[int discussionNumber](discussions_discussionNumber_body payload, map<string|string[]> headers = {}) returns TeamDiscussion|error {
+    resource isolated function patch orgs/[string org]/teams/[string teamSlug]/discussions/[int discussionNumber](DiscussionsdiscussionNumberBody payload, map<string|string[]> headers = {}) returns TeamDiscussion|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/teams/${getEncodedUri(teamSlug)}/discussions/${getEncodedUri(discussionNumber)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3044,7 +3044,7 @@ public isolated client class Client {
     # + discussionNumber - The number that identifies the discussion
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post orgs/[string org]/teams/[string teamSlug]/discussions/[int discussionNumber]/comments(discussionNumber_comments_body payload, map<string|string[]> headers = {}) returns TeamDiscussionComment|error {
+    resource isolated function post orgs/[string org]/teams/[string teamSlug]/discussions/[int discussionNumber]/comments(DiscussionNumberCommentsBody payload, map<string|string[]> headers = {}) returns TeamDiscussionComment|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/teams/${getEncodedUri(teamSlug)}/discussions/${getEncodedUri(discussionNumber)}/comments`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3086,7 +3086,7 @@ public isolated client class Client {
     # + commentNumber - The number that identifies the comment
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch orgs/[string org]/teams/[string teamSlug]/discussions/[int discussionNumber]/comments/[int commentNumber](comments_commentNumber_body payload, map<string|string[]> headers = {}) returns TeamDiscussionComment|error {
+    resource isolated function patch orgs/[string org]/teams/[string teamSlug]/discussions/[int discussionNumber]/comments/[int commentNumber](DiscussionNumberCommentsBody payload, map<string|string[]> headers = {}) returns TeamDiscussionComment|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/teams/${getEncodedUri(teamSlug)}/discussions/${getEncodedUri(discussionNumber)}/comments/${getEncodedUri(commentNumber)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3117,7 +3117,7 @@ public isolated client class Client {
     # + commentNumber - The number that identifies the comment
     # + headers - Headers to be sent with the request 
     # + return - Response when the reaction type has already been added to this team discussion comment 
-    resource isolated function post orgs/[string org]/teams/[string teamSlug]/discussions/[int discussionNumber]/comments/[int commentNumber]/reactions(commentNumber_reactions_body payload, map<string|string[]> headers = {}) returns Reaction|error {
+    resource isolated function post orgs/[string org]/teams/[string teamSlug]/discussions/[int discussionNumber]/comments/[int commentNumber]/reactions(CommentNumberReactionsBody payload, map<string|string[]> headers = {}) returns Reaction|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/teams/${getEncodedUri(teamSlug)}/discussions/${getEncodedUri(discussionNumber)}/comments/${getEncodedUri(commentNumber)}/reactions`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3160,7 +3160,7 @@ public isolated client class Client {
     # + discussionNumber - The number that identifies the discussion
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post orgs/[string org]/teams/[string teamSlug]/discussions/[int discussionNumber]/reactions(discussionNumber_reactions_body payload, map<string|string[]> headers = {}) returns Reaction|error {
+    resource isolated function post orgs/[string org]/teams/[string teamSlug]/discussions/[int discussionNumber]/reactions(DiscussionNumberReactionsBody payload, map<string|string[]> headers = {}) returns Reaction|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/teams/${getEncodedUri(teamSlug)}/discussions/${getEncodedUri(discussionNumber)}/reactions`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3226,7 +3226,7 @@ public isolated client class Client {
     # + username - The handle for the GitHub user account
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put orgs/[string org]/teams/[string teamSlug]/memberships/[string username](memberships_username_body_1 payload, map<string|string[]> headers = {}) returns TeamMembership|error {
+    resource isolated function put orgs/[string org]/teams/[string teamSlug]/memberships/[string username](MembershipsusernameBody1 payload, map<string|string[]> headers = {}) returns TeamMembership|error {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/teams/${getEncodedUri(teamSlug)}/memberships/${getEncodedUri(username)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3278,7 +3278,7 @@ public isolated client class Client {
     # + projectId - The unique identifier of the project
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put orgs/[string org]/teams/[string teamSlug]/projects/[int projectId](projects_projectId_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put orgs/[string org]/teams/[string teamSlug]/projects/[int projectId](ProjectsprojectIdBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/teams/${getEncodedUri(teamSlug)}/projects/${getEncodedUri(projectId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3316,7 +3316,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + teamSlug - The slug of the team name
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Alternative response with repository permissions 
     resource isolated function get orgs/[string org]/teams/[string teamSlug]/repos/[string owner]/[string repo](map<string|string[]> headers = {}) returns TeamRepository|error? {
@@ -3329,10 +3329,10 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + teamSlug - The slug of the team name
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put orgs/[string org]/teams/[string teamSlug]/repos/[string owner]/[string repo](owner_repo_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put orgs/[string org]/teams/[string teamSlug]/repos/[string owner]/[string repo](OwnerrepoBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/teams/${getEncodedUri(teamSlug)}/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3345,7 +3345,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + teamSlug - The slug of the team name
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function delete orgs/[string org]/teams/[string teamSlug]/repos/[string owner]/[string repo](map<string|string[]> headers = {}) returns error? {
@@ -3371,11 +3371,11 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + securityProduct - The security feature to enable or disable
     # + enablement - The action to take.
-    # `enable_all` means to enable the specified security feature for all repositories in the organization.
-    # `disable_all` means to disable the specified security feature for all repositories in the organization
+    # enable_all means to enable the specified security feature for all repositories in the organization.
+    # disable_all means to disable the specified security feature for all repositories in the organization
     # + headers - Headers to be sent with the request 
     # + return - Action started 
-    resource isolated function post orgs/[string org]/["dependency_graph"|"dependabot_alerts"|"dependabot_security_updates"|"advanced_security"|"code_scanning_default_setup"|"secret_scanning"|"secret_scanning_push_protection" securityProduct]/["enable_all"|"disable_all" enablement](securityProduct_enablement_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function post orgs/[string org]/["dependency_graph"|"dependabot_alerts"|"dependabot_security_updates"|"advanced_security"|"code_scanning_default_setup"|"secret_scanning"|"secret_scanning_push_protection" securityProduct]/["enable_all"|"disable_all" enablement](SecurityProductenablementBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/orgs/${getEncodedUri(org)}/${getEncodedUri(securityProduct)}/${getEncodedUri(enablement)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3408,7 +3408,7 @@ public isolated client class Client {
     # + cardId - The unique identifier of the card
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch projects/columns/cards/[int cardId](cards_cardId_body payload, map<string|string[]> headers = {}) returns ProjectCard|error? {
+    resource isolated function patch projects/columns/cards/[int cardId](CardscardIdBody payload, map<string|string[]> headers = {}) returns ProjectCard|error? {
         string resourcePath = string `/projects/columns/cards/${getEncodedUri(cardId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3421,7 +3421,7 @@ public isolated client class Client {
     # + cardId - The unique identifier of the card
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post projects/columns/cards/[int cardId]/moves(cardId_moves_body payload, map<string|string[]> headers = {}) returns record {||}|error? {
+    resource isolated function post projects/columns/cards/[int cardId]/moves(CardIdMovesBody payload, map<string|string[]> headers = {}) returns record {||}|error? {
         string resourcePath = string `/projects/columns/cards/${getEncodedUri(cardId)}/moves`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3454,7 +3454,7 @@ public isolated client class Client {
     # + columnId - The unique identifier of the column
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch projects/columns/[int columnId](columns_columnId_body payload, map<string|string[]> headers = {}) returns ProjectColumn|error? {
+    resource isolated function patch projects/columns/[int columnId](ColumnscolumnIdBody payload, map<string|string[]> headers = {}) returns ProjectColumn|error? {
         string resourcePath = string `/projects/columns/${getEncodedUri(columnId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3479,7 +3479,7 @@ public isolated client class Client {
     # + columnId - The unique identifier of the column
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post projects/columns/[int columnId]/cards(columnId_cards_body payload, map<string|string[]> headers = {}) returns ProjectCard|error? {
+    resource isolated function post projects/columns/[int columnId]/cards(ColumnIdCardsBody payload, map<string|string[]> headers = {}) returns ProjectCard|error? {
         string resourcePath = string `/projects/columns/${getEncodedUri(columnId)}/cards`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3492,7 +3492,7 @@ public isolated client class Client {
     # + columnId - The unique identifier of the column
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post projects/columns/[int columnId]/moves(columnId_moves_body payload, map<string|string[]> headers = {}) returns record {||}|error? {
+    resource isolated function post projects/columns/[int columnId]/moves(ColumnIdMovesBody payload, map<string|string[]> headers = {}) returns record {||}|error? {
         string resourcePath = string `/projects/columns/${getEncodedUri(columnId)}/moves`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3525,7 +3525,7 @@ public isolated client class Client {
     # + projectId - The unique identifier of the project
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch projects/[int projectId](projects_projectId_body_1 payload, map<string|string[]> headers = {}) returns Project|error? {
+    resource isolated function patch projects/[int projectId](ProjectsprojectIdBody1 payload, map<string|string[]> headers = {}) returns Project|error? {
         string resourcePath = string `/projects/${getEncodedUri(projectId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3551,7 +3551,7 @@ public isolated client class Client {
     # + username - The handle for the GitHub user account
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put projects/[int projectId]/collaborators/[string username](collaborators_username_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put projects/[int projectId]/collaborators/[string username](CollaboratorsusernameBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/projects/${getEncodedUri(projectId)}/collaborators/${getEncodedUri(username)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3598,7 +3598,7 @@ public isolated client class Client {
     # + projectId - The unique identifier of the project
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post projects/[int projectId]/columns(projectId_columns_body payload, map<string|string[]> headers = {}) returns ProjectColumn|error? {
+    resource isolated function post projects/[int projectId]/columns(ColumnscolumnIdBody payload, map<string|string[]> headers = {}) returns ProjectColumn|error? {
         string resourcePath = string `/projects/${getEncodedUri(projectId)}/columns`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3618,7 +3618,7 @@ public isolated client class Client {
     # Get a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo](map<string|string[]> headers = {}) returns FullRepository|error {
@@ -3629,7 +3629,7 @@ public isolated client class Client {
     # Delete a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function delete repos/[string owner]/[string repo](map<string|string[]> headers = {}) returns error? {
@@ -3640,10 +3640,10 @@ public isolated client class Client {
     # Update a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo](owner_repo_body_1 payload, map<string|string[]> headers = {}) returns FullRepository|error {
+    resource isolated function patch repos/[string owner]/[string repo](OwnerrepoBody1 payload, map<string|string[]> headers = {}) returns FullRepository|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3654,7 +3654,7 @@ public isolated client class Client {
     # List artifacts for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -3667,7 +3667,7 @@ public isolated client class Client {
     # Get an artifact
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + artifactId - The unique identifier of the artifact
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -3679,7 +3679,7 @@ public isolated client class Client {
     # Delete an artifact
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + artifactId - The unique identifier of the artifact
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -3691,7 +3691,7 @@ public isolated client class Client {
     # Download an artifact
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + artifactId - The unique identifier of the artifact
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -3703,7 +3703,7 @@ public isolated client class Client {
     # Get GitHub Actions cache usage for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/actions/cache/usage(map<string|string[]> headers = {}) returns ActionsCacheUsageByRepository|error {
@@ -3714,7 +3714,7 @@ public isolated client class Client {
     # List GitHub Actions caches for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -3727,7 +3727,7 @@ public isolated client class Client {
     # Delete GitHub Actions caches for a repository (using a cache key)
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -3740,7 +3740,7 @@ public isolated client class Client {
     # Delete a GitHub Actions cache for a repository (using a cache ID)
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + cacheId - The unique identifier of the GitHub Actions cache
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -3752,7 +3752,7 @@ public isolated client class Client {
     # Get a job for a workflow run
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + jobId - The unique identifier of the job
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -3764,7 +3764,7 @@ public isolated client class Client {
     # Download job logs for a workflow run
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + jobId - The unique identifier of the job
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -3776,11 +3776,11 @@ public isolated client class Client {
     # Re-run a job from a workflow run
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + jobId - The unique identifier of the job
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/actions/jobs/[int jobId]/rerun(jobId_rerun_body payload, map<string|string[]> headers = {}) returns EmptyObject|error {
+    resource isolated function post repos/[string owner]/[string repo]/actions/jobs/[int jobId]/rerun(JobIdRerunBody payload, map<string|string[]> headers = {}) returns EmptyObject|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/actions/jobs/${getEncodedUri(jobId)}/rerun`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3791,7 +3791,7 @@ public isolated client class Client {
     # Get the customization template for an OIDC subject claim for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Status response 
     resource isolated function get repos/[string owner]/[string repo]/actions/oidc/customization/sub(map<string|string[]> headers = {}) returns OidcCustomSubRepo|error {
@@ -3802,10 +3802,10 @@ public isolated client class Client {
     # Set the customization template for an OIDC subject claim for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Empty response 
-    resource isolated function put repos/[string owner]/[string repo]/actions/oidc/customization/sub(Actions\ OIDC\ subject\ customization\ for\ a\ repository payload, map<string|string[]> headers = {}) returns EmptyObject|error {
+    resource isolated function put repos/[string owner]/[string repo]/actions/oidc/customization/sub(ActionsOIDCSubjectCustomizationForARepository payload, map<string|string[]> headers = {}) returns EmptyObject|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/actions/oidc/customization/sub`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3816,7 +3816,7 @@ public isolated client class Client {
     # List repository organization secrets
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -3829,7 +3829,7 @@ public isolated client class Client {
     # List repository organization variables
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -3842,7 +3842,7 @@ public isolated client class Client {
     # Get GitHub Actions permissions for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/actions/permissions(map<string|string[]> headers = {}) returns ActionsRepositoryPermissions|error {
@@ -3853,10 +3853,10 @@ public isolated client class Client {
     # Set GitHub Actions permissions for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/actions/permissions(actions_permissions_body_1 payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put repos/[string owner]/[string repo]/actions/permissions(ActionsPermissionsBody1 payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/actions/permissions`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3867,7 +3867,7 @@ public isolated client class Client {
     # Get the level of access for workflows outside of the repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/actions/permissions/access(map<string|string[]> headers = {}) returns ActionsWorkflowAccessToRepository|error {
@@ -3878,7 +3878,7 @@ public isolated client class Client {
     # Set the level of access for workflows outside of the repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function put repos/[string owner]/[string repo]/actions/permissions/access(ActionsWorkflowAccessToRepository payload, map<string|string[]> headers = {}) returns error? {
@@ -3892,7 +3892,7 @@ public isolated client class Client {
     # Get allowed actions and reusable workflows for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/actions/permissions/selected\-actions(map<string|string[]> headers = {}) returns SelectedActions|error {
@@ -3903,7 +3903,7 @@ public isolated client class Client {
     # Set allowed actions and reusable workflows for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function put repos/[string owner]/[string repo]/actions/permissions/selected\-actions(SelectedActions payload, map<string|string[]> headers = {}) returns error? {
@@ -3917,7 +3917,7 @@ public isolated client class Client {
     # Get default workflow permissions for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/actions/permissions/workflow(map<string|string[]> headers = {}) returns ActionsGetDefaultWorkflowPermissions|error {
@@ -3928,7 +3928,7 @@ public isolated client class Client {
     # Set default workflow permissions for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Success response 
     resource isolated function put repos/[string owner]/[string repo]/actions/permissions/workflow(ActionsSetDefaultWorkflowPermissions payload, map<string|string[]> headers = {}) returns error? {
@@ -3942,7 +3942,7 @@ public isolated client class Client {
     # List self-hosted runners for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -3955,7 +3955,7 @@ public isolated client class Client {
     # List runner applications for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/actions/runners/downloads(map<string|string[]> headers = {}) returns RunnerApplication[]|error {
@@ -3966,10 +3966,10 @@ public isolated client class Client {
     # Create configuration for a just-in-time runner for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/actions/runners/generate\-jitconfig(runners_generatejitconfig_body_1 payload, map<string|string[]> headers = {}) returns JitConfig|error {
+    resource isolated function post repos/[string owner]/[string repo]/actions/runners/generate\-jitconfig(RunnersGenerateJitconfigBody payload, map<string|string[]> headers = {}) returns JitConfig|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/actions/runners/generate-jitconfig`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -3980,7 +3980,7 @@ public isolated client class Client {
     # Create a registration token for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function post repos/[string owner]/[string repo]/actions/runners/registration\-token(map<string|string[]> headers = {}) returns AuthenticationToken|error {
@@ -3992,7 +3992,7 @@ public isolated client class Client {
     # Create a remove token for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function post repos/[string owner]/[string repo]/actions/runners/remove\-token(map<string|string[]> headers = {}) returns AuthenticationToken|error {
@@ -4004,7 +4004,7 @@ public isolated client class Client {
     # Get a self-hosted runner for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runnerId - Unique identifier of the self-hosted runner
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4016,7 +4016,7 @@ public isolated client class Client {
     # Delete a self-hosted runner from a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runnerId - Unique identifier of the self-hosted runner
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4028,7 +4028,7 @@ public isolated client class Client {
     # List labels for a self-hosted runner for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runnerId - Unique identifier of the self-hosted runner
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4040,11 +4040,11 @@ public isolated client class Client {
     # Set custom labels for a self-hosted runner for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runnerId - Unique identifier of the self-hosted runner
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/actions/runners/[int runnerId]/labels(runnerId_labels_body_2 payload, map<string|string[]> headers = {}) returns RunnerLabelResponse|error {
+    resource isolated function put repos/[string owner]/[string repo]/actions/runners/[int runnerId]/labels(RunnerIdLabelsBody payload, map<string|string[]> headers = {}) returns RunnerLabelResponse|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/actions/runners/${getEncodedUri(runnerId)}/labels`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4055,11 +4055,11 @@ public isolated client class Client {
     # Add custom labels to a self-hosted runner for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runnerId - Unique identifier of the self-hosted runner
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/actions/runners/[int runnerId]/labels(runnerId_labels_body_3 payload, map<string|string[]> headers = {}) returns RunnerLabelResponse|error {
+    resource isolated function post repos/[string owner]/[string repo]/actions/runners/[int runnerId]/labels(RunnerIdLabelsBody1 payload, map<string|string[]> headers = {}) returns RunnerLabelResponse|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/actions/runners/${getEncodedUri(runnerId)}/labels`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4070,7 +4070,7 @@ public isolated client class Client {
     # Remove all custom labels from a self-hosted runner for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runnerId - Unique identifier of the self-hosted runner
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4082,7 +4082,7 @@ public isolated client class Client {
     # Remove a custom label from a self-hosted runner for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runnerId - Unique identifier of the self-hosted runner
     # + name - The name of a self-hosted runner's custom label
     # + headers - Headers to be sent with the request 
@@ -4095,7 +4095,7 @@ public isolated client class Client {
     # List workflow runs for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -4108,7 +4108,7 @@ public isolated client class Client {
     # Get a workflow run
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -4122,7 +4122,7 @@ public isolated client class Client {
     # Delete a workflow run
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4134,7 +4134,7 @@ public isolated client class Client {
     # Get the review history for a workflow run
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4146,7 +4146,7 @@ public isolated client class Client {
     # Approve a workflow run for a fork pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4159,7 +4159,7 @@ public isolated client class Client {
     # List workflow run artifacts
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -4173,7 +4173,7 @@ public isolated client class Client {
     # Get a workflow run attempt
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + attemptNumber - The attempt number of the workflow run
     # + headers - Headers to be sent with the request 
@@ -4188,7 +4188,7 @@ public isolated client class Client {
     # List jobs for a workflow run attempt
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + attemptNumber - The attempt number of the workflow run
     # + headers - Headers to be sent with the request 
@@ -4203,7 +4203,7 @@ public isolated client class Client {
     # Download workflow run attempt logs
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + attemptNumber - The attempt number of the workflow run
     # + headers - Headers to be sent with the request 
@@ -4216,7 +4216,7 @@ public isolated client class Client {
     # Cancel a workflow run
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4229,11 +4229,11 @@ public isolated client class Client {
     # Review custom deployment protection rules for a workflow run
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/actions/runs/[int runId]/deployment_protection_rule(runId_deployment_protection_rule_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function post repos/[string owner]/[string repo]/actions/runs/[int runId]/deployment_protection_rule(RunIdDeploymentProtectionRuleBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/actions/runs/${getEncodedUri(runId)}/deployment_protection_rule`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4244,7 +4244,7 @@ public isolated client class Client {
     # Force cancel a workflow run
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4257,7 +4257,7 @@ public isolated client class Client {
     # List jobs for a workflow run
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -4271,7 +4271,7 @@ public isolated client class Client {
     # Download workflow run logs
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4283,7 +4283,7 @@ public isolated client class Client {
     # Delete workflow run logs
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4295,7 +4295,7 @@ public isolated client class Client {
     # Get pending deployments for a workflow run
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4307,11 +4307,11 @@ public isolated client class Client {
     # Review pending deployments for a workflow run
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/actions/runs/[int runId]/pending_deployments(runId_pending_deployments_body payload, map<string|string[]> headers = {}) returns Deployment[]|error {
+    resource isolated function post repos/[string owner]/[string repo]/actions/runs/[int runId]/pending_deployments(RunIdPendingDeploymentsBody payload, map<string|string[]> headers = {}) returns Deployment[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/actions/runs/${getEncodedUri(runId)}/pending_deployments`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4322,11 +4322,11 @@ public isolated client class Client {
     # Re-run a workflow
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/actions/runs/[int runId]/rerun(runId_rerun_body payload, map<string|string[]> headers = {}) returns EmptyObject|error {
+    resource isolated function post repos/[string owner]/[string repo]/actions/runs/[int runId]/rerun(JobIdRerunBody payload, map<string|string[]> headers = {}) returns EmptyObject|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/actions/runs/${getEncodedUri(runId)}/rerun`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4337,11 +4337,11 @@ public isolated client class Client {
     # Re-run failed jobs from a workflow run
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/actions/runs/[int runId]/rerun\-failed\-jobs(runId_rerunfailedjobs_body payload, map<string|string[]> headers = {}) returns EmptyObject|error {
+    resource isolated function post repos/[string owner]/[string repo]/actions/runs/[int runId]/rerun\-failed\-jobs(JobIdRerunBody payload, map<string|string[]> headers = {}) returns EmptyObject|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/actions/runs/${getEncodedUri(runId)}/rerun-failed-jobs`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4352,7 +4352,7 @@ public isolated client class Client {
     # Get workflow run usage
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + runId - The unique identifier of the workflow run
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4364,7 +4364,7 @@ public isolated client class Client {
     # List repository secrets
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -4377,7 +4377,7 @@ public isolated client class Client {
     # Get a repository public key
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/actions/secrets/public\-key(map<string|string[]> headers = {}) returns ActionsPublicKey|error {
@@ -4388,7 +4388,7 @@ public isolated client class Client {
     # Get a repository secret
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4400,11 +4400,11 @@ public isolated client class Client {
     # Create or update a repository secret
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response when creating a secret 
-    resource isolated function put repos/[string owner]/[string repo]/actions/secrets/[string secretName](secrets_secretName_body_3 payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
+    resource isolated function put repos/[string owner]/[string repo]/actions/secrets/[string secretName](SecretssecretNameBody3 payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/actions/secrets/${getEncodedUri(secretName)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4415,7 +4415,7 @@ public isolated client class Client {
     # Delete a repository secret
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4427,7 +4427,7 @@ public isolated client class Client {
     # List repository variables
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -4440,10 +4440,10 @@ public isolated client class Client {
     # Create a repository variable
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/actions/variables(actions_variables_body_1 payload, map<string|string[]> headers = {}) returns EmptyObject|error {
+    resource isolated function post repos/[string owner]/[string repo]/actions/variables(ActionsVariablesBody1 payload, map<string|string[]> headers = {}) returns EmptyObject|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/actions/variables`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4454,7 +4454,7 @@ public isolated client class Client {
     # Get a repository variable
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + name - The name of the variable
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4466,7 +4466,7 @@ public isolated client class Client {
     # Delete a repository variable
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + name - The name of the variable
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4478,11 +4478,11 @@ public isolated client class Client {
     # Update a repository variable
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + name - The name of the variable
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/actions/variables/[string name](variables_name_body_1 payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function patch repos/[string owner]/[string repo]/actions/variables/[string name](VariablesnameBody1 payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/actions/variables/${getEncodedUri(name)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4493,7 +4493,7 @@ public isolated client class Client {
     # List repository workflows
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -4506,7 +4506,7 @@ public isolated client class Client {
     # Get a workflow
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + workflowId - The ID of the workflow. You can also pass the workflow file name as a string
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4518,7 +4518,7 @@ public isolated client class Client {
     # Disable a workflow
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + workflowId - The ID of the workflow. You can also pass the workflow file name as a string
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4531,11 +4531,11 @@ public isolated client class Client {
     # Create a workflow dispatch event
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + workflowId - The ID of the workflow. You can also pass the workflow file name as a string
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/actions/workflows/[workflowId workflowId]/dispatches(workflowId_dispatches_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function post repos/[string owner]/[string repo]/actions/workflows/[workflowId workflowId]/dispatches(WorkflowIdDispatchesBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/actions/workflows/${getEncodedUri(workflowId)}/dispatches`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4546,7 +4546,7 @@ public isolated client class Client {
     # Enable a workflow
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + workflowId - The ID of the workflow. You can also pass the workflow file name as a string
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4559,7 +4559,7 @@ public isolated client class Client {
     # List workflow runs for a workflow
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + workflowId - The ID of the workflow. You can also pass the workflow file name as a string
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -4573,7 +4573,7 @@ public isolated client class Client {
     # Get workflow usage
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + workflowId - The ID of the workflow. You can also pass the workflow file name as a string
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4585,7 +4585,7 @@ public isolated client class Client {
     # List repository activities
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -4598,7 +4598,7 @@ public isolated client class Client {
     # List assignees
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -4611,9 +4611,9 @@ public isolated client class Client {
     # Check if a user can be assigned
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
-    # + return - If the `assignee` can be assigned to issues in the repository, a `204` header with no content is returned 
+    # + return - If the assignee can be assigned to issues in the repository, a 204 header with no content is returned 
     resource isolated function get repos/[string owner]/[string repo]/assignees/[string assignee](map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/assignees/${getEncodedUri(assignee)}`;
         return self.clientEp->get(resourcePath, headers);
@@ -4622,7 +4622,7 @@ public isolated client class Client {
     # List all autolinks of a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -4635,10 +4635,10 @@ public isolated client class Client {
     # Create an autolink reference for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - response 
-    resource isolated function post repos/[string owner]/[string repo]/autolinks(repo_autolinks_body payload, map<string|string[]> headers = {}) returns Autolink|error {
+    resource isolated function post repos/[string owner]/[string repo]/autolinks(RepoAutolinksBody payload, map<string|string[]> headers = {}) returns Autolink|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/autolinks`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4649,7 +4649,7 @@ public isolated client class Client {
     # Get an autolink reference of a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + autolinkId - The unique identifier of the autolink
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4661,7 +4661,7 @@ public isolated client class Client {
     # Delete an autolink reference from a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + autolinkId - The unique identifier of the autolink
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4673,7 +4673,7 @@ public isolated client class Client {
     # Check if automated security fixes are enabled for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response if dependabot is enabled 
     resource isolated function get repos/[string owner]/[string repo]/automated\-security\-fixes(map<string|string[]> headers = {}) returns CheckAutomatedSecurityFixes|error {
@@ -4684,7 +4684,7 @@ public isolated client class Client {
     # Enable automated security fixes
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function put repos/[string owner]/[string repo]/automated\-security\-fixes(map<string|string[]> headers = {}) returns error? {
@@ -4696,7 +4696,7 @@ public isolated client class Client {
     # Disable automated security fixes
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function delete repos/[string owner]/[string repo]/automated\-security\-fixes(map<string|string[]> headers = {}) returns error? {
@@ -4707,7 +4707,7 @@ public isolated client class Client {
     # List branches
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -4720,7 +4720,7 @@ public isolated client class Client {
     # Get a branch
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4732,7 +4732,7 @@ public isolated client class Client {
     # Get branch protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4744,11 +4744,11 @@ public isolated client class Client {
     # Update branch protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/branches/[string branch]/protection(branch_protection_body payload, map<string|string[]> headers = {}) returns ProtectedBranch|error {
+    resource isolated function put repos/[string owner]/[string repo]/branches/[string branch]/protection(BranchProtectionBody payload, map<string|string[]> headers = {}) returns ProtectedBranch|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4759,7 +4759,7 @@ public isolated client class Client {
     # Delete branch protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4771,7 +4771,7 @@ public isolated client class Client {
     # Get admin branch protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4783,7 +4783,7 @@ public isolated client class Client {
     # Set admin branch protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4796,7 +4796,7 @@ public isolated client class Client {
     # Delete admin branch protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4808,7 +4808,7 @@ public isolated client class Client {
     # Get pull request review protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4820,7 +4820,7 @@ public isolated client class Client {
     # Delete pull request review protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4832,11 +4832,11 @@ public isolated client class Client {
     # Update pull request review protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/branches/[string branch]/protection/required_pull_request_reviews(protection_required_pull_request_reviews_body payload, map<string|string[]> headers = {}) returns ProtectedBranchPullRequestReview|error {
+    resource isolated function patch repos/[string owner]/[string repo]/branches/[string branch]/protection/required_pull_request_reviews(ProtectionRequiredPullRequestReviewsBody payload, map<string|string[]> headers = {}) returns ProtectedBranchPullRequestReview|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/required_pull_request_reviews`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4847,7 +4847,7 @@ public isolated client class Client {
     # Get commit signature protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4859,7 +4859,7 @@ public isolated client class Client {
     # Create commit signature protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4872,7 +4872,7 @@ public isolated client class Client {
     # Delete commit signature protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4884,7 +4884,7 @@ public isolated client class Client {
     # Get status checks protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4896,7 +4896,7 @@ public isolated client class Client {
     # Remove status check protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4908,11 +4908,11 @@ public isolated client class Client {
     # Update status check protection
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/branches/[string branch]/protection/required_status_checks(protection_required_status_checks_body payload, map<string|string[]> headers = {}) returns StatusCheckPolicy|error {
+    resource isolated function patch repos/[string owner]/[string repo]/branches/[string branch]/protection/required_status_checks(ProtectionRequiredStatusChecksBody payload, map<string|string[]> headers = {}) returns StatusCheckPolicy|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/required_status_checks`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4923,7 +4923,7 @@ public isolated client class Client {
     # Get all status check contexts
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4935,11 +4935,11 @@ public isolated client class Client {
     # Set status check contexts
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/branches/[string branch]/protection/required_status_checks/contexts(required_status_checks_contexts_body payload, map<string|string[]> headers = {}) returns string[]|error {
+    resource isolated function put repos/[string owner]/[string repo]/branches/[string branch]/protection/required_status_checks/contexts(RequiredStatusChecksContextsBody payload, map<string|string[]> headers = {}) returns string[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/required_status_checks/contexts`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4950,11 +4950,11 @@ public isolated client class Client {
     # Add status check contexts
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/protection/required_status_checks/contexts(required_status_checks_contexts_body_1 payload, map<string|string[]> headers = {}) returns string[]|error {
+    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/protection/required_status_checks/contexts(RequiredStatusChecksContextsBody1 payload, map<string|string[]> headers = {}) returns string[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/required_status_checks/contexts`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4965,11 +4965,11 @@ public isolated client class Client {
     # Remove status check contexts
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function delete repos/[string owner]/[string repo]/branches/[string branch]/protection/required_status_checks/contexts(required_status_checks_contexts_body_2 payload, map<string|string[]> headers = {}) returns string[]|error {
+    resource isolated function delete repos/[string owner]/[string repo]/branches/[string branch]/protection/required_status_checks/contexts(RequiredStatusChecksContextsBody2 payload, map<string|string[]> headers = {}) returns string[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/required_status_checks/contexts`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -4980,7 +4980,7 @@ public isolated client class Client {
     # Get access restrictions
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -4992,7 +4992,7 @@ public isolated client class Client {
     # Delete access restrictions
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5004,7 +5004,7 @@ public isolated client class Client {
     # Get apps with access to the protected branch
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5016,11 +5016,11 @@ public isolated client class Client {
     # Set app access restrictions
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/apps(restrictions_apps_body payload, map<string|string[]> headers = {}) returns Integration[]|error {
+    resource isolated function put repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/apps(RestrictionsAppsBody payload, map<string|string[]> headers = {}) returns Integration[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/apps`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5031,11 +5031,11 @@ public isolated client class Client {
     # Add app access restrictions
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/apps(restrictions_apps_body_1 payload, map<string|string[]> headers = {}) returns Integration[]|error {
+    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/apps(RestrictionsAppsBody1 payload, map<string|string[]> headers = {}) returns Integration[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/apps`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5046,11 +5046,11 @@ public isolated client class Client {
     # Remove app access restrictions
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function delete repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/apps(restrictions_apps_body_2 payload, map<string|string[]> headers = {}) returns Integration[]|error {
+    resource isolated function delete repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/apps(RestrictionsAppsBody2 payload, map<string|string[]> headers = {}) returns Integration[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/apps`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5061,7 +5061,7 @@ public isolated client class Client {
     # Get teams with access to the protected branch
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5073,11 +5073,11 @@ public isolated client class Client {
     # Set team access restrictions
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/teams(restrictions_teams_body payload, map<string|string[]> headers = {}) returns Team[]|error {
+    resource isolated function put repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/teams(RestrictionsTeamsBody payload, map<string|string[]> headers = {}) returns Team[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/teams`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5088,11 +5088,11 @@ public isolated client class Client {
     # Add team access restrictions
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/teams(restrictions_teams_body_1 payload, map<string|string[]> headers = {}) returns Team[]|error {
+    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/teams(RestrictionsTeamsBody1 payload, map<string|string[]> headers = {}) returns Team[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/teams`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5103,11 +5103,11 @@ public isolated client class Client {
     # Remove team access restrictions
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function delete repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/teams(restrictions_teams_body_2 payload, map<string|string[]> headers = {}) returns Team[]|error {
+    resource isolated function delete repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/teams(RestrictionsTeamsBody2 payload, map<string|string[]> headers = {}) returns Team[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/teams`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5118,7 +5118,7 @@ public isolated client class Client {
     # Get users with access to the protected branch
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5130,11 +5130,11 @@ public isolated client class Client {
     # Set user access restrictions
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/users(restrictions_users_body payload, map<string|string[]> headers = {}) returns SimpleUser[]|error {
+    resource isolated function put repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/users(RestrictionsUsersBody payload, map<string|string[]> headers = {}) returns SimpleUser[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/users`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5145,11 +5145,11 @@ public isolated client class Client {
     # Add user access restrictions
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/users(restrictions_users_body_1 payload, map<string|string[]> headers = {}) returns SimpleUser[]|error {
+    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/users(RestrictionsUsersBody1 payload, map<string|string[]> headers = {}) returns SimpleUser[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/users`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5160,11 +5160,11 @@ public isolated client class Client {
     # Remove user access restrictions
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function delete repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/users(restrictions_users_body_2 payload, map<string|string[]> headers = {}) returns SimpleUser[]|error {
+    resource isolated function delete repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/users(RestrictionsUsersBody2 payload, map<string|string[]> headers = {}) returns SimpleUser[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/users`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5175,11 +5175,11 @@ public isolated client class Client {
     # Rename a branch
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/rename(branch_rename_body payload, map<string|string[]> headers = {}) returns BranchWithProtection|error {
+    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/rename(BranchRenameBody payload, map<string|string[]> headers = {}) returns BranchWithProtection|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/rename`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5190,10 +5190,10 @@ public isolated client class Client {
     # Create a check run
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/check\-runs(repo_checkruns_body payload, map<string|string[]> headers = {}) returns CheckRun|error {
+    resource isolated function post repos/[string owner]/[string repo]/check\-runs(RepoCheckRunsBody payload, map<string|string[]> headers = {}) returns CheckRun|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/check-runs`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5204,7 +5204,7 @@ public isolated client class Client {
     # Get a repository security advisory
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + ghsaId - The GHSA (GitHub Security Advisory) identifier of the advisory
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5216,11 +5216,11 @@ public isolated client class Client {
     # Update a repository security advisory
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + ghsaId - The GHSA (GitHub Security Advisory) identifier of the advisory
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/check\-runs/[int checkRunId](checkruns_checkRunId_body payload, map<string|string[]> headers = {}) returns CheckRun|error {
+    resource isolated function patch repos/[string owner]/[string repo]/check\-runs/[int checkRunId](CheckRunscheckRunIdBody payload, map<string|string[]> headers = {}) returns CheckRun|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/check-runs/${getEncodedUri(checkRunId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5231,7 +5231,7 @@ public isolated client class Client {
     # List check run annotations
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + checkRunId - The unique identifier of the check run
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -5245,7 +5245,7 @@ public isolated client class Client {
     # Rerequest a check suite
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + checkSuiteId - The unique identifier of the check suite
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5258,10 +5258,10 @@ public isolated client class Client {
     # Create a check suite
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response when the suite already exists 
-    resource isolated function post repos/[string owner]/[string repo]/check\-suites(repo_checksuites_body payload, map<string|string[]> headers = {}) returns CheckSuite|error {
+    resource isolated function post repos/[string owner]/[string repo]/check\-suites(RepoCheckSuitesBody payload, map<string|string[]> headers = {}) returns CheckSuite|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/check-suites`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5272,10 +5272,10 @@ public isolated client class Client {
     # Update repository preferences for check suites
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/check\-suites/preferences(checksuites_preferences_body payload, map<string|string[]> headers = {}) returns CheckSuitePreference|error {
+    resource isolated function patch repos/[string owner]/[string repo]/check\-suites/preferences(CheckSuitesPreferencesBody payload, map<string|string[]> headers = {}) returns CheckSuitePreference|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/check-suites/preferences`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5286,7 +5286,7 @@ public isolated client class Client {
     # Get a repository security advisory
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + ghsaId - The GHSA (GitHub Security Advisory) identifier of the advisory
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5298,7 +5298,7 @@ public isolated client class Client {
     # List check runs in a check suite
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + checkSuiteId - The unique identifier of the check suite
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -5312,7 +5312,7 @@ public isolated client class Client {
     # Rerequest a check suite
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + checkSuiteId - The unique identifier of the check suite
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5325,7 +5325,7 @@ public isolated client class Client {
     # List secret scanning alerts for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5338,8 +5338,8 @@ public isolated client class Client {
     # Get a secret scanning alert
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + alertNumber - The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + alertNumber - The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the number field in the response from the GET /repos/{owner}/{repo}/code-scanning/alerts operation
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/code\-scanning/alerts/[AlertNumber alertNumber](map<string|string[]> headers = {}) returns CodeScanningAlert|error? {
@@ -5350,11 +5350,11 @@ public isolated client class Client {
     # Update a secret scanning alert
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + alertNumber - The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + alertNumber - The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the number field in the response from the GET /repos/{owner}/{repo}/code-scanning/alerts operation
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/code\-scanning/alerts/[AlertNumber alertNumber](alerts_alertNumber_body payload, map<string|string[]> headers = {}) returns CodeScanningAlert|error {
+    resource isolated function patch repos/[string owner]/[string repo]/code\-scanning/alerts/[AlertNumber alertNumber](AlertsalertNumberBody payload, map<string|string[]> headers = {}) returns CodeScanningAlert|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/code-scanning/alerts/${getEncodedUri(alertNumber)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5365,8 +5365,8 @@ public isolated client class Client {
     # List instances of a code scanning alert
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + alertNumber - The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + alertNumber - The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the number field in the response from the GET /repos/{owner}/{repo}/code-scanning/alerts operation
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5379,7 +5379,7 @@ public isolated client class Client {
     # List code scanning analyses for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5392,8 +5392,8 @@ public isolated client class Client {
     # Get a code scanning analysis for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + analysisId - The ID of the analysis, as returned from the `GET /repos/{owner}/{repo}/code-scanning/analyses` operation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + analysisId - The ID of the analysis, as returned from the GET /repos/{owner}/{repo}/code-scanning/analyses operation
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/code\-scanning/analyses/[int analysisId](map<string|string[]> headers = {}) returns CodeScanningAnalysis|error {
@@ -5404,8 +5404,8 @@ public isolated client class Client {
     # Delete a code scanning analysis from a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + analysisId - The ID of the analysis, as returned from the `GET /repos/{owner}/{repo}/code-scanning/analyses` operation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + analysisId - The ID of the analysis, as returned from the GET /repos/{owner}/{repo}/code-scanning/analyses operation
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5418,7 +5418,7 @@ public isolated client class Client {
     # List CodeQL databases for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/code\-scanning/codeql/databases(map<string|string[]> headers = {}) returns CodeScanningCodeqlDatabase[]|error {
@@ -5429,7 +5429,7 @@ public isolated client class Client {
     # Get a CodeQL database for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + language - The language of the CodeQL database
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5441,7 +5441,7 @@ public isolated client class Client {
     # Get a code scanning default setup configuration
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/code\-scanning/default\-setup(map<string|string[]> headers = {}) returns CodeScanningDefaultSetup|error {
@@ -5452,7 +5452,7 @@ public isolated client class Client {
     # Update a code scanning default setup configuration
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function patch repos/[string owner]/[string repo]/code\-scanning/default\-setup(CodeScanningDefaultSetupUpdate payload, map<string|string[]> headers = {}) returns EmptyObject|CodeScanningDefaultSetupUpdateResponse|error {
@@ -5466,10 +5466,10 @@ public isolated client class Client {
     # Upload an analysis as SARIF data
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/code\-scanning/sarifs(codescanning_sarifs_body payload, map<string|string[]> headers = {}) returns CodeScanningSarifsReceipt|error {
+    resource isolated function post repos/[string owner]/[string repo]/code\-scanning/sarifs(CodeScanningSarifsBody payload, map<string|string[]> headers = {}) returns CodeScanningSarifsReceipt|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/code-scanning/sarifs`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5480,7 +5480,7 @@ public isolated client class Client {
     # Get information about a SARIF upload
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + sarifId - The SARIF ID obtained after uploading
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5492,7 +5492,7 @@ public isolated client class Client {
     # List CODEOWNERS errors
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5505,7 +5505,7 @@ public isolated client class Client {
     # List codespaces in a repository for the authenticated user
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5518,10 +5518,10 @@ public isolated client class Client {
     # Create a codespace in a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response when the codespace was successfully created 
-    resource isolated function post repos/[string owner]/[string repo]/codespaces(repo_codespaces_body payload, map<string|string[]> headers = {}) returns Codespace|error {
+    resource isolated function post repos/[string owner]/[string repo]/codespaces(RepoCodespacesBody payload, map<string|string[]> headers = {}) returns Codespace|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/codespaces`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5532,7 +5532,7 @@ public isolated client class Client {
     # List devcontainer configurations in a repository for the authenticated user
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5545,7 +5545,7 @@ public isolated client class Client {
     # List available machine types for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5558,7 +5558,7 @@ public isolated client class Client {
     # Get default attributes for a codespace
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response when a user is able to create codespaces from the repository 
@@ -5571,7 +5571,7 @@ public isolated client class Client {
     # Check if permissions defined by a devcontainer have been accepted by the authenticated user
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response when the permission check is successful 
@@ -5584,7 +5584,7 @@ public isolated client class Client {
     # List repository secrets
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5597,7 +5597,7 @@ public isolated client class Client {
     # Get a repository public key
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/codespaces/secrets/public\-key(map<string|string[]> headers = {}) returns CodespacesPublicKey|error {
@@ -5608,7 +5608,7 @@ public isolated client class Client {
     # Get a repository secret
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5620,11 +5620,11 @@ public isolated client class Client {
     # Create or update a repository secret
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response when creating a secret 
-    resource isolated function put repos/[string owner]/[string repo]/codespaces/secrets/[string secretName](secrets_secretName_body_4 payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
+    resource isolated function put repos/[string owner]/[string repo]/codespaces/secrets/[string secretName](SecretssecretNameBody4 payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/codespaces/secrets/${getEncodedUri(secretName)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5635,7 +5635,7 @@ public isolated client class Client {
     # Delete a repository secret
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5647,7 +5647,7 @@ public isolated client class Client {
     # List repository collaborators
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5660,7 +5660,7 @@ public isolated client class Client {
     # Check if a user is a repository collaborator
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + username - The handle for the GitHub user account
     # + headers - Headers to be sent with the request 
     # + return - Response if user is a collaborator 
@@ -5672,11 +5672,11 @@ public isolated client class Client {
     # Add a repository collaborator
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + username - The handle for the GitHub user account
     # + headers - Headers to be sent with the request 
     # + return - Response when a new invitation is created 
-    resource isolated function put repos/[string owner]/[string repo]/collaborators/[string username](collaborators_username_body_1 payload, map<string|string[]> headers = {}) returns RepositoryInvitation|error? {
+    resource isolated function put repos/[string owner]/[string repo]/collaborators/[string username](CollaboratorsusernameBody1 payload, map<string|string[]> headers = {}) returns RepositoryInvitation|error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/collaborators/${getEncodedUri(username)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5687,7 +5687,7 @@ public isolated client class Client {
     # Remove a repository collaborator
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + username - The handle for the GitHub user account
     # + headers - Headers to be sent with the request 
     # + return - No Content when collaborator was removed from the repository 
@@ -5699,7 +5699,7 @@ public isolated client class Client {
     # Get repository permissions for a user
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + username - The handle for the GitHub user account
     # + headers - Headers to be sent with the request 
     # + return - if user has admin permissions 
@@ -5711,7 +5711,7 @@ public isolated client class Client {
     # List commit comments for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5724,7 +5724,7 @@ public isolated client class Client {
     # Get a commit comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5736,7 +5736,7 @@ public isolated client class Client {
     # Delete a commit comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5748,11 +5748,11 @@ public isolated client class Client {
     # Update a commit comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/comments/[int commentId](comments_commentId_body_1 payload, map<string|string[]> headers = {}) returns CommitComment|error {
+    resource isolated function patch repos/[string owner]/[string repo]/comments/[int commentId](CommentscommentIdBody payload, map<string|string[]> headers = {}) returns CommitComment|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/comments/${getEncodedUri(commentId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5763,7 +5763,7 @@ public isolated client class Client {
     # List reactions for a commit comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -5777,11 +5777,11 @@ public isolated client class Client {
     # Create reaction for a commit comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + return - Reaction exists 
-    resource isolated function post repos/[string owner]/[string repo]/comments/[int commentId]/reactions(commentId_reactions_body payload, map<string|string[]> headers = {}) returns Reaction|error {
+    resource isolated function post repos/[string owner]/[string repo]/comments/[int commentId]/reactions(CommentIdReactionsBody payload, map<string|string[]> headers = {}) returns Reaction|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/comments/${getEncodedUri(commentId)}/reactions`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5792,7 +5792,7 @@ public isolated client class Client {
     # Delete a commit comment reaction
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + reactionId - The unique identifier of the reaction
     # + headers - Headers to be sent with the request 
@@ -5805,7 +5805,7 @@ public isolated client class Client {
     # List commits
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5818,7 +5818,7 @@ public isolated client class Client {
     # List branches for HEAD commit
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commitSha - The SHA of the commit
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -5830,7 +5830,7 @@ public isolated client class Client {
     # List commit comments
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commitSha - The SHA of the commit
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -5844,11 +5844,11 @@ public isolated client class Client {
     # Create a commit comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commitSha - The SHA of the commit
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/commits/[string commitSha]/comments(commitSha_comments_body payload, map<string|string[]> headers = {}) returns CommitComment|error {
+    resource isolated function post repos/[string owner]/[string repo]/commits/[string commitSha]/comments(CommitShaCommentsBody payload, map<string|string[]> headers = {}) returns CommitComment|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/commits/${getEncodedUri(commitSha)}/comments`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5859,7 +5859,7 @@ public isolated client class Client {
     # List pull requests associated with a commit
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commitSha - The SHA of the commit
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -5873,8 +5873,8 @@ public isolated client class Client {
     # Get a commit
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + ref - The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + ref - The commit reference. Can be a commit SHA, branch name (heads/BRANCH_NAME), or tag name (tags/TAG_NAME). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5887,8 +5887,8 @@ public isolated client class Client {
     # List check runs for a Git reference
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + ref - The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + ref - The commit reference. Can be a commit SHA, branch name (heads/BRANCH_NAME), or tag name (tags/TAG_NAME). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5901,8 +5901,8 @@ public isolated client class Client {
     # List check suites for a Git reference
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + ref - The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + ref - The commit reference. Can be a commit SHA, branch name (heads/BRANCH_NAME), or tag name (tags/TAG_NAME). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5915,8 +5915,8 @@ public isolated client class Client {
     # Get the combined status for a specific reference
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + ref - The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + ref - The commit reference. Can be a commit SHA, branch name (heads/BRANCH_NAME), or tag name (tags/TAG_NAME). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5929,8 +5929,8 @@ public isolated client class Client {
     # List commit statuses for a reference
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + ref - The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + ref - The commit reference. Can be a commit SHA, branch name (heads/BRANCH_NAME), or tag name (tags/TAG_NAME). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5943,7 +5943,7 @@ public isolated client class Client {
     # Get community profile metrics
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/community/profile(map<string|string[]> headers = {}) returns CommunityProfile|error {
@@ -5954,8 +5954,8 @@ public isolated client class Client {
     # Compare two commits
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + basehead - The base branch and head branch to compare. This parameter expects the format `BASE...HEAD`. Both must be branch names in `repo`. To compare with a branch that exists in a different repository in the same network as `repo`, the `basehead` parameter expects the format `USERNAME:BASE...USERNAME:HEAD`
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + basehead - The base branch and head branch to compare. This parameter expects the format BASE...HEAD. Both must be branch names in repo. To compare with a branch that exists in a different repository in the same network as repo, the basehead parameter expects the format USERNAME:BASE...USERNAME:HEAD
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -5968,12 +5968,12 @@ public isolated client class Client {
     # Get repository content
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + path - path parameter
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
-    resource isolated function get repos/[string owner]/[string repo]/contents/[string path](map<string|string[]> headers = {}, *ReposGetContentQueries queries) returns inline_response_200|error? {
+    resource isolated function get repos/[string owner]/[string repo]/contents/[string path](map<string|string[]> headers = {}, *ReposGetContentQueries queries) returns InlineResponse200|error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/contents/${getEncodedUri(path)}`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
         return self.clientEp->get(resourcePath, headers);
@@ -5982,11 +5982,11 @@ public isolated client class Client {
     # Create or update file contents
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + path - path parameter
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/contents/[string path](contents_path_body payload, map<string|string[]> headers = {}) returns FileCommit|error {
+    resource isolated function put repos/[string owner]/[string repo]/contents/[string path](ContentspathBody payload, map<string|string[]> headers = {}) returns FileCommit|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/contents/${getEncodedUri(path)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5997,11 +5997,11 @@ public isolated client class Client {
     # Delete a file
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + path - path parameter
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function delete repos/[string owner]/[string repo]/contents/[string path](contents_path_body_1 payload, map<string|string[]> headers = {}) returns FileCommit|error {
+    resource isolated function delete repos/[string owner]/[string repo]/contents/[string path](ContentspathBody1 payload, map<string|string[]> headers = {}) returns FileCommit|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/contents/${getEncodedUri(path)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6012,7 +6012,7 @@ public isolated client class Client {
     # List repository contributors
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - If repository contains content 
@@ -6025,7 +6025,7 @@ public isolated client class Client {
     # List Dependabot alerts for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -6038,11 +6038,11 @@ public isolated client class Client {
     # Get a Dependabot alert
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + alertNumber - The number that identifies a Dependabot alert in its repository.
     # You can find this at the end of the URL for a Dependabot alert within GitHub,
-    # or in `number` fields in the response from the
-    # `GET /repos/{owner}/{repo}/dependabot/alerts` operation
+    # or in number fields in the response from the
+    # GET /repos/{owner}/{repo}/dependabot/alerts operation
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/dependabot/alerts/[AlertNumber alertNumber](map<string|string[]> headers = {}) returns DependabotAlert|error? {
@@ -6053,14 +6053,14 @@ public isolated client class Client {
     # Update a Dependabot alert
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + alertNumber - The number that identifies a Dependabot alert in its repository.
     # You can find this at the end of the URL for a Dependabot alert within GitHub,
-    # or in `number` fields in the response from the
-    # `GET /repos/{owner}/{repo}/dependabot/alerts` operation
+    # or in number fields in the response from the
+    # GET /repos/{owner}/{repo}/dependabot/alerts operation
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/dependabot/alerts/[AlertNumber alertNumber](alerts_alertNumber_body_1 payload, map<string|string[]> headers = {}) returns DependabotAlert|error {
+    resource isolated function patch repos/[string owner]/[string repo]/dependabot/alerts/[AlertNumber alertNumber](AlertsalertNumberBody1 payload, map<string|string[]> headers = {}) returns DependabotAlert|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/dependabot/alerts/${getEncodedUri(alertNumber)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6071,7 +6071,7 @@ public isolated client class Client {
     # List repository secrets
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -6084,7 +6084,7 @@ public isolated client class Client {
     # Get a repository public key
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/dependabot/secrets/public\-key(map<string|string[]> headers = {}) returns DependabotPublicKey|error {
@@ -6095,7 +6095,7 @@ public isolated client class Client {
     # Get a repository secret
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -6107,11 +6107,11 @@ public isolated client class Client {
     # Create or update a repository secret
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response when creating a secret 
-    resource isolated function put repos/[string owner]/[string repo]/dependabot/secrets/[string secretName](secrets_secretName_body_5 payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
+    resource isolated function put repos/[string owner]/[string repo]/dependabot/secrets/[string secretName](SecretssecretNameBody5 payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/dependabot/secrets/${getEncodedUri(secretName)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6122,7 +6122,7 @@ public isolated client class Client {
     # Delete a repository secret
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -6134,8 +6134,8 @@ public isolated client class Client {
     # Get a diff of the dependencies between commits
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + basehead - The base and head Git revisions to compare. The Git revisions will be resolved to commit SHAs. Named revisions will be resolved to their corresponding HEAD commits, and an appropriate merge base will be determined. This parameter expects the format `{base}...{head}`
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + basehead - The base and head Git revisions to compare. The Git revisions will be resolved to commit SHAs. Named revisions will be resolved to their corresponding HEAD commits, and an appropriate merge base will be determined. This parameter expects the format {base}...{head}
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -6148,7 +6148,7 @@ public isolated client class Client {
     # Export a software bill of materials (SBOM) for a repository.
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/dependency\-graph/sbom(map<string|string[]> headers = {}) returns DependencyGraphSpdxSbom|error {
@@ -6159,7 +6159,7 @@ public isolated client class Client {
     # Create a snapshot of dependencies for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function post repos/[string owner]/[string repo]/dependency\-graph/snapshots(Snapshot payload, map<string|string[]> headers = {}) returns SnapshotResponse|error {
@@ -6173,7 +6173,7 @@ public isolated client class Client {
     # List deployments
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -6186,10 +6186,10 @@ public isolated client class Client {
     # Create a deployment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/deployments(repo_deployments_body payload, map<string|string[]> headers = {}) returns Deployment|MergedBranchResponse|error {
+    resource isolated function post repos/[string owner]/[string repo]/deployments(RepoDeploymentsBody payload, map<string|string[]> headers = {}) returns Deployment|MergedBranchResponse|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/deployments`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6200,7 +6200,7 @@ public isolated client class Client {
     # Get a deployment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + deploymentId - deployment_id parameter
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -6212,7 +6212,7 @@ public isolated client class Client {
     # Delete a deployment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + deploymentId - deployment_id parameter
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -6224,7 +6224,7 @@ public isolated client class Client {
     # List deployment statuses
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + deploymentId - deployment_id parameter
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -6238,11 +6238,11 @@ public isolated client class Client {
     # Create a deployment status
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + deploymentId - deployment_id parameter
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/deployments/[int deploymentId]/statuses(deploymentId_statuses_body payload, map<string|string[]> headers = {}) returns DeploymentStatus|error {
+    resource isolated function post repos/[string owner]/[string repo]/deployments/[int deploymentId]/statuses(DeploymentIdStatusesBody payload, map<string|string[]> headers = {}) returns DeploymentStatus|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/deployments/${getEncodedUri(deploymentId)}/statuses`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6253,7 +6253,7 @@ public isolated client class Client {
     # Get a deployment status
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + deploymentId - deployment_id parameter
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -6265,10 +6265,10 @@ public isolated client class Client {
     # Create a repository dispatch event
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/dispatches(repo_dispatches_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function post repos/[string owner]/[string repo]/dispatches(RepoDispatchesBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/dispatches`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6279,7 +6279,7 @@ public isolated client class Client {
     # List environments
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -6292,7 +6292,7 @@ public isolated client class Client {
     # Get an environment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + environmentName - The name of the environment
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -6304,11 +6304,11 @@ public isolated client class Client {
     # Create or update an environment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + environmentName - The name of the environment
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/environments/[string environmentName](environments_environmentName_body payload, map<string|string[]> headers = {}) returns Environment|error {
+    resource isolated function put repos/[string owner]/[string repo]/environments/[string environmentName](EnvironmentsenvironmentNameBody payload, map<string|string[]> headers = {}) returns Environment|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/environments/${getEncodedUri(environmentName)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6319,7 +6319,7 @@ public isolated client class Client {
     # Delete an environment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + environmentName - The name of the environment
     # + headers - Headers to be sent with the request 
     # + return - Default response 
@@ -6331,7 +6331,7 @@ public isolated client class Client {
     # List deployment branch policies
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + environmentName - The name of the environment
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -6345,7 +6345,7 @@ public isolated client class Client {
     # Create a deployment branch policy
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + environmentName - The name of the environment
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -6360,7 +6360,7 @@ public isolated client class Client {
     # Get a deployment branch policy
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + environmentName - The name of the environment
     # + branchPolicyId - The unique identifier of the branch policy
     # + headers - Headers to be sent with the request 
@@ -6373,7 +6373,7 @@ public isolated client class Client {
     # Update a deployment branch policy
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + environmentName - The name of the environment
     # + branchPolicyId - The unique identifier of the branch policy
     # + headers - Headers to be sent with the request 
@@ -6389,7 +6389,7 @@ public isolated client class Client {
     # Delete a deployment branch policy
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + environmentName - The name of the environment
     # + branchPolicyId - The unique identifier of the branch policy
     # + headers - Headers to be sent with the request 
@@ -6402,7 +6402,7 @@ public isolated client class Client {
     # Get all deployment protection rules for an environment
     #
     # + environmentName - The name of the environment
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + owner - The account owner of the repository. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - List of deployment protection rules 
@@ -6414,11 +6414,11 @@ public isolated client class Client {
     # Create a custom deployment protection rule on an environment
     #
     # + environmentName - The name of the environment
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + owner - The account owner of the repository. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - The enabled custom deployment protection rule 
-    resource isolated function post repos/[string owner]/[string repo]/environments/[string environmentName]/deployment_protection_rules(environmentName_deployment_protection_rules_body payload, map<string|string[]> headers = {}) returns DeploymentProtectionRule|error {
+    resource isolated function post repos/[string owner]/[string repo]/environments/[string environmentName]/deployment_protection_rules(EnvironmentNameDeploymentProtectionRulesBody payload, map<string|string[]> headers = {}) returns DeploymentProtectionRule|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/environments/${getEncodedUri(environmentName)}/deployment_protection_rules`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6429,7 +6429,7 @@ public isolated client class Client {
     # List custom deployment rule integrations available for an environment
     #
     # + environmentName - The name of the environment
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + owner - The account owner of the repository. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -6443,7 +6443,7 @@ public isolated client class Client {
     # Get a custom deployment protection rule
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + environmentName - The name of the environment
     # + protectionRuleId - The unique identifier of the protection rule
     # + headers - Headers to be sent with the request 
@@ -6456,7 +6456,7 @@ public isolated client class Client {
     # Disable a custom protection rule for an environment
     #
     # + environmentName - The name of the environment
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + owner - The account owner of the repository. The name is not case sensitive
     # + protectionRuleId - The unique identifier of the protection rule
     # + headers - Headers to be sent with the request 
@@ -6469,7 +6469,7 @@ public isolated client class Client {
     # List repository events
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -6482,7 +6482,7 @@ public isolated client class Client {
     # List forks
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -6495,10 +6495,10 @@ public isolated client class Client {
     # Create a fork
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/forks(repo_forks_body payload, map<string|string[]> headers = {}) returns FullRepository|error {
+    resource isolated function post repos/[string owner]/[string repo]/forks(RepoForksBody payload, map<string|string[]> headers = {}) returns FullRepository|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/forks`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6509,10 +6509,10 @@ public isolated client class Client {
     # Create a blob
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/git/blobs(git_blobs_body payload, map<string|string[]> headers = {}) returns ShortBlob|error {
+    resource isolated function post repos/[string owner]/[string repo]/git/blobs(GitBlobsBody payload, map<string|string[]> headers = {}) returns ShortBlob|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/git/blobs`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6523,7 +6523,7 @@ public isolated client class Client {
     # Get a blob
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/git/blobs/[string fileSha](map<string|string[]> headers = {}) returns Blob|error {
@@ -6534,10 +6534,10 @@ public isolated client class Client {
     # Create a commit
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/git/commits(git_commits_body payload, map<string|string[]> headers = {}) returns GitCommit|error {
+    resource isolated function post repos/[string owner]/[string repo]/git/commits(GitCommitsBody payload, map<string|string[]> headers = {}) returns GitCommit|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/git/commits`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6548,7 +6548,7 @@ public isolated client class Client {
     # Get a commit object
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commitSha - The SHA of the commit
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -6560,8 +6560,8 @@ public isolated client class Client {
     # List matching references
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + ref - The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + ref - The commit reference. Can be a commit SHA, branch name (heads/BRANCH_NAME), or tag name (tags/TAG_NAME). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/git/matching\-refs/[string ref](map<string|string[]> headers = {}) returns GitRef[]|error {
@@ -6572,8 +6572,8 @@ public isolated client class Client {
     # Get a reference
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + ref - The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + ref - The commit reference. Can be a commit SHA, branch name (heads/BRANCH_NAME), or tag name (tags/TAG_NAME). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/git/ref/[string ref](map<string|string[]> headers = {}) returns GitRef|error {
@@ -6584,10 +6584,10 @@ public isolated client class Client {
     # Create a reference
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/git/refs(git_refs_body payload, map<string|string[]> headers = {}) returns GitRef|error {
+    resource isolated function post repos/[string owner]/[string repo]/git/refs(GitRefsBody payload, map<string|string[]> headers = {}) returns GitRef|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/git/refs`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6598,8 +6598,8 @@ public isolated client class Client {
     # Delete a reference
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + ref - The commit reference. Can be a commit SHA, branch name (`heads/BRANCH_NAME`), or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + ref - The commit reference. Can be a commit SHA, branch name (heads/BRANCH_NAME), or tag name (tags/TAG_NAME). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function delete repos/[string owner]/[string repo]/git/refs/[string ref](map<string|string[]> headers = {}) returns error? {
@@ -6610,11 +6610,11 @@ public isolated client class Client {
     # Update a reference
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + ref - The name of the reference to update (for example, `heads/featureA`). Can be a branch name (`heads/BRANCH_NAME`) or tag name (`tags/TAG_NAME`). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + ref - The name of the reference to update (for example, heads/featureA). Can be a branch name (heads/BRANCH_NAME) or tag name (tags/TAG_NAME). For more information, see "[Git References](https://git-scm.com/book/en/v2/Git-Internals-Git-References)" in the Git documentation
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/git/refs/[string ref](refs_ref_body payload, map<string|string[]> headers = {}) returns GitRef|error {
+    resource isolated function patch repos/[string owner]/[string repo]/git/refs/[string ref](RefsrefBody payload, map<string|string[]> headers = {}) returns GitRef|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/git/refs/${getEncodedUri(ref)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6625,10 +6625,10 @@ public isolated client class Client {
     # Create a tag object
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/git/tags(git_tags_body payload, map<string|string[]> headers = {}) returns GitTag|error {
+    resource isolated function post repos/[string owner]/[string repo]/git/tags(GitTagsBody payload, map<string|string[]> headers = {}) returns GitTag|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/git/tags`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6639,7 +6639,7 @@ public isolated client class Client {
     # Get a tag
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/git/tags/[string tagSha](map<string|string[]> headers = {}) returns GitTag|error {
@@ -6650,10 +6650,10 @@ public isolated client class Client {
     # Create a tree
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/git/trees(git_trees_body payload, map<string|string[]> headers = {}) returns GitTree|error {
+    resource isolated function post repos/[string owner]/[string repo]/git/trees(GitTreesBody payload, map<string|string[]> headers = {}) returns GitTree|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/git/trees`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6664,7 +6664,7 @@ public isolated client class Client {
     # Get a tree
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + treeSha - The SHA1 value or ref (branch or tag) name of the tree
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -6678,7 +6678,7 @@ public isolated client class Client {
     # List repository webhooks
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -6691,10 +6691,10 @@ public isolated client class Client {
     # Create a repository webhook
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/hooks(repo_hooks_body payload, map<string|string[]> headers = {}) returns Hook|error {
+    resource isolated function post repos/[string owner]/[string repo]/hooks(RepoHooksBody payload, map<string|string[]> headers = {}) returns Hook|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/hooks`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6705,8 +6705,8 @@ public isolated client class Client {
     # Get a repository webhook
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/hooks/[int hookId](map<string|string[]> headers = {}) returns Hook|error {
@@ -6717,8 +6717,8 @@ public isolated client class Client {
     # Delete a repository webhook
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function delete repos/[string owner]/[string repo]/hooks/[int hookId](map<string|string[]> headers = {}) returns error? {
@@ -6729,11 +6729,11 @@ public isolated client class Client {
     # Update a repository webhook
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/hooks/[int hookId](hooks_hookId_body_1 payload, map<string|string[]> headers = {}) returns Hook|error {
+    resource isolated function patch repos/[string owner]/[string repo]/hooks/[int hookId](HookshookIdBody1 payload, map<string|string[]> headers = {}) returns Hook|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/hooks/${getEncodedUri(hookId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6744,8 +6744,8 @@ public isolated client class Client {
     # Get a webhook configuration for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/hooks/[int hookId]/config(map<string|string[]> headers = {}) returns WebhookConfig|error {
@@ -6756,11 +6756,11 @@ public isolated client class Client {
     # Update a webhook configuration for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/hooks/[int hookId]/config(hookId_config_body_1 payload, map<string|string[]> headers = {}) returns WebhookConfig|error {
+    resource isolated function patch repos/[string owner]/[string repo]/hooks/[int hookId]/config(HookIdConfigBody payload, map<string|string[]> headers = {}) returns WebhookConfig|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/hooks/${getEncodedUri(hookId)}/config`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6771,8 +6771,8 @@ public isolated client class Client {
     # List deliveries for a repository webhook
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -6785,8 +6785,8 @@ public isolated client class Client {
     # Get a delivery for a repository webhook
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/hooks/[int hookId]/deliveries/[int deliveryId](map<string|string[]> headers = {}) returns HookDelivery|error {
@@ -6797,8 +6797,8 @@ public isolated client class Client {
     # Redeliver a delivery for a repository webhook
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Accepted 
     resource isolated function post repos/[string owner]/[string repo]/hooks/[int hookId]/deliveries/[int deliveryId]/attempts(map<string|string[]> headers = {}) returns record {}|error {
@@ -6810,8 +6810,8 @@ public isolated client class Client {
     # Ping a repository webhook
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function post repos/[string owner]/[string repo]/hooks/[int hookId]/pings(map<string|string[]> headers = {}) returns error? {
@@ -6823,8 +6823,8 @@ public isolated client class Client {
     # Test the push repository webhook
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + hookId - The unique identifier of the hook. You can find this value in the `X-GitHub-Hook-ID` header of a webhook delivery
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + hookId - The unique identifier of the hook. You can find this value in the X-GitHub-Hook-ID header of a webhook delivery
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function post repos/[string owner]/[string repo]/hooks/[int hookId]/tests(map<string|string[]> headers = {}) returns error? {
@@ -6836,7 +6836,7 @@ public isolated client class Client {
     # Get an import status
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/'import(map<string|string[]> headers = {}) returns Import|error {
@@ -6847,10 +6847,10 @@ public isolated client class Client {
     # Start an import
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/'import(repo_import_body payload, map<string|string[]> headers = {}) returns Import|error {
+    resource isolated function put repos/[string owner]/[string repo]/'import(RepoImportBody payload, map<string|string[]> headers = {}) returns Import|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/import`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6861,7 +6861,7 @@ public isolated client class Client {
     # Cancel an import
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function delete repos/[string owner]/[string repo]/'import(map<string|string[]> headers = {}) returns error? {
@@ -6872,10 +6872,10 @@ public isolated client class Client {
     # Update an import
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/'import(repo_import_body_1 payload, map<string|string[]> headers = {}) returns Import|error {
+    resource isolated function patch repos/[string owner]/[string repo]/'import(RepoImportBody1 payload, map<string|string[]> headers = {}) returns Import|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/import`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6886,7 +6886,7 @@ public isolated client class Client {
     # Get commit authors
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -6899,10 +6899,10 @@ public isolated client class Client {
     # Map a commit author
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/'import/authors/[int authorId](authors_authorId_body payload, map<string|string[]> headers = {}) returns PorterAuthor|error {
+    resource isolated function patch repos/[string owner]/[string repo]/'import/authors/[int authorId](AuthorsauthorIdBody payload, map<string|string[]> headers = {}) returns PorterAuthor|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/import/authors/${getEncodedUri(authorId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6913,7 +6913,7 @@ public isolated client class Client {
     # Get large files
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/'import/large_files(map<string|string[]> headers = {}) returns PorterLargeFile[]|error {
@@ -6924,10 +6924,10 @@ public isolated client class Client {
     # Update Git LFS preference
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/'import/lfs(import_lfs_body payload, map<string|string[]> headers = {}) returns Import|error {
+    resource isolated function patch repos/[string owner]/[string repo]/'import/lfs(ImportLfsBody payload, map<string|string[]> headers = {}) returns Import|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/import/lfs`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -6938,7 +6938,7 @@ public isolated client class Client {
     # Get a repository installation for the authenticated app
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/installation(map<string|string[]> headers = {}) returns Installation|error {
@@ -6949,7 +6949,7 @@ public isolated client class Client {
     # Get interaction restrictions for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/interaction\-limits(map<string|string[]> headers = {}) returns InteractionLimitResponseAny|error {
@@ -6960,7 +6960,7 @@ public isolated client class Client {
     # Set interaction restrictions for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function put repos/[string owner]/[string repo]/interaction\-limits(InteractionLimit payload, map<string|string[]> headers = {}) returns InteractionLimitResponse|error {
@@ -6974,7 +6974,7 @@ public isolated client class Client {
     # Remove interaction restrictions for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function delete repos/[string owner]/[string repo]/interaction\-limits(map<string|string[]> headers = {}) returns error? {
@@ -6985,7 +6985,7 @@ public isolated client class Client {
     # List repository invitations
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -6998,7 +6998,7 @@ public isolated client class Client {
     # Delete a repository invitation
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + invitationId - The unique identifier of the invitation
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -7010,11 +7010,11 @@ public isolated client class Client {
     # Update a repository invitation
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + invitationId - The unique identifier of the invitation
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/invitations/[int invitationId](invitations_invitationId_body payload, map<string|string[]> headers = {}) returns RepositoryInvitation|error {
+    resource isolated function patch repos/[string owner]/[string repo]/invitations/[int invitationId](InvitationsinvitationIdBody payload, map<string|string[]> headers = {}) returns RepositoryInvitation|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/invitations/${getEncodedUri(invitationId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7025,7 +7025,7 @@ public isolated client class Client {
     # List repository issues
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -7038,10 +7038,10 @@ public isolated client class Client {
     # Create an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/issues(repo_issues_body payload, map<string|string[]> headers = {}) returns Issue|error {
+    resource isolated function post repos/[string owner]/[string repo]/issues(RepoIssuesBody payload, map<string|string[]> headers = {}) returns Issue|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/issues`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7052,7 +7052,7 @@ public isolated client class Client {
     # List issue comments for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -7065,7 +7065,7 @@ public isolated client class Client {
     # Get an issue comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -7077,7 +7077,7 @@ public isolated client class Client {
     # Delete an issue comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -7089,11 +7089,11 @@ public isolated client class Client {
     # Update an issue comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/issues/comments/[int commentId](comments_commentId_body_2 payload, map<string|string[]> headers = {}) returns IssueComment|error {
+    resource isolated function patch repos/[string owner]/[string repo]/issues/comments/[int commentId](CommentscommentIdBody1 payload, map<string|string[]> headers = {}) returns IssueComment|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/issues/comments/${getEncodedUri(commentId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7104,7 +7104,7 @@ public isolated client class Client {
     # List reactions for an issue comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -7118,11 +7118,11 @@ public isolated client class Client {
     # Create reaction for an issue comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + return - Reaction exists 
-    resource isolated function post repos/[string owner]/[string repo]/issues/comments/[int commentId]/reactions(commentId_reactions_body_1 payload, map<string|string[]> headers = {}) returns Reaction|error {
+    resource isolated function post repos/[string owner]/[string repo]/issues/comments/[int commentId]/reactions(CommentIdReactionsBody1 payload, map<string|string[]> headers = {}) returns Reaction|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/issues/comments/${getEncodedUri(commentId)}/reactions`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7133,7 +7133,7 @@ public isolated client class Client {
     # Delete an issue comment reaction
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + reactionId - The unique identifier of the reaction
     # + headers - Headers to be sent with the request 
@@ -7146,7 +7146,7 @@ public isolated client class Client {
     # List issue events for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -7159,7 +7159,7 @@ public isolated client class Client {
     # Get an issue event
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/issues/events/[int eventId](map<string|string[]> headers = {}) returns IssueEvent|error {
@@ -7170,7 +7170,7 @@ public isolated client class Client {
     # Get an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -7182,11 +7182,11 @@ public isolated client class Client {
     # Update an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/issues/[int issueNumber](issues_issueNumber_body payload, map<string|string[]> headers = {}) returns Issue|error {
+    resource isolated function patch repos/[string owner]/[string repo]/issues/[int issueNumber](IssuesissueNumberBody payload, map<string|string[]> headers = {}) returns Issue|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/issues/${getEncodedUri(issueNumber)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7197,11 +7197,11 @@ public isolated client class Client {
     # Add assignees to an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/issues/[int issueNumber]/assignees(issueNumber_assignees_body payload, map<string|string[]> headers = {}) returns Issue|error {
+    resource isolated function post repos/[string owner]/[string repo]/issues/[int issueNumber]/assignees(IssueNumberAssigneesBody payload, map<string|string[]> headers = {}) returns Issue|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/issues/${getEncodedUri(issueNumber)}/assignees`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7212,11 +7212,11 @@ public isolated client class Client {
     # Remove assignees from an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function delete repos/[string owner]/[string repo]/issues/[int issueNumber]/assignees(issueNumber_assignees_body_1 payload, map<string|string[]> headers = {}) returns Issue|error {
+    resource isolated function delete repos/[string owner]/[string repo]/issues/[int issueNumber]/assignees(IssueNumberAssigneesBody1 payload, map<string|string[]> headers = {}) returns Issue|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/issues/${getEncodedUri(issueNumber)}/assignees`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7227,10 +7227,10 @@ public isolated client class Client {
     # Check if a user can be assigned to a issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
-    # + return - Response if `assignee` can be assigned to `issue_number` 
+    # + return - Response if assignee can be assigned to issue_number 
     resource isolated function get repos/[string owner]/[string repo]/issues/[int issueNumber]/assignees/[string assignee](map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/issues/${getEncodedUri(issueNumber)}/assignees/${getEncodedUri(assignee)}`;
         return self.clientEp->get(resourcePath, headers);
@@ -7239,7 +7239,7 @@ public isolated client class Client {
     # List issue comments
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -7253,11 +7253,11 @@ public isolated client class Client {
     # Create an issue comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/issues/[int issueNumber]/comments(issueNumber_comments_body payload, map<string|string[]> headers = {}) returns IssueComment|error {
+    resource isolated function post repos/[string owner]/[string repo]/issues/[int issueNumber]/comments(CommentscommentIdBody1 payload, map<string|string[]> headers = {}) returns IssueComment|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/issues/${getEncodedUri(issueNumber)}/comments`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7268,7 +7268,7 @@ public isolated client class Client {
     # List issue events
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -7282,7 +7282,7 @@ public isolated client class Client {
     # List labels for an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -7296,11 +7296,11 @@ public isolated client class Client {
     # Set labels for an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/issues/[int issueNumber]/labels(issueNumber_labels_body payload, map<string|string[]> headers = {}) returns Label[]|error {
+    resource isolated function put repos/[string owner]/[string repo]/issues/[int issueNumber]/labels(IssueNumberLabelsBody payload, map<string|string[]> headers = {}) returns Label[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/issues/${getEncodedUri(issueNumber)}/labels`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7311,11 +7311,11 @@ public isolated client class Client {
     # Add labels to an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/issues/[int issueNumber]/labels(issueNumber_labels_body_1 payload, map<string|string[]> headers = {}) returns Label[]|error {
+    resource isolated function post repos/[string owner]/[string repo]/issues/[int issueNumber]/labels(IssueNumberLabelsBody1 payload, map<string|string[]> headers = {}) returns Label[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/issues/${getEncodedUri(issueNumber)}/labels`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7326,7 +7326,7 @@ public isolated client class Client {
     # Remove all labels from an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -7338,7 +7338,7 @@ public isolated client class Client {
     # Remove a label from an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -7350,11 +7350,11 @@ public isolated client class Client {
     # Lock an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/issues/[int issueNumber]/'lock(issueNumber_lock_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put repos/[string owner]/[string repo]/issues/[int issueNumber]/'lock(IssueNumberLockBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/issues/${getEncodedUri(issueNumber)}/lock`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7365,7 +7365,7 @@ public isolated client class Client {
     # Unlock an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -7377,7 +7377,7 @@ public isolated client class Client {
     # List reactions for an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -7391,11 +7391,11 @@ public isolated client class Client {
     # Create reaction for an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/issues/[int issueNumber]/reactions(issueNumber_reactions_body payload, map<string|string[]> headers = {}) returns Reaction|error {
+    resource isolated function post repos/[string owner]/[string repo]/issues/[int issueNumber]/reactions(IssueNumberReactionsBody payload, map<string|string[]> headers = {}) returns Reaction|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/issues/${getEncodedUri(issueNumber)}/reactions`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7406,7 +7406,7 @@ public isolated client class Client {
     # Delete an issue reaction
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + reactionId - The unique identifier of the reaction
     # + headers - Headers to be sent with the request 
@@ -7419,7 +7419,7 @@ public isolated client class Client {
     # List timeline events for an issue
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + issueNumber - The number that identifies the issue
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -7433,7 +7433,7 @@ public isolated client class Client {
     # List deploy keys
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -7446,10 +7446,10 @@ public isolated client class Client {
     # Create a deploy key
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/keys(repo_keys_body payload, map<string|string[]> headers = {}) returns DeployKey|error {
+    resource isolated function post repos/[string owner]/[string repo]/keys(RepoKeysBody payload, map<string|string[]> headers = {}) returns DeployKey|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/keys`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7460,7 +7460,7 @@ public isolated client class Client {
     # Get a deploy key
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + keyId - The unique identifier of the key
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -7472,7 +7472,7 @@ public isolated client class Client {
     # Delete a deploy key
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + keyId - The unique identifier of the key
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -7484,7 +7484,7 @@ public isolated client class Client {
     # List labels for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -7497,10 +7497,10 @@ public isolated client class Client {
     # Create a label
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/labels(repo_labels_body payload, map<string|string[]> headers = {}) returns Label|error {
+    resource isolated function post repos/[string owner]/[string repo]/labels(RepoLabelsBody payload, map<string|string[]> headers = {}) returns Label|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/labels`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7511,7 +7511,7 @@ public isolated client class Client {
     # Get a label
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/labels/[string name](map<string|string[]> headers = {}) returns Label|error {
@@ -7522,7 +7522,7 @@ public isolated client class Client {
     # Delete a label
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function delete repos/[string owner]/[string repo]/labels/[string name](map<string|string[]> headers = {}) returns error? {
@@ -7533,10 +7533,10 @@ public isolated client class Client {
     # Update a label
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/labels/[string name](labels_name_body payload, map<string|string[]> headers = {}) returns Label|error {
+    resource isolated function patch repos/[string owner]/[string repo]/labels/[string name](LabelsnameBody payload, map<string|string[]> headers = {}) returns Label|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/labels/${getEncodedUri(name)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7547,7 +7547,7 @@ public isolated client class Client {
     # List repository languages
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/languages(map<string|string[]> headers = {}) returns Language|error {
@@ -7558,7 +7558,7 @@ public isolated client class Client {
     # Get the license for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/license(map<string|string[]> headers = {}) returns LicenseContent|error {
@@ -7569,10 +7569,10 @@ public isolated client class Client {
     # Sync a fork branch with the upstream repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - The branch has been successfully synced with the upstream repository 
-    resource isolated function post repos/[string owner]/[string repo]/merge\-upstream(repo_mergeupstream_body payload, map<string|string[]> headers = {}) returns MergedUpstream|error {
+    resource isolated function post repos/[string owner]/[string repo]/merge\-upstream(RepoMergeUpstreamBody payload, map<string|string[]> headers = {}) returns MergedUpstream|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/merge-upstream`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7583,10 +7583,10 @@ public isolated client class Client {
     # Merge a branch
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Successful Response (The resulting merge commit) 
-    resource isolated function post repos/[string owner]/[string repo]/merges(repo_merges_body payload, map<string|string[]> headers = {}) returns Commit|error? {
+    resource isolated function post repos/[string owner]/[string repo]/merges(RepoMergesBody payload, map<string|string[]> headers = {}) returns Commit|error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/merges`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7597,7 +7597,7 @@ public isolated client class Client {
     # List milestones
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -7610,10 +7610,10 @@ public isolated client class Client {
     # Create a milestone
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/milestones(repo_milestones_body payload, map<string|string[]> headers = {}) returns Milestone|error {
+    resource isolated function post repos/[string owner]/[string repo]/milestones(RepoMilestonesBody payload, map<string|string[]> headers = {}) returns Milestone|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/milestones`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7624,7 +7624,7 @@ public isolated client class Client {
     # Get a milestone
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + milestoneNumber - The number that identifies the milestone
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -7636,7 +7636,7 @@ public isolated client class Client {
     # Delete a milestone
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + milestoneNumber - The number that identifies the milestone
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -7648,11 +7648,11 @@ public isolated client class Client {
     # Update a milestone
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + milestoneNumber - The number that identifies the milestone
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/milestones/[int milestoneNumber](milestones_milestoneNumber_body payload, map<string|string[]> headers = {}) returns Milestone|error {
+    resource isolated function patch repos/[string owner]/[string repo]/milestones/[int milestoneNumber](MilestonesmilestoneNumberBody payload, map<string|string[]> headers = {}) returns Milestone|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/milestones/${getEncodedUri(milestoneNumber)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7663,7 +7663,7 @@ public isolated client class Client {
     # List labels for issues in a milestone
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + milestoneNumber - The number that identifies the milestone
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -7677,7 +7677,7 @@ public isolated client class Client {
     # List repository notifications for the authenticated user
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -7690,10 +7690,10 @@ public isolated client class Client {
     # Mark repository notifications as read
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/notifications(repo_notifications_body payload, map<string|string[]> headers = {}) returns NotificationRead|error? {
+    resource isolated function put repos/[string owner]/[string repo]/notifications(RepoNotificationsBody payload, map<string|string[]> headers = {}) returns NotificationRead|error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/notifications`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7704,7 +7704,7 @@ public isolated client class Client {
     # Get a GitHub Pages site
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/pages(map<string|string[]> headers = {}) returns Page|error {
@@ -7715,10 +7715,10 @@ public isolated client class Client {
     # Update information about a GitHub Pages site
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/pages(repo_pages_body payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put repos/[string owner]/[string repo]/pages(RepoPagesBody payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pages`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7729,10 +7729,10 @@ public isolated client class Client {
     # Create a GitHub Pages site
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/pages(repo_pages_body_1 payload, map<string|string[]> headers = {}) returns Page|error {
+    resource isolated function post repos/[string owner]/[string repo]/pages(RepoPagesBody1 payload, map<string|string[]> headers = {}) returns Page|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pages`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7743,7 +7743,7 @@ public isolated client class Client {
     # Delete a GitHub Pages site
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function delete repos/[string owner]/[string repo]/pages(map<string|string[]> headers = {}) returns error? {
@@ -7754,7 +7754,7 @@ public isolated client class Client {
     # List GitHub Pages builds
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -7767,7 +7767,7 @@ public isolated client class Client {
     # Request a GitHub Pages build
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function post repos/[string owner]/[string repo]/pages/builds(map<string|string[]> headers = {}) returns PageBuildStatus|error {
@@ -7779,7 +7779,7 @@ public isolated client class Client {
     # Get latest Pages build
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/pages/builds/latest(map<string|string[]> headers = {}) returns PageBuild|error {
@@ -7790,7 +7790,7 @@ public isolated client class Client {
     # Get GitHub Pages build
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/pages/builds/[int buildId](map<string|string[]> headers = {}) returns PageBuild|error {
@@ -7801,10 +7801,10 @@ public isolated client class Client {
     # Create a GitHub Pages deployment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/pages/deployment(pages_deployment_body payload, map<string|string[]> headers = {}) returns PageDeployment|error {
+    resource isolated function post repos/[string owner]/[string repo]/pages/deployment(PagesDeploymentBody payload, map<string|string[]> headers = {}) returns PageDeployment|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pages/deployment`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7815,7 +7815,7 @@ public isolated client class Client {
     # Get a DNS health check for GitHub Pages
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/pages/health(map<string|string[]> headers = {}) returns PagesHealthCheck|EmptyObject|error {
@@ -7826,7 +7826,7 @@ public isolated client class Client {
     # Enable private vulnerability reporting for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - A header with no content is returned 
     resource isolated function put repos/[string owner]/[string repo]/private\-vulnerability\-reporting(map<string|string[]> headers = {}) returns error? {
@@ -7838,7 +7838,7 @@ public isolated client class Client {
     # Disable private vulnerability reporting for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - A header with no content is returned 
     resource isolated function delete repos/[string owner]/[string repo]/private\-vulnerability\-reporting(map<string|string[]> headers = {}) returns error? {
@@ -7849,7 +7849,7 @@ public isolated client class Client {
     # List repository projects
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -7862,10 +7862,10 @@ public isolated client class Client {
     # Create a repository project
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/projects(repo_projects_body payload, map<string|string[]> headers = {}) returns Project|error {
+    resource isolated function post repos/[string owner]/[string repo]/projects(OrgProjectsBody payload, map<string|string[]> headers = {}) returns Project|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/projects`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7876,7 +7876,7 @@ public isolated client class Client {
     # List pull requests
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -7889,10 +7889,10 @@ public isolated client class Client {
     # Create a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/pulls(repo_pulls_body payload, map<string|string[]> headers = {}) returns PullRequest|error {
+    resource isolated function post repos/[string owner]/[string repo]/pulls(RepoPullsBody payload, map<string|string[]> headers = {}) returns PullRequest|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7903,7 +7903,7 @@ public isolated client class Client {
     # List review comments in a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -7916,7 +7916,7 @@ public isolated client class Client {
     # Get a review comment for a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -7928,7 +7928,7 @@ public isolated client class Client {
     # Delete a review comment for a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -7940,11 +7940,11 @@ public isolated client class Client {
     # Update a review comment for a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/pulls/comments/[int commentId](comments_commentId_body_3 payload, map<string|string[]> headers = {}) returns PullRequestReviewComment|error {
+    resource isolated function patch repos/[string owner]/[string repo]/pulls/comments/[int commentId](CommentscommentIdBody2 payload, map<string|string[]> headers = {}) returns PullRequestReviewComment|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls/comments/${getEncodedUri(commentId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7955,7 +7955,7 @@ public isolated client class Client {
     # List reactions for a pull request review comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -7969,11 +7969,11 @@ public isolated client class Client {
     # Create reaction for a pull request review comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + return - Reaction exists 
-    resource isolated function post repos/[string owner]/[string repo]/pulls/comments/[int commentId]/reactions(commentId_reactions_body_2 payload, map<string|string[]> headers = {}) returns Reaction|error {
+    resource isolated function post repos/[string owner]/[string repo]/pulls/comments/[int commentId]/reactions(CommentIdReactionsBody2 payload, map<string|string[]> headers = {}) returns Reaction|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls/comments/${getEncodedUri(commentId)}/reactions`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -7984,7 +7984,7 @@ public isolated client class Client {
     # Delete a pull request comment reaction
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + commentId - The unique identifier of the comment
     # + reactionId - The unique identifier of the reaction
     # + headers - Headers to be sent with the request 
@@ -7997,7 +7997,7 @@ public isolated client class Client {
     # Get a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + return - Pass the appropriate [media type](https://docs.github.com/rest/overview/media-types/#commits-commit-comparison-and-pull-requests) to fetch diff and patch formats 
@@ -8009,11 +8009,11 @@ public isolated client class Client {
     # Update a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/pulls/[int pullNumber](pulls_pullNumber_body payload, map<string|string[]> headers = {}) returns PullRequest|error {
+    resource isolated function patch repos/[string owner]/[string repo]/pulls/[int pullNumber](PullspullNumberBody payload, map<string|string[]> headers = {}) returns PullRequest|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls/${getEncodedUri(pullNumber)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8024,11 +8024,11 @@ public isolated client class Client {
     # Create a codespace from a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + return - Response when the codespace was successfully created 
-    resource isolated function post repos/[string owner]/[string repo]/pulls/[int pullNumber]/codespaces(pullNumber_codespaces_body payload, map<string|string[]> headers = {}) returns Codespace|error {
+    resource isolated function post repos/[string owner]/[string repo]/pulls/[int pullNumber]/codespaces(PullNumberCodespacesBody payload, map<string|string[]> headers = {}) returns Codespace|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls/${getEncodedUri(pullNumber)}/codespaces`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8039,7 +8039,7 @@ public isolated client class Client {
     # List review comments on a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -8053,11 +8053,11 @@ public isolated client class Client {
     # Create a review comment for a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/pulls/[int pullNumber]/comments(pullNumber_comments_body payload, map<string|string[]> headers = {}) returns PullRequestReviewComment|error {
+    resource isolated function post repos/[string owner]/[string repo]/pulls/[int pullNumber]/comments(PullNumberCommentsBody payload, map<string|string[]> headers = {}) returns PullRequestReviewComment|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls/${getEncodedUri(pullNumber)}/comments`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8068,12 +8068,12 @@ public isolated client class Client {
     # Create a reply for a review comment
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + commentId - The unique identifier of the comment
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/pulls/[int pullNumber]/comments/[int commentId]/replies(commentId_replies_body payload, map<string|string[]> headers = {}) returns PullRequestReviewComment|error {
+    resource isolated function post repos/[string owner]/[string repo]/pulls/[int pullNumber]/comments/[int commentId]/replies(CommentIdRepliesBody payload, map<string|string[]> headers = {}) returns PullRequestReviewComment|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls/${getEncodedUri(pullNumber)}/comments/${getEncodedUri(commentId)}/replies`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8084,7 +8084,7 @@ public isolated client class Client {
     # List commits on a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -8098,7 +8098,7 @@ public isolated client class Client {
     # List pull requests files
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -8112,7 +8112,7 @@ public isolated client class Client {
     # Check if a pull request has been merged
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + return - Response if pull request has been merged 
@@ -8124,11 +8124,11 @@ public isolated client class Client {
     # Merge a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + return - if merge was successful 
-    resource isolated function put repos/[string owner]/[string repo]/pulls/[int pullNumber]/merge(pullNumber_merge_body payload, map<string|string[]> headers = {}) returns PullRequestMergeResult|error {
+    resource isolated function put repos/[string owner]/[string repo]/pulls/[int pullNumber]/merge(PullNumberMergeBody payload, map<string|string[]> headers = {}) returns PullRequestMergeResult|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls/${getEncodedUri(pullNumber)}/merge`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8139,7 +8139,7 @@ public isolated client class Client {
     # Get all requested reviewers for a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -8151,11 +8151,11 @@ public isolated client class Client {
     # Request reviewers for a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/pulls/[int pullNumber]/requested_reviewers(pullNumber_requested_reviewers_body payload, map<string|string[]> headers = {}) returns PullRequestSimple|error {
+    resource isolated function post repos/[string owner]/[string repo]/pulls/[int pullNumber]/requested_reviewers(PullNumberRequestedReviewersBody payload, map<string|string[]> headers = {}) returns PullRequestSimple|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls/${getEncodedUri(pullNumber)}/requested_reviewers`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8166,11 +8166,11 @@ public isolated client class Client {
     # Remove requested reviewers from a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function delete repos/[string owner]/[string repo]/pulls/[int pullNumber]/requested_reviewers(pullNumber_requested_reviewers_body_1 payload, map<string|string[]> headers = {}) returns PullRequestSimple|error {
+    resource isolated function delete repos/[string owner]/[string repo]/pulls/[int pullNumber]/requested_reviewers(PullNumberRequestedReviewersBody1 payload, map<string|string[]> headers = {}) returns PullRequestSimple|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls/${getEncodedUri(pullNumber)}/requested_reviewers`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8181,7 +8181,7 @@ public isolated client class Client {
     # List reviews for a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -8195,11 +8195,11 @@ public isolated client class Client {
     # Create a review for a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/pulls/[int pullNumber]/reviews(pullNumber_reviews_body payload, map<string|string[]> headers = {}) returns PullRequestReview|error {
+    resource isolated function post repos/[string owner]/[string repo]/pulls/[int pullNumber]/reviews(PullNumberReviewsBody payload, map<string|string[]> headers = {}) returns PullRequestReview|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls/${getEncodedUri(pullNumber)}/reviews`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8210,7 +8210,7 @@ public isolated client class Client {
     # Get a review for a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + reviewId - The unique identifier of the review
     # + headers - Headers to be sent with the request 
@@ -8223,12 +8223,12 @@ public isolated client class Client {
     # Update a review for a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + reviewId - The unique identifier of the review
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/pulls/[int pullNumber]/reviews/[int reviewId](reviews_reviewId_body payload, map<string|string[]> headers = {}) returns PullRequestReview|error {
+    resource isolated function put repos/[string owner]/[string repo]/pulls/[int pullNumber]/reviews/[int reviewId](ReviewsreviewIdBody payload, map<string|string[]> headers = {}) returns PullRequestReview|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls/${getEncodedUri(pullNumber)}/reviews/${getEncodedUri(reviewId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8239,7 +8239,7 @@ public isolated client class Client {
     # Delete a pending review for a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + reviewId - The unique identifier of the review
     # + headers - Headers to be sent with the request 
@@ -8252,7 +8252,7 @@ public isolated client class Client {
     # List comments for a pull request review
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + reviewId - The unique identifier of the review
     # + headers - Headers to be sent with the request 
@@ -8267,12 +8267,12 @@ public isolated client class Client {
     # Dismiss a review for a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + reviewId - The unique identifier of the review
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/pulls/[int pullNumber]/reviews/[int reviewId]/dismissals(reviewId_dismissals_body payload, map<string|string[]> headers = {}) returns PullRequestReview|error {
+    resource isolated function put repos/[string owner]/[string repo]/pulls/[int pullNumber]/reviews/[int reviewId]/dismissals(ReviewIdDismissalsBody payload, map<string|string[]> headers = {}) returns PullRequestReview|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls/${getEncodedUri(pullNumber)}/reviews/${getEncodedUri(reviewId)}/dismissals`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8283,12 +8283,12 @@ public isolated client class Client {
     # Submit a review for a pull request
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + reviewId - The unique identifier of the review
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/pulls/[int pullNumber]/reviews/[int reviewId]/events(reviewId_events_body payload, map<string|string[]> headers = {}) returns PullRequestReview|error {
+    resource isolated function post repos/[string owner]/[string repo]/pulls/[int pullNumber]/reviews/[int reviewId]/events(ReviewIdEventsBody payload, map<string|string[]> headers = {}) returns PullRequestReview|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls/${getEncodedUri(pullNumber)}/reviews/${getEncodedUri(reviewId)}/events`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8299,11 +8299,11 @@ public isolated client class Client {
     # Update a pull request branch
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + pullNumber - The number that identifies the pull request
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/pulls/[int pullNumber]/update\-branch(pullNumber_updatebranch_body payload, map<string|string[]> headers = {}) returns NotificationRead|error {
+    resource isolated function put repos/[string owner]/[string repo]/pulls/[int pullNumber]/update\-branch(PullNumberUpdateBranchBody payload, map<string|string[]> headers = {}) returns NotificationRead|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/pulls/${getEncodedUri(pullNumber)}/update-branch`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8314,7 +8314,7 @@ public isolated client class Client {
     # Get a repository README
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -8327,7 +8327,7 @@ public isolated client class Client {
     # Get a repository README for a directory
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + dir - The alternate path to look for a README file
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -8341,7 +8341,7 @@ public isolated client class Client {
     # List releases
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -8354,10 +8354,10 @@ public isolated client class Client {
     # Create a release
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/releases(repo_releases_body payload, map<string|string[]> headers = {}) returns Release|error {
+    resource isolated function post repos/[string owner]/[string repo]/releases(RepoReleasesBody payload, map<string|string[]> headers = {}) returns Release|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/releases`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8368,7 +8368,7 @@ public isolated client class Client {
     # Get a release asset
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + assetId - The unique identifier of the asset
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -8380,7 +8380,7 @@ public isolated client class Client {
     # Delete a release asset
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + assetId - The unique identifier of the asset
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -8392,11 +8392,11 @@ public isolated client class Client {
     # Update a release asset
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + assetId - The unique identifier of the asset
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/releases/assets/[int assetId](assets_assetId_body payload, map<string|string[]> headers = {}) returns ReleaseAsset|error {
+    resource isolated function patch repos/[string owner]/[string repo]/releases/assets/[int assetId](AssetsassetIdBody payload, map<string|string[]> headers = {}) returns ReleaseAsset|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/releases/assets/${getEncodedUri(assetId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8407,10 +8407,10 @@ public isolated client class Client {
     # Generate release notes content for a release
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Name and body of generated release notes 
-    resource isolated function post repos/[string owner]/[string repo]/releases/generate\-notes(releases_generatenotes_body payload, map<string|string[]> headers = {}) returns ReleaseNotesContent|error {
+    resource isolated function post repos/[string owner]/[string repo]/releases/generate\-notes(ReleasesGenerateNotesBody payload, map<string|string[]> headers = {}) returns ReleaseNotesContent|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/releases/generate-notes`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8421,7 +8421,7 @@ public isolated client class Client {
     # Get the latest release
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/releases/latest(map<string|string[]> headers = {}) returns Release|error {
@@ -8432,7 +8432,7 @@ public isolated client class Client {
     # Get a release by tag name
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + tag - tag parameter
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -8444,10 +8444,10 @@ public isolated client class Client {
     # Get a release
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + releaseId - The unique identifier of the release
     # + headers - Headers to be sent with the request 
-    # + return - **Note:** This returns an `upload_url` key corresponding to the endpoint for uploading release assets. This key is a [hypermedia resource](https://docs.github.com/rest/overview/resources-in-the-rest-api#hypermedia) 
+    # + return - **Note:** This returns an upload_url key corresponding to the endpoint for uploading release assets. This key is a [hypermedia resource](https://docs.github.com/rest/overview/resources-in-the-rest-api#hypermedia) 
     resource isolated function get repos/[string owner]/[string repo]/releases/[int releaseId](map<string|string[]> headers = {}) returns Release|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/releases/${getEncodedUri(releaseId)}`;
         return self.clientEp->get(resourcePath, headers);
@@ -8456,7 +8456,7 @@ public isolated client class Client {
     # Delete a release
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + releaseId - The unique identifier of the release
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -8468,11 +8468,11 @@ public isolated client class Client {
     # Update a release
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + releaseId - The unique identifier of the release
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/releases/[int releaseId](releases_releaseId_body payload, map<string|string[]> headers = {}) returns Release|error {
+    resource isolated function patch repos/[string owner]/[string repo]/releases/[int releaseId](ReleasesreleaseIdBody payload, map<string|string[]> headers = {}) returns Release|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/releases/${getEncodedUri(releaseId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8483,7 +8483,7 @@ public isolated client class Client {
     # List release assets
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + releaseId - The unique identifier of the release
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -8497,7 +8497,7 @@ public isolated client class Client {
     # Upload a release asset
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + releaseId - The unique identifier of the release
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -8513,7 +8513,7 @@ public isolated client class Client {
     # List reactions for a release
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + releaseId - The unique identifier of the release
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -8527,11 +8527,11 @@ public isolated client class Client {
     # Create reaction for a release
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + releaseId - The unique identifier of the release
     # + headers - Headers to be sent with the request 
     # + return - Reaction exists 
-    resource isolated function post repos/[string owner]/[string repo]/releases/[int releaseId]/reactions(releaseId_reactions_body payload, map<string|string[]> headers = {}) returns Reaction|error {
+    resource isolated function post repos/[string owner]/[string repo]/releases/[int releaseId]/reactions(ReleaseIdReactionsBody payload, map<string|string[]> headers = {}) returns Reaction|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/releases/${getEncodedUri(releaseId)}/reactions`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8542,7 +8542,7 @@ public isolated client class Client {
     # Delete a release reaction
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + releaseId - The unique identifier of the release
     # + reactionId - The unique identifier of the reaction
     # + headers - Headers to be sent with the request 
@@ -8555,7 +8555,7 @@ public isolated client class Client {
     # Get rules for a branch
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -8569,7 +8569,7 @@ public isolated client class Client {
     # Get all repository rulesets
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -8582,11 +8582,11 @@ public isolated client class Client {
     # Create a repository ruleset
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + payload - Request body 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/rulesets(repo_rulesets_body payload, map<string|string[]> headers = {}) returns RepositoryRuleset|error {
+    resource isolated function post repos/[string owner]/[string repo]/rulesets(RepoRulesetsBody payload, map<string|string[]> headers = {}) returns RepositoryRuleset|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/rulesets`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8597,7 +8597,7 @@ public isolated client class Client {
     # List repository rule suites
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -8610,7 +8610,7 @@ public isolated client class Client {
     # Get a repository rule suite
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + ruleSuiteId - The unique identifier of the rule suite result.
     # To get this ID, you can use [GET /repos/{owner}/{repo}/rulesets/rule-suites](https://docs.github.com/rest/repos/rule-suites#list-repository-rule-suites)
     # for repositories and [GET /orgs/{org}/rulesets/rule-suites](https://docs.github.com/rest/orgs/rule-suites#list-organization-rule-suites)
@@ -8625,7 +8625,7 @@ public isolated client class Client {
     # Get a repository ruleset
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + rulesetId - The ID of the ruleset
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -8639,12 +8639,12 @@ public isolated client class Client {
     # Update a repository ruleset
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + rulesetId - The ID of the ruleset
     # + headers - Headers to be sent with the request 
     # + payload - Request body 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/rulesets/[int rulesetId](rulesets_rulesetId_body_1 payload, map<string|string[]> headers = {}) returns RepositoryRuleset|error {
+    resource isolated function put repos/[string owner]/[string repo]/rulesets/[int rulesetId](RulesetsrulesetIdBody1 payload, map<string|string[]> headers = {}) returns RepositoryRuleset|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/rulesets/${getEncodedUri(rulesetId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8655,7 +8655,7 @@ public isolated client class Client {
     # Delete a repository ruleset
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + rulesetId - The ID of the ruleset
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -8667,7 +8667,7 @@ public isolated client class Client {
     # List secret scanning alerts for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -8680,8 +8680,8 @@ public isolated client class Client {
     # Get a secret scanning alert
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + alertNumber - The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + alertNumber - The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the number field in the response from the GET /repos/{owner}/{repo}/code-scanning/alerts operation
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/secret\-scanning/alerts/[AlertNumber alertNumber](map<string|string[]> headers = {}) returns SecretScanningAlert|error? {
@@ -8692,11 +8692,11 @@ public isolated client class Client {
     # Update a secret scanning alert
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + alertNumber - The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + alertNumber - The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the number field in the response from the GET /repos/{owner}/{repo}/code-scanning/alerts operation
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repos/[string owner]/[string repo]/secret\-scanning/alerts/[AlertNumber alertNumber](alerts_alertNumber_body_2 payload, map<string|string[]> headers = {}) returns SecretScanningAlert|error {
+    resource isolated function patch repos/[string owner]/[string repo]/secret\-scanning/alerts/[AlertNumber alertNumber](AlertsalertNumberBody2 payload, map<string|string[]> headers = {}) returns SecretScanningAlert|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/secret-scanning/alerts/${getEncodedUri(alertNumber)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8707,8 +8707,8 @@ public isolated client class Client {
     # List locations for a secret scanning alert
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
-    # + alertNumber - The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the `number` field in the response from the `GET /repos/{owner}/{repo}/code-scanning/alerts` operation
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
+    # + alertNumber - The number that identifies an alert. You can find this at the end of the URL for a code scanning alert within GitHub, and in the number field in the response from the GET /repos/{owner}/{repo}/code-scanning/alerts operation
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -8721,7 +8721,7 @@ public isolated client class Client {
     # List repository security advisories
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -8734,7 +8734,7 @@ public isolated client class Client {
     # Create a repository security advisory
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function post repos/[string owner]/[string repo]/security\-advisories(RepositoryAdvisoryCreate payload, map<string|string[]> headers = {}) returns RepositoryAdvisory|error {
@@ -8748,7 +8748,7 @@ public isolated client class Client {
     # Privately report a security vulnerability
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function post repos/[string owner]/[string repo]/security\-advisories/reports(PrivateVulnerabilityReportCreate payload, map<string|string[]> headers = {}) returns RepositoryAdvisory|error {
@@ -8762,7 +8762,7 @@ public isolated client class Client {
     # Get a repository security advisory
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + ghsaId - The GHSA (GitHub Security Advisory) identifier of the advisory
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -8774,7 +8774,7 @@ public isolated client class Client {
     # Update a repository security advisory
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + ghsaId - The GHSA (GitHub Security Advisory) identifier of the advisory
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -8789,7 +8789,7 @@ public isolated client class Client {
     # Request a CVE for a repository security advisory
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + ghsaId - The GHSA (GitHub Security Advisory) identifier of the advisory
     # + headers - Headers to be sent with the request 
     # + return - Accepted 
@@ -8802,7 +8802,7 @@ public isolated client class Client {
     # List stargazers
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -8815,7 +8815,7 @@ public isolated client class Client {
     # Get the weekly commit activity
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Returns a weekly aggregate of the number of additions and deletions pushed to a repository 
     resource isolated function get repos/[string owner]/[string repo]/stats/code_frequency(map<string|string[]> headers = {}) returns CodeFrequencyStat[]|record {}|error? {
@@ -8826,7 +8826,7 @@ public isolated client class Client {
     # Get the last year of commit activity
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/stats/commit_activity(map<string|string[]> headers = {}) returns CommitActivity[]|record {}|error? {
@@ -8837,7 +8837,7 @@ public isolated client class Client {
     # Get all contributor commit activity
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/stats/contributors(map<string|string[]> headers = {}) returns ContributorActivity[]|record {}|error? {
@@ -8848,7 +8848,7 @@ public isolated client class Client {
     # Get the weekly commit count
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - The array order is oldest week (index 0) to most recent week 
     resource isolated function get repos/[string owner]/[string repo]/stats/participation(map<string|string[]> headers = {}) returns ParticipationStats|error {
@@ -8859,9 +8859,9 @@ public isolated client class Client {
     # Get the hourly commit count for each day
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
-    # + return - For example, `[2, 14, 25]` indicates that there were 25 total commits, during the 2:00pm hour on Tuesdays. All times are based on the time zone of individual commits 
+    # + return - For example, [2, 14, 25] indicates that there were 25 total commits, during the 2:00pm hour on Tuesdays. All times are based on the time zone of individual commits 
     resource isolated function get repos/[string owner]/[string repo]/stats/punch_card(map<string|string[]> headers = {}) returns CodeFrequencyStat[]|error? {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/stats/punch_card`;
         return self.clientEp->get(resourcePath, headers);
@@ -8870,10 +8870,10 @@ public isolated client class Client {
     # Create a commit status
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/statuses/[string sha](statuses_sha_body payload, map<string|string[]> headers = {}) returns Status|error {
+    resource isolated function post repos/[string owner]/[string repo]/statuses/[string sha](StatusesshaBody payload, map<string|string[]> headers = {}) returns Status|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/statuses/${getEncodedUri(sha)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8884,7 +8884,7 @@ public isolated client class Client {
     # List watchers
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -8897,7 +8897,7 @@ public isolated client class Client {
     # Get a repository subscription
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - if you subscribe to the repository 
     resource isolated function get repos/[string owner]/[string repo]/subscription(map<string|string[]> headers = {}) returns RepositorySubscription|error {
@@ -8908,10 +8908,10 @@ public isolated client class Client {
     # Set a repository subscription
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/subscription(repo_subscription_body payload, map<string|string[]> headers = {}) returns RepositorySubscription|error {
+    resource isolated function put repos/[string owner]/[string repo]/subscription(RepoSubscriptionBody payload, map<string|string[]> headers = {}) returns RepositorySubscription|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/subscription`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8922,7 +8922,7 @@ public isolated client class Client {
     # Delete a repository subscription
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function delete repos/[string owner]/[string repo]/subscription(map<string|string[]> headers = {}) returns error? {
@@ -8933,7 +8933,7 @@ public isolated client class Client {
     # List repository tags
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -8946,7 +8946,7 @@ public isolated client class Client {
     # List tag protection states for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/tags/protection(map<string|string[]> headers = {}) returns TagProtection[]|error {
@@ -8957,10 +8957,10 @@ public isolated client class Client {
     # Create a tag protection state for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/tags/protection(tags_protection_body payload, map<string|string[]> headers = {}) returns TagProtection|error {
+    resource isolated function post repos/[string owner]/[string repo]/tags/protection(TagsProtectionBody payload, map<string|string[]> headers = {}) returns TagProtection|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/tags/protection`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -8971,7 +8971,7 @@ public isolated client class Client {
     # Delete a tag protection state for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + tagProtectionId - The unique identifier of the tag protection
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -8983,7 +8983,7 @@ public isolated client class Client {
     # Download a repository archive (tar)
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/tarball/[string ref](map<string|string[]> headers = {}) returns error? {
@@ -8994,7 +8994,7 @@ public isolated client class Client {
     # List repository teams
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -9007,7 +9007,7 @@ public isolated client class Client {
     # Get all repository topics
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -9020,10 +9020,10 @@ public isolated client class Client {
     # Replace all repository topics
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function put repos/[string owner]/[string repo]/topics(repo_topics_body payload, map<string|string[]> headers = {}) returns Topic|error {
+    resource isolated function put repos/[string owner]/[string repo]/topics(RepoTopicsBody payload, map<string|string[]> headers = {}) returns Topic|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/topics`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9034,7 +9034,7 @@ public isolated client class Client {
     # Get repository clones
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -9047,7 +9047,7 @@ public isolated client class Client {
     # Get top referral paths
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/traffic/popular/paths(map<string|string[]> headers = {}) returns ContentTraffic[]|error {
@@ -9058,7 +9058,7 @@ public isolated client class Client {
     # Get top referral sources
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/traffic/popular/referrers(map<string|string[]> headers = {}) returns ReferrerTraffic[]|error {
@@ -9069,7 +9069,7 @@ public isolated client class Client {
     # Get page views
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
     # + return - Response 
@@ -9082,10 +9082,10 @@ public isolated client class Client {
     # Transfer a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/transfer(repo_transfer_body payload, map<string|string[]> headers = {}) returns MinimalRepository|error {
+    resource isolated function post repos/[string owner]/[string repo]/transfer(RepoTransferBody payload, map<string|string[]> headers = {}) returns MinimalRepository|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/transfer`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9096,7 +9096,7 @@ public isolated client class Client {
     # Check if vulnerability alerts are enabled for a repository
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response if repository is enabled with vulnerability alerts 
     resource isolated function get repos/[string owner]/[string repo]/vulnerability\-alerts(map<string|string[]> headers = {}) returns error? {
@@ -9107,7 +9107,7 @@ public isolated client class Client {
     # Enable vulnerability alerts
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function put repos/[string owner]/[string repo]/vulnerability\-alerts(map<string|string[]> headers = {}) returns error? {
@@ -9119,7 +9119,7 @@ public isolated client class Client {
     # Disable vulnerability alerts
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function delete repos/[string owner]/[string repo]/vulnerability\-alerts(map<string|string[]> headers = {}) returns error? {
@@ -9130,7 +9130,7 @@ public isolated client class Client {
     # Download a repository archive (zip)
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get repos/[string owner]/[string repo]/zipball/[string ref](map<string|string[]> headers = {}) returns error? {
@@ -9141,10 +9141,10 @@ public isolated client class Client {
     # Create a repository using a template
     #
     # + templateOwner - The account owner of the template repository. The name is not case sensitive
-    # + templateRepo - The name of the template repository without the `.git` extension. The name is not case sensitive
+    # + templateRepo - The name of the template repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string templateOwner]/[string templateRepo]/generate(templateRepo_generate_body payload, map<string|string[]> headers = {}) returns Repository|error {
+    resource isolated function post repos/[string templateOwner]/[string templateRepo]/generate(TemplateRepoGenerateBody payload, map<string|string[]> headers = {}) returns Repository|error {
         string resourcePath = string `/repos/${getEncodedUri(templateOwner)}/${getEncodedUri(templateRepo)}/generate`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9206,7 +9206,7 @@ public isolated client class Client {
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response when creating a secret 
-    resource isolated function put repositories/[int repositoryId]/environments/[string environmentName]/secrets/[string secretName](secrets_secretName_body_6 payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
+    resource isolated function put repositories/[int repositoryId]/environments/[string environmentName]/secrets/[string secretName](SecretssecretNameBody6 payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
         string resourcePath = string `/repositories/${getEncodedUri(repositoryId)}/environments/${getEncodedUri(environmentName)}/secrets/${getEncodedUri(secretName)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9245,7 +9245,7 @@ public isolated client class Client {
     # + environmentName - The name of the environment
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repositories/[int repositoryId]/environments/[string environmentName]/variables(environmentName_variables_body payload, map<string|string[]> headers = {}) returns EmptyObject|error {
+    resource isolated function post repositories/[int repositoryId]/environments/[string environmentName]/variables(ActionsVariablesBody1 payload, map<string|string[]> headers = {}) returns EmptyObject|error {
         string resourcePath = string `/repositories/${getEncodedUri(repositoryId)}/environments/${getEncodedUri(environmentName)}/variables`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9284,7 +9284,7 @@ public isolated client class Client {
     # + environmentName - The name of the environment
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch repositories/[int repositoryId]/environments/[string environmentName]/variables/[string name](variables_name_body_2 payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function patch repositories/[int repositoryId]/environments/[string environmentName]/variables/[string name](VariablesnameBody1 payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/repositories/${getEncodedUri(repositoryId)}/environments/${getEncodedUri(environmentName)}/variables/${getEncodedUri(name)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9403,7 +9403,7 @@ public isolated client class Client {
     # 
     # # Deprecated
     @deprecated
-    resource isolated function patch teams/[int teamId](teams_teamId_body payload, map<string|string[]> headers = {}) returns TeamFull|error {
+    resource isolated function patch teams/[int teamId](TeamsteamIdBody payload, map<string|string[]> headers = {}) returns TeamFull|error {
         string resourcePath = string `/teams/${getEncodedUri(teamId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9434,7 +9434,7 @@ public isolated client class Client {
     # 
     # # Deprecated
     @deprecated
-    resource isolated function post teams/[int teamId]/discussions(teamId_discussions_body payload, map<string|string[]> headers = {}) returns TeamDiscussion|error {
+    resource isolated function post teams/[int teamId]/discussions(TeamSlugDiscussionsBody payload, map<string|string[]> headers = {}) returns TeamDiscussion|error {
         string resourcePath = string `/teams/${getEncodedUri(teamId)}/discussions`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9479,7 +9479,7 @@ public isolated client class Client {
     # 
     # # Deprecated
     @deprecated
-    resource isolated function patch teams/[int teamId]/discussions/[int discussionNumber](discussions_discussionNumber_body_1 payload, map<string|string[]> headers = {}) returns TeamDiscussion|error {
+    resource isolated function patch teams/[int teamId]/discussions/[int discussionNumber](DiscussionsdiscussionNumberBody payload, map<string|string[]> headers = {}) returns TeamDiscussion|error {
         string resourcePath = string `/teams/${getEncodedUri(teamId)}/discussions/${getEncodedUri(discussionNumber)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9512,7 +9512,7 @@ public isolated client class Client {
     # 
     # # Deprecated
     @deprecated
-    resource isolated function post teams/[int teamId]/discussions/[int discussionNumber]/comments(discussionNumber_comments_body_1 payload, map<string|string[]> headers = {}) returns TeamDiscussionComment|error {
+    resource isolated function post teams/[int teamId]/discussions/[int discussionNumber]/comments(DiscussionNumberCommentsBody payload, map<string|string[]> headers = {}) returns TeamDiscussionComment|error {
         string resourcePath = string `/teams/${getEncodedUri(teamId)}/discussions/${getEncodedUri(discussionNumber)}/comments`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9560,7 +9560,7 @@ public isolated client class Client {
     # 
     # # Deprecated
     @deprecated
-    resource isolated function patch teams/[int teamId]/discussions/[int discussionNumber]/comments/[int commentNumber](comments_commentNumber_body_1 payload, map<string|string[]> headers = {}) returns TeamDiscussionComment|error {
+    resource isolated function patch teams/[int teamId]/discussions/[int discussionNumber]/comments/[int commentNumber](DiscussionNumberCommentsBody payload, map<string|string[]> headers = {}) returns TeamDiscussionComment|error {
         string resourcePath = string `/teams/${getEncodedUri(teamId)}/discussions/${getEncodedUri(discussionNumber)}/comments/${getEncodedUri(commentNumber)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9595,7 +9595,7 @@ public isolated client class Client {
     # 
     # # Deprecated
     @deprecated
-    resource isolated function post teams/[int teamId]/discussions/[int discussionNumber]/comments/[int commentNumber]/reactions(commentNumber_reactions_body_1 payload, map<string|string[]> headers = {}) returns Reaction|error {
+    resource isolated function post teams/[int teamId]/discussions/[int discussionNumber]/comments/[int commentNumber]/reactions(CommentNumberReactionsBody payload, map<string|string[]> headers = {}) returns Reaction|error {
         string resourcePath = string `/teams/${getEncodedUri(teamId)}/discussions/${getEncodedUri(discussionNumber)}/comments/${getEncodedUri(commentNumber)}/reactions`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9628,7 +9628,7 @@ public isolated client class Client {
     # 
     # # Deprecated
     @deprecated
-    resource isolated function post teams/[int teamId]/discussions/[int discussionNumber]/reactions(discussionNumber_reactions_body_1 payload, map<string|string[]> headers = {}) returns Reaction|error {
+    resource isolated function post teams/[int teamId]/discussions/[int discussionNumber]/reactions(DiscussionNumberReactionsBody payload, map<string|string[]> headers = {}) returns Reaction|error {
         string resourcePath = string `/teams/${getEncodedUri(teamId)}/discussions/${getEncodedUri(discussionNumber)}/reactions`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9732,7 +9732,7 @@ public isolated client class Client {
     # 
     # # Deprecated
     @deprecated
-    resource isolated function put teams/[int teamId]/memberships/[string username](memberships_username_body_2 payload, map<string|string[]> headers = {}) returns TeamMembership|error {
+    resource isolated function put teams/[int teamId]/memberships/[string username](MembershipsusernameBody1 payload, map<string|string[]> headers = {}) returns TeamMembership|error {
         string resourcePath = string `/teams/${getEncodedUri(teamId)}/memberships/${getEncodedUri(username)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9792,7 +9792,7 @@ public isolated client class Client {
     # 
     # # Deprecated
     @deprecated
-    resource isolated function put teams/[int teamId]/projects/[int projectId](projects_projectId_body_2 payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put teams/[int teamId]/projects/[int projectId](ProjectsprojectIdBody2 payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/teams/${getEncodedUri(teamId)}/projects/${getEncodedUri(projectId)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9833,7 +9833,7 @@ public isolated client class Client {
     #
     # + teamId - The unique identifier of the team
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Alternative response with extra repository information 
     # 
@@ -9848,13 +9848,13 @@ public isolated client class Client {
     #
     # + teamId - The unique identifier of the team
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     # 
     # # Deprecated
     @deprecated
-    resource isolated function put teams/[int teamId]/repos/[string owner]/[string repo](owner_repo_body_2 payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put teams/[int teamId]/repos/[string owner]/[string repo](OwnerrepoBody2 payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/teams/${getEncodedUri(teamId)}/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9866,7 +9866,7 @@ public isolated client class Client {
     #
     # + teamId - The unique identifier of the team
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     # 
@@ -9905,7 +9905,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch user(user_body payload, map<string|string[]> headers = {}) returns PrivateUser|error? {
+    resource isolated function patch user(UserBody payload, map<string|string[]> headers = {}) returns PrivateUser|error? {
         string resourcePath = string `/user`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -9970,7 +9970,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response when the codespace was successfully created 
-    resource isolated function post user/codespaces(user_codespaces_body payload, map<string|string[]> headers = {}) returns Codespace|error {
+    resource isolated function post user/codespaces(UserCodespacesBody payload, map<string|string[]> headers = {}) returns Codespace|error {
         string resourcePath = string `/user/codespaces`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10013,7 +10013,7 @@ public isolated client class Client {
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - Response after successfully creating a secret 
-    resource isolated function put user/codespaces/secrets/[string secretName](secrets_secretName_body_7 payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
+    resource isolated function put user/codespaces/secrets/[string secretName](SecretssecretNameBody7 payload, map<string|string[]> headers = {}) returns EmptyObject|error? {
         string resourcePath = string `/user/codespaces/secrets/${getEncodedUri(secretName)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10046,7 +10046,7 @@ public isolated client class Client {
     # + secretName - The name of the secret
     # + headers - Headers to be sent with the request 
     # + return - No Content when repositories were added to the selected list 
-    resource isolated function put user/codespaces/secrets/[string secretName]/repositories(secretName_repositories_body_3 payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function put user/codespaces/secrets/[string secretName]/repositories(SecretNameRepositoriesBody3 payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/user/codespaces/secrets/${getEncodedUri(secretName)}/repositories`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10100,7 +10100,7 @@ public isolated client class Client {
     # + codespaceName - The name of the codespace
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch user/codespaces/[string codespaceName](codespaces_codespaceName_body payload, map<string|string[]> headers = {}) returns Codespace|error {
+    resource isolated function patch user/codespaces/[string codespaceName](CodespacescodespaceNameBody payload, map<string|string[]> headers = {}) returns Codespace|error {
         string resourcePath = string `/user/codespaces/${getEncodedUri(codespaceName)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10122,7 +10122,7 @@ public isolated client class Client {
     # Get details about a codespace export
     #
     # + codespaceName - The name of the codespace
-    # + exportId - The ID of the export operation, or `latest`. Currently only `latest` is currently supported
+    # + exportId - The ID of the export operation, or latest. Currently only latest is currently supported
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function get user/codespaces/[string codespaceName]/exports/[string exportId](map<string|string[]> headers = {}) returns CodespaceExportDetails|error {
@@ -10145,7 +10145,7 @@ public isolated client class Client {
     # + codespaceName - The name of the codespace
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post user/codespaces/[string codespaceName]/publish(codespaceName_publish_body payload, map<string|string[]> headers = {}) returns CodespaceWithFullRepository|error {
+    resource isolated function post user/codespaces/[string codespaceName]/publish(CodespaceNamePublishBody payload, map<string|string[]> headers = {}) returns CodespaceWithFullRepository|error {
         string resourcePath = string `/user/codespaces/${getEncodedUri(codespaceName)}/publish`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10188,7 +10188,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch user/email/visibility(email_visibility_body payload, map<string|string[]> headers = {}) returns Email[]|error? {
+    resource isolated function patch user/email/visibility(EmailVisibilityBody payload, map<string|string[]> headers = {}) returns Email[]|error? {
         string resourcePath = string `/user/email/visibility`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10211,7 +10211,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post user/emails(user_emails_body payload, map<string|string[]> headers = {}) returns Email[]|error? {
+    resource isolated function post user/emails(UserEmailsBody payload, map<string|string[]> headers = {}) returns Email[]|error? {
         string resourcePath = string `/user/emails`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10223,7 +10223,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function delete user/emails(user_emails_body_1 payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function delete user/emails(UserEmailsBody1 payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/user/emails`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10299,7 +10299,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post user/gpg_keys(user_gpg_keys_body payload, map<string|string[]> headers = {}) returns GpgKey|error? {
+    resource isolated function post user/gpg_keys(UserGpgKeysBody payload, map<string|string[]> headers = {}) returns GpgKey|error? {
         string resourcePath = string `/user/gpg_keys`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10331,7 +10331,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
-    # + return - You can find the permissions for the installation under the `permissions` key 
+    # + return - You can find the permissions for the installation under the permissions key 
     resource isolated function get user/installations(map<string|string[]> headers = {}, *AppsListInstallationsForAuthenticatedUserQueries queries) returns InstallationResponse|error? {
         string resourcePath = string `/user/installations`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
@@ -10343,7 +10343,7 @@ public isolated client class Client {
     # + installationId - The unique identifier of the installation
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
-    # + return - The access the user has to each repository is included in the hash under the `permissions` key 
+    # + return - The access the user has to each repository is included in the hash under the permissions key 
     resource isolated function get user/installations/[int installationId]/repositories(map<string|string[]> headers = {}, *AppsListInstallationReposForAuthenticatedUserQueries queries) returns RepositoryResponse|error? {
         string resourcePath = string `/user/installations/${getEncodedUri(installationId)}/repositories`;
         resourcePath = resourcePath + check getPathForQueryParam(queries);
@@ -10429,7 +10429,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post user/keys(user_keys_body payload, map<string|string[]> headers = {}) returns Key|error? {
+    resource isolated function post user/keys(UserKeysBody payload, map<string|string[]> headers = {}) returns Key|error? {
         string resourcePath = string `/user/keys`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10505,7 +10505,7 @@ public isolated client class Client {
     # + org - The organization name. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function patch user/memberships/orgs/[string org](orgs_org_body_1 payload, map<string|string[]> headers = {}) returns OrgMembership|error {
+    resource isolated function patch user/memberships/orgs/[string org](OrgsorgBody1 payload, map<string|string[]> headers = {}) returns OrgMembership|error {
         string resourcePath = string `/user/memberships/orgs/${getEncodedUri(org)}`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10528,7 +10528,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post user/migrations(user_migrations_body payload, map<string|string[]> headers = {}) returns Migration|error? {
+    resource isolated function post user/migrations(UserMigrationsBody payload, map<string|string[]> headers = {}) returns Migration|error? {
         string resourcePath = string `/user/migrations`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10616,7 +10616,7 @@ public isolated client class Client {
 
     # Get a package for the authenticated user
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -10627,7 +10627,7 @@ public isolated client class Client {
 
     # Delete a package for the authenticated user
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + headers - Headers to be sent with the request 
     # + return - Response 
@@ -10638,7 +10638,7 @@ public isolated client class Client {
 
     # Restore a package for the authenticated user
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -10652,7 +10652,7 @@ public isolated client class Client {
 
     # List package versions for a package owned by the authenticated user
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + headers - Headers to be sent with the request 
     # + queries - Queries to be sent with the request 
@@ -10665,7 +10665,7 @@ public isolated client class Client {
 
     # Get a package version for the authenticated user
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + packageVersionId - Unique identifier of the package version
     # + headers - Headers to be sent with the request 
@@ -10677,7 +10677,7 @@ public isolated client class Client {
 
     # Delete a package version for the authenticated user
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + packageVersionId - Unique identifier of the package version
     # + headers - Headers to be sent with the request 
@@ -10689,7 +10689,7 @@ public isolated client class Client {
 
     # Restore a package version for the authenticated user
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + packageVersionId - Unique identifier of the package version
     # + headers - Headers to be sent with the request 
@@ -10704,7 +10704,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post user/projects(user_projects_body payload, map<string|string[]> headers = {}) returns Project|error? {
+    resource isolated function post user/projects(UserProjectsBody payload, map<string|string[]> headers = {}) returns Project|error? {
         string resourcePath = string `/user/projects`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10738,7 +10738,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post user/repos(user_repos_body payload, map<string|string[]> headers = {}) returns Repository|error? {
+    resource isolated function post user/repos(UserReposBody payload, map<string|string[]> headers = {}) returns Repository|error? {
         string resourcePath = string `/user/repos`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10793,7 +10793,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post user/social_accounts(user_social_accounts_body payload, map<string|string[]> headers = {}) returns SocialAccount[]|error? {
+    resource isolated function post user/social_accounts(UserSocialAccountsBody payload, map<string|string[]> headers = {}) returns SocialAccount[]|error? {
         string resourcePath = string `/user/social_accounts`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10805,7 +10805,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function delete user/social_accounts(user_social_accounts_body_1 payload, map<string|string[]> headers = {}) returns error? {
+    resource isolated function delete user/social_accounts(UserSocialAccountsBody1 payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/user/social_accounts`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10828,7 +10828,7 @@ public isolated client class Client {
     #
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post user/ssh_signing_keys(user_ssh_signing_keys_body payload, map<string|string[]> headers = {}) returns SshSigningKey|error? {
+    resource isolated function post user/ssh_signing_keys(UserSshSigningKeysBody payload, map<string|string[]> headers = {}) returns SshSigningKey|error? {
         string resourcePath = string `/user/ssh_signing_keys`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -10870,7 +10870,7 @@ public isolated client class Client {
     # Check if a repository is starred by the authenticated user
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response if this repository is starred by you 
     resource isolated function get user/starred/[string owner]/[string repo](map<string|string[]> headers = {}) returns error? {
@@ -10881,7 +10881,7 @@ public isolated client class Client {
     # Star a repository for the authenticated user
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function put user/starred/[string owner]/[string repo](map<string|string[]> headers = {}) returns error? {
@@ -10893,7 +10893,7 @@ public isolated client class Client {
     # Unstar a repository for the authenticated user
     #
     # + owner - The account owner of the repository. The name is not case sensitive
-    # + repo - The name of the repository without the `.git` extension. The name is not case sensitive
+    # + repo - The name of the repository without the .git extension. The name is not case sensitive
     # + headers - Headers to be sent with the request 
     # + return - Response 
     resource isolated function delete user/starred/[string owner]/[string repo](map<string|string[]> headers = {}) returns error? {
@@ -11109,7 +11109,7 @@ public isolated client class Client {
 
     # Get a package for a user
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + username - The handle for the GitHub user account
     # + headers - Headers to be sent with the request 
@@ -11121,7 +11121,7 @@ public isolated client class Client {
 
     # Delete a package for a user
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + username - The handle for the GitHub user account
     # + headers - Headers to be sent with the request 
@@ -11133,7 +11133,7 @@ public isolated client class Client {
 
     # Restore a package for a user
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + username - The handle for the GitHub user account
     # + headers - Headers to be sent with the request 
@@ -11148,7 +11148,7 @@ public isolated client class Client {
 
     # List package versions for a package owned by a user
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + username - The handle for the GitHub user account
     # + headers - Headers to be sent with the request 
@@ -11160,7 +11160,7 @@ public isolated client class Client {
 
     # Get a package version for a user
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + packageVersionId - Unique identifier of the package version
     # + username - The handle for the GitHub user account
@@ -11173,7 +11173,7 @@ public isolated client class Client {
 
     # Delete package version for a user
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + username - The handle for the GitHub user account
     # + packageVersionId - Unique identifier of the package version
@@ -11186,7 +11186,7 @@ public isolated client class Client {
 
     # Restore package version for a user
     #
-    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type `maven`. Docker images pushed to GitHub's Container registry (`ghcr.io`) have the type `container`. You can use the type `docker` to find images that were pushed to GitHub's Docker registry (`docker.pkg.github.com`), even if these have now been migrated to the Container registry
+    # + packageType - The type of supported package. Packages in GitHub's Gradle registry have the type maven. Docker images pushed to GitHub's Container registry (ghcr.io) have the type container. You can use the type docker to find images that were pushed to GitHub's Docker registry (docker.pkg.github.com), even if these have now been migrated to the Container registry
     # + packageName - The name of the package
     # + username - The handle for the GitHub user account
     # + packageVersionId - Unique identifier of the package version

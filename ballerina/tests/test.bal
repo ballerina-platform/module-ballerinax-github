@@ -112,7 +112,7 @@ function testgetBranches() returns error? {
 
 @test:Config {groups: ["mock_tests", "live_tests"]}
 function testCreateRepository() returns error? {
-    user_repos_body body = {
+    UserReposBody body = {
         name: TEST_REPO_NAME,
         description: "New Test Repo Description"
     };
@@ -125,7 +125,7 @@ function testCreateRepository() returns error? {
     dependsOn: [testCreateRepository]
 }
 function testUpdateRepository() returns error? {
-    owner_repo_body_1 body = {
+    OwnerrepoBody1 body = {
         description: "New Updated Description"
     };
     FullRepository response = check github->/repos/[testUsername]/[TEST_REPO_NAME].patch(body);
@@ -165,7 +165,7 @@ function testGetMilestones() returns error? {
     enable: false
 }
 function testCreateUserProject() returns error? {
-    user_projects_body body = {
+    UserProjectsBody body = {
         name: "Test Project Created by Ballerina GitHub Connector",
         body: "This is the body of the test project"
     };
@@ -178,7 +178,7 @@ function testCreateUserProject() returns error? {
     dependsOn: [testGetMilestone]
 }
 function testCreateIssue() returns error? {
-    repo_issues_body body = {
+    RepoIssuesBody body = {
         title: "This is a test Issue Title",
         body: "This is test issue body",
         assignees: [testUsername],
@@ -197,7 +197,7 @@ function testCreateIssue() returns error? {
     dependsOn: [testCreateIssue]
 }
 function testUpdateIssue() returns error? {
-    issues_issueNumber_body body = {
+    IssuesissueNumberBody body = {
         title: "Updated issue title",
         body: "This is updated test issue body",
         assignees: [testUsername],
@@ -231,7 +231,7 @@ function testGetIssues() returns error? {
     dependsOn: [testGetIssue]
 }
 function testAddComment() returns error? {
-    issueNumber_comments_body body = {
+    CommentscommentIdBody1 body = {
         body: "Comment Added by Ballerina GitHub connector!"
     };
     IssueComment response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber]/comments.post(body);
@@ -244,7 +244,7 @@ function testAddComment() returns error? {
     dependsOn: [testAddComment]
 }
 function testUpdateComment() returns error? {
-    comments_commentId_body_2 body = {
+    CommentscommentIdBody2 body = {
         body: "New comment added with addComment() UPDATED"
     };
     IssueComment response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/comments/[createdIssueCommentId].patch(body);
@@ -280,7 +280,7 @@ function testGetIssueLabels() returns error? {
     dependsOn: [testCreateIssue]
 }
 function testAddIssueLabels() returns error? {
-    issueNumber_labels_body_1 body = {
+    IssueNumberLabelsBody1 body = {
         labels: ["bug"]
     };
     Label[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/issues/[createdIssueNumber]/labels.post(body);
@@ -301,7 +301,7 @@ function testRemoveIssueLabels() returns error? {
     dependsOn: [testRemoveIssueLabels]
 }
 function testCloseIssue() returns error? {
-    issues_issueNumber_body body = {
+    IssuesissueNumberBody body = {
         state: "closed",
         stateReason: "not_planned"
     };
@@ -321,7 +321,7 @@ function testGetMasterBranchLatestCommitSHA() returns error? {
     dependsOn: [testGetMasterBranchLatestCommitSHA]
 }
 function testCreateNewBranch() returns error? {
-    git_refs_body body = {
+    GitRefsBody body = {
         ref: NEW_FEATURE_BRANCH_REF,
         sha: LATEST_MASTER_COMMIT_HASH
     };
@@ -334,7 +334,7 @@ function testCreateNewBranch() returns error? {
     dependsOn: [testCreateNewBranch]
 }
 function testCommitNewFile() returns error? {
-    git_blobs_body blobBody = {
+    GitBlobsBody blobBody = {
         content: "This is an example file content."
     };
     ShortBlob blobResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/blobs.post(blobBody);
@@ -343,7 +343,7 @@ function testCommitNewFile() returns error? {
     GitCommit commitResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/commits/[LATEST_MASTER_COMMIT_HASH]();
     string treeSHA = commitResponse.tree.sha;
 
-    git_trees_body treeBody = {
+    GitTreesBody treeBody = {
         baseTree: treeSHA,
         tree: [
             {
@@ -357,7 +357,7 @@ function testCommitNewFile() returns error? {
     GitTree treeResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/trees.post(treeBody);
     string newTreeSHA = treeResponse.sha;
 
-    git_commits_body commitBody = {
+    GitCommitsBody commitBody = {
         parents: [LATEST_MASTER_COMMIT_HASH],
         tree: newTreeSHA,
         message: "Add a new text file"
@@ -365,7 +365,7 @@ function testCommitNewFile() returns error? {
     GitCommit newCommitResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/commits.post(commitBody);
     string newCommitSHA = newCommitResponse.sha;
 
-    refs_ref_body updateRefBody = {
+    RefsrefBody updateRefBody = {
         sha: newCommitSHA
     };
     GitRef response = check github->/repos/[testUsername]/[testUserRepositoryName]/git/refs/[NEW_FEATURE_BRANCH_HEAD].patch(updateRefBody);
@@ -377,7 +377,7 @@ function testCommitNewFile() returns error? {
     dependsOn: [testCommitNewFile]
 }
 function testCreatePullRequest() returns error? {
-    repo_pulls_body body = {
+    RepoPullsBody body = {
         title: "Test PR created from Ballerina GitHub Connector",
         base: MASTER_BRANCH,
         head: NEW_FEATURE_BRANCH,
@@ -421,7 +421,7 @@ function testLastCommit() returns error? {
     dependsOn: [testLastCommit]
 }
 function testUpdatePullRequest() returns error? {
-    pulls_pullNumber_body body = {
+    PullspullNumberBody body = {
         title: "Test PR created from Ballerina GitHub Connector Updated"
     };
     PullRequest response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls/[createdPullRequestNumber].patch(body);
@@ -433,7 +433,7 @@ function testUpdatePullRequest() returns error? {
     dependsOn: [testUpdatePullRequest]
 }
 function testUpdatePullRequestToClose() returns error? {
-    pulls_pullNumber_body body = {
+    PullspullNumberBody body = {
         state: "closed"
     };
 
@@ -454,7 +454,7 @@ function testDeleteBranch() returns error? {
     dependsOn: [testUpdatePullRequest]
 }
 function testCreatePullRequestReview() returns error? {
-    pullNumber_reviews_body body = {
+    PullNumberReviewsBody body = {
         body: "This is a test review comment for a pull  from Ballerina GitHub connector ",
         event: "COMMENT"
     };
@@ -468,7 +468,7 @@ function testCreatePullRequestReview() returns error? {
     dependsOn: [testUpdatePullRequest]
 }
 function testCreatePullRequestReviewWithPendingState() returns error? {
-    pullNumber_reviews_body body = {
+    PullNumberReviewsBody body = {
         body: "This is a test review comment for a pull  from Ballerina GitHub connector "
     };
 
@@ -481,7 +481,7 @@ function testCreatePullRequestReviewWithPendingState() returns error? {
     dependsOn: [testCreatePullRequestReview]
 }
 function testUpdatePullRequestReview() returns error? {
-    reviews_reviewId_body body = {
+    ReviewsreviewIdBody body = {
         body: "This is a test review comment for a pull  from Ballerina GitHub connector Updated"
     };
 
@@ -524,7 +524,7 @@ function testGetLatestUserProject() returns error? {
     dependsOn: [testGetLatestUserProject]
 }
 function testUpdateProject() returns error? {
-    projects_projectId_body_1 body = {
+    ProjectsprojectIdBody1 body = {
         name: "Test Project Created by Ballerina GitHub Connector UPDATED"
     };
 
@@ -580,7 +580,7 @@ function testGetLanguagesFromRepository() returns error? {
 
 @test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetRepositoryContent() returns error? {
-    inline_response_200? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src"]();
+    InlineResponse200? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src"]();
     if response is ContentDirectory {
         test:assertTrue(response.length() > 0);
     } else {
@@ -590,7 +590,7 @@ function testGetRepositoryContent() returns error? {
 
 @test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetRepositoryContentOfFile() returns error? {
-    inline_response_200? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src/db/main.bal"]();
+    InlineResponse200? response = check github->/repos/[testUsername]/[testUserRepositoryName]/contents/["src/db/main.bal"]();
     if response is ContentFile {
         test:assertTrue(response.name.length() > 0);
     } else {

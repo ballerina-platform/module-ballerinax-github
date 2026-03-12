@@ -36,21 +36,21 @@ github:Client github = check new (gitHubConfig);
 
 public function main() returns error? {
     // Create a New Repository
-    github:User_repos_body newRepoBody = {
+    github:UserReposBody newRepoBody = {
         name: userRepoName,
         description: "New Repository Description"
     };
     github:Repository newRepository = check github->/user/repos.post(newRepoBody);
 
     // Commit a README.md file
-    github:Contents_path_body newFileBody = {
+    github:ContentspathBody newFileBody = {
         message: "Add README.md file",
         content: "This is a test content."
     };
     github:FileCommit fileCommit = check github->/repos/[userName]/[userRepoName]/contents/[readmeFilePath].put(newFileBody);
 
     // Add a New Collaborator
-    github:Collaborators_username_body_1 collaboratorBody = {
+    github:CollaboratorsusernameBody1 collaboratorBody = {
 
     };
     github:RepositoryInvitation repoInvite =

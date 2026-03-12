@@ -35,7 +35,7 @@ github:Client github = check new (gitHubConfig);
 
 public function main() returns error? {
     // Create a New Issue
-    github:Repo_issues_body createIssueBody = {
+    github:RepoIssuesBody createIssueBody = {
         title: "This is a test Issue Title",
         body: "This is test issue body"
     };
@@ -43,13 +43,13 @@ public function main() returns error? {
     issueNumber = issueResp.number;
 
     // Add Labels to the Issue
-    github:Issues_issue_number_body labelIssueBody = {
+    github:IssuesissueNumberBody labelIssueBody = {
         labels: ["enhancement", "good-first"]
     };
     github:Issue issueWithLabelResp = check github->/repos/[userName]/[userRepoName]/issues/[issueNumber].patch(labelIssueBody);
 
-    // Assign the Issue to a Usesr
-    github:Issues_issue_number_body assignIssueBody = {
+    // Assign the Issue to a User
+    github:IssuesissueNumberBody assignIssueBody = {
         assignees: [userName]
     };
     github:Issue assignedIssueResp = check github->/repos/[userName]/[userRepoName]/issues/[issueNumber].patch(assignIssueBody);
