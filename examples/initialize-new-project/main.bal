@@ -45,7 +45,7 @@ public function main() returns error? {
     // Commit a README.md file
     github:ContentspathBody newFileBody = {
         message: "Add README.md file",
-        content: "This is a test content."
+        content: "This is a test content.".toBytes().toBase64()
     };
     github:FileCommit fileCommit = check github->/repos/[userName]/[userRepoName]/contents/[readmeFilePath].put(newFileBody);
 
