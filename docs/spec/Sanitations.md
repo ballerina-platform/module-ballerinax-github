@@ -68,7 +68,9 @@ This file documents the modifications applied to enhance the usability of the of
 
 10. Remove the security-sensitive keys, including the private key, GitHub app token, and JWT token, which are provided as example values. These keys are leading to failures in Trivy scans.
 
-11. Rename the `RepositoryRuleDetailed` `oneOf` variant schemas from the verbose auto-generated names (e.g., `RepositoryRuleDetailedRepositoryRuleDetailed...OneOf12345678910111213`) to short names `RepositoryRuleDetailedOneOf1` through `RepositoryRuleDetailedOneOf14`. The `bal openapi align` tool generates cascading names by repeating the parent schema name for each nested variant, causing the file paths of the generated `.class` files to exceed OS limits and break the build.
+11. Consolidate duplicate request body schemas for the branch protection restrictions endpoints. The flatten step generated three identical schemas for the PUT/POST/DELETE methods on each of the `/apps`, `/teams`, and `/users` restriction endpoints (e.g. `RestrictionsAppsBody`, `RestrictionsAppsBody1`, `RestrictionsAppsBody2`). All three methods accept the same body structure, so `Body1` and `Body2` variants (and their underlying duplicate `OneOf` component schemas) were removed, and the POST and DELETE endpoint refs updated to point to the canonical `Body` schema.
+
+12. Rename the `RepositoryRuleDetailed` `oneOf` variant schemas from the verbose auto-generated names (e.g., `RepositoryRuleDetailedRepositoryRuleDetailed...OneOf12345678910111213`) to short names `RepositoryRuleDetailedOneOf1` through `RepositoryRuleDetailedOneOf14`. The `bal openapi align` tool generates cascading names by repeating the parent schema name for each nested variant, causing the file paths of the generated `.class` files to exceed OS limits and break the build.
 
 ## OpenAPI cli command
 
