@@ -5035,7 +5035,7 @@ public isolated client class Client {
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/apps(RestrictionsAppsBody1 payload, map<string|string[]> headers = {}) returns Integration[]|error {
+    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/apps(RestrictionsAppsBody payload, map<string|string[]> headers = {}) returns Integration[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/apps`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5050,7 +5050,7 @@ public isolated client class Client {
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function delete repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/apps(RestrictionsAppsBody2 payload, map<string|string[]> headers = {}) returns Integration[]|error {
+    resource isolated function delete repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/apps(RestrictionsAppsBody payload, map<string|string[]> headers = {}) returns Integration[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/apps`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5092,7 +5092,7 @@ public isolated client class Client {
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/teams(RestrictionsTeamsBody1 payload, map<string|string[]> headers = {}) returns Team[]|error {
+    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/teams(RestrictionsTeamsBody payload, map<string|string[]> headers = {}) returns Team[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/teams`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5107,7 +5107,7 @@ public isolated client class Client {
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function delete repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/teams(RestrictionsTeamsBody2 payload, map<string|string[]> headers = {}) returns Team[]|error {
+    resource isolated function delete repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/teams(RestrictionsTeamsBody payload, map<string|string[]> headers = {}) returns Team[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/teams`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5149,7 +5149,7 @@ public isolated client class Client {
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/users(RestrictionsUsersBody1 payload, map<string|string[]> headers = {}) returns SimpleUser[]|error {
+    resource isolated function post repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/users(RestrictionsUsersBody payload, map<string|string[]> headers = {}) returns SimpleUser[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/users`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);
@@ -5164,7 +5164,7 @@ public isolated client class Client {
     # + branch - The name of the branch. Cannot contain wildcard characters. To use wildcard characters in branch names, use [the GraphQL API](https://docs.github.com/graphql)
     # + headers - Headers to be sent with the request 
     # + return - Response 
-    resource isolated function delete repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/users(RestrictionsUsersBody2 payload, map<string|string[]> headers = {}) returns SimpleUser[]|error {
+    resource isolated function delete repos/[string owner]/[string repo]/branches/[string branch]/protection/restrictions/users(RestrictionsUsersBody payload, map<string|string[]> headers = {}) returns SimpleUser[]|error {
         string resourcePath = string `/repos/${getEncodedUri(owner)}/${getEncodedUri(repo)}/branches/${getEncodedUri(branch)}/protection/restrictions/users`;
         http:Request request = new;
         json jsonBody = jsondata:toJson(payload);

@@ -476,8 +476,6 @@ public type ArtifactResponse record {
     Artifact[] artifacts;
 };
 
-public type ReposownerrepobranchesbranchprotectionrestrictionsappsreposownerrepobranchesbranchprotectionrestrictionsappsOneOf112 string[];
-
 @constraint:Array {minLength: 1}
 public type ReposownerrepoissuesissueNumberlabelsreposownerrepoissuesissueNumberlabelsreposownerrepoissuesissueNumberlabelsreposownerrepoissuesissueNumberlabelsOneOf11234 ReposownerrepoissuesissueNumberlabelsLabels[];
 
@@ -1214,8 +1212,6 @@ public type ReposownerrepobranchesbranchprotectionrequiredStatusCheckscontextsOn
     string[] contexts;
 };
 
-public type ReposownerrepobranchesbranchprotectionrestrictionsappsreposownerrepobranchesbranchprotectionrestrictionsappsOneOf122 string[];
-
 public type PullRequestReviewCommentLinks record {
     # Hypermedia link to the associated pull request.
     @jsondata:Name {value: "pull_request"}
@@ -1282,11 +1278,6 @@ public type TeamsListDiscussionsInOrgQueries record {
     "asc"|"desc" direction = "desc";
 };
 
-public type ReposownerrepobranchesbranchprotectionrestrictionsusersOneOf11 record {
-    # The username for users
-    string[] users;
-};
-
 # Represents the Queries record for the operation: issues/list-for-repo
 public type IssuesListForRepoQueries record {
     # The number of results per page (max 100)
@@ -1312,11 +1303,6 @@ public type IssuesListForRepoQueries record {
     "asc"|"desc" direction = "desc";
     # Only show results that were last updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: YYYY-MM-DDTHH:MM:SSZ
     string since?;
-};
-
-public type ReposownerrepobranchesbranchprotectionrestrictionsusersOneOf12 record {
-    # The username for users
-    string[] users;
 };
 
 # Represents the Queries record for the operation: codespaces/list-in-repository-for-authenticated-user
@@ -3256,11 +3242,6 @@ public type OrgPersonalAccessTokenRequestsBody record {
     "approve"|"deny" action;
 };
 
-public type ReposownerrepobranchesbranchprotectionrestrictionsteamsOneOf12 record {
-    # The slug values for teams
-    string[] teams;
-};
-
 # The object used to create GitHub Pages deployment
 public type PagesDeploymentBody record {
     # The URL of an artifact that contains the .zip or .tar of static assets to deploy. The artifact belongs to the repository
@@ -3284,11 +3265,6 @@ public type ReferencedWorkflow record {
     string ref?;
     # The commit SHA of the referenced workflow.
     string sha;
-};
-
-public type ReposownerrepobranchesbranchprotectionrestrictionsteamsOneOf11 record {
-    # The slug values for teams
-    string[] teams;
 };
 
 # A label for a self hosted runner
@@ -5247,8 +5223,6 @@ public type Topic record {
     string[] names;
 };
 
-public type ReposownerrepobranchesbranchprotectionrestrictionsusersreposownerrepobranchesbranchprotectionrestrictionsusersOneOf122 string[];
-
 # Represents the Queries record for the operation: repos/list-pages-builds
 public type ReposListPagesBuildsQueries record {
     # The number of results per page (max 100)
@@ -5523,8 +5497,6 @@ public type UsercodespacesPullRequest record {
     @jsondata:Name {value: "repository_id"}
     int repositoryId;
 };
-
-public type ReposownerrepobranchesbranchprotectionrestrictionsusersreposownerrepobranchesbranchprotectionrestrictionsusersOneOf112 string[];
 
 # The package's language or package management ecosystem
 public type SecurityAdvisoryEcosystems "rubygems"|"npm"|"pip"|"maven"|"nuget"|"composer"|"go"|"rust"|"erlang"|"actions"|"pub"|"other"|"swift";
@@ -8637,18 +8609,8 @@ public type PrivateUser record {
     string? suspendedAt?;
 };
 
-public type ReposownerrepobranchesbranchprotectionrestrictionsappsOneOf11 record {
-    # The GitHub Apps that have push access to this branch. Use the slugified version of the app name. **Note**: The list of users, apps, and teams in total is limited to 100 items
-    string[] apps;
-};
-
 # The time that the analysis was created in ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ
 public type CodeScanningAnalysisCreatedAt string;
-
-public type ReposownerrepobranchesbranchprotectionrestrictionsappsOneOf12 record {
-    # The GitHub Apps that have push access to this branch. Use the slugified version of the app name. **Note**: The list of users, apps, and teams in total is limited to 100 items
-    string[] apps;
-};
 
 # Thread
 public type NotificationThread record {
@@ -9893,10 +9855,6 @@ public type CustomDeploymentRuleAppResponse record {
     @jsondata:Name {value: "total_count"}
     int totalCount?;
 };
-
-public type RestrictionsUsersBody2 ReposownerrepobranchesbranchprotectionrestrictionsusersOneOf12|ReposownerrepobranchesbranchprotectionrestrictionsusersreposownerrepobranchesbranchprotectionrestrictionsusersOneOf122;
-
-public type RestrictionsUsersBody1 ReposownerrepobranchesbranchprotectionrestrictionsusersOneOf11|ReposownerrepobranchesbranchprotectionrestrictionsusersreposownerrepobranchesbranchprotectionrestrictionsusersOneOf112;
 
 # The set of permissions for the GitHub app
 public type IntegrationPermissions record {|
@@ -11269,9 +11227,6 @@ public type TimelineReviewedEventLinks record {
     TimelineReviewedEventLinksHtml html;
 };
 
-# The slug values for teams
-public type ReposownerrepobranchesbranchprotectionrestrictionsteamsreposownerrepobranchesbranchprotectionrestrictionsteamsOneOf122 string[];
-
 public type EventRepo record {
     # The full name of the repository associated with the event.
     string name;
@@ -12432,9 +12387,6 @@ public type StarredRepository record {
     string starredAt;
 };
 
-# The slug values for teams
-public type ReposownerrepobranchesbranchprotectionrestrictionsteamsreposownerrepobranchesbranchprotectionrestrictionsteamsOneOf112 string[];
-
 public type RepositoryRuleDetailedOneOf9 record {
     *RepositoryRuleNonFastForward;
     *RepositoryRuleRulesetInfo;
@@ -12693,10 +12645,6 @@ public type BranchProtectionLockBranch record {
     # Whether the branch is set as read-only.
     boolean enabled = false;
 };
-
-public type RestrictionsTeamsBody1 ReposownerrepobranchesbranchprotectionrestrictionsteamsOneOf11|ReposownerrepobranchesbranchprotectionrestrictionsteamsreposownerrepobranchesbranchprotectionrestrictionsteamsOneOf112;
-
-public type RestrictionsTeamsBody2 ReposownerrepobranchesbranchprotectionrestrictionsteamsOneOf12|ReposownerrepobranchesbranchprotectionrestrictionsteamsreposownerrepobranchesbranchprotectionrestrictionsteamsOneOf122;
 
 # Represents the Queries record for the operation: issues/list-events-for-repo
 public type IssuesListEventsForRepoQueries record {
@@ -13970,10 +13918,6 @@ public type AppsListWebhookDeliveriesQueries record {
     # Filter to only return redeliveries.
     boolean redelivery?;
 };
-
-public type RestrictionsAppsBody1 ReposownerrepobranchesbranchprotectionrestrictionsappsOneOf11|ReposownerrepobranchesbranchprotectionrestrictionsappsreposownerrepobranchesbranchprotectionrestrictionsappsOneOf112;
-
-public type RestrictionsAppsBody2 ReposownerrepobranchesbranchprotectionrestrictionsappsOneOf12|ReposownerrepobranchesbranchprotectionrestrictionsappsreposownerrepobranchesbranchprotectionrestrictionsappsOneOf122;
 
 public type IssueNumberReactionsBody record {
     # The [reaction type](https://docs.github.com/rest/reactions/reactions#about-reactions) to add to the issue
