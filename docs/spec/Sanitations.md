@@ -89,7 +89,7 @@ bal openapi align -i docs/spec/openapi.json
 mv aligned_ballerina_openapi.json docs/spec/openapi.json
 
 # Step 3: Apply the overlay (injects missing descriptions, wraps $ref props, strips backticks)
-python scripts/apply_overlay.py
+# (apply overlay.yaml to openapi.json locally before generating)
 
 # Step 4: Generate the client
 bal openapi -i docs/spec/openapi.json --mode client --license docs/license.txt -o ballerina
@@ -105,15 +105,9 @@ when GitHub releases a new spec, re-applying the overlay restores all customisat
 - **`actions`**: schema property descriptions (`$.components.schemas.X.properties.Y`)
 - **`path_params`**: inline query/path parameter descriptions for specific operations
 
-To add descriptions for newly undocumented properties (e.g. after a spec update):
-```bash
-# Generates descriptions via Claude API and appends new actions to overlay.yaml
-# Already-covered properties are skipped automatically
-ANTHROPIC_API_KEY=<key> python scripts/generate_field_docs.py
-
-# Re-apply the updated overlay
-python scripts/apply_overlay.py
-```
+To add descriptions for newly undocumented properties (e.g. after a spec update), generate
+descriptions and append new actions to `overlay.yaml` (skipping already-covered properties),
+then re-apply the updated overlay to `openapi.json`.
 
 ## Known generator warnings (unfixable without patching the Ballerina OpenAPI tool)
 
