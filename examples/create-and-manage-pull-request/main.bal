@@ -35,7 +35,7 @@ github:Client github = check new (gitHubConfig);
 
 public function main() returns error? {
     // Create a New Pull Request
-    github:Repo_pulls_body createPRBody = {
+    github:RepoPullsBody createPRBody = {
         title: "Test PR",
         base: "main",
         head: "feature/feature2",
@@ -45,7 +45,7 @@ public function main() returns error? {
     prNumber = createdPRResponse.number;
 
     // Add a Change Request
-    github:Pull_number_reviews_body changeReqBody = {
+    github:PullNumberReviewsBody changeReqBody = {
         body: "This is a test review comment to request changes.",
         event: "REQUEST_CHANGES"
     };
