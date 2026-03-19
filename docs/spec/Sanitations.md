@@ -72,6 +72,10 @@ This file documents the modifications applied to enhance the usability of the of
 
 12. Rename the `RepositoryRuleDetailed` `oneOf` variant schemas from the verbose auto-generated names (e.g., `RepositoryRuleDetailedRepositoryRuleDetailed...OneOf12345678910111213`) to short names `RepositoryRuleDetailedOneOf1` through `RepositoryRuleDetailedOneOf14`. The `bal openapi align` tool generates cascading names by repeating the parent schema name for each nested variant, causing the file paths of the generated `.class` files to exceed OS limits and break the build.
 
+13. Remove the `default: "all"` from the `type` query parameter of `GET /user/repos`. The GitHub API returns a 422 if `type` is sent in the same request as `visibility` or `affiliation`, but all three had defaults in the original spec, so every generated call triggered the error. Making `type` optional (no default) resolves this.
+
+14. Remove the `default: false` from the `allow_forking` field in the `PATCH /repos/{owner}/{repo}` request body (`OwnerrepoBody1`). The GitHub API returns a 422 ("Allow forks can only be changed on org-owned repositories") if `allow_forking` is sent for a personal repository, but the default caused it to always be included in the request. Making it optional (no default) resolves this.
+
 ## OpenAPI cli command
 
 **Important:** The overlay must be applied AFTER `bal openapi align`, not before. The align

@@ -34,7 +34,7 @@ const REPO_BASE_URL = "https://api.github.com/repos/connector-ecosystem/github-c
 const REPO_FILE_PATH = "/src/db/resources/info1.txt";
 const MASTER_BRANCH = "master";
 const NEW_FEATURE_BRANCH = "feature/newFeature";
-const LATEST_MASTER_COMMIT_HASH = "9e7ce2f52536e7c5b90f8fee35f129fb14d1631f";
+string latestMasterCommitHash = "";
 const TEST_REPO_NAME = "ballerina-github-connector-test-repo";
 string NEW_FEATURE_BRANCH_HEAD = string `heads/${NEW_FEATURE_BRANCH}`;
 string NEW_FEATURE_BRANCH_REF = string `refs/${NEW_FEATURE_BRANCH_HEAD}`;
@@ -112,6 +112,8 @@ function testgetBranches() returns error? {
 
 @test:Config {groups: ["mock_tests", "live_tests"]}
 function testCreateRepository() returns error? {
+    // Clean up any leftover repo from a previous test run
+    do { check github->/repos/[testUsername]/[TEST_REPO_NAME].delete(); } on fail {}
     UserReposBody body = {
         name: TEST_REPO_NAME,
         description: "New Test Repo Description"
@@ -312,8 +314,8 @@ function testCloseIssue() returns error? {
 @test:Config {groups: ["mock_tests", "live_tests"]}
 function testGetMasterBranchLatestCommitSHA() returns error? {
     BranchWithProtection response = check github->/repos/[testUsername]/[testUserRepositoryName]/branches/[MASTER_BRANCH]();
-    string commitHash = response.'commit.sha;
-    test:assertEquals(commitHash, LATEST_MASTER_COMMIT_HASH);
+    latestMasterCommitHash = response.'commit.sha;
+    test:assertTrue(latestMasterCommitHash.length() > 0, "Expected a non-empty commit SHA for master branch");
 }
 
 @test:Config {
@@ -323,7 +325,7 @@ function testGetMasterBranchLatestCommitSHA() returns error? {
 function testCreateNewBranch() returns error? {
     GitRefsBody body = {
         ref: NEW_FEATURE_BRANCH_REF,
-        sha: LATEST_MASTER_COMMIT_HASH
+        sha: latestMasterCommitHash
     };
     GitRef response = check github->/repos/[testUsername]/[testUserRepositoryName]/git/refs.post(body);
     test:assertEquals(response.ref, NEW_FEATURE_BRANCH_REF);
@@ -340,7 +342,7 @@ function testCommitNewFile() returns error? {
     ShortBlob blobResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/blobs.post(blobBody);
     string blobSHA = blobResponse.sha;
 
-    GitCommit commitResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/commits/[LATEST_MASTER_COMMIT_HASH]();
+    GitCommit commitResponse = check github->/repos/[testUsername]/[testUserRepositoryName]/git/commits/[latestMasterCommitHash]();
     string treeSHA = commitResponse.tree.sha;
 
     GitTreesBody treeBody = {
@@ -358,7 +360,7 @@ function testCommitNewFile() returns error? {
     string newTreeSHA = treeResponse.sha;
 
     GitCommitsBody commitBody = {
-        parents: [LATEST_MASTER_COMMIT_HASH],
+        parents: [latestMasterCommitHash],
         tree: newTreeSHA,
         message: "Add a new text file"
     };
