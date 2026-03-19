@@ -16538,7 +16538,7 @@ public type ReposListForAuthenticatedUserQueries record {
     # Page number of the results to fetch
     int page = 1;
     # Limit results to repositories of the specified type. Will cause a 422 error if used in the same request as **visibility** or **affiliation**
-    "all"|"owner"|"public"|"private"|"member" 'type = "all";
+    "all"|"owner"|"public"|"private"|"member" 'type?;
     # The order to sort by. Default: asc when using full_name, otherwise desc
     "asc"|"desc" direction?;
     # Only show repositories updated after the given time. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: YYYY-MM-DDTHH:MM:SSZ
@@ -18495,7 +18495,7 @@ public type OwnerrepoBody1 record {
     boolean 'private = false;
     # Either true to allow private forks, or false to prevent private forks
     @jsondata:Name {value: "allow_forking"}
-    boolean allowForking = false;
+    boolean allowForking?;
     # Either true to make this repo available as a template repository or false to prevent it
     @jsondata:Name {value: "is_template"}
     boolean isTemplate = false;
