@@ -41,8 +41,6 @@ string NEW_FEATURE_BRANCH_REF = string `refs/${NEW_FEATURE_BRANCH_HEAD}`;
 
 // Variables to hold intermediate results
 int milestoneNumber = 2;
-int fetchedProjectId = -1;
-int fetchedProjectNumber = -1;
 int createdIssueId = -1;
 int createdIssueNumber = -1;
 int createdIssueCommentId = -1;
@@ -153,26 +151,6 @@ function testGetMilestone() returns error? {
 function testGetMilestones() returns error? {
     Milestone[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/milestones();
     test:assertTrue(response[0] is Milestone);
-}
-
-// ----------NOTE----------
-// The project created by this test case will no be deleted.
-// Instead an already created project will be updated and deleted.
-// The reason is Github seems to be adding project async mannger.
-// Sometimes immediate call does not return the project when we try to get the created project.
-// TODO: Re-enable `testCreateUserProject` and `testDeleteProject` if and when the test-user is changed as for this user
-// project creation is disabled due to rate limit.
-// An issue is created to track this: https://github.com/ballerina-platform/ballerina-library/issues/6917
-@test:Config {
-    enable: false
-}
-function testCreateUserProject() returns error? {
-    UserProjectsBody body = {
-        name: "Test Project Created by Ballerina GitHub Connector",
-        body: "This is the body of the test project"
-    };
-    Project? response = check github->/user/projects.post(body);
-    test:assertEquals(response?.name, "Test Project Created by Ballerina GitHub Connector");
 }
 
 @test:Config {
@@ -498,62 +476,6 @@ function testUpdatePullRequestReview() returns error? {
 function testDeletePullRequestReview() returns error? {
     PullRequestReview response = check github->/repos/[testUsername]/[testUserRepositoryName]/pulls/[createdPullRequestNumber]/reviews/[createdPullRequestReviewIdWithPendingState].delete();
     test:assertTrue(response.id == createdPullRequestReviewIdWithPendingState);
-}
-
-// Enable after fixing this: https://github.com/ballerina-platform/ballerina-library/issues/7777
-@test:Config {enable: false}
-function testGetOrgProjectList() returns error? {
-    Project[] response = check github->/orgs/["wso2-enterprise"]/projects();
-    test:assertTrue(response[0] is Project);
-}
-
-// Enable after fixing this: https://github.com/ballerina-platform/ballerina-library/issues/7777
-@test:Config {enable: false}
-function testGetLatestUserProject() returns error? {
-    Project[] response = check github->/users/[testUsername]/projects();
-    if response.length() > 0 {
-        Project recentProject = response[0];
-        fetchedProjectId = recentProject.id;
-        fetchedProjectNumber = recentProject.number;
-    } else {
-        test:assertFail();
-    }
-}
-
-// Enable after fixing this: https://github.com/ballerina-platform/ballerina-library/issues/7777
-@test:Config {
-    enable: false,
-    dependsOn: [testGetLatestUserProject]
-}
-function testUpdateProject() returns error? {
-    ProjectsprojectIdBody1 body = {
-        name: "Test Project Created by Ballerina GitHub Connector UPDATED"
-    };
-
-    Project? response = check github->/projects/[fetchedProjectId].patch(body);
-    test:assertTrue(response?.number == fetchedProjectNumber);
-}
-
-@test:Config {
-    enable: false,
-    dependsOn: [testUpdateProject, testCreateIssue]
-}
-function testDeleteProject() returns error? {
-    check github->/projects/[fetchedProjectId].delete();
-}
-
-// Enable after fixing this: https://github.com/ballerina-platform/ballerina-library/issues/7777
-@test:Config {enable: false}
-function testGetRepositoryProjectList() returns error? {
-    Project[] response = check github->/repos/[testUsername]/[testUserRepositoryName]/projects();
-    test:assertTrue(response[0] is Project);
-}
-
-// Enable after fixing this: https://github.com/ballerina-platform/ballerina-library/issues/7777
-@test:Config {enable: false}
-function testGetUserProjectList() returns error? {
-    Project[] response = check github->/users/[testUsername]/projects();
-    test:assertTrue(response[0] is Project);
 }
 
 @test:Config {groups: ["mock_tests", "live_tests"]}
