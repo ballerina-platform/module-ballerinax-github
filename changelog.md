@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+- [[#7777](https://github.com/ballerina-platform/ballerina-library/issues/7777)] Removed GitHub Projects (classic) REST API endpoints. GitHub deprecated and removed Projects (classic) in favor of the new Projects experience, which is only available via the GraphQL API. All classic project endpoints now return `404 Not Found`.
+
 ### Breaking Changes
 - [[#8642](https://github.com/ballerina-platform/ballerina-library/issues/8642)] Regenerated the connector from the aligned OpenAPI specification
   - Record field names now use camelCase with `@jsondata:Name` annotations for JSON mapping (e.g., `created_at` -> `createdAt`, `body_html` -> `bodyHtml`)

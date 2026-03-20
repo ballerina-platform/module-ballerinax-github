@@ -76,6 +76,8 @@ This file documents the modifications applied to enhance the usability of the of
 
 14. Remove the `default: false` from the `allow_forking` field in the `PATCH /repos/{owner}/{repo}` request body (`OwnerrepoBody1`). The GitHub API returns a 422 ("Allow forks can only be changed on org-owned repositories") if `allow_forking` is sent for a personal repository, but the default caused it to always be included in the request. Making it optional (no default) resolves this.
 
+15. Remove all 18 **Projects (classic)** REST API endpoints and their 19 associated component schemas. GitHub deprecated and removed Projects (classic) in May 2024 in favor of the new Projects experience, which is only available via the GraphQL API. All removed endpoints return `404 Not Found`. Removed paths: `/orgs/{org}/projects`, `/user/projects`, `/users/{username}/projects`, `/repos/{owner}/{repo}/projects`, `/projects/{projectId}` and related sub-paths. Removed schemas: `Project`, `ProjectCard`, `ProjectColumn`, `ProjectCollaboratorPermission`, `TeamProject`, and associated request body schemas.
+
 ## OpenAPI cli command
 
 **Important:** The overlay must be applied AFTER `bal openapi align`, not before. The align
