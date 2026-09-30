@@ -17,8 +17,16 @@
  */
 
 import org.apache.tools.ant.taskdefs.condition.Os
+import javax.inject.Inject
 
 apply plugin: 'java'
+
+abstract class ExecHelper {
+    @Inject
+    abstract ExecOperations getExecOperations()
+}
+
+def execHelper = project.objects.newInstance(ExecHelper)
 
 def graalvmFlag = ""
 
@@ -28,7 +36,7 @@ task testExamples {
     }
     doLast {
         try {
-            exec {
+            execHelper.execOperations.exec {
                 workingDir project.projectDir
                 println("Working dir: ${workingDir}")
                 if (Os.isFamily(Os.FAMILY_WINDOWS)) {
@@ -54,7 +62,7 @@ task buildExamples {
     }
     doLast {
         try {
-            exec {
+            execHelper.execOperations.exec {
                 workingDir project.projectDir
                 println("Working dir: ${workingDir}")
                 if (Os.isFamily(Os.FAMILY_WINDOWS)) {
